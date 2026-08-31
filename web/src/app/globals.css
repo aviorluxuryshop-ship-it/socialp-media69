@@ -1,0 +1,512 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Socialp Media — design system
+
+   The brand identity is genuinely monochrome: the wordmark is a thin geometric
+   monoline set in white on black. The palette is therefore built from ink and
+   paper, with a single accent — a deep crimson sampled directly from the
+   agency's own brand creative (#A81C24–#B01C27) rather than invented.
+
+   Component classes live in @layer components so Tailwind utilities applied on
+   the same element always win. Unlayered rules below are the ones that must
+   beat utilities (base ground, motion primitives).
+   ========================================================================== */
+
+@theme {
+  --color-ink: #08080a;
+  --color-ink-900: #0b0b0d;
+  --color-ink-800: #131316;
+  --color-ink-700: #1b1b1f;
+  --color-ink-600: #292930;
+  --color-paper: #ffffff;
+  --color-bone: #f2f1ef;
+  --color-bone-dim: #e3e1dd;
+
+  /* Neutral ramp for secondary text on each ground. */
+  --color-mist: #a8a8ad; /* on ink  — 8.3:1 */
+  --color-mist-dim: #808086; /* on ink  — 5.0:1, floor for body text */
+  --color-slate: #55555c; /* on bone — 6.6:1 */
+
+  --color-signal: #c2151f; /* accent — non-text use (3.2:1 on ink) */
+  --color-signal-lift: #ff5a5f; /* accent — safe for text on ink (6.5:1) */
+
+  --font-display: var(--font-archivo), 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: var(--font-inter), 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-quote: var(--font-instrument), 'Instrument Serif', Georgia, serif;
+
+  --spacing-sect: clamp(4.5rem, 8vh + 2.5rem, 8rem);
+}
+
+/* --- Base ---------------------------------------------------------------- */
+
+:root {
+  --shell: min(100% - 2.5rem, 90rem);
+  --rule: color-mix(in srgb, white 13%, transparent);
+  --rule-ink: color-mix(in srgb, black 13%, transparent);
+  /* Pointer position in px, published by the motion layer. */
+  --mx: 50vw;
+  --my: 50vh;
+  /* Normalised pointer offset from centre, -1..1. */
+  --px: 0;
+  --py: 0;
+  color-scheme: dark;
+}
+
+* {
+  min-width: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  /* Nothing may ever push the page sideways. */
+  overflow-x: clip;
+}
+
+/* Lenis drives scrolling; without JS the page must still scroll normally. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--color-signal);
+  color: var(--color-paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-signal-lift);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.on-bone :focus-visible {
+  outline-color: var(--color-signal);
+}
+
+@layer components {
+  /* --- Layout ------------------------------------------------------------ */
+
+  .shell {
+    width: var(--shell);
+    margin-inline: auto;
+  }
+
+  .on-bone {
+    background: var(--color-bone);
+    color: var(--color-ink);
+    --rule: var(--rule-ink);
+    --numeral-stroke: rgba(0, 0, 0, 0.42);
+    color-scheme: light;
+  }
+
+  .hair {
+    border-color: var(--rule);
+  }
+
+  /* --- Type -------------------------------------------------------------- */
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.038em;
+    line-height: 0.9;
+    text-wrap: balance;
+  }
+
+  /*
+   * Sized so the longest Turkish line ("Kurguluyoruz.") clears the media frame
+   * column at 1440 and still fits a 360px phone. Three stacked lines at this
+   * scale keep the whole hero inside 100svh.
+   */
+  .display-hero {
+    font-size: clamp(3rem, 8.2vw, 7.5rem);
+    letter-spacing: -0.05em;
+    line-height: 0.86;
+  }
+  .display-lg {
+    font-size: clamp(2.35rem, 6.6vw, 5.75rem);
+  }
+  .display-md {
+    font-size: clamp(1.75rem, 3.6vw, 3.1rem);
+    line-height: 0.98;
+  }
+
+  .kicker {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lead {
+    font-size: clamp(1.0625rem, 1.1vw, 1.25rem);
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .prose-body {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    text-wrap: pretty;
+    max-width: 60ch;
+  }
+
+  .quote {
+    font-family: var(--font-quote);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  /*
+   * Oversized outlined index numerals. `-webkit-text-stroke-color` does not
+   * resolve color-mix() in Chromium, so the outline comes from a concrete token
+   * that each ground overrides.
+   */
+  .numeral {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 0.8;
+    font-variant-numeric: tabular-nums;
+    color: transparent;
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: var(--numeral-stroke, rgba(255, 255, 255, 0.42));
+  }
+  .numeral-solid {
+    color: currentColor;
+    -webkit-text-stroke-width: 0;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .wrap-anywhere {
+    overflow-wrap: anywhere;
+  }
+
+  /* --- 3D stage ---------------------------------------------------------- */
+
+  .stage {
+    perspective: 1400px;
+    perspective-origin: 50% 45%;
+  }
+  .stage-inner {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* --- Film grain -------------------------------------------------------- */
+
+  /*
+   * Static SVG turbulence, tiled and composited once. No JS, no per-frame cost —
+   * it just takes the digital edge off large flat blacks.
+   */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  /* --- Pointer glow ------------------------------------------------------ */
+
+  /*
+   * A single soft light tracking the cursor, driven by CSS variables the motion
+   * layer writes — pointer movement never causes a React re-render.
+   */
+  .glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      36rem 36rem at var(--mx) var(--my),
+      color-mix(in srgb, var(--color-signal) 24%, transparent),
+      transparent 66%
+    );
+    opacity: 0.6;
+  }
+
+  /* --- Media ------------------------------------------------------------- */
+
+  .cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .media {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-ink-800);
+  }
+  .media img {
+    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Marquee ----------------------------------------------------------- */
+
+  .marquee {
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: drift var(--drift, 46s) linear infinite;
+    will-change: transform;
+  }
+
+  /* --- Controls ---------------------------------------------------------- */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    /* Comfortably above the 44px pointer-target floor. */
+    min-height: 3.25rem;
+    padding-inline: 1.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      color 320ms ease,
+      border-color 320ms ease;
+  }
+  .btn-solid {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  .btn-ghost {
+    border: 1px solid var(--rule);
+    color: inherit;
+  }
+  /* Wipe fill, rising from the bottom edge. */
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-signal);
+    transform: translate3d(0, 101%, 0);
+    transition: transform 460ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /*
+   * Underline that draws in from the left.
+   *
+   * The vertical padding is what lifts these text links to a comfortable
+   * pointer target (WCAG 2.2 target size); the underline is offset by the same
+   * amount so it still sits tight under the text.
+   */
+  .link-draw {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.375rem;
+  }
+  .link-draw::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: calc(0.375rem - 2px);
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-bead {
+    animation: bead 1.9s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+  }
+}
+
+/* --- Hover-capable pointers only ----------------------------------------- */
+
+@media (hover: hover) {
+  .media:hover img,
+  .media:focus-within img {
+    transform: scale(1.055);
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+  .btn:hover::before,
+  .btn:focus-visible::before {
+    transform: translate3d(0, 0, 0);
+  }
+  .btn:hover,
+  .btn:focus-visible {
+    color: var(--color-paper);
+    border-color: transparent;
+  }
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+@media (hover: none) {
+  .hover-only,
+  .glow {
+    display: none;
+  }
+}
+
+/* --- Keyframes ------------------------------------------------------------ */
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes bead {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+}
+
+/* --- Logo intro ----------------------------------------------------------- */
+
+/*
+ * The curtain is inert unless the pre-paint script in the layout opts in, so it
+ * can never trap a no-JS or reduced-motion visitor behind a blank screen.
+ */
+[data-preloader] {
+  display: none;
+}
+.is-intro [data-preloader] {
+  display: grid;
+}
+.is-intro body {
+  overflow: hidden;
+}
+
+/* --- Motion primitives ---------------------------------------------------- */
+
+/*
+ * Reveal targets only start hidden when JS is present to bring them back, so
+ * no-JS and reduced-motion visitors always get the finished, readable page.
+ * These stay unlayered: they must win over utilities.
+ */
+.js-motion [data-reveal] {
+  opacity: 0;
+}
+.js-motion [data-reveal='up'] {
+  transform: translate3d(0, 22px, 0);
+}
+.js-motion [data-reveal='fade'] {
+  transform: none;
+}
+
+/* Line-by-line headline wipes. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.js-motion .line-mask > span {
+  display: block;
+  transform: translate3d(0, 105%, 0);
+  will-change: transform;
+}
+
+/* Word-level reveal for manifesto-scale statements. */
+[data-words] > span {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.js-motion [data-words] > span > span {
+  display: inline-block;
+  transform: translate3d(0, 100%, 0);
+}
+
+/* Cinematic image reveal: the frame wipes open, the picture settles back. */
+.js-motion [data-img-reveal] {
+  clip-path: inset(0 0 100% 0);
+}
+.js-motion [data-img-reveal] > * {
+  transform: scale(1.16);
+}
+
+/*
+ * `.force-motion` is a development-only QA flag (see Motion.tsx) that lets the
+ * animation work be reviewed on a machine with OS-level reduce-motion enabled.
+ * Without it, the preference is honoured unconditionally.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html:not(.force-motion) {
+    scroll-behavior: auto;
+  }
+  html:not(.force-motion) [data-reveal],
+  html:not(.force-motion) [data-img-reveal],
+  html:not(.force-motion) [data-img-reveal] > *,
+  html:not(.force-motion) .line-mask > span,
+  html:not(.force-motion) [data-words] > span > span {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  html:not(.force-motion) .marquee-track,
+  html:not(.force-motion) .scroll-bead {
+    animation: none !important;
+  }
+  /* Stopped, but the content must stay reachable. */
+  html:not(.force-motion) .marquee {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  html:not(.force-motion) *,
+  html:not(.force-motion) *::before,
+  html:not(.force-motion) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

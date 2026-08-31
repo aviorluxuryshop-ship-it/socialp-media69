@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+web/.next/
+web/out/
+.vercel
+
+# local QA artefacts and reference material (not part of the site)
+.qa/
+reference/
+tools/
+
+# env
+.env*
+!.env.example
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-error.log*
+
+# build inputs, not needed to deploy (public/media is generated from these)
+web/media-src/
+web/public.zip
+web/tsconfig.tsbuildinfo

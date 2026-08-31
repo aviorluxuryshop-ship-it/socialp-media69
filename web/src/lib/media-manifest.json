@@ -1,0 +1,417 @@
+{
+  "images": {
+    "showroom-otomotiv": {
+      "width": 1600,
+      "height": 2816,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "photo",
+      "cat": "video",
+      "blur": "data:image/webp;base64,UklGRtIAAABXRUJQVlA4IMYAAABwBACdASoQABwAPxFysFAsJqSisAgBgCIJZwDE2Yx2tr5sDyWJ7vT5ZVmIAAD+0JP/0r4MSoSvqytj4RATzg0KukGzozwRE47Of1m2dJZvHPhRW4HGGnSWUwjUxoKjRyT0xdEPx/tvnkfs24Wptt+VvfgMpdPwwQV2SspGmPRXNlmxtadFUButrYOUc4VSdqMXLW4d+WkJ640QxlHL9aJvpx3j/iCHzXTsKhDujstePbF6kEwGJQFDZCNc7FNmSzk4W3vk6gA="
+    },
+    "mekan-video-kurulum": {
+      "width": 3840,
+      "height": 5120,
+      "widths": [
+        400,
+        800,
+        1280,
+        1920
+      ],
+      "kind": "photo",
+      "cat": "video",
+      "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACwAwCdASoQABUAPxFysFAsJqSisAgBgCIJQAAKj6ALNoAftvGrAAD+nul7ZZWvKwSynmdE884ktAaJJKd99ubWwmIMkI3k8DYdDKkcjbifUj55cUlBm3U9hhIKmEq56LmQ/ZVPmBN/hugAAAA="
+    },
+    "konsept-editorial": {
+      "width": 1289,
+      "height": 1716,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "photo",
+      "cat": "video",
+      "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoQABUAPxFysFAsJqSisAgBgCIJaQAARe42kiw6cFiTmqXWAAD+pUOfp24f2jzuJpEySqOmkTwr4DWxE69JO5cBhTzzMqjPBZDpUP9AvAipBiHmuy55bqHYAAAAAA=="
+    },
+    "kafe-tanitim": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "photo",
+      "cat": "video",
+      "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAQBACdASoQABQAPxFysFAsJqSisAgBgCIJQBOmUFH/APQTdrpfTYcLWADNpib7x2x0379ALW8lXUBbiYNMIwDuZI7+LvxcrIVXKKKAs5msqZOVZ9T6/ABpdaFAnEWJzA3xcyQkfxUJnd+CzVNDxIqPFMp8OdzngZFT3D2AO0Etl6G94AA="
+    },
+    "roportaj-stüdyo": {
+      "width": 1206,
+      "height": 2108,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "photo",
+      "cat": "video",
+      "blur": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoQABwAPxFysVCsJqSisAgBgCIJYwC+SGle2upSdKH+RLdtd4AA/vtrQ5vhMEjvLYWSsupvYfDEQcmj+RJ7IeEgNZyN5NtBS4tx89In7HEnDEIytGE6R2gWep1dJnEpHGeBMav6KmIrd6g+vatN8XJY0loGJYjTlRsZengn6yjK0AAA"
+    },
+    "icerik-hazir": {
+      "width": 1206,
+      "height": 2093,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "photo",
+      "cat": "video",
+      "blur": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAwBACdASoQABwAPxFysFCsJqSisAgBgCIJbACdAYzGieEgVJKlXuYg2z4AyVcm8FKu0xYGg92Zjzu5MKuUnwcEPvEZ1+zrEtnWnJVXAkCQ7UeBF8z7Bwn8r37EaTd+h6QoTiG1MTFg25F/gT1vb8qhw5O+u13qZ8nF7ia08sByFvsyEmHaF8Gd9oacOmDKKr4MzFERyXRjpc2P9banGP3L/l7tSWlKvr3ljDDMGs0blXJWUs2VXXZQ6lE1bapfmkjIAA=="
+    },
+    "guzellik-merkezi": {
+      "width": 3840,
+      "height": 5120,
+      "widths": [
+        400,
+        800,
+        1280,
+        1920
+      ],
+      "kind": "photo",
+      "cat": "photo",
+      "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwAwCdASoQABUAPxFysVAsJqSisAgBgCIJYwAATvzB0Q5+vOoqAAD+Wg+8ggNIWkdqstr72eY8NpA/TPqXh8JoowlGBAyC1JDJrz4aJHS9eepDBkjrhpuhntBTw6Tz6C5fZL/w7ik68ywPd4LCBL9BA2IxE7Tysuy7j8vI1q5I6CYAAAA="
+    },
+    "restoran-masa": {
+      "width": 2880,
+      "height": 5120,
+      "widths": [
+        400,
+        800,
+        1280,
+        1920
+      ],
+      "kind": "photo",
+      "cat": "photo",
+      "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAADwAwCdASoQABwAPxFysFAsJqSisAgBgCIJZQABHuqh8bblGRpuIQEAAP79U2Oocwl7FCx0nUFxQR6rKq5Xz3qiHEu2e3bvwkUvz17v6PnBfCZAQDssDkWxuaWp3v8YNese2XtpCwJHr9NVeSH4rncQu8Ebw/1bNQ+L9pDyMDTp7AAA"
+    },
+    "studyo-sanat": {
+      "width": 3024,
+      "height": 4032,
+      "widths": [
+        400,
+        800,
+        1280,
+        1920
+      ],
+      "kind": "photo",
+      "cat": "photo",
+      "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABQBACdASoQABUAPxFysFAsJqSisAgBgCIJYwCo9CMCgcBnh0rG5gP4YB0AAP7s0LzOHGeU/JDwi38H19DS0pY+04d3aV7QbgMIW9J0dij2vwX0xAgvRhYwkQvF1/J6XTj+yxKenaxQ6OAx0LUkx2DbNBPuZGAA"
+    },
+    "kamera-detay": {
+      "width": 1206,
+      "height": 2122,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "photo",
+      "cat": "photo",
+      "blur": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAAAwBACdASoQABwAPxFysFCsJqSisAgBgCIJQBOgAz3HylSC8yz0mksy1wAA/r2ME9ZKO/hlnq9RfJPge+CoX5cTfuRgxM45/xHftIrJDBvaE8/gnkQEy3dj6PYLzt/Nn1es4WT/Dex7dpzqEfK14eZ2+LEWYJSn+fdd0jAND/RZ6JqX9Zw2ze66QQtj3113Bfy66KRB9tycxcoPHOuuzue14D8x3FqyQtwAAA=="
+    },
+    "mekan-isik": {
+      "width": 1600,
+      "height": 2816,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "photo",
+      "cat": "photo",
+      "blur": "data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAAAwBACdASoQABwAPxFysFAsJqSisAgBgCIJYwC06Yx2ca4tQStcoHjElAAA/RSvqLzweu281IygI4Wgd/xabK7Qeet93HKVZ+WOSlI0eCUwRmYS0ZwR35TQANHaQmowPObMxwRHtFQq+UrMAEqYYNfObZBUBMkptc8s/2RSTqOjK7q92OrHSIvTFpbB/otkfCkPnxlfCkwUP/bRR+n/bPVkx0+Tbm02HKLGrIdCO4AAAA=="
+    },
+    "telefon-tepsi": {
+      "width": 1728,
+      "height": 2304,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "brand",
+      "cat": "brand",
+      "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACwAwCdASoQABUAPxFysFAsJqSisAgBgCIJbACdACHEjOBh847hYAD+y4+Jjonk1V+cVKLfLHk4yPCx9LbkD4ccn5pfHbVubcd1GZdkDHcCf12BWamefs+SSfIu2Stdj4k7zqz7x8OPvRbfZbOAAA=="
+    },
+    "meta-tepsi": {
+      "width": 1728,
+      "height": 2304,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "brand",
+      "cat": "brand",
+      "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwBACdASoQABUAPxFysFAsJqSisAgBgCIJbACdL1AVdy3tbsqP9uVMkz4PAAD+y4+Ju9D14qd8axorZYI0q4GgNAah+643gF2AeYf2pt6Q3BfuBPJajseEaSGhp2nINMaAoBI3zYd+hgpc0/4ZXAAA"
+    },
+    "instagram-tepsi": {
+      "width": 1728,
+      "height": 2304,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "brand",
+      "cat": "brand",
+      "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQBACdASoQABUAPxF0sFCsJqSisAgBgCIJbACdL1AB0Ckn4QZwvz7CAAD+y4+Jg16i/EjKkAn7EqXWvUk9KlTpJC/tTb0hvD/rGVG9EH6TlimgEFRuVLx9JgcXQH1KEDkefxhst/EAAAAA"
+    },
+    "bilboard-mockup": {
+      "width": 1536,
+      "height": 2752,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "brand",
+      "cat": "brand",
+      "blur": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAAAQBACdASoQAB0APxFysFAsJqSisAgBgCIJQAALXwHUkSI6F3zMxjWiAAD+4zM/z5q0Y2RUMhjF8em4n2ri4DwEHZY/TXBIaJVT6SHZQLAFgFUfWI30d84S6hZgKeG/GT7Yp7nn+ew03eI6ke8u8HXAN8/c5sg9e45Q5HklyTOG/4YSDSAuClfC4Se3+/6krGtU4C8JssINxwqqL2OUhjwCAAA="
+    },
+    "sokak-tabela": {
+      "width": 1728,
+      "height": 2304,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "brand",
+      "cat": "brand",
+      "blur": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAABQAwCdASoQABUAPxFysFAsJqSisAgBgCIJQBbZASTAyGo8MAD+r3RPmRsm+0HHU3A4bsutyNowFBnlJag3RpnUyNgx2TmJvbBdi0/9yNnaw2YGive0k2A1H9SmYIupoJGm80YdbOXvnqKfNbONJnoDSgAAAA=="
+    },
+    "fon-perde": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "brand",
+      "cat": "brand",
+      "blur": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADQAwCdASoQABQAPxFysFAsJqSisAgBgCIJQAALfY/NH3gQAFSFa4AA/tzhzNwnmtDKBD4BOm0YfCMVP7ibRuyO3ugPpEoxBamCaF/nbjW3ffryJ3T6w3cuINTKmMnPiw9gVMO1+yHL4ThYNqN2rTvt2JkPZaXgAAA="
+    },
+    "nail-dergi": {
+      "width": 1290,
+      "height": 1599,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "photo",
+      "cat": "social",
+      "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACwAwCdASoQABQAPxFysFAsJqSisAgBgCIJZQAAUKPwW7jyUQxzAAD+2nVsve+qr9RpwIaSgnSOwXWI8iMQoPaQZOMVaNlOBxvsYs0Cxk9t4z6t8we6xn0vw+o4UV+83alY48IlvZobS5AAAAA="
+    },
+    "gazete-siyahbeyaz": {
+      "width": 1290,
+      "height": 1607,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "photo",
+      "cat": "social",
+      "blur": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAABQAwCdASoQABQAPxFysFCsJqSisAgBgCIJaQAAews2zWkPAAD+7MoOpkBZpAzBhwZs3//D5bg8lauAAAA="
+    },
+    "cekim-mavi": {
+      "width": 2700,
+      "height": 4800,
+      "widths": [
+        400,
+        800,
+        1280,
+        1920
+      ],
+      "kind": "photo",
+      "cat": "social",
+      "blur": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACQBACdASoQABwAPxGCtFIsKaUisAgBgCIJZgC7BagB5VtLlLSsaqsAyDZubQAA+95HEebgjYMxN51QGarfkYsbSHITOCquKJaswlIyex+E3tUISQhEpIB8Meu7d3rEF7IyU2zXVUg8iSxqpw3gbKXwT5LM9uB3xAHPLw416vv9Po6gbkWWErLLHZf1wwyfp1skMVcP4esdQFVD69jaAA=="
+    },
+    "cekim-kamera": {
+      "width": 1206,
+      "height": 2093,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "photo",
+      "cat": "social",
+      "blur": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAADQAwCdASoQABwALtGIxGIkLCwsDADQS2AFp0xg5r2jplTor3DhuAAA3Op/Oddtpl7WJpkvSVPQl1Pd7e2RXVHA27WrS2Zos3+jmEW10mvbjnX2mf4c7nez3ECD3dc6AJJ5u4LvBtGS5QT4CRPYpFl0V311/JIr3jSHdm7Yb6NsaPL/XaJPI6BksTEL3BQSPWZEpURuX640TuV1KMethyR8SWXRZUSnNfH+SliKugNcCcAAAAA="
+    },
+    "cekim-studyo": {
+      "width": 1206,
+      "height": 2093,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "photo",
+      "cat": "social",
+      "blur": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAADQAwCdASoQABwAPxF0tFAsJyUisAgBgCIJZQABF77KEHKvSBJ0ziAA/qtnV4JRgHtlP0/3f15jkRes7TNMURetHmW+BUyNPTaqcfBqkISWPsuL5ptbdu3lSsP4eX9+mfXbmsa3GXtVi0TiQLSnhNAsoAO9wX8wW8QuW59Moiy/qe6rZylp0YlTxSsuEdNzYcXQAAAA"
+    },
+    "ekip-salon": {
+      "width": 2268,
+      "height": 4032,
+      "widths": [
+        400,
+        800,
+        1280,
+        1920
+      ],
+      "kind": "photo",
+      "cat": "social",
+      "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAQBACdASoQABwAPxFysFAsJqSisAgBgCIJZQDImBnSMcnnuMX+TZMciADRiBqi+H6CN8Ca4qs8iZx3f+2Ls+BezjW5UINco6Gy9Ef3hx0VkAy7KO2dlQ1Rh3hFZdygWfp7HyMPEZ8W0dx+tM5LDn1nyAGRsHZo0CoEnR+fS5Xpsn7iOVXTyFAAAAA="
+    },
+    "ofis-tabela": {
+      "width": 2000,
+      "height": 3000,
+      "widths": [
+        400,
+        800,
+        1280,
+        1920
+      ],
+      "kind": "photo",
+      "cat": "studio",
+      "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABQBACdASoQABgAPxFwsFAsJiSisAgBgCIJYwCw7CL3J+Dw/Z9uAHHLHoUwAP7ZmzhQ1ggtqLppsZeSLRiK8/i2T97A+X7VezPpegEuvHr5PHRwtR9vF76nWQ/jENIwhvqAG4wAp+VbNzRYnNGgmGxk+5HSuMkv8yMsjp2Hut+eweVjgAA="
+    },
+    "ekip-beyaz": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "photo",
+      "cat": "studio",
+      "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABQBACdASoQABQAPxFysFAsJqSisAgBgCIJaAC+SYxswP6szMPzjx21FHYQAP6ZchpZdbKcD4+Xpq/gEENs4NklIgdoHFdMBdQH4ha/MQ5VLCjPbHUKgwBxYpiku1/z8vNjFhZYF7OnpmbD26vAZaByK45v6390NbP/TomubetsS4LiPAA="
+    },
+    "ekip-siyah": {
+      "width": 1856,
+      "height": 2304,
+      "widths": [
+        400,
+        800,
+        1280
+      ],
+      "kind": "photo",
+      "cat": "studio",
+      "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADwAwCdASoQABQAPxFysFAsJqSisAgBgCIJZACo9BpD4wOAXWP1RKiAAP3BbDm0TJ9plIScs9ethHEUaMz3HOSQb9M+ZAVPxCK39f6tMtqj4630CMFRPNySluTAc+S1w+vJ+uKR7MjsHzTrhmTlBTC/s+Y4ohoknx/iwyEEWHgAAA=="
+    },
+    "sektor-guzellik": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "sector",
+      "cat": "sector",
+      "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAABQBACdASoQABQAPxFysFAsJqSisAgBgCIJZgCdMoADX3uMUOW1J0IZNFJMAP7pTykdfmPMWe5BZLt2G4eNaYlw2z+hpI+ib3elzEFqeID5xZKP3/MI6P72ZdKdCfxP5VukKNq41F+WLz1xasyjzURZ7JahCgwEATD42zFM6G3crAAA"
+    },
+    "sektor-portre": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "sector",
+      "cat": "sector",
+      "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAwCdASoQABQAPxFysFAsJqSisAgBgCIJZACdABoiiF9qf8uq2HrgAP7Tlkmf/HoOoXmHZQkZVUlIspF7GE0k6GzXzcGd2fWn2o9vonjtRO4wAAA="
+    },
+    "sektor-restoran": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "sector",
+      "cat": "sector",
+      "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQAwCdASoQABQAPxFysFAsJqSisAgBgCIJQBOgA9js3pSBVTGctAAA/AVjWs613vaFX96FoXBGQvz/lIxcQUdmHHkdn7feeGBjiW+SBEEmksMi5bUw1csZ4YEPJGS59jvXjDVFEsI78gUNSNBkhAAA"
+    },
+    "sektor-egitim": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "sector",
+      "cat": "sector",
+      "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACwAwCdASoQABQAPxFysFAsJqSisAgBgCIJYwCsABndHJsJAUmKgAD+tQkWqzUK7BQqlihMS0ym8CyOg4m4iN4gYBA/x645Ufe+ujjc+yAPF5qFAyj0k9nbToEEXDJZNBrMlx7cBdbDz2gFPRYAAA=="
+    },
+    "sektor-insaat": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "sector",
+      "cat": "sector",
+      "blur": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAABQBACdASoQABQAPxFysFAsJqSisAgBgCIJYwCdO/9yAA86/Zgb7ek5v74AAP7fJwsPoIDMtfH4htn6RqGydXK/EmHZRRBO7BIE8HCvh5UaeloDp42Y2QRUGvjY+H2iZcXwByqpyh2E5UzftSVJZJYLCUI7qyAdtWChQimWAAA="
+    },
+    "sektor-kurumsal": {
+      "width": 1080,
+      "height": 1350,
+      "widths": [
+        400,
+        800
+      ],
+      "kind": "sector",
+      "cat": "sector",
+      "blur": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoQABQAPxFysFAsJqSisAgBgCIJQBfJBD0pMTbLgG/4GWDRRrAA/sNHHhlCzOR47rk/wm8nGKzZltsmL74z+CXt7fnD06yikQTSdMGr1Lcyz32/S/qcRkuoAVL+d27aO8LC90UWaeBFR8+tKVQW4VkjYOceXCW7Uvvn9ctOpzCZAAAA"
+    }
+  },
+  "marks": {
+    "dlux": {
+      "label": "DLUX Professional",
+      "width": 777,
+      "height": 327
+    },
+    "kinetics": {
+      "label": "Kinetics",
+      "width": 559,
+      "height": 155
+    },
+    "balance": {
+      "label": "The Balance",
+      "width": 735,
+      "height": 178
+    },
+    "lalin": {
+      "label": "Lalin Cadde",
+      "width": 715,
+      "height": 104
+    },
+    "fibabanka": {
+      "label": "Fibabanka",
+      "width": 722,
+      "height": 144
+    },
+    "plus100": {
+      "label": "+100",
+      "width": 232,
+      "height": 74
+    }
+  },
+  "logo": {
+    "width": 741,
+    "height": 298
+  }
+}

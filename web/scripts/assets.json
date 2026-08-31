@@ -1,0 +1,51 @@
+{
+  "_comment": "Curated map of authentic Socialp Media assets pulled from the brand's own Wix CDN originals. kind: photo=real project/BTS photography, brand=brand-owned creative content, sector=illustrative sector imagery (NOT client work), mark=logo/wordmark.",
+  "assets": [
+    { "id": "showroom-otomotiv",    "src": "587171_30498246393e4d5a8e732f386d3b3beb~mv2.png", "kind": "photo",  "cat": "video" },
+    { "id": "mekan-video-kurulum",  "src": "587171_1026fc84153941198468389ec7191d82~mv2.jpg", "kind": "photo",  "cat": "video" },
+    { "id": "konsept-editorial",    "src": "587171_64d1471b58ca4416bc40393e0fdb0d0f~mv2.jpg", "kind": "photo",  "cat": "video" },
+    { "id": "kafe-tanitim",         "src": "587171_4abef5122f7140da8353bab9fb66d4fc~mv2.jpg", "kind": "photo",  "cat": "video" },
+    { "id": "roportaj-stüdyo",      "src": "587171_f0c4ec4473e44f0285a2b3d305b86b17~mv2.jpg", "kind": "photo",  "cat": "video" },
+    { "id": "icerik-hazir",         "src": "587171_ad5ffc35e8c34d88ade3b9a3361d0a36~mv2.jpg", "kind": "photo",  "cat": "video" },
+
+    { "id": "guzellik-merkezi",     "src": "587171_e75985a6d27d426a94d00e3cac02fa60~mv2.jpg", "kind": "photo",  "cat": "photo" },
+    { "id": "restoran-masa",        "src": "587171_e2edf266490a49e69308ee47148e2aaa~mv2.jpg", "kind": "photo",  "cat": "photo" },
+    { "id": "studyo-sanat",         "src": "587171_1538daa7b5504957af56248f1498f530~mv2.jpg", "kind": "photo",  "cat": "photo" },
+    { "id": "kamera-detay",         "src": "587171_10e5098205804e90bcb94740e7029c7d~mv2.jpg", "kind": "photo",  "cat": "photo" },
+    { "id": "mekan-isik",           "src": "587171_3ecc1a0e16bf40d49671d009b5e47e94~mv2.png", "kind": "photo",  "cat": "photo" },
+
+    { "id": "telefon-tepsi",        "src": "587171_29e34092f49349f485c76e65e2381723~mv2.png", "kind": "brand",  "cat": "brand" },
+    { "id": "meta-tepsi",           "src": "587171_5fd56f43fce3443ba6c1d15ec175c785~mv2.png", "kind": "brand",  "cat": "brand" },
+    { "id": "instagram-tepsi",      "src": "587171_84c1d9e772c14b7286093c8cde1b78f0~mv2.png", "kind": "brand",  "cat": "brand" },
+    { "id": "bilboard-mockup",      "src": "587171_c48663e009e54ea29a88575d8df01e31~mv2.jpg", "kind": "brand",  "cat": "brand" },
+    { "id": "sokak-tabela",         "src": "587171_1ce5855d6b8642f5bf5a09e919a92e01~mv2.png", "kind": "brand",  "cat": "brand" },
+    { "id": "fon-perde",            "src": "587171_be70588bcb5f498f8a45b0e2d7cb74b3~mv2.jpg", "kind": "brand",  "cat": "brand" },
+
+    { "id": "nail-dergi",           "src": "587171_314d85d3795c492dbf123aabc0cfa1e2~mv2.jpg", "kind": "photo",  "cat": "social" },
+    { "id": "gazete-siyahbeyaz",    "src": "587171_438a7f8ece97416f9f12bc4a8f331174~mv2.jpg", "kind": "photo",  "cat": "social" },
+    { "id": "cekim-mavi",           "src": "587171_724b11aa9279421aa4b219dced423fe0~mv2.jpg", "kind": "photo",  "cat": "social" },
+    { "id": "cekim-kamera",         "src": "587171_9810c57e67684a64aab7071fb2bf2c87~mv2.jpg", "kind": "photo",  "cat": "social" },
+    { "id": "cekim-studyo",         "src": "587171_bac8cb2ccd1c4f398d8616f2a3c9002d~mv2.jpg", "kind": "photo",  "cat": "social" },
+    { "id": "ekip-salon",           "src": "587171_8a250490295f4c3fb40c997506ecbda9~mv2.jpg", "kind": "photo",  "cat": "social" },
+
+    { "id": "ofis-tabela",          "src": "587171_c5c22556576b4c27b4c104be5335997b~mv2.jpg", "kind": "photo",  "cat": "studio" },
+    { "id": "ekip-beyaz",           "src": "587171_5a73f2f7b7944865ac1eb93bc04f8ab3~mv2.jpg", "kind": "photo",  "cat": "studio" },
+    { "id": "ekip-siyah",           "src": "587171_6012bfa4440549f5825018ce3548e0af~mv2.png", "kind": "photo",  "cat": "studio" },
+
+    { "id": "sektor-guzellik",      "src": "587171_3bb5739fb93946baaee7e63838666207~mv2.jpg", "kind": "sector", "cat": "sector" },
+    { "id": "sektor-portre",        "src": "587171_6db8a2e73e2c49a1a0ae4337e9356549~mv2.jpg", "kind": "sector", "cat": "sector" },
+    { "id": "sektor-restoran",      "src": "587171_0a358bb539784dc2b51ddc9a8527aa04~mv2.jpg", "kind": "sector", "cat": "sector" },
+    { "id": "sektor-egitim",        "src": "587171_6d7a3812aea8409fa86917738822fa08~mv2.jpg", "kind": "sector", "cat": "sector" },
+    { "id": "sektor-insaat",        "src": "587171_7fe2703222ca41f488cd780182285e80~mv2.jpg", "kind": "sector", "cat": "sector" },
+    { "id": "sektor-kurumsal",      "src": "587171_5377ea612cff4846b27c85747f1d1dce~mv2.jpg", "kind": "sector", "cat": "sector" }
+  ],
+  "marks": [
+    { "id": "dlux",       "src": "587171_8419cd09ee284267912d3b183e5df34d~mv2.png", "label": "DLUX Professional" },
+    { "id": "kinetics",   "src": "587171_87fd86d187bc4190b13168ec7e013497~mv2.png", "label": "Kinetics" },
+    { "id": "balance",    "src": "587171_b8d247c6c0914a77b4804f2825802fe0~mv2.png", "label": "The Balance" },
+    { "id": "lalin",      "src": "587171_db005108e8674ff093b0ba9a6e9a7f1c~mv2.png", "label": "Lalin Cadde" },
+    { "id": "fibabanka",  "src": "587171_e5473497379144d29bc14f70b87be35c~mv2.png", "label": "Fibabanka" },
+    { "id": "plus100",    "src": "587171_e4341d3e59ca423bbb349d0407180b0d~mv2.png", "label": "+100" }
+  ],
+  "logo": { "src": "587171_2ea9e5de11f04dcda62896783fd58fe5~mv2.png" }
+}
