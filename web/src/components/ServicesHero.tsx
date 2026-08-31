@@ -35,6 +35,7 @@ export function ServicesHero({ dict }: { dict: Dict }) {
   const capRefs = useRef<(HTMLDivElement | null)[]>([]);
   const fitRef = useRef<(() => void) | null>(null);
   const [mobile, setMobile] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const beats = dict.services.items.slice(0, ANGLES.length);
 
@@ -43,7 +44,6 @@ export function ServicesHero({ dict }: { dict: Dict }) {
   }, []);
 
   useEffect(() => {
-    if (mobile) return;
     const section = sectionRef.current;
     const mount = mountRef.current;
     if (!section || !mount) return;
@@ -69,11 +69,13 @@ export function ServicesHero({ dict }: { dict: Dict }) {
 
       const w = () => mount.clientWidth || 1;
       const h = () => mount.clientHeight || 1;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const small = window.matchMedia('(max-width: 1023px)').matches;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, small ? 1.5 : 2));
       renderer.setSize(w(), h());
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
-      renderer.shadowMap.enabled = true;
+      // Shadow mapping is the expensive pass; phones get the lighting without it.
+      renderer.shadowMap.enabled = !small;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       mount.appendChild(renderer.domElement);
       renderer.domElement.style.display = 'block';
@@ -90,7 +92,7 @@ export function ServicesHero({ dict }: { dict: Dict }) {
       scene.add(new THREE.AmbientLight(0xffffff, 0.5));
       const key = new THREE.DirectionalLight(0xffffff, 2.4);
       key.position.set(5, 8, 6);
-      key.castShadow = true;
+      key.castShadow = !small;
       key.shadow.mapSize.set(1024, 1024);
       key.shadow.camera.far = 40;
       key.shadow.bias = -0.0015;
@@ -138,7 +140,7 @@ export function ServicesHero({ dict }: { dict: Dict }) {
             doomed.push(m);
             return;
           }
-          m.castShadow = true;
+          m.castShadow = !small;
           kept.push(m);
         });
         doomed.forEach((m) => m.removeFromParent());
@@ -170,6 +172,7 @@ export function ServicesHero({ dict }: { dict: Dict }) {
         };
         fitView();
         fitRef.current = fitView;
+        setReady(true);
         rig.rotation.set(ANGLES[0].rotX, ANGLES[0].rotY, 0);
         rig.position.set(ANGLES[0].x, ANGLES[0].y, ANGLES[0].z);
 
@@ -242,9 +245,9 @@ export function ServicesHero({ dict }: { dict: Dict }) {
       <div
         ref={mountRef}
         aria-hidden="true"
-        className="absolute inset-y-0 right-0 w-full max-w-full overflow-hidden lg:w-[62%]"
+        className="absolute inset-x-0 top-0 h-[56%] max-w-full overflow-hidden lg:inset-y-0 lg:left-auto lg:right-0 lg:h-full lg:w-[62%]"
       />
-      {mobile ? (
+      {mobile && !ready ? (
         <div className="absolute inset-x-0 top-[10%] h-[42%]" aria-hidden="true">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/cam/cam4.webp" alt="" className="mx-auto h-full w-auto max-w-[86vw] object-contain" />
