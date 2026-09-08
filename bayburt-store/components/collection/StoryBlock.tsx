@@ -1,0 +1,164 @@
+'use client'
+
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { useRef } from 'react'
+
+import { JerseyImage } from '@/components/ui/JerseyImage'
+import { fadeUp, staggerContainer, viewportOnce } from '@/lib/motion'
+import type { Product, ProductSlug } from '@/data/products'
+import { cn, formatPrice } from '@/lib/utils'
+
+const MOTIF: Record<ProductSlug, string> = {
+  hisar: '/images/motifs/castle.svg',
+  coruh: '/images/motifs/river.svg',
+  cinimacin: '/images/motifs/tile.svg',
+}
+
+interface StoryBlockProps {
+  product: Product
+  index: number
+}
+
+export function StoryBlock({ product, index }: StoryBlockProps) {
+  const sectionRef = useRef<HTMLElement>(null)
+  const isReversed = index % 2 === 1
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  })
+
+  // Gentle counter-scroll: the kit floats against the narrative column.
+  const kitY = useTransform(scrollYProgress, [0, 1], [48, -48])
+  const motifY = useTransform(scrollYProgress, [0, 1], [-30, 30])
+
+  return (
+    <section
+      ref={sectionRef}
+      id={product.slug}
+      aria-labelledby={`${product.slug}-baslik`}
+      className="scroll-mt-24 border-t border-white/10 py-20 lg:py-32"
+    >
+      <div className="container">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          {/* Visual plate */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={viewportOnce}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            data-reveal
+            className={cn(
+              'relative aspect-[4/5] overflow-hidden rounded-sm border border-white/10 bg-graphite-dark sm:aspect-[5/4] lg:aspect-[4/5]',
+              isReversed && 'lg:order-2',
+            )}
+          >
+            <span
+              aria-hidden
+              className="absolute inset-0"
+              style={{
+                background: `radial-gradient(58% 46% at 50% 72%, ${product.palette.glow} 0%, transparent 70%)`,
+              }}
+            />
+            <motion.span
+              aria-hidden
+              style={{
+                y: motifY,
+                backgroundImage: `url(${MOTIF[product.slug]})`,
+                backgroundSize: '210px',
+              }}
+              className="absolute inset-[-12%] opacity-[0.07]"
+            />
+            <span
+              aria-hidden
+              className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.5)_0%,transparent_35%,rgba(5,5,5,0.6)_100%)]"
+            />
+
+            <motion.div style={{ y: kitY }} className="absolute inset-[8%]">
+              <JerseyImage
+                src={product.media.views[0]?.src ?? ''}
+                alt={product.media.views[0]?.alt ?? product.displayName}
+                sizes="(max-width: 1024px) 88vw, 46vw"
+                className="drop-shadow-[0_32px_52px_rgba(0,0,0,0.6)]"
+              />
+            </motion.div>
+
+            <span className="absolute bottom-6 left-6 font-sans text-[11px] uppercase tracking-wider2 text-smoke">
+              {String(index + 1).padStart(2, '0')} · {product.kind}
+            </span>
+          </motion.div>
+
+          {/* Narrative column */}
+          <motion.div
+            variants={staggerContainer(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            data-reveal
+            className={cn(isReversed && 'lg:order-1')}
+          >
+            <motion.p variants={fadeUp(14)} className="eyebrow">
+              {product.story.kicker} · {product.story.source}
+            </motion.p>
+
+            <motion.h2
+              id={`${product.slug}-baslik`}
+              variants={fadeUp(22)}
+              className="mt-5 font-display text-[clamp(2rem,5vw,3.5rem)] font-semibold uppercase leading-[1.04] tracking-tight text-white"
+            >
+              {product.displayName}
+            </motion.h2>
+
+            <motion.p
+              variants={fadeUp(18)}
+              className="mt-3 font-display text-lg uppercase tracking-wider2 text-gold-500"
+            >
+              {product.story.heading}
+            </motion.p>
+
+            <motion.div variants={fadeUp(18)} className="mt-8 space-y-5">
+              {product.story.paragraphs.map((paragraph) => (
+                <p
+                  key={paragraph.slice(0, 24)}
+                  className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </motion.div>
+
+            <motion.ul variants={fadeUp(16)} className="mt-9 flex flex-wrap gap-2.5">
+              {product.story.motifs.map((motif) => (
+                <li
+                  key={motif}
+                  className="border border-white/12 px-3.5 py-2 font-sans text-[11px] uppercase tracking-wider2 text-ash"
+                >
+                  {motif}
+                </li>
+              ))}
+            </motion.ul>
+
+            <motion.div
+              variants={fadeUp(16)}
+              className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4"
+            >
+              <Link
+                href={`/forma/${product.slug}`}
+                className="group inline-flex items-center gap-3 border border-white/15 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+              >
+                Formayı incele
+                <ArrowRight
+                  className="h-3.5 w-3.5 transition-transform duration-500 ease-luxe group-hover:translate-x-1"
+                  aria-hidden
+                />
+              </Link>
+              <span className="font-sans text-sm text-ash">{formatPrice(product.price)}</span>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
