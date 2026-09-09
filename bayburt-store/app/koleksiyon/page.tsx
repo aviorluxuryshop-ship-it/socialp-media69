@@ -97,11 +97,11 @@ export default function CollectionPage() {
         <div className="container">
           <div className="mx-auto max-w-2xl text-center">
             <Reveal as="h2" className="font-display text-[clamp(1.7rem,4vw,2.75rem)] font-semibold uppercase leading-tight tracking-tight text-balance text-white">
-              Üçü bir arada, sezon başına 1.969 adet
+              Üçü bir arada
             </Reveal>
             <Reveal as="p" delay={0.08} className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-smoke">
-              Miras Koleksiyonu tek seferlik bir üretimdir. Her formanın etek etiketinde kendi
-              numarası vardır ve o numara bir daha basılmaz.
+              Kale, nehir ve çini. Üç forma ayrı ayrı durur, yan yana geldiğinde şehrin
+              tamamını anlatır.
             </Reveal>
             <Reveal delay={0.14} className="mt-10">
               <Link

@@ -60,7 +60,7 @@ const VALUES = [
   },
   {
     heading: 'Az ama doğru',
-    body: 'Sezon başına 1.969 adet. Stok tükendiğinde yeniden basılmaz; koleksiyon bir tarih kaydı gibi kapanır.',
+    body: 'Gereğinden fazlasını üretmiyoruz. Bir tasarım koleksiyona giriyorsa, şehirde bir karşılığı olduğu içindir.',
   },
   {
     heading: 'Şehirde üretim',
@@ -71,8 +71,8 @@ const VALUES = [
 const FIGURES = [
   { value: '1969', label: 'Kuruluş yılı' },
   { value: '69', label: 'Şehir kodu' },
-  { value: '1.969', label: 'Sezonluk üretim' },
-  { value: '3', label: 'Forma, üç kaynak' },
+  { value: '3', label: 'Kaynak: kale, nehir, çini' },
+  { value: 'TR', label: 'Üretim' },
 ]
 
 export default function AboutPage() {
