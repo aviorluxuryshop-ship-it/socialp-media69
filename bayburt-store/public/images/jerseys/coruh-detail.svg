@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" role="img">
+  <rect width="1000" height="1000" fill="transparent" />
+
+  <defs>
+    <clipPath id="shirt"><path d="M 500 74 C 468 74 442 78 420 86 L 148 254 C 130 264 122 284 126 306 L 138 388 C 140 406 148 416 160 421 L 282 471 C 268 640 264 806 270 936 C 271 952 284 962 302 963 L 698 963 C 716 962 729 952 730 936 C 736 806 732 640 718 471 L 840 421 C 852 416 860 406 862 388 L 874 306 C 878 284 870 264 852 254 L 580 86 C 558 78 532 74 500 74 Z" /></clipPath>
+    <clipPath id="body"><path d="M 400 88 C 362 176 312 300 282 471 C 268 640 264 806 270 936 C 271 952 284 962 302 963 L 698 963 C 716 962 729 952 730 936 C 736 806 732 640 718 471 C 688 300 638 176 600 88 C 570 76 532 74 500 74 C 468 74 430 76 400 88 Z" /></clipPath>
+    <clipPath id="sleeve-l"><path d="M 400 88 L 148 254 C 130 264 122 284 126 306 L 138 388 C 140 406 148 416 160 421 L 282 471 C 312 300 362 176 400 88 Z" /></clipPath>
+    <clipPath id="sleeve-r"><path d="M 600 88 L 852 254 C 870 264 878 284 874 306 L 862 388 C 860 406 852 416 840 421 L 718 471 C 688 300 638 176 600 88 Z" /></clipPath>
+
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="69" result="noise" />
+      <feColorMatrix in="noise" type="saturate" values="0" result="mono" />
+      <feComponentTransfer in="mono" result="soft">
+        <feFuncA type="linear" slope="0.07" intercept="0" />
+      </feComponentTransfer>
+      <feComposite in="soft" in2="SourceGraphic" operator="in" />
+    </filter>
+
+    <linearGradient id="lightSweep" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.16" />
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.03" />
+      <stop offset="74%" stop-color="#000000" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.20" />
+    </linearGradient>
+
+    <radialGradient id="chestLight" cx="42%" cy="26%" r="58%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="softShade">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.30" />
+      <stop offset="60%" stop-color="#000000" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="crestSheen" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.34" />
+      <stop offset="46%" stop-color="#FFFFFF" stop-opacity="0" />
+      <stop offset="100%" stop-color="#5A4310" stop-opacity="0.30" />
+    </linearGradient>
+
+    <radialGradient id="vignette" cx="50%" cy="46%" r="72%">
+      <stop offset="52%" stop-color="#000000" stop-opacity="0" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.5" />
+    </radialGradient>
+    
+    <linearGradient id="coruhSheen" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+      <stop offset="50%" stop-color="#F5F5F4" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#DBDBD8" stop-opacity="0.7" />
+    </linearGradient>
+    <linearGradient id="bandSheen" x1="0" y1="0" x2="1" y2="0.15">
+      <stop offset="0%" stop-color="#A56C05" stop-opacity="0.4" />
+      <stop offset="42%" stop-color="#F6BB40" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#9C6604" stop-opacity="0.45" />
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(-528.6 63.4) scale(1.85)">
+
+  <g clip-path="url(#shirt)">
+    <rect width="1000" height="1000" fill="#FFFFFF" />
+    <rect width="1000" height="1000" fill="url(#coruhSheen)" />
+  </g>
+  <g clip-path="url(#body)">
+    
+      <g stroke="#0A0A0A" stroke-opacity="0.06" fill="none" stroke-width="7" stroke-linejoin="round">
+        <path d="M 300 700 L 300 556 L 338 556 L 338 596 L 376 596 L 376 542 L 414 542 L 414 596 L 452 596 L 452 556 L 490 556 L 490 700" />
+        <path d="M 316 900 L 316 812 L 352 812 L 352 844 L 388 844 L 388 800 L 424 800 L 424 900" />
+        <path d="M 508 500 L 508 330 L 546 330 L 546 372 L 584 372 L 584 316 L 622 316 L 622 500" />
+      </g>
+      <g stroke="#0A0A0A" stroke-opacity="0.055" fill="none" stroke-width="6" stroke-linecap="round">
+        <path d="M 268 240 C 372 296 348 402 438 456 C 528 510 492 614 388 656" />
+        <path d="M 306 224 C 416 284 392 392 482 448 C 572 504 534 616 428 660" />
+        <path d="M 344 210 C 458 276 434 386 524 442 C 614 498 576 620 466 666" />
+        <path d="M 286 928 C 380 896 434 922 528 890" />
+        <path d="M 292 958 C 390 926 440 952 534 920" />
+      </g>
+      <g fill="#0A0A0A" fill-opacity="0.035">
+        <path d="M 366 300 L 442 258 L 442 362 L 366 404 Z" />
+        <path d="M 296 736 L 384 696 L 384 802 L 296 842 Z" />
+      </g>
+    <rect x="566" y="50" width="26" height="950" fill="#0A0A0A" />
+    <rect x="598" y="50" width="68" height="950" fill="#E9A21C" />
+    <rect x="598" y="50" width="68" height="950" fill="url(#bandSheen)" />
+  </g>
+
+  <g clip-path="url(#shirt)" fill="none" stroke="#000000" stroke-opacity="0.14" stroke-width="2.5">
+    <path d="M 400 88 C 362 176 312 300 282 471 M 600 88 C 638 176 688 300 718 471" />
+    <path d="M 270 936 C 380 952 620 952 730 936" />
+  </g>
+
+  <g clip-path="url(#shirt)">
+    <path d="M 500 74 C 468 74 442 78 420 86 L 148 254 C 130 264 122 284 126 306 L 138 388 C 140 406 148 416 160 421 L 282 471 C 268 640 264 806 270 936 C 271 952 284 962 302 963 L 698 963 C 716 962 729 952 730 936 C 736 806 732 640 718 471 L 840 421 C 852 416 860 406 862 388 L 874 306 C 878 284 870 264 852 254 L 580 86 C 558 78 532 74 500 74 Z" fill="url(#chestLight)" />
+    <path d="M 500 74 C 468 74 442 78 420 86 L 148 254 C 130 264 122 284 126 306 L 138 388 C 140 406 148 416 160 421 L 282 471 C 268 640 264 806 270 936 C 271 952 284 962 302 963 L 698 963 C 716 962 729 952 730 936 C 736 806 732 640 718 471 L 840 421 C 852 416 860 406 862 388 L 874 306 C 878 284 870 264 852 254 L 580 86 C 558 78 532 74 500 74 Z" fill="url(#lightSweep)" />
+    <ellipse cx="500" cy="120" rx="250" ry="90" fill="url(#softShade)" />
+    <ellipse cx="224" cy="352" rx="140" ry="150" fill="url(#softShade)" />
+    <ellipse cx="776" cy="352" rx="140" ry="150" fill="url(#softShade)" />
+    <ellipse cx="500" cy="984" rx="240" ry="80" fill="url(#softShade)" />
+    <ellipse cx="300" cy="720" rx="86" ry="250" fill="url(#softShade)" opacity="0.7" />
+    <ellipse cx="700" cy="720" rx="86" ry="250" fill="url(#softShade)" opacity="0.7" />
+    <path d="M 500 74 C 468 74 442 78 420 86 L 148 254 C 130 264 122 284 126 306 L 138 388 C 140 406 148 416 160 421 L 282 471 C 268 640 264 806 270 936 C 271 952 284 962 302 963 L 698 963 C 716 962 729 952 730 936 C 736 806 732 640 718 471 L 840 421 C 852 416 860 406 862 388 L 874 306 C 878 284 870 264 852 254 L 580 86 C 558 78 532 74 500 74 Z" fill="#FFFFFF" filter="url(#grain)" opacity="0.45" />
+  </g>
+  <path d="M 500 74 C 468 74 442 78 420 86 L 148 254 C 130 264 122 284 126 306 L 138 388 C 140 406 148 416 160 421 L 282 471 C 268 640 264 806 270 936 C 271 952 284 962 302 963 L 698 963 C 716 962 729 952 730 936 C 736 806 732 640 718 471 L 840 421 C 852 416 860 406 862 388 L 874 306 C 878 284 870 264 852 254 L 580 86 C 558 78 532 74 500 74 Z" fill="none" stroke="#000000" stroke-opacity="0.30" stroke-width="2.4" />
+
+<path d="M 412 90 C 440 78 470 74 500 74 C 530 74 560 78 588 90 L 500 225 Z" fill="#121212" />
+<g clip-path="url(#shirt)"><path d="M 412 90 C 440 78 470 74 500 74 C 530 74 560 78 588 90 L 500 225 Z" fill="none" stroke="#0A0A0A" stroke-width="40" stroke-linejoin="round" /><path d="M 412 90 C 440 78 470 74 500 74 C 530 74 560 78 588 90 L 500 225 Z" fill="none" stroke="#E9A21C" stroke-width="26" stroke-linejoin="round" /><path d="M 412 90 C 440 78 470 74 500 74 C 530 74 560 78 588 90 L 500 225 Z" fill="none" stroke="#0A0A0A" stroke-width="14" stroke-linejoin="round" /><path d="M 412 90 C 440 78 470 74 500 74 C 530 74 560 78 588 90 L 500 225 Z" fill="none" stroke="#E9A21C" stroke-width="6" stroke-linejoin="round" /></g>
+<g clip-path="url(#sleeve-l)"><line x1="55.03" y1="360.69" x2="399.1" y2="501.7" stroke="#0A0A0A" stroke-width="26" /><line x1="63.37" y1="340.33" x2="407.45" y2="481.35" stroke="#E9A21C" stroke-width="11" /><line x1="70.2" y1="323.68" x2="414.27" y2="464.69" stroke="#0A0A0A" stroke-width="11" /><line x1="75.51" y1="310.72" x2="419.58" y2="451.74" stroke="#E9A21C" stroke-width="6" /></g><g clip-path="url(#sleeve-r)"><line x1="944.97" y1="360.69" x2="600.9" y2="501.7" stroke="#0A0A0A" stroke-width="26" /><line x1="936.63" y1="340.33" x2="592.55" y2="481.35" stroke="#E9A21C" stroke-width="11" /><line x1="929.8" y1="323.68" x2="585.73" y2="464.69" stroke="#0A0A0A" stroke-width="11" /><line x1="924.49" y1="310.72" x2="580.42" y2="451.74" stroke="#E9A21C" stroke-width="6" /></g>
+
+  <g transform="translate(620 322) scale(0.48)">
+    <path d="M -76 -96 L 76 -96 C 84 -96 90 -90 90 -82 L 90 26 C 90 76 40 108 0 122 C -40 108 -90 76 -90 26 L -90 -82 C -90 -90 -84 -96 -76 -96 Z" fill="#050505" transform="scale(1.10)" />
+    <path d="M -76 -96 L 76 -96 C 84 -96 90 -90 90 -82 L 90 26 C 90 76 40 108 0 122 C -40 108 -90 76 -90 26 L -90 -82 C -90 -90 -84 -96 -76 -96 Z" fill="#FFFFFF" transform="scale(1.045)" />
+    <path d="M -76 -96 L 76 -96 C 84 -96 90 -90 90 -82 L 90 26 C 90 76 40 108 0 122 C -40 108 -90 76 -90 26 L -90 -82 C -90 -90 -84 -96 -76 -96 Z" fill="#D4AF37" />
+    <path d="M -76 -96 L 76 -96 C 84 -96 90 -90 90 -82 L 90 26 C 90 76 40 108 0 122 C -40 108 -90 76 -90 26 L -90 -82 C -90 -90 -84 -96 -76 -96 Z" fill="url(#crestSheen)" />
+    <path d="M -90 -82 C -90 -90 -84 -96 -76 -96 L 76 -96 C 84 -96 90 -90 90 -82 L 90 -50 L -90 -50 Z" fill="#050505" />
+    <text x="0" y="-64" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="1" fill="#FFFFFF">BAYBURTSPOR</text>
+    <g fill="#050505">
+      <rect x="-42" y="-32" width="16" height="96" rx="3" />
+      <rect x="-47" y="-45" width="26" height="14" rx="3" />
+      <rect x="-38" y="-58" width="8" height="15" rx="2" />
+    </g>
+    <path d="M 34 -18 C 34 -34 16 -42 4 -33 C -8 -24 -2 -8 12 2 C 28 13 34 30 22 44 C 10 57 -8 52 -12 36" fill="none" stroke="#050505" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <g transform="translate(650 886) scale(0.46)">
+    <path d="M -54 -42 L 54 -42 C 60 -42 64 -38 64 -32 L 64 12 C 64 46 28 62 0 70 C -28 62 -64 46 -64 12 L -64 -32 C -64 -38 -60 -42 -54 -42 Z" fill="#050505" opacity="0.9" transform="scale(1.08)" />
+    <path d="M -54 -42 L 54 -42 C 60 -42 64 -38 64 -32 L 64 12 C 64 46 28 62 0 70 C -28 62 -64 46 -64 12 L -64 -32 C -64 -38 -60 -42 -54 -42 Z" fill="#D4AF37" />
+    <path d="M -54 -42 L 54 -42 C 60 -42 64 -38 64 -32 L 64 12 C 64 46 28 62 0 70 C -28 62 -64 46 -64 12 L -64 -32 C -64 -38 -60 -42 -54 -42 Z" fill="url(#crestSheen)" />
+    <text x="0" y="-22" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="1.4" fill="#0A0A0A" opacity="0.8">BAYBURT</text>
+    <path d="M -34 -14 L 34 -14" stroke="#0A0A0A" stroke-width="2" opacity="0.4" />
+    <text x="0" y="34" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="56" font-weight="700" fill="#0A0A0A">69</text>
+  </g>
+
+  <g transform="translate(500 132) scale(0.78)">
+    <rect x="-30" y="-20" width="60" height="40" rx="3" fill="#E30A17" />
+    <circle cx="-5" cy="0" r="13" fill="#FFFFFF" />
+    <circle cx="0.5" cy="0" r="10.4" fill="#E30A17" />
+    <g fill="#FFFFFF"><polygon points="14,-8 15.94,-2.67 21.61,-2.47 17.14,1.02 18.7,6.47 14,3.3 9.3,6.47 10.86,1.02 6.39,-2.47 12.06,-2.67" /></g>
+  </g>
+  </g>
+  <rect width="1000" height="1000" fill="url(#vignette)" />
+</svg>

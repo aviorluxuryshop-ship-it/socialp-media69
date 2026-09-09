@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --obsidian: #050505;
+    --graphite: #18181b;
+    --gold: #d4af37;
+    --gold-soft: #e4cb7c;
+    --paper: #ffffff;
+    --hairline: rgba(255, 255, 255, 0.1);
+    --header-height: 76px;
+  }
+
+  * {
+    border-color: var(--hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--obsidian);
+    color: #ffffff;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: rgba(212, 175, 55, 0.28);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #050505;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border: 3px solid #050505;
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Wordmark and section eyebrows share one tracking scale. */
+  .eyebrow {
+    @apply font-sans text-[11px] uppercase tracking-luxe text-gold-500;
+  }
+
+  .eyebrow-muted {
+    @apply font-sans text-[11px] uppercase tracking-luxe text-smoke;
+  }
+
+  .hairline {
+    @apply block h-px w-full bg-white/10;
+  }
+
+  .gold-text {
+    background-image: linear-gradient(100deg, #96771f 0%, #d4af37 30%, #f3e7be 50%, #d4af37 70%, #96771f 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Restrained link underline that grows from the left. */
+  .link-underline {
+    @apply relative inline-block;
+  }
+
+  .link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-gold-500 transition-transform duration-500 ease-luxe;
+  }
+
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    @apply scale-x-100;
+  }
+
+  .surface {
+    @apply border border-white/10 bg-graphite/40 backdrop-blur-sm;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Fine film grain: keeps large obsidian fields from banding. */
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+
+  .perspective-1200 {
+    perspective: 1200px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
