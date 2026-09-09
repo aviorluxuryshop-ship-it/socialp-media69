@@ -28,10 +28,14 @@ export function MenuProvider({ children }: { children: ReactNode }) {
   const close = useCallback(() => setIsOpen(false), [])
   const toggle = useCallback(() => setIsOpen((value) => !value), [])
 
-  // Any navigation closes the overlay.
-  useEffect(() => {
-    setIsOpen(false)
-  }, [pathname])
+  // Any navigation closes the overlay. Adjusting state during render is
+  // React's own pattern for reacting to a changed value, and it closes the
+  // menu in the same commit as the navigation rather than a frame later.
+  const [renderedPathname, setRenderedPathname] = useState(pathname)
+  if (pathname !== renderedPathname) {
+    setRenderedPathname(pathname)
+    if (isOpen) setIsOpen(false)
+  }
 
   // Escape closes it too, and the page underneath must not scroll.
   useEffect(() => {
