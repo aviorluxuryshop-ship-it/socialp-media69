@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 import './globals.css'
 
 import { Footer } from '@/components/ui/Footer'
+import { HideOnHome } from '@/components/ui/HideOnHome'
 import { Header } from '@/components/ui/Header'
 import { Providers } from '@/components/providers/Providers'
 import { contact, siteConfig } from '@/data/site'
@@ -112,7 +113,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           <Header />
           <main id="icerik">{children}</main>
-          <Footer />
+          <HideOnHome>
+            <Footer />
+          </HideOnHome>
         </Providers>
       </body>
     </html>

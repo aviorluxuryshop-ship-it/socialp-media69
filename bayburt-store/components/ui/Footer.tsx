@@ -16,8 +16,8 @@ export function Footer() {
               <span className="ml-2 font-sans text-[10px] tracking-luxe text-gold-500">Store</span>
             </p>
             <p className="mt-5 max-w-xs font-sans text-sm leading-relaxed text-ash">
-              {siteConfig.collection} — şehrin kalesinden, nehrinden ve çinisinden gelen üç forma.
-              Sezon başına 1.969 adet.
+              {siteConfig.collection} — şehrin kalesinden, nehrinden ve çinisinden gelen üç
+              forma.
             </p>
           </div>
 

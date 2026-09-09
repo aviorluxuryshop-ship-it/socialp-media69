@@ -89,7 +89,7 @@ export const products: Product[] = [
     sku: 'BS-MRS-69-HSR',
     gtin: '8690690690012',
     colorway: 'Altın Sarı / Obsidyen',
-    edition: 'Miras Koleksiyonu · Sınırlı Üretim',
+    edition: 'Miras Koleksiyonu',
     releaseYear: 2025,
     availability: 'InStock',
     palette: {
@@ -151,9 +151,9 @@ export const products: Product[] = [
           'Gövde yanları tek parça örülür. Sürtünme noktası yok, ısı atımı için mikro delikli bölge var.',
       },
       {
-        title: 'Sınırlı Üretim',
+        title: 'Şehirde Üretim',
         description:
-          'Kuruluş yılına saygı: sezon başına 1.969 adet. Her formanın etek etiketinde üretim numarası yer alır.',
+          'Kumaştan baskıya kadar tüm süreç Türkiye’de yürür. Tedarik zinciri kısa, sorumluluk açık.',
       },
     ],
     story: {
@@ -182,7 +182,7 @@ export const products: Product[] = [
     sku: 'BS-MRS-69-CRH',
     gtin: '8690690690029',
     colorway: 'Saf Beyaz / Altın',
-    edition: 'Miras Koleksiyonu · Sınırlı Üretim',
+    edition: 'Miras Koleksiyonu',
     releaseYear: 2025,
     availability: 'InStock',
     palette: {
@@ -244,9 +244,9 @@ export const products: Product[] = [
           'Optik parlatıcı kullanılmadan elde edilen saf beyaz; kamera altında mavi atmaz, sahada göz almaz.',
       },
       {
-        title: 'Sınırlı Üretim',
+        title: 'Şehirde Üretim',
         description:
-          'Kuruluş yılına saygı: sezon başına 1.969 adet. Her formanın etek etiketinde üretim numarası yer alır.',
+          'Kumaştan baskıya kadar tüm süreç Türkiye’de yürür. Tedarik zinciri kısa, sorumluluk açık.',
       },
     ],
     story: {
@@ -275,7 +275,7 @@ export const products: Product[] = [
     sku: 'BS-MRS-69-CNM',
     gtin: '8690690690036',
     colorway: 'Obsidyen / Altın',
-    edition: 'Miras Koleksiyonu · Sınırlı Üretim',
+    edition: 'Miras Koleksiyonu',
     releaseYear: 2025,
     availability: 'InStock',
     palette: {
@@ -337,9 +337,9 @@ export const products: Product[] = [
           'Gövdedeki ok yapısı çini panolarının simetri eksenini taşır; hareket ettikçe desen katman değiştirir.',
       },
       {
-        title: 'Sınırlı Üretim',
+        title: 'Şehirde Üretim',
         description:
-          'Kuruluş yılına saygı: sezon başına 1.969 adet. Her formanın etek etiketinde üretim numarası yer alır.',
+          'Kumaştan baskıya kadar tüm süreç Türkiye’de yürür. Tedarik zinciri kısa, sorumluluk açık.',
       },
     ],
     story: {
