@@ -1,13 +1,13 @@
 # Bayburt Store — Miras Koleksiyonu
 
 Bayburtspor Miras Koleksiyonu için üretim kalitesinde vitrin sitesi.
-Next.js 15 (App Router), TypeScript, Tailwind CSS ve Framer Motion.
+Next.js 16 (App Router, Turbopack), TypeScript, Tailwind CSS ve Framer Motion.
 
 ```bash
 npm install
 npm run dev      # http://localhost:3000
 npm run build    # üretim derlemesi
-npm run lint     # ESLint
+npm run lint     # ESLint (flat config; `next lint` Next 16’da kaldırıldı)
 npm run typecheck
 npm run assets   # forma görsellerini yeniden üret
 ```
