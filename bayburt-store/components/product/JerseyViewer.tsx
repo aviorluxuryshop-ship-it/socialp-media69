@@ -108,6 +108,7 @@ export function JerseyViewer({ product }: { product: Product }) {
         </span>
       </div>
 
+      {views.length > 1 ? (
       <div
         role="tablist"
         aria-label={`${product.displayName} görselleri`}
@@ -154,6 +155,7 @@ export function JerseyViewer({ product }: { product: Product }) {
           )
         })}
       </div>
+      ) : null}
     </div>
   )
 }

@@ -18,9 +18,9 @@ const BLUR_RADIUS = 5
 
 export interface JerseyMeshes {
   front: THREE.BufferGeometry
-  back: THREE.BufferGeometry
-  frontTexture: THREE.Texture
-  backTexture: THREE.Texture
+  texture: THREE.Texture
+  /** Width ÷ height of the kit artwork; the plane is built to match. */
+  aspect: number
   dispose: () => void
 }
 
@@ -34,13 +34,22 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   })
 }
 
+/**
+ * Draw the kit into a square working canvas, inset by a pixel so the
+ * outermost texels are guaranteed transparent and clamped edge sampling can
+ * never light the plane's border. The square stretch is undone by building
+ * the plane at the artwork's own aspect.
+ */
+const INSET = 12
+
 function drawToCanvas(image: HTMLImageElement, size: number): HTMLCanvasElement {
   const canvas = document.createElement('canvas')
   canvas.width = size
   canvas.height = size
   const context = canvas.getContext('2d')
   if (!context) throw new Error('2D bağlamı alınamadı')
-  context.drawImage(image, 0, 0, size, size)
+  const inset = Math.max(1, Math.round((INSET * size) / 1024))
+  context.drawImage(image, inset, inset, size - inset * 2, size - inset * 2)
   return canvas
 }
 
@@ -120,9 +129,9 @@ function buildPanel(
   field: Float32Array<ArrayBuffer>,
   depth: number,
   sign: number,
-  mirrorU: boolean,
+  aspect: number,
 ) {
-  const geometry = new THREE.PlaneGeometry(1, 1, SEGMENTS, SEGMENTS)
+  const geometry = new THREE.PlaneGeometry(aspect, 1, SEGMENTS, SEGMENTS)
   const position = geometry.attributes.position as THREE.BufferAttribute
   const uv = geometry.attributes.uv as THREE.BufferAttribute
 
@@ -139,51 +148,44 @@ function buildPanel(
 
     const z = sign * depth * inside * (1 + folds) * (0.55 + 0.45 * inside)
     position.setZ(i, z)
-
-    if (mirrorU) uv.setX(i, 1 - u)
   }
 
   position.needsUpdate = true
-  uv.needsUpdate = true
   geometry.computeVertexNormals()
   return geometry
 }
 
 /**
- * Build the front and back shells for one kit. `depth` is in plane units,
- * so 0.13 inflates the shirt to roughly a quarter of its width front-to-back.
+ * Build the inflated shell for one kit from its front view. `depth` is in
+ * plane units, so 0.13 pushes the chest forward by roughly an eighth of the
+ * shirt's width.
  */
-export async function buildJersey(
-  frontSrc: string,
-  backSrc: string,
-  depth = 0.13,
-): Promise<JerseyMeshes> {
-  const [frontImage, backImage] = await Promise.all([loadImage(frontSrc), loadImage(backSrc)])
+export async function buildJersey(src: string, depth = 0.13): Promise<JerseyMeshes> {
+  const image = await loadImage(src)
 
-  const fieldCanvas = drawToCanvas(frontImage, FIELD_SIZE)
-  const field = buildField(fieldCanvas)
+  const field = buildField(drawToCanvas(image, FIELD_SIZE))
 
-  const frontTexture = new THREE.Texture(drawToCanvas(frontImage, 1024))
-  const backTexture = new THREE.Texture(drawToCanvas(backImage, 1024))
-  for (const texture of [frontTexture, backTexture]) {
-    texture.colorSpace = THREE.SRGBColorSpace
-    texture.anisotropy = 8
-    texture.needsUpdate = true
-  }
+  const texture = new THREE.Texture(drawToCanvas(image, 1024))
+  texture.colorSpace = THREE.SRGBColorSpace
+  texture.anisotropy = 8
+  // No mipmaps. Where a fold turns the surface away from the camera the
+  // sampler reaches for a high mip level, which averages the kit's opaque
+  // pixels into the transparent margin and lights a hairline along the
+  // plane's edge under the alpha cutout.
+  texture.generateMipmaps = false
+  texture.minFilter = THREE.LinearFilter
+  texture.needsUpdate = true
 
-  const front = buildPanel(field, depth, 1, false)
-  const back = buildPanel(field, depth, -1, true)
+  const aspect = image.naturalWidth / image.naturalHeight
+  const front = buildPanel(field, depth, 1, aspect)
 
   return {
     front,
-    back,
-    frontTexture,
-    backTexture,
+    texture,
+    aspect,
     dispose: () => {
       front.dispose()
-      back.dispose()
-      frontTexture.dispose()
-      backTexture.dispose()
+      texture.dispose()
     },
   }
 }
