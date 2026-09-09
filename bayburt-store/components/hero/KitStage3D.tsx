@@ -11,6 +11,9 @@ import { cn, formatPrice } from '@/lib/utils'
 const FOV = 32
 const TAN_HALF_FOV = Math.tan((FOV / 2) * (Math.PI / 180))
 
+/** Kits sit a touch below centre, leaving the wordmark and CTA their bands. */
+const SCENE_DROP = -0.05
+
 interface KitStage3DProps {
   products: Product[]
   onUnsupported: () => void
@@ -23,6 +26,9 @@ interface KitNode {
   meshes: JerseyMeshes
   index: number
 }
+
+/** Widest kit aspect; the row is spaced off this so nothing collides. */
+const KIT_ASPECT = 0.91
 
 export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
   const router = useRouter()
@@ -109,9 +115,13 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       // on a phone are unreadable — so it shows one at a time and slides.
       const scale = portrait
         ? Math.min(visibleWidth * 0.96, visibleHeight * 0.62)
-        : Math.min(visibleHeight * 0.9, (visibleWidth * 0.94) / 2.78)
+        : Math.min(visibleHeight * 0.5, (visibleWidth * 0.94) / (3.05 * KIT_ASPECT))
 
-      layout = { scale, gap: scale * (portrait ? 1.15 : 0.89), portrait }
+      layout = {
+        scale,
+        gap: scale * KIT_ASPECT * (portrait ? 1.25 : 1.02),
+        portrait,
+      }
       setIsPortrait(portrait)
 
       camera.aspect = aspect
@@ -122,7 +132,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         node.group.position.x = layout.portrait
           ? (node.index - focusRef.current) * layout.gap
           : (node.index - 1) * layout.gap
-        node.group.position.y = 0
+        node.group.position.y = layout.scale * SCENE_DROP
         node.group.scale.setScalar(layout.scale)
       })
     }
@@ -130,41 +140,46 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     async function build() {
       for (const [index, product] of products.entries()) {
         const front = product.media.views[0]?.src
-        const back = product.media.views[1]?.src ?? front
-        if (!front || !back) continue
+        if (!front) continue
 
-        const meshes = await buildJersey(front, back)
+        const meshes = await buildJersey(front)
         if (disposed) {
           meshes.dispose()
           return
         }
 
-        // Opaque with an alpha cutout, deliberately: a transparent material
-        // puts both shells in the sorted pass, and since they share a centre
-        // the back print can win the sort and draw over the front.
-        const materials = [meshes.frontTexture, meshes.backTexture].map(
-          (map) =>
-            new THREE.MeshStandardMaterial({
-              map,
-              alphaTest: 0.42,
-              roughness: 0.82,
-              metalness: 0.06,
-              side: THREE.DoubleSide,
-            }),
-        )
+        // Opaque with an alpha cutout. A transparent material writes depth
+        // from its feathered edge fragments, which cuts a visible seam where
+        // one kit's plane passes in front of another.
+        //
+        // One inflated shell, not two. A rear shell sits far enough behind the
+        // front that perspective slides it out from under the silhouette at
+        // the off-centre positions, reading as a dark duplicate — and since
+        // the kits never turn more than a few degrees, nothing is ever seen
+        // from behind anyway.
+        const material = new THREE.MeshStandardMaterial({
+          map: meshes.texture,
+          alphaTest: 0.35,
+          roughness: 0.82,
+          metalness: 0.06,
+          side: THREE.DoubleSide,
+        })
+
+        const materials = [material]
 
         const group = new THREE.Group()
-        const frontMesh = new THREE.Mesh(meshes.front, materials[0])
-        const backMesh = new THREE.Mesh(meshes.back, materials[1])
-        frontMesh.renderOrder = 1
-        group.add(frontMesh)
-        group.add(backMesh)
+        group.add(new THREE.Mesh(meshes.front, material))
 
         // Flat proxy for hit-testing — cheaper and steadier than the shell.
+        // Hidden on the object, not the material: a material-level `visible`
+        // flag still let the proxy reach the renderer and draw a hairline
+        // along its own edge. The raycaster ignores visibility, so picking is
+        // unaffected.
         const picker = new THREE.Mesh(
-          new THREE.PlaneGeometry(0.78, 0.92),
-          new THREE.MeshBasicMaterial({ visible: false }),
+          new THREE.PlaneGeometry(meshes.aspect * 0.94, 0.98),
+          new THREE.MeshBasicMaterial(),
         )
+        picker.visible = false
         group.add(picker)
 
         scene.add(group)
@@ -288,7 +303,8 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
           ? (node.index - focusRef.current) * layout.gap
           : (node.index - 1) * layout.gap
         node.group.position.x += (baseX - node.group.position.x) * 0.09
-        node.group.position.y += (bob - node.group.position.y) * 0.08
+        const baseY = layout.scale * SCENE_DROP + bob
+        node.group.position.y += (baseY - node.group.position.y) * 0.08
 
         const currentScale = node.group.scale.x
         node.group.scale.setScalar(currentScale + (targetScale - currentScale) * 0.08)
@@ -297,8 +313,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         const lit = layout.portrait ? node.index === focusRef.current : active === null || isActive
         const targetTint = lit ? 1 : 0.34
         node.materials.forEach((material) => {
-          const tint = material.color.r + (targetTint - material.color.r) * 0.08
-          material.color.setScalar(tint)
+          material.color.setScalar(material.color.r + (targetTint - material.color.r) * 0.08)
         })
       })
 
@@ -367,29 +382,22 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
           >
             <p
               className={cn(
-                'font-display text-lg uppercase tracking-wider2 transition-colors duration-500 sm:text-xl',
+                'font-display text-xl uppercase tracking-wider2 transition-colors duration-500 sm:text-2xl',
                 activeIndex === index ? 'text-gold-300' : 'text-white',
               )}
             >
               {product.displayName}
             </p>
-            <p className="mt-1.5 font-sans text-[10px] uppercase tracking-wider2 text-ash">
+            <p className="mt-2 font-sans text-[10px] uppercase tracking-wider2 text-ash">
               {product.kind}
             </p>
-            <p
-              className={cn(
-                'mt-2 font-sans text-[11px] tracking-wider2 transition-colors duration-500',
-                activeIndex === index ? 'text-gold-500' : 'text-smoke',
-              )}
-            >
-              {formatPrice(product.price)}
-            </p>
+
           </div>
         ))}
       </div>
 
       {isPortrait ? (
-        <div className="absolute inset-x-0 bottom-16 flex justify-center gap-3">
+        <div className="absolute inset-x-0 bottom-28 flex justify-center">
           {products.map((product, index) => (
             <button
               key={product.slug}
@@ -400,11 +408,17 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
               }}
               aria-label={`${product.displayName} formasını göster`}
               aria-current={focusIndex === index}
-              className={cn(
-                'h-1.5 rounded-full transition-all duration-500 ease-luxe',
-                focusIndex === index ? 'w-7 bg-gold-500' : 'w-1.5 bg-white/25',
-              )}
-            />
+              // Generous padding: the bar is 6px tall, the target is not.
+              className="grid place-items-center px-2.5 py-4"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  'block h-1.5 rounded-full transition-all duration-500 ease-luxe',
+                  focusIndex === index ? 'w-7 bg-gold-500' : 'w-1.5 bg-white/25',
+                )}
+              />
+            </button>
           ))}
         </div>
       ) : null}

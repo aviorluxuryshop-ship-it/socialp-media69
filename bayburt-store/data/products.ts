@@ -12,7 +12,11 @@ export interface MediaAsset {
 }
 
 export interface ProductMedia {
-  /** Ordered viewer assets: front, back, detail. */
+  /**
+   * Viewer assets. Only the front is published — the back of each kit is
+   * deliberately not shown. Add more entries here and the viewer grows a
+   * thumbnail strip on its own.
+   */
   views: MediaAsset[]
   /**
    * Optional looping product film. Drop an .mp4 into /public/videos and set the
@@ -101,19 +105,9 @@ export const products: Product[] = [
     media: {
       views: [
         {
-          src: '/images/jerseys/hisar-front.svg',
-          alt: 'Hisar çubuklu formanın ön görünümü: altın sarı zemin üzerinde siyah dikey çubuklar ve siyah polo yaka.',
+          src: '/images/jerseys/hisar.png',
+          alt: 'Hisar çubuklu forma: altın sarı zemin üzerinde siyah dikey çubuklar, siyah polo yaka ve altın biyeler.',
           label: 'Ön',
-        },
-        {
-          src: '/images/jerseys/hisar-back.svg',
-          alt: 'Hisar çubuklu formanın arka görünümü: sırt numarası 69 ve Bayburt yazısı.',
-          label: 'Arka',
-        },
-        {
-          src: '/images/jerseys/hisar-detail.svg',
-          alt: 'Hisar formasının yaka ve arma detayı.',
-          label: 'Detay',
         },
       ],
     },
@@ -194,19 +188,9 @@ export const products: Product[] = [
     media: {
       views: [
         {
-          src: '/images/jerseys/coruh-front.svg',
-          alt: 'Çoruh beyaz formanın ön görünümü: beyaz zemin üzerinde merkezden geçen siyah ve altın dikey bant.',
+          src: '/images/jerseys/coruh.png',
+          alt: 'Çoruh beyaz forma: beyaz zemin üzerinde merkezden geçen siyah ve altın dikey bant, siyah–altın V yaka.',
           label: 'Ön',
-        },
-        {
-          src: '/images/jerseys/coruh-back.svg',
-          alt: 'Çoruh beyaz formanın arka görünümü: sırt numarası 69 ve Bayburt yazısı.',
-          label: 'Arka',
-        },
-        {
-          src: '/images/jerseys/coruh-detail.svg',
-          alt: 'Çoruh formasının V yaka ve arma detayı.',
-          label: 'Detay',
         },
       ],
     },
@@ -287,19 +271,9 @@ export const products: Product[] = [
     media: {
       views: [
         {
-          src: '/images/jerseys/cinimacin-front.svg',
-          alt: 'Çinimaçın siyah formanın ön görünümü: obsidyen zemin üzerinde ton sür ton çini motifleri ve altın V yaka.',
+          src: '/images/jerseys/cinimacin.png',
+          alt: 'Çinimaçın siyah forma: obsidyen zemin üzerinde ton sür ton çini motifleri ve altın V yaka.',
           label: 'Ön',
-        },
-        {
-          src: '/images/jerseys/cinimacin-back.svg',
-          alt: 'Çinimaçın siyah formanın arka görünümü: sırt numarası 69 ve Bayburt yazısı.',
-          label: 'Arka',
-        },
-        {
-          src: '/images/jerseys/cinimacin-detail.svg',
-          alt: 'Çinimaçın formasının çini motifi ve arma detayı.',
-          label: 'Detay',
         },
       ],
     },
