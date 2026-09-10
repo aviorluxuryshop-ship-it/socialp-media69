@@ -11,6 +11,26 @@
     --paper: #ffffff;
     --hairline: rgba(255, 255, 255, 0.1);
     --header-height: 76px;
+
+    /*
+     * The hero plate's own frame.
+     *
+     * The campaign artwork carries the wordmark at its head and the kit names
+     * at its foot, so cropping it to the window loses one end or the other on
+     * a wide, short screen. Instead the plate is laid out at its true
+     * proportion inside the space under the header, and everything that has to
+     * line up with it — the kits, the shop button — is positioned in that same
+     * frame.
+     */
+    --plate-ratio: 1.7758;
+    --plate-w: 100vw;
+    --plate-h: calc(var(--plate-w) / var(--plate-ratio));
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --plate-w: min(100vw, calc((100svh - var(--header-height)) * var(--plate-ratio)));
+    }
   }
 
   * {

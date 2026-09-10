@@ -41,12 +41,45 @@ const KIT_ASPECT = 0.91
  * kits stay on that ground at every window size.
  */
 const PLATE_ASPECT = 1600 / 901
-const PLATE_KIT_Y = 0.538
 const PLATE_KIT = [
-  { x: 0.276, height: 0.505 },
-  { x: 0.516, height: 0.465 },
-  { x: 0.764, height: 0.508 },
+  { x: 0.276, height: 0.512 },
+  { x: 0.516, height: 0.472 },
+  { x: 0.764, height: 0.515 },
 ]
+
+/**
+ * The band the kits are allowed to occupy, as fractions of the plate: below
+ * the tagline under the wordmark, above the painted kit names. Everything
+ * above — the sizes, the resting centre, the ceiling on the hover lift — is
+ * chosen so that a hovered kit still lands inside it.
+ */
+const PLATE_SAFE_TOP = 0.245
+const PLATE_SAFE_BOTTOM = 0.792
+
+/**
+ * Hover lift, kept deliberately small. The kit also steps toward the camera,
+ * which magnifies it again — at 6 units back a step of 0.18 is another 3% —
+ * so the two together stay inside the safe band and clear of the neighbours.
+ */
+const HOVER_SCALE = 1.03
+const HOVER_STEP = 0.18
+
+/**
+ * Portrait keeps this much room, in pixels, at each end of the stage: the
+ * wordmark above the kit, and below it the kit's name, its kind, the carousel
+ * dots and the shop button. The foot needs more than the head, so the band is
+ * off-centre and the kit is lifted to match — which on a small phone is the
+ * difference between a readable page and a kit sitting on its own name.
+ */
+const PORTRAIT_GUARD_TOP = 120
+const PORTRAIT_GUARD_FOOT = 206
+const CAMERA_Z = 6
+
+/** How much bigger a hovered kit reads: the lift, plus the step's perspective. */
+const HOVER_GROWTH = HOVER_SCALE * (CAMERA_Z / (CAMERA_Z - HOVER_STEP))
+
+/** Kits stand on the middle of the safe band. */
+const PLATE_KIT_Y = (PLATE_SAFE_TOP + PLATE_SAFE_BOTTOM) / 2
 
 /** Rim light per kit: gold for Hisar, daylight for Çoruh, warm gold for Çinimaçın. */
 const RIM_COLOURS = [0xffb422, 0xf2f6ff, 0xd4af37]
@@ -118,7 +151,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100)
-    camera.position.set(0, 0, 6)
+    camera.position.set(0, 0, CAMERA_Z)
 
     scene.add(new THREE.AmbientLight(0x5a5a68, 1.15))
 
@@ -140,6 +173,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       scale: 1,
       gap: 1,
       portrait: false,
+      portraitY: 0,
       slots: [] as { x: number; y: number; scale: number }[],
     }
 
@@ -156,22 +190,32 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const plateWidth = aspect > PLATE_ASPECT ? clientWidth : clientHeight * PLATE_ASPECT
       const plateHeight = aspect > PLATE_ASPECT ? clientWidth / PLATE_ASPECT : clientHeight
       const plateLeft = (clientWidth - plateWidth) / 2
-      // object-top on desktop, so the crop comes off the foot, not the head.
-      const plateTop = portrait ? (clientHeight - plateHeight) / 2 : 0
+      const plateTop = (clientHeight - plateHeight) / 2
+
+      // Nothing may grow out of the safe band, however the window is shaped:
+      // the ceiling is the band itself, less the room hover needs.
+      const maxScale =
+        ((PLATE_SAFE_BOTTOM - PLATE_SAFE_TOP) * plateHeight * worldPerPixel) / HOVER_GROWTH
 
       const slots = PLATE_KIT.map((kit) => ({
         x: (plateLeft + kit.x * plateWidth - clientWidth / 2) * worldPerPixel,
         y: (clientHeight / 2 - (plateTop + PLATE_KIT_Y * plateHeight)) * worldPerPixel,
-        scale: kit.height * plateHeight * worldPerPixel,
+        scale: Math.min(kit.height * plateHeight * worldPerPixel, maxScale),
       }))
 
       // Portrait crops the plate too hard to align to; it shows one kit at a
       // time and slides instead, so there it is one size for all three.
+      const bandHeight = Math.max(
+        clientHeight - PORTRAIT_GUARD_TOP - PORTRAIT_GUARD_FOOT,
+        clientHeight * 0.3,
+      )
       const scale = portrait
-        ? Math.min(visibleWidth * 0.96, visibleHeight * 0.62)
+        ? Math.min(visibleWidth * 0.86, bandHeight * worldPerPixel)
         : (slots[0]?.scale ?? 1)
+      const portraitY =
+        (clientHeight / 2 - (PORTRAIT_GUARD_TOP + bandHeight / 2)) * worldPerPixel
 
-      layout = { scale, gap: scale * KIT_ASPECT * 1.25, portrait, slots }
+      layout = { scale, gap: scale * KIT_ASPECT * 1.25, portrait, portraitY, slots }
       setIsPortrait(portrait)
 
       camera.aspect = aspect
@@ -183,7 +227,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         node.group.position.x = layout.portrait
           ? (node.index - focusRef.current) * layout.gap
           : (slot?.x ?? 0)
-        node.group.position.y = layout.portrait ? 0 : (slot?.y ?? 0)
+        node.group.position.y = layout.portrait ? layout.portraitY : (slot?.y ?? 0)
         node.group.scale.setScalar(layout.portrait ? layout.scale : (slot?.scale ?? layout.scale))
       })
     }
@@ -352,8 +396,8 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         // hover is small because the step forward and the region light behind
         // it carry most of the emphasis.
         const base = layout.portrait ? layout.scale : (layout.slots[node.index]?.scale ?? layout.scale)
-        const targetScale = base * (isFocused ? 1.04 : layout.portrait ? 0.82 : 1)
-        const targetZ = isFocused ? (layout.portrait ? 0.2 : 0.55) : 0
+        const targetScale = base * (isFocused ? HOVER_SCALE : layout.portrait ? 0.82 : 1)
+        const targetZ = isFocused ? (layout.portrait ? 0.2 : HOVER_STEP) : 0
 
         node.group.rotation.y += (targetRotation - node.group.rotation.y) * 0.06
         node.group.rotation.z += (sway * 0.06 - node.group.rotation.z) * 0.06
@@ -363,7 +407,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         const baseX = layout.portrait
           ? (node.index - focusRef.current) * layout.gap
           : (slot?.x ?? 0)
-        const baseY = (layout.portrait ? 0 : (slot?.y ?? 0)) + bob
+        const baseY = (layout.portrait ? layout.portraitY : (slot?.y ?? 0)) + bob
         node.group.position.x += (baseX - node.group.position.x) * 0.09
         node.group.position.y += (baseY - node.group.position.y) * 0.08
 

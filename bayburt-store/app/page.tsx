@@ -31,34 +31,60 @@ export default function HomePage() {
       aria-label="Forma seçimi"
       className="relative min-h-[100svh] overflow-hidden bg-obsidian"
     >
-      {/* Plate and stage share one box that starts below the fixed header, so
-          the navigation never lands on the wordmark painted into the banner. */}
-      <div className="absolute inset-x-0 bottom-0 top-[var(--header-height)]">
-        {/* Two plates, not one crop. The landscape banner is unreadable at
-            phone width, so portrait gets its own composition. */}
+      {/* Desktop only: the plate never fills a wide window on its own, so the
+          ground behind it is the same artwork, blurred back into the dark. */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
         <Image
-          src="/images/hero/plate-mobile.jpg"
+          src="/images/hero/plate-ground.jpg"
           alt=""
           fill
-          priority
           sizes="100vw"
-          className="object-cover object-center lg:hidden"
+          className="scale-110 object-cover blur-[3px]"
         />
-        <Image
-          src="/images/hero/plate.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          // Pinned to the top: a wide window crops the plate vertically, and
-          // centring it takes the BAYBURTSPOR line off the wordmark.
-          className="hidden object-cover object-top lg:block"
-        />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.45)_0%,transparent_30%,transparent_66%,rgba(5,5,5,0.72)_100%)] lg:bg-[linear-gradient(180deg,transparent_0%,transparent_72%,rgba(5,5,5,0.7)_100%)]"
-        />
-        <KitSelector products={products} />
+        <span className="absolute inset-0 bg-obsidian/72" />
+      </span>
+
+      {/* The stage frame: the whole space under the header on a phone, the
+          plate's own proportion on a desktop, so the wordmark painted at its
+          head and the kit names at its foot are always both in view. */}
+      <div className="absolute inset-x-0 bottom-0 top-[var(--header-height)] lg:inset-0 lg:flex lg:items-center lg:justify-center lg:pt-[var(--header-height)]">
+        <div className="relative h-full w-full lg:h-[var(--plate-h)] lg:w-[var(--plate-w)]">
+          {/* Two plates, not one crop. The landscape banner is unreadable at
+              phone width, so portrait gets its own composition. */}
+          <Image
+            src="/images/hero/plate-mobile.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center lg:hidden"
+          />
+          <Image
+            src="/images/hero/plate.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="hidden object-cover object-center lg:block"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.62)_0%,rgba(5,5,5,0.46)_20%,rgba(5,5,5,0.2)_34%,transparent_46%,transparent_64%,rgba(5,5,5,0.78)_100%)] lg:bg-none"
+          />
+          <KitSelector products={products} />
+
+          {/* Anchored to the plate, not to the window: on desktop it sits in
+              the strip under the painted kit names. */}
+          <div className="absolute inset-x-0 bottom-9 z-10 flex justify-center sm:bottom-11 lg:bottom-[3.4%]">
+            <Link
+              href="/koleksiyon"
+              className="group inline-flex items-center gap-3.5 border border-white/25 bg-obsidian/40 px-9 py-4 font-sans text-[11px] uppercase tracking-luxe text-white backdrop-blur-sm transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200 lg:py-3"
+            >
+              <ShoppingCart className="h-4 w-4" aria-hidden />
+              Alışveriş yap
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center lg:hidden">
@@ -76,15 +102,6 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div className="absolute inset-x-0 bottom-9 z-10 flex justify-center sm:bottom-11 lg:bottom-2">
-        <Link
-          href="/koleksiyon"
-          className="group inline-flex items-center gap-3.5 border border-white/25 bg-obsidian/40 px-9 py-4 lg:py-3 font-sans text-[11px] uppercase tracking-luxe text-white backdrop-blur-sm transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200"
-        >
-          <ShoppingCart className="h-4 w-4" aria-hidden />
-          Alışveriş yap
-        </Link>
-      </div>
 
 
       {/* The plate carries the wordmark as artwork on desktop; this is the
