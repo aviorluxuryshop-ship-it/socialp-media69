@@ -78,7 +78,7 @@ export function FullMenu() {
                       </span>
                       <span
                         className={cn(
-                          'font-display text-[clamp(1.6rem,4vw,2.6rem)] font-medium uppercase leading-[1.1] tracking-[0.08em] transition-colors duration-500 ease-luxe',
+                          'font-display text-[clamp(1.25rem,2.6vw,1.8rem)] font-medium uppercase leading-[1.15] tracking-[0.1em] transition-colors duration-500 ease-luxe',
                           isActive ? 'text-gold-400' : 'text-white group-hover:text-gold-300',
                         )}
                       >

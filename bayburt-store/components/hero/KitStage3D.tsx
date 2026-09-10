@@ -34,16 +34,18 @@ const KIT_ASPECT = 0.91
  * media-source/banner-placement.jpg — the same frame with the kits painted in
  * — matched against the cut-out photographs, so each kit lands on its own
  * ground: over its label, clear of its neighbours, the middle one set very
- * slightly back the way the artwork stages it. Desktop derives the layout
- * from the plate's cover box rather than from the viewport, so the kits stay
- * on that ground at every window size.
+ * slightly back the way the artwork stages it. They are then set down a
+ * little and taken in from the reference size, so the wordmark above them
+ * stays clear and no shoulder reaches its neighbour. Desktop derives the
+ * layout from the plate's cover box rather than from the viewport, so the
+ * kits stay on that ground at every window size.
  */
 const PLATE_ASPECT = 1600 / 901
-const PLATE_KIT_Y = 0.511
+const PLATE_KIT_Y = 0.538
 const PLATE_KIT = [
-  { x: 0.276, height: 0.570 },
-  { x: 0.516, height: 0.525 },
-  { x: 0.764, height: 0.573 },
+  { x: 0.276, height: 0.505 },
+  { x: 0.516, height: 0.465 },
+  { x: 0.764, height: 0.508 },
 ]
 
 /** Rim light per kit: gold for Hisar, daylight for Çoruh, warm gold for Çinimaçın. */
@@ -154,7 +156,8 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const plateWidth = aspect > PLATE_ASPECT ? clientWidth : clientHeight * PLATE_ASPECT
       const plateHeight = aspect > PLATE_ASPECT ? clientWidth / PLATE_ASPECT : clientHeight
       const plateLeft = (clientWidth - plateWidth) / 2
-      const plateTop = (clientHeight - plateHeight) / 2
+      // object-top on desktop, so the crop comes off the foot, not the head.
+      const plateTop = portrait ? (clientHeight - plateHeight) / 2 : 0
 
       const slots = PLATE_KIT.map((kit) => ({
         x: (plateLeft + kit.x * plateWidth - clientWidth / 2) * worldPerPixel,

@@ -33,7 +33,8 @@ export const siteConfig = {
     'futbol forması',
   ],
   founded: 1969,
-  cityCode: '69',
+  /** Bayburt'un plaka numarası. */
+  plate: '69',
   city: 'Bayburt',
   ogImage: '/opengraph-image',
 } as const
@@ -41,7 +42,6 @@ export const siteConfig = {
 export const navigation: NavItem[] = [
   { label: 'Anasayfa', href: '/', description: 'Miras üçlemesi' },
   { label: 'Koleksiyon', href: '/koleksiyon', description: 'Hikâyenin kaynağı' },
-  { label: 'Hizmetlerimiz', href: '/hizmetlerimiz', description: 'Ne yapıyoruz' },
   { label: 'Hakkımızda', href: '/hakkimizda', description: 'Bayburtspor mirası' },
   { label: 'İletişim', href: '/iletisim', description: 'Mağaza ve kanallar' },
 ]
