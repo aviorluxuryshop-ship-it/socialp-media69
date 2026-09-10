@@ -55,7 +55,18 @@ export function Header() {
             : 'border-b border-transparent bg-transparent',
         )}
       >
-        <div className="container flex h-[var(--header-height)] items-center justify-between gap-6">
+        {/* The hero's head is near-white artwork, and white type on it is
+            unreadable. This wash sits under the bar until the scrolled state
+            takes over, so the links always have ground of their own. */}
+        <span
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--header-height)+2.5rem)] bg-[linear-gradient(180deg,rgba(5,5,5,0.82)_0%,rgba(5,5,5,0.52)_55%,transparent_100%)] transition-opacity duration-500 ease-luxe',
+            isScrolled && !isOpen ? 'opacity-0' : 'opacity-100',
+          )}
+        />
+
+        <div className="container relative flex h-[var(--header-height)] items-center justify-between gap-6">
           <Link
             href="/"
             className="group flex items-baseline gap-2.5 whitespace-nowrap"
