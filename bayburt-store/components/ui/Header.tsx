@@ -77,10 +77,10 @@ export function Header() {
               Koleksiyon
             </Link>
             <Link
-              href="/forma/hisar"
+              href="/hizmetlerimiz"
               className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-smoke transition-colors duration-300 hover:text-white"
             >
-              Formalar
+              Hizmetlerimiz
             </Link>
             <span className="h-4 w-px bg-white/15" aria-hidden />
             <span className="font-sans text-[11px] uppercase tracking-wider2 text-gold-500">

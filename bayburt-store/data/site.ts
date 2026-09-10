@@ -41,7 +41,7 @@ export const siteConfig = {
 export const navigation: NavItem[] = [
   { label: 'Anasayfa', href: '/', description: 'Miras üçlemesi' },
   { label: 'Koleksiyon', href: '/koleksiyon', description: 'Hikâyenin kaynağı' },
-  { label: 'Formalar', href: '/forma/hisar', description: 'Ürün detayları' },
+  { label: 'Hizmetlerimiz', href: '/hizmetlerimiz', description: 'Ne yapıyoruz' },
   { label: 'Hakkımızda', href: '/hakkimizda', description: 'Bayburtspor mirası' },
   { label: 'İletişim', href: '/iletisim', description: 'Mağaza ve kanallar' },
 ]

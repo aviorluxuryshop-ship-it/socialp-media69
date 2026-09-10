@@ -11,9 +11,6 @@ import { cn, formatPrice } from '@/lib/utils'
 const FOV = 32
 const TAN_HALF_FOV = Math.tan((FOV / 2) * (Math.PI / 180))
 
-/** Kits sit a touch below centre, leaving the wordmark and CTA their bands. */
-const SCENE_DROP = -0.05
-
 interface KitStage3DProps {
   products: Product[]
   onUnsupported: () => void
@@ -27,8 +24,24 @@ interface KitNode {
   index: number
 }
 
-/** Widest kit aspect; the row is spaced off this so nothing collides. */
+/** Widest kit aspect; the portrait carousel is spaced off this. */
 const KIT_ASPECT = 0.91
+
+/**
+ * Where the kits sit inside the campaign banner, as fractions of the plate.
+ * The live kits are laid over the ones baked into it, so on desktop the
+ * layout is derived from the plate's cover box rather than from the viewport.
+ */
+const PLATE_ASPECT = 1672 / 941
+const PLATE_KIT_X = [0.256, 0.501, 0.745]
+const PLATE_KIT_Y = 0.512
+const PLATE_KIT_H = 0.60
+
+/** Rim light per kit: gold for Hisar, daylight for Çoruh, warm gold for Çinimaçın. */
+const RIM_COLOURS = [0xffb422, 0xf2f6ff, 0xd4af37]
+
+/** Matching wash laid over the scene while a kit is selected. */
+const WASH = ['rgba(233,162,28,0.20)', 'rgba(226,234,255,0.17)', 'rgba(212,175,55,0.15)']
 
 export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
   const router = useRouter()
@@ -94,6 +107,8 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     key.position.set(2.4, 3.2, 4.2)
     scene.add(key)
 
+    const rimBase = new THREE.Color(0xd4af37)
+    const rimTarget = new THREE.Color(0xd4af37)
     const rim = new THREE.DirectionalLight(0xd4af37, 1.9)
     rim.position.set(-3.4, 1.4, -2.6)
     scene.add(rim)
@@ -102,7 +117,12 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     fill.position.set(-2.2, -1.6, 2.8)
     scene.add(fill)
 
-    let layout = { scale: 1, gap: 1, portrait: false }
+    let layout = {
+      scale: 1,
+      gap: 1,
+      portrait: false,
+      slots: [] as { x: number; y: number }[],
+    }
 
     function measure() {
       const { clientWidth, clientHeight } = container!
@@ -110,18 +130,27 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const visibleHeight = 2 * camera.position.z * TAN_HALF_FOV
       const visibleWidth = visibleHeight * aspect
       const portrait = aspect < 0.95
+      const worldPerPixel = visibleHeight / Math.max(clientHeight, 1)
 
-      // Landscape fits all three across. Portrait cannot — three kits stacked
-      // on a phone are unreadable — so it shows one at a time and slides.
+      // The plate is object-cover: work out its rendered box, then stand each
+      // kit on the one painted into it.
+      const plateWidth = aspect > PLATE_ASPECT ? clientWidth : clientHeight * PLATE_ASPECT
+      const plateHeight = aspect > PLATE_ASPECT ? clientWidth / PLATE_ASPECT : clientHeight
+      const plateLeft = (clientWidth - plateWidth) / 2
+      const plateTop = (clientHeight - plateHeight) / 2
+
+      // Portrait crops the plate too hard to align to; it shows one kit at a
+      // time and slides instead.
       const scale = portrait
         ? Math.min(visibleWidth * 0.96, visibleHeight * 0.62)
-        : Math.min(visibleHeight * 0.5, (visibleWidth * 0.94) / (3.05 * KIT_ASPECT))
+        : PLATE_KIT_H * plateHeight * worldPerPixel
 
-      layout = {
-        scale,
-        gap: scale * KIT_ASPECT * (portrait ? 1.25 : 1.02),
-        portrait,
-      }
+      const slots = PLATE_KIT_X.map((fraction) => ({
+        x: (plateLeft + fraction * plateWidth - clientWidth / 2) * worldPerPixel,
+        y: (clientHeight / 2 - (plateTop + PLATE_KIT_Y * plateHeight)) * worldPerPixel,
+      }))
+
+      layout = { scale, gap: scale * KIT_ASPECT * 1.25, portrait, slots }
       setIsPortrait(portrait)
 
       camera.aspect = aspect
@@ -129,10 +158,11 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       renderer.setSize(clientWidth, clientHeight, false)
 
       nodes.forEach((node) => {
+        const slot = layout.slots[node.index]
         node.group.position.x = layout.portrait
           ? (node.index - focusRef.current) * layout.gap
-          : (node.index - 1) * layout.gap
-        node.group.position.y = layout.scale * SCENE_DROP
+          : (slot?.x ?? 0)
+        node.group.position.y = layout.portrait ? 0 : (slot?.y ?? 0)
         node.group.scale.setScalar(layout.scale)
       })
     }
@@ -236,7 +266,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         return
       }
       const slug = products[index]?.slug
-      if (slug) router.push(`/forma/${slug}`)
+      if (slug) router.push(`/koleksiyon/${slug}`)
     }
 
     let swipeStartX: number | null = null
@@ -284,6 +314,11 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       }
 
       const active = activeRef.current
+      const highlight = layout.portrait ? focusRef.current : active
+      rimTarget.set(highlight === null ? rimBase.getHex() : RIM_COLOURS[highlight] ?? rimBase.getHex())
+      rim.color.lerp(rimTarget, 0.06)
+      rim.intensity += ((highlight === null ? 1.9 : 3.1) - rim.intensity) * 0.06
+      key.intensity += ((highlight === null ? 2.4 : 3.0) - key.intensity) * 0.06
 
       nodes.forEach((node) => {
         const isActive = node.index === active
@@ -299,11 +334,12 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         node.group.rotation.z += (sway * 0.06 - node.group.rotation.z) * 0.06
         node.group.position.z += (targetZ - node.group.position.z) * 0.07
 
+        const slot = layout.slots[node.index]
         const baseX = layout.portrait
           ? (node.index - focusRef.current) * layout.gap
-          : (node.index - 1) * layout.gap
+          : (slot?.x ?? 0)
+        const baseY = (layout.portrait ? 0 : (slot?.y ?? 0)) + bob
         node.group.position.x += (baseX - node.group.position.x) * 0.09
-        const baseY = layout.scale * SCENE_DROP + bob
         node.group.position.y += (baseY - node.group.position.y) * 0.08
 
         const currentScale = node.group.scale.x
@@ -363,6 +399,22 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     <div ref={containerRef} className="absolute inset-0 cursor-pointer">
       <canvas ref={canvasRef} className="block h-full w-full" aria-hidden />
 
+      {/* The stage answers the selection, not just the kit: the chosen kit's
+          own colour washes across the scene. */}
+      {products.map((product, index) => (
+        <span
+          key={`${product.slug}-wash`}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 mix-blend-screen transition-opacity duration-[900ms] ease-luxe"
+          style={{
+            opacity: (isPortrait ? focusIndex : activeIndex) === index ? 1 : 0,
+            background: `radial-gradient(48% 46% at ${
+              isPortrait ? 50 : [26, 50, 74][index]
+            }% 50%, ${WASH[index]}, transparent 72%)`,
+          }}
+        />
+      ))}
+
       <div
         className={cn(
           'pointer-events-none absolute inset-0 transition-opacity duration-1000 ease-luxe',
@@ -377,6 +429,8 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
             }}
             className={cn(
               'absolute left-0 top-0 w-52 text-center transition-opacity duration-500 will-change-transform',
+              // The campaign plate already carries the names on desktop.
+              !isPortrait && 'opacity-0',
               isPortrait && focusIndex !== index && 'opacity-0',
             )}
           >
@@ -427,7 +481,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       <ul className="sr-only">
         {products.map((product) => (
           <li key={product.slug}>
-            <a href={`/forma/${product.slug}`}>
+            <a href={`/koleksiyon/${product.slug}`}>
               {product.displayName} — {product.kind}, {formatPrice(product.price)}
             </a>
           </li>

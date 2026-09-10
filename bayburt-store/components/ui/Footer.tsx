@@ -43,7 +43,7 @@ export function Footer() {
               {products.map((product) => (
                 <li key={product.slug}>
                   <Link
-                    href={`/forma/${product.slug}`}
+                    href={`/koleksiyon/${product.slug}`}
                     className="link-underline font-sans text-sm text-smoke transition-colors duration-300 hover:text-white"
                   >
                     {product.displayName}

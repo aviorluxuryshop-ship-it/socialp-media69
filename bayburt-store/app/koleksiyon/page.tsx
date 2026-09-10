@@ -105,7 +105,7 @@ export default function CollectionPage() {
             </Reveal>
             <Reveal delay={0.14} className="mt-10">
               <Link
-                href="/forma/hisar"
+                href="/koleksiyon/hisar"
                 className="group inline-flex items-center gap-3 border border-gold-600/60 bg-gold-500/5 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-gold-300 transition-colors duration-500 ease-luxe hover:bg-gold-500/10 hover:text-gold-100"
               >
                 Alışverişe başla
