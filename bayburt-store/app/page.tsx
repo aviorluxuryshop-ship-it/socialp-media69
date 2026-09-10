@@ -75,7 +75,7 @@ export default function HomePage() {
 
           {/* Anchored to the plate, not to the window: on desktop it sits in
               the strip under the painted kit names. */}
-          <div className="absolute inset-x-0 bottom-9 z-10 flex justify-center sm:bottom-11 lg:bottom-[3.4%]">
+          <div className="absolute inset-x-0 bottom-7 z-10 flex justify-center sm:bottom-9 lg:bottom-[3.4%]">
             <Link
               href="/koleksiyon"
               className="group inline-flex items-center gap-3.5 border border-white/25 bg-obsidian/40 px-9 py-4 font-sans text-[11px] uppercase tracking-luxe text-white backdrop-blur-sm transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200 lg:py-3"
@@ -88,16 +88,16 @@ export default function HomePage() {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center lg:hidden">
-        <p className="font-sans text-[10px] uppercase tracking-luxe text-smoke sm:text-[11px]">
+        <p className="font-sans text-[10px] uppercase tracking-luxe text-white/85 [text-shadow:0_1px_14px_rgba(5,5,5,0.95)] sm:text-[11px]">
           Bayburtspor
         </p>
-        <h1 className="mt-2.5 font-display text-[clamp(2.5rem,11vw,4rem)] font-semibold uppercase leading-[0.94] tracking-[0.07em]">
+        <h1 className="mt-2.5 font-display text-[clamp(2.5rem,11vw,4rem)] font-semibold uppercase leading-[0.94] tracking-[0.07em] [text-shadow:0_2px_22px_rgba(5,5,5,0.95)]">
           <span className="gold-text">Miras</span>
-          <span className="mt-2 block font-sans text-[clamp(0.6rem,2.4vw,0.7rem)] font-normal tracking-luxe text-smoke">
+          <span className="mt-2 block font-sans text-[clamp(0.6rem,2.4vw,0.7rem)] font-normal tracking-luxe text-white/85">
             Koleksiyonu
           </span>
         </h1>
-        <p className="mt-4 font-sans text-[9px] uppercase tracking-luxe text-ash sm:text-[10px]">
+        <p className="mt-4 font-sans text-[9px] uppercase tracking-luxe text-white/70 [text-shadow:0_1px_14px_rgba(5,5,5,0.95)] sm:text-[10px]">
           {siteConfig.tagline}
         </p>
       </div>
