@@ -1,10 +1,10 @@
 /**
  * Bayburt Store — source media preparation.
  *
- * Takes the supplied product shots and campaign banner and turns them into
- * what the site needs: kits cut out of their white studio background with
- * anti-aliased edges, and a hero plate whose centre is soft so the kits read
- * against it while the castle and tile motif stay sharp at the edges.
+ * Takes the supplied product shots and the kit-free campaign backdrop and
+ * turns them into what the site needs: kits cut out of their white studio
+ * background with anti-aliased edges, and the two hero plates — the
+ * landscape backdrop itself, and a portrait composition built from it.
  *
  *   npm run media -- <kaynak-klasörü>
  */
@@ -199,47 +199,109 @@ async function cutOutKit(slug, file) {
 }
 
 /**
- * Hero plate: the banner with its centre softened, and the castle and tile
- * motif restored sharp at the edges. The kits are drawn live on top, so the
- * artwork baked into the middle of the banner is deliberately blurred away.
+ * The backdrop has a shop button painted into its foot, and the page draws a
+ * real one of its own — two buttons, one of them dead. This lifts the painted
+ * one out.
+ *
+ * The ground under it is flat obsidian with a slow vertical fall, so each row
+ * is refilled by blending the colour just left of the box into the colour just
+ * right of it, and the seam is feathered back into the original.
+ */
+const SHOP_BUTTON = { left: 0.4019, top: 0.8779, right: 0.5975, bottom: 0.9578 }
+const FEATHER = 7
+
+async function eraseShopButton(source) {
+  const { data, info } = await sharp(source).removeAlpha().raw().toBuffer({ resolveWithObject: true })
+  const { width, height, channels } = info
+
+  const x0 = Math.round(SHOP_BUTTON.left * width)
+  const x1 = Math.round(SHOP_BUTTON.right * width)
+  const y0 = Math.round(SHOP_BUTTON.top * height)
+  const y1 = Math.round(SHOP_BUTTON.bottom * height)
+  const SAMPLE = 20
+
+  const median = (values) => {
+    values.sort((a, b) => a - b)
+    return values[values.length >> 1] ?? 0
+  }
+
+  const sample = (y, from) => {
+    const channelValues = [[], [], []]
+    for (let x = from; x < from + SAMPLE; x += 1) {
+      const i = (y * width + Math.min(Math.max(x, 0), width - 1)) * channels
+      for (let c = 0; c < 3; c += 1) channelValues[c].push(data[i + c])
+    }
+    return channelValues.map(median)
+  }
+
+  for (let y = y0; y <= y1; y += 1) {
+    const left = sample(y, x0 - SAMPLE - 2)
+    const right = sample(y, x1 + 3)
+    const edgeY = Math.min(y - y0, y1 - y, FEATHER) / FEATHER
+
+    for (let x = x0; x <= x1; x += 1) {
+      const t = (x - x0) / Math.max(x1 - x0, 1)
+      const edgeX = Math.min(x - x0, x1 - x, FEATHER) / FEATHER
+      const blend = Math.min(edgeX, edgeY)
+      const i = (y * width + x) * channels
+      for (let c = 0; c < 3; c += 1) {
+        const fill = left[c] + (right[c] - left[c]) * t
+        data[i + c] = Math.round(data[i + c] + (fill - data[i + c]) * blend)
+      }
+    }
+  }
+
+  return sharp(data, { raw: { width, height, channels } }).jpeg({ quality: 96 }).toBuffer()
+}
+
+/**
+ * Hero plate: the kit-free backdrop, shipped whole.
+ *
+ * media-source/banner.jpg is the campaign artwork with no kits in it — the
+ * castle, the valley, the river, the city and the patterned right edge, and
+ * nothing standing in front of them. The three kits are drawn live over it,
+ * so there is nothing here to cut out or paint over.
+ *
+ * media-source/banner-placement.jpg is the same frame with the kits painted
+ * in. It is the placement reference the live layout is calibrated against
+ * and is never used as a background — nothing reads it at build time.
  */
 async function buildHeroPlate(file) {
   const source = join(SOURCE, file)
   const meta = await sharp(source).metadata()
-  const width = meta.width ?? 1672
-  const height = meta.height ?? 941
+  const width = meta.width ?? 1600
+  const height = meta.height ?? 901
 
-  // The centre of the banner has kits, a wordmark and labels baked into it,
-  // all of which the live page draws itself. Rather than blurring them into
-  // recognisable ghosts, the centre is rebuilt from a clean vertical strip of
-  // the valley — the one part of the frame no artwork sits on.
-  // The banner ships as-is. Reconstructing the valley behind the kits painted
-  // into it was tried and abandoned: horizontal fill streaks, and blurring
-  // leaves ghosts. The live kits are drawn over the baked ones instead — the
-  // same photographs, so they cover. Drop a kit-free backdrop in as
-  // media-source/banner.jpg and nothing else has to change.
-  const plate = sharp(source)
+  const cleaned = await eraseShopButton(source)
+  const plate = sharp(cleaned)
 
   await plate.clone().jpeg({ quality: 84, mozjpeg: true }).toFile(join(HERO_DIR, 'plate.jpg'))
   await plate.clone().webp({ quality: 80 }).toFile(join(HERO_DIR, 'plate.webp'))
   console.log(`hero    plate ${width}x${height}`)
 
-  await buildMobilePlate(source, width, height)
+  await buildMobilePlate(cleaned, width, height)
 }
 
 /**
  * Portrait plate.
  *
- * The landscape banner crops to nothing usable on a phone — the kits baked
- * across its middle fill the frame and its typesetting is unreadable at that
- * width. So portrait is composed instead: the castle down one edge, the tile
- * motif down the other, both zoomed to their own proportions, and the site's
- * obsidian ground between them for the kit to stand on.
+ * The landscape backdrop crops to nothing usable on a phone — at that width a
+ * cover crop keeps about a third of the frame and throws the valley away. So
+ * portrait is composed from the same artwork instead: the valley, the river
+ * and the mountains across the upper half, the castle down one edge, the tile
+ * motif down the other, and the site's obsidian ground beneath for the kit to
+ * stand on.
+ *
+ * Every crop stops short of the backdrop's baked typesetting — the wordmark
+ * at the top, the kit names and the credit line at the foot — because the
+ * page sets all of that live.
  */
 async function buildMobilePlate(source, width, height) {
   const W = 900
   const H = 1600
   const EDGE = 300
+  const SCENE_H = 580
+  const SCENE_TOP = 150
 
   const ground = Buffer.from(
     `<svg width="${W}" height="${H}"><defs>` +
@@ -261,11 +323,65 @@ async function buildMobilePlate(source, width, height) {
         `</linearGradient></defs><rect width="${EDGE}" height="${H}" fill="url(#f)"/></svg>`,
     )
 
-  // The castle occupies the banner's left quarter; the tile motif its right.
+  // The columns are cropped at full height so the side copy keeps its size and
+  // stays whole; this washes their foot out before the backdrop's credit line
+  // can be dragged into frame as half a word.
+  const footFade = Buffer.from(
+    `<svg width="${EDGE}" height="${H}"><defs><linearGradient id="b" x1="0" x2="0" y1="0" y2="1">` +
+      '<stop offset="0%" stop-color="#fff" stop-opacity="1"/>' +
+      '<stop offset="60%" stop-color="#fff" stop-opacity="1"/>' +
+      '<stop offset="76%" stop-color="#fff" stop-opacity="0.16"/>' +
+      '<stop offset="85%" stop-color="#fff" stop-opacity="0"/>' +
+      `</linearGradient></defs><rect width="${EDGE}" height="${H}" fill="url(#b)"/></svg>`,
+  )
+
+  // The valley: wide enough to keep the river and the town, and cropped clear
+  // of the backdrop's own typesetting — below the wordmark, above the names.
+  const scene = await sharp(source)
+    .extract({
+      left: Math.round(width * 0.24),
+      top: Math.round(height * 0.33),
+      width: Math.round(width * 0.52),
+      height: Math.round(height * 0.45),
+    })
+    .resize(W, SCENE_H, { fit: 'cover', position: 'centre' })
+    // Feathered on all four sides. A hard-edged band reads as a rectangle
+    // pasted over the ground, and its edge cuts across the side copy.
+    .composite([
+      {
+        input: Buffer.from(
+          `<svg width="${W}" height="${SCENE_H}"><defs><linearGradient id="s" x1="0" x2="0" y1="0" y2="1">` +
+            '<stop offset="0%" stop-color="#fff" stop-opacity="0"/>' +
+            '<stop offset="22%" stop-color="#fff" stop-opacity="0.6"/>' +
+            '<stop offset="60%" stop-color="#fff" stop-opacity="0.6"/>' +
+            '<stop offset="100%" stop-color="#fff" stop-opacity="0"/>' +
+            `</linearGradient></defs><rect width="${W}" height="${SCENE_H}" fill="url(#s)"/></svg>`,
+        ),
+        blend: 'dest-in',
+      },
+      {
+        input: Buffer.from(
+          `<svg width="${W}" height="${SCENE_H}"><defs><linearGradient id="h" x1="0" x2="1" y1="0" y2="0">` +
+            '<stop offset="0%" stop-color="#fff" stop-opacity="0"/>' +
+            '<stop offset="26%" stop-color="#fff" stop-opacity="1"/>' +
+            '<stop offset="74%" stop-color="#fff" stop-opacity="1"/>' +
+            '<stop offset="100%" stop-color="#fff" stop-opacity="0"/>' +
+            `</linearGradient></defs><rect width="${W}" height="${SCENE_H}" fill="url(#h)"/></svg>`,
+        ),
+        blend: 'dest-in',
+      },
+    ])
+    .png()
+    .toBuffer()
+
+  // The castle occupies the backdrop's left quarter; the tile motif its right.
   const castle = await sharp(source)
     .extract({ left: 0, top: 0, width: Math.round(width * 0.25), height })
     .resize(EDGE, H, { fit: 'cover', position: 'left' })
-    .composite([{ input: fade('left'), blend: 'dest-in' }])
+    .composite([
+      { input: fade('left'), blend: 'dest-in' },
+      { input: footFade, blend: 'dest-in' },
+    ])
     .png()
     .toBuffer()
 
@@ -277,20 +393,26 @@ async function buildMobilePlate(source, width, height) {
       height,
     })
     .resize(EDGE, H, { fit: 'cover', position: 'right' })
-    .composite([{ input: fade('right'), blend: 'dest-in' }])
+    .composite([
+      { input: fade('right'), blend: 'dest-in' },
+      { input: footFade, blend: 'dest-in' },
+    ])
     .png()
     .toBuffer()
 
   const vignette = Buffer.from(
     `<svg width="${W}" height="${H}"><defs><linearGradient id="v" x1="0" x2="0" y1="0" y2="1">` +
-      '<stop offset="0%" stop-color="#050505" stop-opacity="0.62"/>' +
-      '<stop offset="34%" stop-color="#050505" stop-opacity="0"/>' +
+      '<stop offset="0%" stop-color="#050505" stop-opacity="0.93"/>' +
+      '<stop offset="13%" stop-color="#050505" stop-opacity="0.66"/>' +
+      '<stop offset="26%" stop-color="#050505" stop-opacity="0.18"/>' +
+      '<stop offset="38%" stop-color="#050505" stop-opacity="0"/>' +
       '<stop offset="72%" stop-color="#050505" stop-opacity="0"/>' +
       '<stop offset="100%" stop-color="#050505" stop-opacity="0.8"/>' +
       `</linearGradient></defs><rect width="${W}" height="${H}" fill="url(#v)"/></svg>`,
   )
 
   const mobile = sharp(ground).composite([
+    { input: scene, left: 0, top: SCENE_TOP },
     { input: castle, left: 0, top: 0 },
     { input: tile, left: W - EDGE, top: 0 },
     { input: vignette, left: 0, top: 0 },
