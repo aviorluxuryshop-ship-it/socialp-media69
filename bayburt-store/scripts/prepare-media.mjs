@@ -222,6 +222,81 @@ async function buildHeroPlate(file) {
   await plate.clone().jpeg({ quality: 84, mozjpeg: true }).toFile(join(HERO_DIR, 'plate.jpg'))
   await plate.clone().webp({ quality: 80 }).toFile(join(HERO_DIR, 'plate.webp'))
   console.log(`hero    plate ${width}x${height}`)
+
+  await buildMobilePlate(source, width, height)
+}
+
+/**
+ * Portrait plate.
+ *
+ * The landscape banner crops to nothing usable on a phone — the kits baked
+ * across its middle fill the frame and its typesetting is unreadable at that
+ * width. So portrait is composed instead: the castle down one edge, the tile
+ * motif down the other, both zoomed to their own proportions, and the site's
+ * obsidian ground between them for the kit to stand on.
+ */
+async function buildMobilePlate(source, width, height) {
+  const W = 900
+  const H = 1600
+  const EDGE = 300
+
+  const ground = Buffer.from(
+    `<svg width="${W}" height="${H}"><defs>` +
+      `<radialGradient id="g" cx="0.5" cy="0.42" r="0.78">` +
+      '<stop offset="0%" stop-color="#1B1713"/>' +
+      '<stop offset="52%" stop-color="#0C0C0D"/>' +
+      '<stop offset="100%" stop-color="#050505"/>' +
+      `</radialGradient></defs><rect width="${W}" height="${H}" fill="url(#g)"/></svg>`,
+  )
+
+  const fade = (direction) =>
+    Buffer.from(
+      `<svg width="${EDGE}" height="${H}"><defs><linearGradient id="f" x1="${
+        direction === 'left' ? 0 : 1
+      }" x2="${direction === 'left' ? 1 : 0}" y1="0" y2="0">` +
+        '<stop offset="0%" stop-color="#fff" stop-opacity="1"/>' +
+        '<stop offset="55%" stop-color="#fff" stop-opacity="0.66"/>' +
+        '<stop offset="100%" stop-color="#fff" stop-opacity="0"/>' +
+        `</linearGradient></defs><rect width="${EDGE}" height="${H}" fill="url(#f)"/></svg>`,
+    )
+
+  // The castle occupies the banner's left quarter; the tile motif its right.
+  const castle = await sharp(source)
+    .extract({ left: 0, top: 0, width: Math.round(width * 0.25), height })
+    .resize(EDGE, H, { fit: 'cover', position: 'left' })
+    .composite([{ input: fade('left'), blend: 'dest-in' }])
+    .png()
+    .toBuffer()
+
+  const tile = await sharp(source)
+    .extract({
+      left: width - Math.round(width * 0.14),
+      top: 0,
+      width: Math.round(width * 0.14),
+      height,
+    })
+    .resize(EDGE, H, { fit: 'cover', position: 'right' })
+    .composite([{ input: fade('right'), blend: 'dest-in' }])
+    .png()
+    .toBuffer()
+
+  const vignette = Buffer.from(
+    `<svg width="${W}" height="${H}"><defs><linearGradient id="v" x1="0" x2="0" y1="0" y2="1">` +
+      '<stop offset="0%" stop-color="#050505" stop-opacity="0.62"/>' +
+      '<stop offset="34%" stop-color="#050505" stop-opacity="0"/>' +
+      '<stop offset="72%" stop-color="#050505" stop-opacity="0"/>' +
+      '<stop offset="100%" stop-color="#050505" stop-opacity="0.8"/>' +
+      `</linearGradient></defs><rect width="${W}" height="${H}" fill="url(#v)"/></svg>`,
+  )
+
+  const mobile = sharp(ground).composite([
+    { input: castle, left: 0, top: 0 },
+    { input: tile, left: W - EDGE, top: 0 },
+    { input: vignette, left: 0, top: 0 },
+  ])
+
+  await mobile.clone().jpeg({ quality: 84, mozjpeg: true }).toFile(join(HERO_DIR, 'plate-mobile.jpg'))
+  console.log(`hero    plate-mobile ${W}x${H}`)
 }
 
 async function main() {
