@@ -34,19 +34,27 @@ export default function HomePage() {
       {/* Plate and stage share one box that starts below the fixed header, so
           the navigation never lands on the wordmark painted into the banner. */}
       <div className="absolute inset-x-0 bottom-0 top-[var(--header-height)]">
+        {/* Two plates, not one crop. The landscape banner is unreadable at
+            phone width, so portrait gets its own composition. */}
+        <Image
+          src="/images/hero/plate-mobile.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center lg:hidden"
+        />
         <Image
           src="/images/hero/plate.jpg"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="hidden object-cover object-center lg:block"
         />
-        {/* Portrait crops the banner hard, so its baked type is sunk into
-            shadow and the live wordmark carries the page there instead. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-obsidian/[0.88] lg:bg-[linear-gradient(180deg,transparent_0%,transparent_72%,rgba(5,5,5,0.7)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.45)_0%,transparent_30%,transparent_66%,rgba(5,5,5,0.72)_100%)] lg:bg-[linear-gradient(180deg,transparent_0%,transparent_72%,rgba(5,5,5,0.7)_100%)]"
         />
         <KitSelector products={products} />
       </div>
@@ -55,9 +63,9 @@ export default function HomePage() {
         <p className="font-sans text-[10px] uppercase tracking-luxe text-smoke sm:text-[11px]">
           Bayburtspor
         </p>
-        <h1 className="mt-2.5 font-display text-[clamp(2rem,5.6vw,4rem)] font-semibold uppercase leading-[0.94] tracking-[0.07em]">
+        <h1 className="mt-2.5 font-display text-[clamp(2.5rem,11vw,4rem)] font-semibold uppercase leading-[0.94] tracking-[0.07em]">
           <span className="gold-text">Miras</span>
-          <span className="mt-2 block font-sans text-[clamp(0.55rem,1.2vw,0.7rem)] font-normal tracking-luxe text-smoke">
+          <span className="mt-2 block font-sans text-[clamp(0.6rem,2.4vw,0.7rem)] font-normal tracking-luxe text-smoke">
             Koleksiyonu
           </span>
         </h1>
