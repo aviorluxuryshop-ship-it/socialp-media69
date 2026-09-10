@@ -28,14 +28,23 @@ interface KitNode {
 const KIT_ASPECT = 0.91
 
 /**
- * Where the kits sit inside the campaign banner, as fractions of the plate.
- * The live kits are laid over the ones baked into it, so on desktop the
- * layout is derived from the plate's cover box rather than from the viewport.
+ * Where the kits stand inside the backdrop, as fractions of the plate.
+ *
+ * The plate itself has no kits in it. These numbers come from
+ * media-source/banner-placement.jpg — the same frame with the kits painted in
+ * — matched against the cut-out photographs, so each kit lands on its own
+ * ground: over its label, clear of its neighbours, the middle one set very
+ * slightly back the way the artwork stages it. Desktop derives the layout
+ * from the plate's cover box rather than from the viewport, so the kits stay
+ * on that ground at every window size.
  */
-const PLATE_ASPECT = 1672 / 941
-const PLATE_KIT_X = [0.256, 0.501, 0.745]
-const PLATE_KIT_Y = 0.512
-const PLATE_KIT_H = 0.60
+const PLATE_ASPECT = 1600 / 901
+const PLATE_KIT_Y = 0.511
+const PLATE_KIT = [
+  { x: 0.276, height: 0.570 },
+  { x: 0.516, height: 0.525 },
+  { x: 0.764, height: 0.573 },
+]
 
 /** Rim light per kit: gold for Hisar, daylight for Çoruh, warm gold for Çinimaçın. */
 const RIM_COLOURS = [0xffb422, 0xf2f6ff, 0xd4af37]
@@ -46,9 +55,9 @@ const RIM_COLOURS = [0xffb422, 0xf2f6ff, 0xd4af37]
  * the region it belongs to and lets the other two fall back.
  */
 const REGIONS = [
-  { left: '0%', width: '35%', lift: 'rgba(233,162,28,0.22)' },
-  { left: '33%', width: '34%', lift: 'rgba(228,238,255,0.20)' },
-  { left: '65%', width: '35%', lift: 'rgba(212,175,55,0.16)' },
+  { left: '0%', width: '40%', lift: 'rgba(233,162,28,0.22)' },
+  { left: '38%', width: '28%', lift: 'rgba(228,238,255,0.20)' },
+  { left: '64%', width: '36%', lift: 'rgba(212,175,55,0.16)' },
 ]
 
 export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
@@ -129,7 +138,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       scale: 1,
       gap: 1,
       portrait: false,
-      slots: [] as { x: number; y: number }[],
+      slots: [] as { x: number; y: number; scale: number }[],
     }
 
     function measure() {
@@ -147,16 +156,17 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const plateLeft = (clientWidth - plateWidth) / 2
       const plateTop = (clientHeight - plateHeight) / 2
 
+      const slots = PLATE_KIT.map((kit) => ({
+        x: (plateLeft + kit.x * plateWidth - clientWidth / 2) * worldPerPixel,
+        y: (clientHeight / 2 - (plateTop + PLATE_KIT_Y * plateHeight)) * worldPerPixel,
+        scale: kit.height * plateHeight * worldPerPixel,
+      }))
+
       // Portrait crops the plate too hard to align to; it shows one kit at a
-      // time and slides instead.
+      // time and slides instead, so there it is one size for all three.
       const scale = portrait
         ? Math.min(visibleWidth * 0.96, visibleHeight * 0.62)
-        : PLATE_KIT_H * plateHeight * worldPerPixel
-
-      const slots = PLATE_KIT_X.map((fraction) => ({
-        x: (plateLeft + fraction * plateWidth - clientWidth / 2) * worldPerPixel,
-        y: (clientHeight / 2 - (plateTop + PLATE_KIT_Y * plateHeight)) * worldPerPixel,
-      }))
+        : (slots[0]?.scale ?? 1)
 
       layout = { scale, gap: scale * KIT_ASPECT * 1.25, portrait, slots }
       setIsPortrait(portrait)
@@ -171,7 +181,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
           ? (node.index - focusRef.current) * layout.gap
           : (slot?.x ?? 0)
         node.group.position.y = layout.portrait ? 0 : (slot?.y ?? 0)
-        node.group.scale.setScalar(layout.scale)
+        node.group.scale.setScalar(layout.portrait ? layout.scale : (slot?.scale ?? layout.scale))
       })
     }
 
@@ -335,7 +345,11 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
         const isFocused = layout.portrait ? node.index === focusRef.current : isActive
         const targetRotation = isFocused ? sway * 0.25 : sway
-        const targetScale = layout.scale * (isFocused ? 1.06 : layout.portrait ? 0.82 : 0.97)
+        // At rest a kit is exactly the size the artwork gives it; the lift on
+        // hover is small because the step forward and the region light behind
+        // it carry most of the emphasis.
+        const base = layout.portrait ? layout.scale : (layout.slots[node.index]?.scale ?? layout.scale)
+        const targetScale = base * (isFocused ? 1.04 : layout.portrait ? 0.82 : 1)
         const targetZ = isFocused ? (layout.portrait ? 0.2 : 0.55) : 0
 
         node.group.rotation.y += (targetRotation - node.group.rotation.y) * 0.06
