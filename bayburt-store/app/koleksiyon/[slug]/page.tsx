@@ -174,7 +174,7 @@ export default async function ProductPage({ params }: PageProps) {
                   {formatPrice(product.price)}
                 </span>
                 <span className="ml-auto pb-1.5 font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
-                  {siteConfig.cityCode} · {product.colorway}
+                  {siteConfig.plate} · {product.colorway}
                 </span>
               </div>
 

@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react'
 
 import { StoryBlock } from '@/components/collection/StoryBlock'
 import { GoldRule } from '@/components/ui/GoldRule'
-import { Reveal, RevealGroup, RevealItem } from '@/components/ui/Reveal'
+import { Reveal } from '@/components/ui/Reveal'
 import { products } from '@/data/products'
 import { siteConfig } from '@/data/site'
 
@@ -32,11 +32,6 @@ export const metadata: Metadata = {
   },
 }
 
-const CHAPTERS = [
-  { label: 'Kale', value: 'Hisar' },
-  { label: 'Nehir', value: 'Çoruh' },
-  { label: 'Çini', value: 'Çinimaçın' },
-]
 
 export default function CollectionPage() {
   return (
@@ -65,27 +60,14 @@ export default function CollectionPage() {
             delay={0.12}
             className="mt-8 max-w-2xl font-sans text-base leading-relaxed text-pretty text-smoke"
           >
-            Üç forma tasarlanmadı; okundu. Bayburt’un üç kalıcı işareti — kale, nehir, çini —
-            ölçüye çevrildi, sonra kumaşa. Aşağıda her birinin nereden geldiği anlatılıyor.
+            Üç forma tasarlanmadı; okundu. Bayburt’un kalıcı işaretleri ölçüye çevrildi,
+            sonra kumaşa. Aşağıda her birinin nereden geldiği anlatılıyor.
           </Reveal>
 
           <div className="mt-14">
             <GoldRule />
           </div>
 
-          <RevealGroup as="ul" className="mt-10 grid gap-8 sm:grid-cols-3" stagger={0.1}>
-            {CHAPTERS.map((chapter, index) => (
-              <RevealItem as="li" key={chapter.value}>
-                <p className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
-                  Bölüm {String(index + 1).padStart(2, '0')}
-                </p>
-                <p className="mt-3 font-display text-xl uppercase tracking-wider2 text-white">
-                  {chapter.value}
-                </p>
-                <p className="mt-1.5 font-sans text-sm text-ash">{chapter.label}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
         </div>
       </section>
 
@@ -100,8 +82,7 @@ export default function CollectionPage() {
               Üçü bir arada
             </Reveal>
             <Reveal as="p" delay={0.08} className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-smoke">
-              Kale, nehir ve çini. Üç forma ayrı ayrı durur, yan yana geldiğinde şehrin
-              tamamını anlatır.
+              Üç forma ayrı ayrı durur, yan yana geldiğinde şehrin tamamını anlatır.
             </Reveal>
             <Reveal delay={0.14} className="mt-10">
               <Link

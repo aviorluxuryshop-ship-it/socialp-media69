@@ -70,9 +70,8 @@ const VALUES = [
 
 const FIGURES = [
   { value: '1969', label: 'Kuruluş yılı' },
-  { value: '69', label: 'Şehir kodu' },
-  { value: '3', label: 'Kaynak: kale, nehir, çini' },
-  { value: 'TR', label: 'Üretim' },
+  { value: '69', label: 'Bayburt plakası' },
+  { value: 'Türkiye', label: 'Üretim' },
 ]
 
 export default function AboutPage() {

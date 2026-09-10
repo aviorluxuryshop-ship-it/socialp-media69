@@ -50,7 +50,9 @@ export default function HomePage() {
           fill
           priority
           sizes="100vw"
-          className="hidden object-cover object-center lg:block"
+          // Pinned to the top: a wide window crops the plate vertically, and
+          // centring it takes the BAYBURTSPOR line off the wordmark.
+          className="hidden object-cover object-top lg:block"
         />
         <span
           aria-hidden
@@ -74,10 +76,10 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div className="absolute inset-x-0 bottom-9 z-10 flex justify-center sm:bottom-11">
+      <div className="absolute inset-x-0 bottom-9 z-10 flex justify-center sm:bottom-11 lg:bottom-2">
         <Link
           href="/koleksiyon"
-          className="group inline-flex items-center gap-3.5 border border-white/25 bg-obsidian/40 px-9 py-4 font-sans text-[11px] uppercase tracking-luxe text-white backdrop-blur-sm transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200"
+          className="group inline-flex items-center gap-3.5 border border-white/25 bg-obsidian/40 px-9 py-4 lg:py-3 font-sans text-[11px] uppercase tracking-luxe text-white backdrop-blur-sm transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200"
         >
           <ShoppingCart className="h-4 w-4" aria-hidden />
           Alışveriş yap
