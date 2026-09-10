@@ -42,7 +42,7 @@ module.exports = {
         ash: '#71717A',
       },
       fontFamily: {
-        display: ['var(--font-cinzel)', 'Cinzel', 'Georgia', 'Times New Roman', 'serif'],
+        display: ['var(--font-display)', 'Jost', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'sans-serif'],
         sans: [
           'var(--font-inter)',
           'Inter',

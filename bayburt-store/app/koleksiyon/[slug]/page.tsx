@@ -170,14 +170,9 @@ export default async function ProductPage({ params }: PageProps) {
               </p>
 
               <div className="mt-9 flex items-end gap-4">
-                <span className="font-display text-3xl font-semibold tracking-tight text-white">
+                <span className="font-sans text-[26px] font-medium tracking-tight text-white">
                   {formatPrice(product.price)}
                 </span>
-                {product.compareAtPrice ? (
-                  <span className="pb-1 font-sans text-sm text-ash line-through">
-                    {formatPrice(product.compareAtPrice)}
-                  </span>
-                ) : null}
                 <span className="ml-auto pb-1.5 font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
                   {siteConfig.cityCode} · {product.colorway}
                 </span>

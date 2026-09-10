@@ -213,10 +213,11 @@ async function buildHeroPlate(file) {
   // all of which the live page draws itself. Rather than blurring them into
   // recognisable ghosts, the centre is rebuilt from a clean vertical strip of
   // the valley — the one part of the frame no artwork sits on.
-  // The banner ships as-is. Its castle, mountains, river and tile motif are
-  // the whole reason it looks expensive, and every attempt to mask the kits
-  // baked into it also killed the landscape behind them. The live kits are
-  // drawn over the baked ones instead — same photographs, so they cover.
+  // The banner ships as-is. Reconstructing the valley behind the kits painted
+  // into it was tried and abandoned: horizontal fill streaks, and blurring
+  // leaves ghosts. The live kits are drawn over the baked ones instead — the
+  // same photographs, so they cover. Drop a kit-free backdrop in as
+  // media-source/banner.jpg and nothing else has to change.
   const plate = sharp(source)
 
   await plate.clone().jpeg({ quality: 84, mozjpeg: true }).toFile(join(HERO_DIR, 'plate.jpg'))

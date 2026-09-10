@@ -1,13 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
 import { overlayLink, overlayPanel } from '@/lib/motion'
-import { contact, navigation, socials } from '@/data/site'
+import { navigation } from '@/data/site'
 import { products } from '@/data/products'
 import { cn } from '@/lib/utils'
 
@@ -79,7 +78,7 @@ export function FullMenu() {
                       </span>
                       <span
                         className={cn(
-                          'font-display text-[clamp(2rem,7vw,4.25rem)] font-semibold uppercase leading-[1.02] tracking-tight transition-colors duration-500 ease-luxe',
+                          'font-display text-[clamp(1.6rem,4vw,2.6rem)] font-medium uppercase leading-[1.1] tracking-[0.08em] transition-colors duration-500 ease-luxe',
                           isActive ? 'text-gold-400' : 'text-white group-hover:text-gold-300',
                         )}
                       >
@@ -124,50 +123,6 @@ export function FullMenu() {
               </ul>
             </motion.div>
 
-            <motion.div variants={overlayLink} custom={7} initial="hidden" animate="visible" exit="exit">
-              <p className="eyebrow-muted mb-6">İletişim</p>
-              <div className="space-y-2 font-sans text-sm text-smoke">
-                <p>
-                  <a href={contact.phoneHref} className="link-underline hover:text-white">
-                    {contact.phone}
-                  </a>
-                </p>
-                <p>
-                  <a href={contact.emailHref} className="link-underline hover:text-white">
-                    {contact.email}
-                  </a>
-                </p>
-                <p className="text-ash">
-                  {contact.store.addressLine}, {contact.store.district}
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.ul
-              variants={overlayLink}
-              custom={8}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="flex flex-wrap gap-x-8 gap-y-3"
-            >
-              {socials.map((social) => (
-                <li key={social.label}>
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="group inline-flex items-center gap-1.5 font-sans text-[11px] uppercase tracking-wider2 text-smoke transition-colors duration-300 hover:text-gold-300"
-                  >
-                    {social.label}
-                    <ArrowUpRight
-                      className="h-3 w-3 transition-transform duration-500 ease-luxe group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                      aria-hidden
-                    />
-                  </a>
-                </li>
-              ))}
-            </motion.ul>
           </div>
         </div>
 
