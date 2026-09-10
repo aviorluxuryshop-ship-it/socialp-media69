@@ -54,7 +54,6 @@ export interface Product {
   subtitle: string
   tagline: string
   price: number
-  compareAtPrice?: number
   currency: 'TRY'
   currencySymbol: '₺'
   sku: string
@@ -87,7 +86,6 @@ export const products: Product[] = [
     subtitle: 'İç Saha',
     tagline: 'Surların ritmi, sahanın dokusu.',
     price: 2450,
-    compareAtPrice: 2850,
     currency: 'TRY',
     currencySymbol: '₺',
     sku: 'BS-MRS-69-HSR',
@@ -170,7 +168,6 @@ export const products: Product[] = [
     subtitle: 'Deplasman',
     tagline: 'Akan su, duran şehir.',
     price: 2450,
-    compareAtPrice: 2850,
     currency: 'TRY',
     currencySymbol: '₺',
     sku: 'BS-MRS-69-CRH',
@@ -253,7 +250,6 @@ export const products: Product[] = [
     subtitle: 'Üçüncü Takım',
     tagline: 'Ateşten geçen renk solmaz.',
     price: 2650,
-    compareAtPrice: 2950,
     currency: 'TRY',
     currencySymbol: '₺',
     sku: 'BS-MRS-69-CNM',

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Cinzel, Inter } from 'next/font/google'
+import { Inter, Jost } from 'next/font/google'
 import type { ReactNode } from 'react'
 
 import './globals.css'
@@ -10,10 +10,10 @@ import { Header } from '@/components/ui/Header'
 import { Providers } from '@/components/providers/Providers'
 import { contact, siteConfig } from '@/data/site'
 
-const cinzel = Cinzel({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-cinzel',
+const jost = Jost({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-display',
   display: 'swap',
 })
 
@@ -89,7 +89,7 @@ const organisationSchema = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang={siteConfig.language} className={`${cinzel.variable} ${inter.variable}`}>
+    <html lang={siteConfig.language} className={`${jost.variable} ${inter.variable}`}>
       <body className="min-h-screen bg-obsidian font-sans antialiased">
         <script
           type="application/ld+json"

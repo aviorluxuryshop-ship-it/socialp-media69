@@ -40,8 +40,16 @@ const PLATE_KIT_H = 0.60
 /** Rim light per kit: gold for Hisar, daylight for Çoruh, warm gold for Çinimaçın. */
 const RIM_COLOURS = [0xffb422, 0xf2f6ff, 0xd4af37]
 
-/** Matching wash laid over the scene while a kit is selected. */
-const WASH = ['rgba(233,162,28,0.20)', 'rgba(226,234,255,0.17)', 'rgba(212,175,55,0.15)']
+/**
+ * The backdrop is three regions — the castle and its gold light, the river
+ * and the city in daylight, the dark patterned right. Selecting a kit lifts
+ * the region it belongs to and lets the other two fall back.
+ */
+const REGIONS = [
+  { left: '0%', width: '35%', lift: 'rgba(233,162,28,0.22)' },
+  { left: '33%', width: '34%', lift: 'rgba(228,238,255,0.20)' },
+  { left: '65%', width: '35%', lift: 'rgba(212,175,55,0.16)' },
+]
 
 export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
   const router = useRouter()
@@ -399,21 +407,37 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     <div ref={containerRef} className="absolute inset-0 cursor-pointer">
       <canvas ref={canvasRef} className="block h-full w-full" aria-hidden />
 
-      {/* The stage answers the selection, not just the kit: the chosen kit's
-          own colour washes across the scene. */}
-      {products.map((product, index) => (
-        <span
-          key={`${product.slug}-wash`}
-          aria-hidden
-          className="pointer-events-none absolute inset-0 mix-blend-screen transition-opacity duration-[900ms] ease-luxe"
-          style={{
-            opacity: (isPortrait ? focusIndex : activeIndex) === index ? 1 : 0,
-            background: `radial-gradient(48% 46% at ${
-              isPortrait ? 50 : [26, 50, 74][index]
-            }% 50%, ${WASH[index]}, transparent 72%)`,
-          }}
-        />
-      ))}
+      {/* The stage answers the selection, not just the kit. The region of the
+          backdrop the chosen kit belongs to lifts; the other two recede. */}
+      {REGIONS.map((region, index) => {
+        const selected = (isPortrait ? focusIndex : activeIndex) === index
+        const anySelected = (isPortrait ? focusIndex : activeIndex) !== null
+        return (
+          <span key={`region-${region.left}`} aria-hidden className="pointer-events-none">
+            <span
+              className="pointer-events-none absolute inset-y-0 mix-blend-screen transition-opacity duration-[900ms] ease-luxe"
+              style={{
+                left: isPortrait ? '0%' : region.left,
+                width: isPortrait ? '100%' : region.width,
+                opacity: selected ? 1 : 0,
+                background: `radial-gradient(62% 58% at 50% 48%, ${region.lift}, transparent 74%)`,
+              }}
+            />
+            <span
+              // Faded at both edges: a hard-edged veil draws the seams
+              // between regions as visible bands.
+              className="pointer-events-none absolute inset-y-0 transition-opacity duration-[900ms] ease-luxe"
+              style={{
+                left: region.left,
+                width: region.width,
+                opacity: !isPortrait && anySelected && !selected ? 0.44 : 0,
+                background:
+                  'linear-gradient(90deg, rgba(5,5,5,0) 0%, rgba(5,5,5,1) 26%, rgba(5,5,5,1) 74%, rgba(5,5,5,0) 100%)',
+              }}
+            />
+          </span>
+        )
+      })}
 
       <div
         className={cn(
