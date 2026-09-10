@@ -145,7 +145,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
               className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4"
             >
               <Link
-                href={`/forma/${product.slug}`}
+                href={`/koleksiyon/${product.slug}`}
                 className="group inline-flex items-center gap-3 border border-white/15 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
               >
                 Formayı incele

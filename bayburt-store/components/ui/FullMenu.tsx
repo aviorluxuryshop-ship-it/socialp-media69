@@ -102,7 +102,7 @@ export function FullMenu() {
                 {products.map((product) => (
                   <li key={product.slug}>
                     <Link
-                      href={`/forma/${product.slug}`}
+                      href={`/koleksiyon/${product.slug}`}
                       className="group flex items-center justify-between border-b border-white/10 py-4"
                     >
                       <span className="flex items-center gap-4">

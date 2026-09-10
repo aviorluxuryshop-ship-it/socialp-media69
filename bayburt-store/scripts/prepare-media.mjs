@@ -213,63 +213,11 @@ async function buildHeroPlate(file) {
   // all of which the live page draws itself. Rather than blurring them into
   // recognisable ghosts, the centre is rebuilt from a clean vertical strip of
   // the valley — the one part of the frame no artwork sits on.
-  // The centre of the banner carries kits, a wordmark and labels that the
-  // live page draws itself, and no clean run of valley is wide enough to
-  // rebuild it from — stretching one only smears. So the centre becomes the
-  // site's own obsidian ground, and the banner's two signature elements are
-  // kept sharp at the edges: the castle left, the tile motif right. The kits
-  // sit on the dark middle, which is where they read best anyway.
-  const centre = Buffer.from(
-    `<svg width="${width}" height="${height}"><defs>` +
-      `<radialGradient id="c" cx="0.5" cy="0.34" r="0.72">` +
-      '<stop offset="0%" stop-color="#191614"/>' +
-      '<stop offset="55%" stop-color="#0C0C0D"/>' +
-      '<stop offset="100%" stop-color="#050505"/>' +
-      `</radialGradient></defs><rect width="${width}" height="${height}" fill="url(#c)"/></svg>`,
-  )
-
-  const base = await sharp(centre).png().toBuffer()
-
-  // Sharp again at the edges, stopping short of the first and last kit.
-  const leftWidth = Math.round(width * 0.13)
-  const rightWidth = Math.round(width * 0.12)
-
-  const fade = (panelWidth, direction) =>
-    Buffer.from(
-      `<svg width="${panelWidth}" height="${height}"><defs><linearGradient id="g" x1="${
-        direction === 'left' ? 0 : 1
-      }" x2="${direction === 'left' ? 1 : 0}" y1="0" y2="0">` +
-        '<stop offset="0%" stop-color="#fff" stop-opacity="1"/>' +
-        '<stop offset="58%" stop-color="#fff" stop-opacity="0.7"/>' +
-        '<stop offset="100%" stop-color="#fff" stop-opacity="0"/>' +
-        `</linearGradient></defs><rect width="${panelWidth}" height="${height}" fill="url(#g)"/></svg>`,
-    )
-
-  const leftPanel = await sharp(source)
-    .extract({ left: 0, top: 0, width: leftWidth, height })
-    .composite([{ input: fade(leftWidth, 'left'), blend: 'dest-in' }])
-    .png()
-    .toBuffer()
-
-  const rightPanel = await sharp(source)
-    .extract({ left: width - rightWidth, top: 0, width: rightWidth, height })
-    .composite([{ input: fade(rightWidth, 'right'), blend: 'dest-in' }])
-    .png()
-    .toBuffer()
-
-  const vignette = Buffer.from(
-    `<svg width="${width}" height="${height}"><defs><linearGradient id="v" x1="0" x2="0" y1="0" y2="1">` +
-      '<stop offset="0%" stop-color="#050505" stop-opacity="0.3"/>' +
-      '<stop offset="48%" stop-color="#050505" stop-opacity="0"/>' +
-      '<stop offset="100%" stop-color="#050505" stop-opacity="0.78"/>' +
-      `</linearGradient></defs><rect width="${width}" height="${height}" fill="url(#v)"/></svg>`,
-  )
-
-  const plate = sharp(base).composite([
-    { input: leftPanel, left: 0, top: 0 },
-    { input: rightPanel, left: width - rightWidth, top: 0 },
-    { input: vignette, left: 0, top: 0 },
-  ])
+  // The banner ships as-is. Its castle, mountains, river and tile motif are
+  // the whole reason it looks expensive, and every attempt to mask the kits
+  // baked into it also killed the landscape behind them. The live kits are
+  // drawn over the baked ones instead — same photographs, so they cover.
+  const plate = sharp(source)
 
   await plate.clone().jpeg({ quality: 84, mozjpeg: true }).toFile(join(HERO_DIR, 'plate.jpg'))
   await plate.clone().webp({ quality: 80 }).toFile(join(HERO_DIR, 'plate.webp'))

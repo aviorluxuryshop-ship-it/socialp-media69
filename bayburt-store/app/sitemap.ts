@@ -15,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
-    url: absoluteUrl(`/forma/${product.slug}`, siteConfig.url),
+    url: absoluteUrl(`/koleksiyon/${product.slug}`, siteConfig.url),
     lastModified,
     changeFrequency: 'weekly',
     priority: 0.8,

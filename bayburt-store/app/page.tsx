@@ -31,26 +31,27 @@ export default function HomePage() {
       aria-label="Forma seçimi"
       className="relative min-h-[100svh] overflow-hidden bg-obsidian"
     >
-      <Image
-        src="/images/hero/plate.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-center"
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(56%_42%_at_50%_36%,rgba(212,175,55,0.08),transparent_74%)]"
-      />
-      {/*
-        Dither, not decoration. The gold wash above is a very low opacity
-        gradient; on an 8-bit ramp over a dark ground it quantises into
-        visible contours, and the grain has to sit over it to break them up.
-      */}
-      <span aria-hidden className="grain pointer-events-none absolute inset-0" />
+      {/* Plate and stage share one box that starts below the fixed header, so
+          the navigation never lands on the wordmark painted into the banner. */}
+      <div className="absolute inset-x-0 bottom-0 top-[var(--header-height)]">
+        <Image
+          src="/images/hero/plate.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        {/* Portrait crops the banner hard, so its baked type is sunk into
+            shadow and the live wordmark carries the page there instead. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-obsidian/[0.88] lg:bg-[linear-gradient(180deg,transparent_0%,transparent_72%,rgba(5,5,5,0.7)_100%)]"
+        />
+        <KitSelector products={products} />
+      </div>
 
-      <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center lg:hidden">
         <p className="font-sans text-[10px] uppercase tracking-luxe text-smoke sm:text-[11px]">
           Bayburtspor
         </p>
@@ -65,8 +66,6 @@ export default function HomePage() {
         </p>
       </div>
 
-      <KitSelector products={products} />
-
       <div className="absolute inset-x-0 bottom-9 z-10 flex justify-center sm:bottom-11">
         <Link
           href="/koleksiyon"
@@ -77,20 +76,12 @@ export default function HomePage() {
         </Link>
       </div>
 
-      <p className="pointer-events-none absolute bottom-6 left-6 z-10 hidden font-sans text-[9px] uppercase leading-relaxed tracking-luxe text-ash lg:block">
-        Bayburtspor
-        <br />
-        Miras Koleksiyonu
-      </p>
-      <p className="pointer-events-none absolute bottom-6 right-6 z-10 hidden text-right font-sans text-[9px] uppercase leading-relaxed tracking-luxe text-ash lg:block">
-        Köklü şehir
-        <br />
-        Güçlü yarınlar
-      </p>
 
-      {/* Baked into the hero plate as artwork; here for readers and crawlers. */}
+      {/* The plate carries the wordmark as artwork on desktop; this is the
+          same text for readers and crawlers. */}
       <p className="sr-only">
-        Tarih, şehir, takım, biz. Kültür, miras, inanç, daima.
+        Bayburtspor Miras Koleksiyonu — geçmişten gelen, geleceğe taşınan. Hisar, Çoruh,
+        Çinimaçın. Tarih, şehir, takım, biz. Kültür, miras, inanç, daima.
       </p>
     </section>
   )

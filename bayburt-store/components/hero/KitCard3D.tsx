@@ -66,7 +66,7 @@ export function KitCard3D({ product, index, priority = false }: KitCard3DProps) 
         className="preserve-3d relative"
       >
         <Link
-          href={`/forma/${product.slug}`}
+          href={`/koleksiyon/${product.slug}`}
           className="block focus-visible:outline-none"
           aria-label={`${product.displayName} — ${product.kind}, ${formatPrice(product.price)}`}
         >

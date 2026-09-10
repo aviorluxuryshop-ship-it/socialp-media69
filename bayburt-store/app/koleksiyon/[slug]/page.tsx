@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = `${product.displayName} — ${product.kind}`
   const description = `${product.tagline} ${product.displayName}, ${siteConfig.collection} içinde ${product.colorway} renginde. ${product.fabric}. ${formatPrice(product.price)}.`
-  const path = `/forma/${product.slug}`
+  const path = `/koleksiyon/${product.slug}`
 
   return {
     title,
@@ -65,7 +65,7 @@ export default async function ProductPage({ params }: PageProps) {
   if (!product) notFound()
 
   const related = getRelatedProducts(product.slug)
-  const path = `/forma/${product.slug}`
+  const path = `/koleksiyon/${product.slug}`
 
   const productSchema = {
     '@context': 'https://schema.org',
@@ -299,7 +299,7 @@ export default async function ProductPage({ params }: PageProps) {
             {related.map((item) => (
               <RevealItem key={item.slug}>
                 <Link
-                  href={`/forma/${item.slug}`}
+                  href={`/koleksiyon/${item.slug}`}
                   className="group relative flex items-center gap-7 overflow-hidden rounded-sm border border-white/10 bg-graphite-dark p-6 transition-colors duration-700 ease-luxe hover:border-gold-600/40 sm:p-8"
                 >
                   <span

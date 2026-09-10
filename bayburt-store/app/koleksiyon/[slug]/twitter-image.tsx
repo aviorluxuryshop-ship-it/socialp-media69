@@ -4,4 +4,4 @@ export {
   size,
   contentType,
   generateStaticParams,
-} from '@/app/forma/[slug]/opengraph-image'
+} from '@/app/koleksiyon/[slug]/opengraph-image'
