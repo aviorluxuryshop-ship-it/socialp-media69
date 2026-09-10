@@ -42,9 +42,9 @@ const KIT_ASPECT = 0.91
  */
 const PLATE_ASPECT = 1600 / 901
 const PLATE_KIT = [
-  { x: 0.276, height: 0.512 },
-  { x: 0.516, height: 0.472 },
-  { x: 0.764, height: 0.515 },
+  { x: 0.276, height: 0.494 },
+  { x: 0.516, height: 0.455 },
+  { x: 0.764, height: 0.497 },
 ]
 
 /**
@@ -54,7 +54,7 @@ const PLATE_KIT = [
  * chosen so that a hovered kit still lands inside it.
  */
 const PLATE_SAFE_TOP = 0.245
-const PLATE_SAFE_BOTTOM = 0.792
+const PLATE_SAFE_BOTTOM = 0.773
 
 /**
  * Hover lift, kept deliberately small. The kit also steps toward the camera,
@@ -71,8 +71,8 @@ const HOVER_STEP = 0.18
  * off-centre and the kit is lifted to match — which on a small phone is the
  * difference between a readable page and a kit sitting on its own name.
  */
-const PORTRAIT_GUARD_TOP = 120
-const PORTRAIT_GUARD_FOOT = 206
+const PORTRAIT_GUARD_TOP = 138
+const PORTRAIT_GUARD_FOOT = 216
 const CAMERA_Z = 6
 
 /** How much bigger a hovered kit reads: the lift, plus the step's perspective. */
@@ -521,13 +521,13 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
           >
             <p
               className={cn(
-                'font-display text-xl uppercase tracking-wider2 transition-colors duration-500 sm:text-2xl',
+                'font-display text-xl uppercase tracking-wider2 transition-colors duration-500 [text-shadow:0_2px_18px_rgba(5,5,5,0.95)] sm:text-2xl',
                 activeIndex === index ? 'text-gold-300' : 'text-white',
               )}
             >
               {product.displayName}
             </p>
-            <p className="mt-2 font-sans text-[10px] uppercase tracking-wider2 text-ash">
+            <p className="mt-2 font-sans text-[10px] uppercase tracking-wider2 text-white/70 [text-shadow:0_1px_12px_rgba(5,5,5,0.95)]">
               {product.kind}
             </p>
 
@@ -536,7 +536,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       </div>
 
       {isPortrait ? (
-        <div className="absolute inset-x-0 bottom-28 flex justify-center">
+        <div className="absolute inset-x-0 bottom-[86px] flex justify-center sm:bottom-[104px]">
           {products.map((product, index) => (
             <button
               key={product.slug}

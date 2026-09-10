@@ -199,23 +199,32 @@ async function buildMobilePlate(source, width, height) {
       `</radialGradient></defs><rect width="${W}" height="${H}" fill="url(#g)"/></svg>`,
   )
 
+  // The columns fade out well before their inner edge. The backdrop carries
+  // TARİH ŞEHİR TAKIM BİZ down one side and KÜLTÜR MİRAS İNANÇ DAİMA down the
+  // other, and on a phone the kit stands right on top of them — half a word
+  // either side of a jersey. Fading the copy away is the whole point of where
+  // these stops sit; the castle and the tile motif keep the outer half.
   const fade = (direction) =>
     Buffer.from(
       `<svg width="${EDGE}" height="${H}"><defs><linearGradient id="f" x1="${
         direction === 'left' ? 0 : 1
       }" x2="${direction === 'left' ? 1 : 0}" y1="0" y2="0">` +
         '<stop offset="0%" stop-color="#fff" stop-opacity="1"/>' +
-        '<stop offset="55%" stop-color="#fff" stop-opacity="0.66"/>' +
+        '<stop offset="22%" stop-color="#fff" stop-opacity="0.9"/>' +
+        '<stop offset="38%" stop-color="#fff" stop-opacity="0.2"/>' +
+        '<stop offset="50%" stop-color="#fff" stop-opacity="0"/>' +
         '<stop offset="100%" stop-color="#fff" stop-opacity="0"/>' +
         `</linearGradient></defs><rect width="${EDGE}" height="${H}" fill="url(#f)"/></svg>`,
     )
 
-  // The columns are cropped at full height so the side copy keeps its size and
-  // stays whole; this washes their foot out before the backdrop's credit line
-  // can be dragged into frame as half a word.
+  // Head and foot of each column washed out: the backdrop's sky at the top,
+  // which reads as a light leak against the obsidian, and its credit line at
+  // the bottom, which would otherwise arrive as half a word.
   const footFade = Buffer.from(
     `<svg width="${EDGE}" height="${H}"><defs><linearGradient id="b" x1="0" x2="0" y1="0" y2="1">` +
-      '<stop offset="0%" stop-color="#fff" stop-opacity="1"/>' +
+      '<stop offset="0%" stop-color="#fff" stop-opacity="0"/>' +
+      '<stop offset="10%" stop-color="#fff" stop-opacity="0.38"/>' +
+      '<stop offset="21%" stop-color="#fff" stop-opacity="1"/>' +
       '<stop offset="60%" stop-color="#fff" stop-opacity="1"/>' +
       '<stop offset="76%" stop-color="#fff" stop-opacity="0.16"/>' +
       '<stop offset="85%" stop-color="#fff" stop-opacity="0"/>' +
@@ -289,8 +298,8 @@ async function buildMobilePlate(source, width, height) {
 
   const vignette = Buffer.from(
     `<svg width="${W}" height="${H}"><defs><linearGradient id="v" x1="0" x2="0" y1="0" y2="1">` +
-      '<stop offset="0%" stop-color="#050505" stop-opacity="0.93"/>' +
-      '<stop offset="13%" stop-color="#050505" stop-opacity="0.66"/>' +
+      '<stop offset="0%" stop-color="#050505" stop-opacity="0.96"/>' +
+      '<stop offset="13%" stop-color="#050505" stop-opacity="0.78"/>' +
       '<stop offset="26%" stop-color="#050505" stop-opacity="0.18"/>' +
       '<stop offset="38%" stop-color="#050505" stop-opacity="0"/>' +
       '<stop offset="72%" stop-color="#050505" stop-opacity="0"/>' +
