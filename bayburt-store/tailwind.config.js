@@ -39,7 +39,8 @@ module.exports = {
           900: '#4A3A0D',
         },
         smoke: '#A1A1AA',
-        ash: '#71717A',
+        // Lifted to clear 4.5:1 on obsidian; #71717A measured 4.2:1.
+        ash: '#7B7B86',
       },
       fontFamily: {
         display: ['var(--font-display)', 'Jost', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'sans-serif'],

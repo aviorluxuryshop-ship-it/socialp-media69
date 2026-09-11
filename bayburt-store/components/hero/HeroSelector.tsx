@@ -37,7 +37,7 @@ export function HeroSelector() {
             custom={1}
             initial="hidden"
             animate="visible"
-            className="mt-6 font-display text-[clamp(2.6rem,9vw,6.5rem)] font-semibold uppercase leading-[0.94] tracking-[0.06em] text-balance"
+            className="mt-6 font-display text-[clamp(2.6rem,9vw,6.5rem)] font-semibold uppercase leading-[1.06] tracking-[0.06em] text-balance"
           >
             <span className="gold-text">Miras</span>
             <span className="mt-2 block font-sans text-[clamp(0.62rem,1.5vw,0.8rem)] font-normal tracking-luxe text-smoke">

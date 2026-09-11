@@ -35,6 +35,18 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 /**
+ * The texture goes straight to WebGL, so the image optimiser never sees it
+ * and the raw file is what ships — a third of a megabyte per kit as PNG.
+ * The build writes a WebP beside each one; this prefers it and falls back to
+ * the original if anything about it fails.
+ */
+function loadKitImage(src: string): Promise<HTMLImageElement> {
+  const webp = src.replace(/\.png$/i, '.webp')
+  if (webp === src) return loadImage(src)
+  return loadImage(webp).catch(() => loadImage(src))
+}
+
+/**
  * Draw the kit into a square working canvas, inset by a pixel so the
  * outermost texels are guaranteed transparent and clamped edge sampling can
  * never light the plane's border. The square stretch is undone by building
@@ -161,7 +173,7 @@ function buildPanel(
  * shirt's width.
  */
 export async function buildJersey(src: string, depth = 0.13): Promise<JerseyMeshes> {
-  const image = await loadImage(src)
+  const image = await loadKitImage(src)
 
   const field = buildField(drawToCanvas(image, FIELD_SIZE))
 

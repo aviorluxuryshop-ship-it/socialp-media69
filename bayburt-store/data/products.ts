@@ -244,8 +244,8 @@ export const products: Product[] = [
   },
   {
     slug: 'cinimacin',
-    name: 'Çinimaçın',
-    displayName: 'ÇİNİMAÇIN',
+    name: 'Çinimaçin',
+    displayName: 'ÇİNİMAÇİN',
     kind: 'Siyah Forma',
     subtitle: 'Üçüncü Takım',
     tagline: 'Ateşten geçen renk solmaz.',
@@ -268,7 +268,7 @@ export const products: Product[] = [
       views: [
         {
           src: '/images/jerseys/cinimacin.png',
-          alt: 'Çinimaçın siyah forma: obsidyen zemin üzerinde ton sür ton çini motifleri ve altın V yaka.',
+          alt: 'Çinimaçin siyah forma: obsidyen zemin üzerinde ton sür ton çini motifleri ve altın V yaka.',
           label: 'Ön',
         },
       ],
@@ -318,7 +318,7 @@ export const products: Product[] = [
       source: 'Çini & Direnç',
       paragraphs: [
         'Çini, Anadolu’nun sabrıdır. Toprak önce şekil alır, sonra ateşe girer; çıktığında rengi artık değişmez. Bu yüzden yüzyıllar sonra bile ilk günkü gibi durur.',
-        'Çinimaçın’ın deseni bu sabırdan alındı. Siyahın üzerine siyah işlendi: uzaktan tek bir renk, yakından bir pano. Görmek için bakmak yeterli değil, ışığı beklemek gerekiyor.',
+        'Çinimaçin’in deseni bu sabırdan alındı. Siyahın üzerine siyah işlendi: uzaktan tek bir renk, yakından bir pano. Görmek için bakmak yeterli değil, ışığı beklemek gerekiyor.',
         'Altın yaka ve manşetler ise fırından çıkan parlaklık. Bir formanın üzerindeki en küçük detay, çoğu zaman en çok emek isteyen yeridir.',
       ],
       motifs: ['Sekizgen pano', 'Rumi kıvrım', 'Fırın parlaklığı'],

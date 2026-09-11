@@ -20,14 +20,14 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') ?? 'https://bayburtstore.com',
   tagline: 'Geçmişten gelen, geleceğe taşınan.',
   description:
-    'Bayburt Store — Bayburtspor Miras Koleksiyonu. Hisar, Çoruh ve Çinimaçın formaları; şehrin kalesinden, nehrinden ve çini motiflerinden doğan üç tasarım.',
+    'Bayburt Store — Bayburtspor Miras Koleksiyonu. Hisar, Çoruh ve Çinimaçin formaları; şehrin kalesinden, nehrinden ve çini motiflerinden doğan üç tasarım.',
   keywords: [
     'Bayburt Store',
     'Bayburtspor',
     'Miras Koleksiyonu',
     'Hisar forma',
     'Çoruh forma',
-    'Çinimaçın forma',
+    'Çinimaçin forma',
     'Bayburt forma',
     '69 Bayburt',
     'futbol forması',

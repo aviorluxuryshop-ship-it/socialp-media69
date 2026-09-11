@@ -19,7 +19,9 @@ export function formatPrice(value: number, symbol = '₺'): string {
   const negative = value < 0
   const [integer = '0', fraction = '00'] = Math.abs(value).toFixed(2).split('.')
   const grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-  return `${negative ? '-' : ''}${symbol}${grouped},${fraction}`
+  // Whole lira are written whole. ₺2.450,00 reads like a bank statement.
+  const kurus = fraction === '00' ? '' : `,${fraction}`
+  return `${negative ? '-' : ''}${symbol}${grouped}${kurus}`
 }
 
 /**

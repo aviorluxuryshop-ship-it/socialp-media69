@@ -252,7 +252,7 @@ export default async function ProductPage({ params }: PageProps) {
               <Reveal
                 as="h2"
                 delay={0.06}
-                className="mt-5 font-display text-[clamp(1.8rem,4.2vw,2.9rem)] font-semibold uppercase leading-tight tracking-tight text-white"
+                className="mt-5 font-display text-[clamp(1.8rem,4.2vw,2.9rem)] font-semibold uppercase leading-[1.14] tracking-tight text-white"
               >
                 <span id="hikaye">{product.story.heading}</span>
               </Reveal>

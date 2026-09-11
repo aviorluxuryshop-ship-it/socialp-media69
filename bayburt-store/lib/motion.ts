@@ -74,4 +74,9 @@ export const overlayLink: Variants = {
 }
 
 /** Viewport defaults for scroll-triggered reveals. */
-export const viewportOnce = { once: true, amount: 0.25 } as const
+/**
+ * A block reveals as soon as a tenth of it is in view. At a quarter, a tall
+ * story block sits blank through the first screen of scrolling it — and a
+ * block taller than four screens would never reach the threshold at all.
+ */
+export const viewportOnce = { once: true, amount: 0.1 } as const

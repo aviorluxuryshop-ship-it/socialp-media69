@@ -61,7 +61,7 @@ export function Header() {
         <span
           aria-hidden
           className={cn(
-            'pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--header-height)+2.5rem)] bg-[linear-gradient(180deg,rgba(5,5,5,0.82)_0%,rgba(5,5,5,0.52)_55%,transparent_100%)] transition-opacity duration-500 ease-luxe',
+            'pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--header-height)+2.5rem)] bg-[linear-gradient(180deg,rgba(5,5,5,0.94)_0%,rgba(5,5,5,0.86)_46%,rgba(5,5,5,0.4)_78%,transparent_100%)] transition-opacity duration-500 ease-luxe',
             isScrolled && !isOpen ? 'opacity-0' : 'opacity-100',
           )}
         />

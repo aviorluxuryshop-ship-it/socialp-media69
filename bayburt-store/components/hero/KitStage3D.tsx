@@ -25,7 +25,7 @@ interface KitNode {
 }
 
 /** Widest kit aspect; the portrait carousel is spaced off this. */
-const KIT_ASPECT = 0.91
+const KIT_ASPECT = 0.78
 
 /**
  * Where the kits stand inside the backdrop, as fractions of the plate.
@@ -72,7 +72,7 @@ const HOVER_STEP = 0.18
  * difference between a readable page and a kit sitting on its own name.
  */
 const PORTRAIT_GUARD_TOP = 138
-const PORTRAIT_GUARD_FOOT = 216
+const PORTRAIT_GUARD_FOOT = 238
 const CAMERA_Z = 6
 
 /** How much bigger a hovered kit reads: the lift, plus the step's perspective. */
@@ -81,8 +81,13 @@ const HOVER_GROWTH = HOVER_SCALE * (CAMERA_Z / (CAMERA_Z - HOVER_STEP))
 /** Kits stand on the middle of the safe band. */
 const PLATE_KIT_Y = (PLATE_SAFE_TOP + PLATE_SAFE_BOTTOM) / 2
 
-/** Rim light per kit: gold for Hisar, daylight for Çoruh, warm gold for Çinimaçın. */
-const RIM_COLOURS = [0xffb422, 0xf2f6ff, 0xd4af37]
+/**
+ * Rim light per kit: gold for Hisar, daylight for Çoruh, and for Çinimaçin a
+ * a neutral white rather than gold — a warm rim multiplies into a black
+ * garment and turns it olive, and a black kit should stay black when a light
+ * is brought to it. Its gold trim picks up the light on its own.
+ */
+const RIM_COLOURS = [0xffc247, 0xeef3ff, 0xf6f4f0]
 
 /**
  * The backdrop is three regions — the castle and its gold light, the river
@@ -100,6 +105,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const labelRefs = useRef<(HTMLDivElement | null)[]>([])
+  const dotsRef = useRef<HTMLDivElement>(null)
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [isReady, setIsReady] = useState(false)
@@ -215,7 +221,12 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const portraitY =
         (clientHeight / 2 - (PORTRAIT_GUARD_TOP + bandHeight / 2)) * worldPerPixel
 
-      layout = { scale, gap: scale * KIT_ASPECT * 1.25, portrait, portraitY, slots }
+      // Never less than a screen apart: on a short phone the kit is small
+      // enough that a gap sized off the kit alone leaves its neighbour
+      // hanging into the frame.
+      const gap = Math.max(scale * KIT_ASPECT * 1.35, visibleWidth * 0.94)
+
+      layout = { scale, gap, portrait, portraitY, slots }
       setIsPortrait(portrait)
 
       camera.aspect = aspect
@@ -243,9 +254,12 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
           return
         }
 
-        // Opaque with an alpha cutout. A transparent material writes depth
-        // from its feathered edge fragments, which cuts a visible seam where
-        // one kit's plane passes in front of another.
+        // Opaque with an alpha cutout, resolved through the multisample
+        // buffer. A plain cutout has no anti-aliasing, so against the pale
+        // valley behind them the sleeves read as a staircase; a transparent
+        // material instead writes depth from its feathered edge fragments and
+        // cuts a seam where one kit's plane passes in front of another.
+        // Alpha-to-coverage gives the soft edge without the depth trouble.
         //
         // One inflated shell, not two. A rear shell sits far enough behind the
         // front that perspective slides it out from under the silhouette at
@@ -254,7 +268,8 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         // from behind anyway.
         const material = new THREE.MeshStandardMaterial({
           map: meshes.texture,
-          alphaTest: 0.35,
+          alphaTest: 0.5,
+          alphaToCoverage: true,
           roughness: 0.82,
           metalness: 0.06,
           side: THREE.DoubleSide,
@@ -382,8 +397,10 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const highlight = layout.portrait ? focusRef.current : active
       rimTarget.set(highlight === null ? rimBase.getHex() : RIM_COLOURS[highlight] ?? rimBase.getHex())
       rim.color.lerp(rimTarget, 0.06)
-      rim.intensity += ((highlight === null ? 1.9 : 3.1) - rim.intensity) * 0.06
-      key.intensity += ((highlight === null ? 2.4 : 3.0) - key.intensity) * 0.06
+      // Restrained: at full strength the rim draws a bright outline around the
+      // silhouette, which reads as a halo rather than as light.
+      rim.intensity += ((highlight === null ? 1.9 : 2.2) - rim.intensity) * 0.06
+      key.intensity += ((highlight === null ? 2.4 : 2.7) - key.intensity) * 0.06
 
       nodes.forEach((node) => {
         const isActive = node.index === active
@@ -423,8 +440,12 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       })
 
       // Camera drifts with the pointer — a slow studio dolly, not a swing.
-      const driftX = prefersReducedMotion ? 0 : pointer.x * 0.42
-      const driftY = prefersReducedMotion ? 0 : pointer.y * 0.26
+      // Only under a mouse: on a phone the pointer is wherever the last tap
+      // landed, so the drift leaves the kit sitting off-centre after someone
+      // presses a carousel dot.
+      const drifts = !prefersReducedMotion && !layout.portrait
+      const driftX = drifts ? pointer.x * 0.42 : 0
+      const driftY = drifts ? pointer.y * 0.26 : 0
       camera.position.x += (driftX - camera.position.x) * 0.045
       camera.position.y += (driftY - camera.position.y) * 0.045
       camera.lookAt(0, 0, 0)
@@ -433,6 +454,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
       // Park each label under its kit, in screen space.
       const bounds = container!.getBoundingClientRect()
+      let labelFoot = 0
       nodes.forEach((node) => {
         const label = labelRefs.current[node.index]
         if (!label) return
@@ -440,7 +462,18 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         const x = (projected.x * 0.5 + 0.5) * bounds.width
         const y = (-projected.y * 0.5 + 0.5) * bounds.height
         label.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, 0)`
+        if (node.index === focusRef.current) labelFoot = y + label.offsetHeight
       })
+
+      // The carousel dots follow the label rather than the bottom of the
+      // screen. Anchored to the screen they collide with the kind line
+      // whenever the kit is tall — a tablet in portrait, most of all.
+      const dots = dotsRef.current
+      if (dots && layout.portrait && labelFoot > 0) {
+        // Never below the strip the shop button needs, however tall the kit.
+        const floor = bounds.height - 96
+        dots.style.top = `${Math.round(Math.min(labelFoot + 14, floor))}px`
+      }
     }
 
     tick()
@@ -466,8 +499,6 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
   return (
     <div ref={containerRef} className="absolute inset-0 cursor-pointer">
-      <canvas ref={canvasRef} className="block h-full w-full" aria-hidden />
-
       {/* The stage answers the selection, not just the kit. The region of the
           backdrop the chosen kit belongs to lifts; the other two recede. */}
       {REGIONS.map((region, index) => {
@@ -500,9 +531,16 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         )
       })}
 
+      {/* Above the region lights: an absolutely positioned sibling paints over
+          a static one whatever the DOM order, so the canvas is lifted out of
+          flow to sit on top of them — the lights belong behind the kits, not
+          washed across them. */}
+      <canvas ref={canvasRef} className="relative z-10 block h-full w-full" aria-hidden />
+
+
       <div
         className={cn(
-          'pointer-events-none absolute inset-0 transition-opacity duration-1000 ease-luxe',
+          'pointer-events-none absolute inset-0 z-20 transition-opacity duration-1000 ease-luxe',
           isReady ? 'opacity-100' : 'opacity-0',
         )}
       >
@@ -536,7 +574,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       </div>
 
       {isPortrait ? (
-        <div className="absolute inset-x-0 bottom-[86px] flex justify-center sm:bottom-[104px]">
+        <div ref={dotsRef} className="absolute inset-x-0 top-0 z-20 flex justify-center">
           {products.map((product, index) => (
             <button
               key={product.slug}

@@ -10,7 +10,7 @@ import { siteConfig } from '@/data/site'
 export const metadata: Metadata = {
   title: `${siteConfig.name} — ${siteConfig.collection}`,
   description:
-    'Bayburt Store Miras Koleksiyonu: Hisar, Çoruh ve Çinimaçın formaları. Bayburt Kalesi, Çoruh Nehri ve çini motiflerinden doğan üç tasarım.',
+    'Bayburt Store Miras Koleksiyonu: Hisar, Çoruh ve Çinimaçin formaları. Bayburt Kalesi, Çoruh Nehri ve çini motiflerinden doğan üç tasarım.',
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
@@ -71,6 +71,22 @@ export default function HomePage() {
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.62)_0%,rgba(5,5,5,0.46)_20%,rgba(5,5,5,0.2)_34%,transparent_46%,transparent_64%,rgba(5,5,5,0.78)_100%)] lg:bg-none"
           />
+
+          {/* A pool of shadow under each kit. The valley behind them is pale,
+              and the white Çoruh in particular loses its silhouette against
+              it; this gives all three something to stand out from. Centred on
+              the same fractions the stage places the kits at. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 hidden lg:block"
+            style={{
+              background: [
+                'radial-gradient(19% 37% at 27.6% 52%, rgba(5,5,5,0.6) 0%, rgba(5,5,5,0.32) 46%, transparent 72%)',
+                'radial-gradient(18% 35% at 51.6% 52%, rgba(5,5,5,0.68) 0%, rgba(5,5,5,0.38) 46%, transparent 72%)',
+                'radial-gradient(19% 37% at 76.4% 52%, rgba(5,5,5,0.58) 0%, rgba(5,5,5,0.3) 46%, transparent 72%)',
+              ].join(', '),
+            }}
+          />
           <KitSelector products={products} />
 
           {/* Anchored to the plate, not to the window: on desktop it sits in
@@ -91,7 +107,7 @@ export default function HomePage() {
         <p className="font-sans text-[10px] uppercase tracking-luxe text-white/85 [text-shadow:0_1px_14px_rgba(5,5,5,0.95)] sm:text-[11px]">
           Bayburtspor
         </p>
-        <h1 className="mt-2.5 font-display text-[clamp(2.5rem,11vw,4rem)] font-semibold uppercase leading-[0.94] tracking-[0.07em] [text-shadow:0_2px_22px_rgba(5,5,5,0.95)]">
+        <h1 className="mt-2.5 font-display text-[clamp(2.5rem,11vw,4rem)] font-semibold uppercase leading-[1.06] tracking-[0.07em] [text-shadow:0_2px_22px_rgba(5,5,5,0.95)]">
           <span className="gold-text">Miras</span>
           <span className="mt-2 block font-sans text-[clamp(0.6rem,2.4vw,0.7rem)] font-normal tracking-luxe text-white/85">
             Koleksiyonu
@@ -108,7 +124,7 @@ export default function HomePage() {
           same text for readers and crawlers. */}
       <p className="sr-only">
         Bayburtspor Miras Koleksiyonu — geçmişten gelen, geleceğe taşınan. Hisar, Çoruh,
-        Çinimaçın. Tarih, şehir, takım, biz. Kültür, miras, inanç, daima.
+        Çinimaçin. Tarih, şehir, takım, biz. Kültür, miras, inanç, daima.
       </p>
     </section>
   )
