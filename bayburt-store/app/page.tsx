@@ -89,9 +89,11 @@ export default function HomePage() {
           />
           <KitSelector products={products} />
 
-          {/* Anchored to the plate, not to the window: on desktop it sits in
-              the strip under the painted kit names. */}
-          <div className="absolute inset-x-0 bottom-7 z-10 flex justify-center sm:bottom-9 lg:bottom-[3.4%]">
+          {/* Anchored to the plate, not to the window, and on desktop stacked
+              below the kit names by a fixed distance — 24px of air above the
+              names, the names themselves, then 30px before the button — so
+              the four things never close up on a short window. */}
+          <div className="absolute inset-x-0 bottom-7 z-20 flex justify-center sm:bottom-9 lg:bottom-auto lg:top-[calc(74.5%+101px)]">
             <Link
               href="/koleksiyon"
               className="group inline-flex items-center gap-3.5 border border-white/25 bg-obsidian/40 px-9 py-4 font-sans text-[11px] uppercase tracking-luxe text-white backdrop-blur-sm transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200 lg:py-3"

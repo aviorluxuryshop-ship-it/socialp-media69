@@ -54,7 +54,20 @@ const PLATE_KIT = [
  * chosen so that a hovered kit still lands inside it.
  */
 const PLATE_SAFE_TOP = 0.245
-const PLATE_SAFE_BOTTOM = 0.773
+const PLATE_SAFE_BOTTOM = 0.745
+
+/**
+ * Where the band under the kits begins, and how it is stacked.
+ *
+ * The kit, its name, its kind and the shop button each get a strip of their
+ * own, separated by fixed gaps rather than by fractions — a fraction shrinks
+ * with the plate and the strips close up on a short window. Nothing here is
+ * layered over anything: the kits end at PLATE_SAFE_BOTTOM and the type
+ * starts below it.
+ */
+const NAME_BAND_TOP = '74.5%'
+const NAME_BAND_GAP = 24
+const NAME_BAND_HEIGHT = 47
 
 /**
  * Hover lift, kept deliberately small. The kit also steps toward the camera,
@@ -72,7 +85,17 @@ const HOVER_STEP = 0.18
  * difference between a readable page and a kit sitting on its own name.
  */
 const PORTRAIT_GUARD_TOP = 138
-const PORTRAIT_GUARD_FOOT = 238
+
+/**
+ * What has to fit below the kit in portrait, in pixels: the name, its kind,
+ * the carousel dots, the shop button, and the gaps between all four. The kit
+ * is sized to what is left rather than to a guessed fraction, so the four
+ * never close up on a short phone or run into each other on a tall tablet.
+ */
+const PORTRAIT_FOOT_STACK = 246
+
+/** Air between the kit's hem and its name, on top of the anchor's own gap. */
+const PORTRAIT_NAME_GAP = 18
 const CAMERA_Z = 6
 
 /** How much bigger a hovered kit reads: the lift, plus the step's perspective. */
@@ -211,10 +234,13 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
       // Portrait crops the plate too hard to align to; it shows one kit at a
       // time and slides instead, so there it is one size for all three.
-      const bandHeight = Math.max(
-        clientHeight - PORTRAIT_GUARD_TOP - PORTRAIT_GUARD_FOOT,
-        clientHeight * 0.3,
+      // The label hangs a fixed fraction of the kit below it, so the kit and
+      // that gap together have to fit the space the foot stack leaves.
+      const usable = Math.max(
+        clientHeight - PORTRAIT_GUARD_TOP - PORTRAIT_FOOT_STACK - PORTRAIT_NAME_GAP,
+        clientHeight * 0.26,
       )
+      const bandHeight = usable / 1.02
       const scale = portrait
         ? Math.min(visibleWidth * 0.86, bandHeight * worldPerPixel)
         : (slots[0]?.scale ?? 1)
@@ -470,9 +496,9 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       // whenever the kit is tall — a tablet in portrait, most of all.
       const dots = dotsRef.current
       if (dots && layout.portrait && labelFoot > 0) {
-        // Never below the strip the shop button needs, however tall the kit.
-        const floor = bounds.height - 96
-        dots.style.top = `${Math.round(Math.min(labelFoot + 14, floor))}px`
+        // Never into the strip the shop button needs, however tall the kit.
+        const floor = bounds.height - 124
+        dots.style.top = `${Math.round(Math.min(labelFoot + 16, floor))}px`
       }
     }
 
@@ -538,9 +564,42 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full" aria-hidden />
 
 
+      {/* Landscape: each name sits in the band below the kits, under its own
+          kit and on clear ground — not projected onto the stage, so nothing
+          it belongs to can drift over it. */}
+      <div
+        aria-hidden={isPortrait}
+        className={cn(
+          'pointer-events-none absolute inset-x-0 z-20 hidden transition-opacity duration-1000 ease-luxe lg:block',
+          isReady ? 'opacity-100' : 'opacity-0',
+        )}
+        style={{ top: NAME_BAND_TOP, marginTop: NAME_BAND_GAP, height: NAME_BAND_HEIGHT }}
+      >
+        {products.map((product, index) => (
+          <div
+            key={product.slug}
+            className="absolute top-0 w-56 -translate-x-1/2 text-center"
+            style={{ left: `${(PLATE_KIT[index]?.x ?? 0.5) * 100}%` }}
+          >
+            <p
+              className={cn(
+                'font-display text-2xl uppercase leading-[1.1] tracking-wider2 transition-colors duration-500',
+                activeIndex === index ? 'text-gold-300' : 'text-white',
+              )}
+            >
+              {product.displayName}
+            </p>
+            <p className="mt-1.5 font-sans text-[11px] uppercase tracking-wider2 text-smoke">
+              {product.kind}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Portrait: one name at a time, parked under the kit it belongs to. */}
       <div
         className={cn(
-          'pointer-events-none absolute inset-0 z-20 transition-opacity duration-1000 ease-luxe',
+          'pointer-events-none absolute inset-0 z-20 transition-opacity duration-1000 ease-luxe lg:hidden',
           isReady ? 'opacity-100' : 'opacity-0',
         )}
       >
@@ -552,23 +611,16 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
             }}
             className={cn(
               'absolute left-0 top-0 w-52 text-center transition-opacity duration-500 will-change-transform',
-              // The campaign plate already carries the names on desktop.
-              !isPortrait && 'opacity-0',
-              isPortrait && focusIndex !== index && 'opacity-0',
+              focusIndex !== index && 'opacity-0',
             )}
+            style={{ paddingTop: PORTRAIT_NAME_GAP }}
           >
-            <p
-              className={cn(
-                'font-display text-xl uppercase tracking-wider2 transition-colors duration-500 [text-shadow:0_2px_18px_rgba(5,5,5,0.95)] sm:text-2xl',
-                activeIndex === index ? 'text-gold-300' : 'text-white',
-              )}
-            >
+            <p className="font-display text-xl uppercase leading-[1.1] tracking-wider2 text-white [text-shadow:0_2px_18px_rgba(5,5,5,0.95)] sm:text-2xl">
               {product.displayName}
             </p>
-            <p className="mt-2 font-sans text-[10px] uppercase tracking-wider2 text-white/70 [text-shadow:0_1px_12px_rgba(5,5,5,0.95)]">
+            <p className="mt-2 font-sans text-[11px] uppercase tracking-wider2 text-white/75 [text-shadow:0_1px_12px_rgba(5,5,5,0.95)]">
               {product.kind}
             </p>
-
           </div>
         ))}
       </div>
