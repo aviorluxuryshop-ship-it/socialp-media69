@@ -99,7 +99,7 @@ export function JerseyViewer({ product }: { product: Product }) {
           />
         ) : null}
 
-        <span className="pointer-events-none absolute bottom-5 left-5 font-sans text-[11px] uppercase tracking-wider2 text-smoke opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+        <span className="pointer-events-none absolute bottom-5 left-5 hidden font-sans text-[11px] uppercase tracking-wider2 text-smoke opacity-0 transition-opacity duration-500 group-hover:opacity-100 lg:block">
           Yakınlaştırmak için üzerine gelin
         </span>
 

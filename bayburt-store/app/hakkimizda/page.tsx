@@ -49,7 +49,7 @@ const TIMELINE = [
   {
     year: '2025',
     heading: 'Miras Koleksiyonu',
-    body: 'Bayburt Store, kulübün görsel hafızasını üç formada topladı. Hisar, Çoruh ve Çinimaçın; tasarım değil, tercüme.',
+    body: 'Bayburt Store, kulübün görsel hafızasını üç formada topladı. Hisar, Çoruh ve Çinimaçin; tasarım değil, tercüme.',
   },
 ]
 
@@ -89,7 +89,7 @@ export default function AboutPage() {
           <Reveal
             as="h1"
             delay={0.06}
-            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[0.98] tracking-tight text-balance text-white"
+            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
           >
             Bir şehrin hafızası, bir kulübün rengi
           </Reveal>
@@ -109,7 +109,7 @@ export default function AboutPage() {
 
       <section className="py-4 lg:py-8" aria-label="Rakamlar">
         <div className="container">
-          <RevealGroup className="grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+          <RevealGroup className="grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
             {FIGURES.map((figure) => (
               <RevealItem key={figure.label} className="bg-obsidian px-7 py-9">
                 <p className="font-display text-3xl font-semibold tracking-tight text-gold-400">

@@ -106,7 +106,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
             <motion.h2
               id={`${product.slug}-baslik`}
               variants={fadeUp(22)}
-              className="mt-5 font-display text-[clamp(2rem,5vw,3.5rem)] font-semibold uppercase leading-[1.04] tracking-tight text-white"
+              className="mt-5 font-display text-[clamp(2rem,5vw,3.5rem)] font-semibold uppercase leading-[1.14] tracking-tight text-white"
             >
               {product.displayName}
             </motion.h2>

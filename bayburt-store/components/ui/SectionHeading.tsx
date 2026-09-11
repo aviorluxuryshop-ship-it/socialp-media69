@@ -26,7 +26,7 @@ export function SectionHeading({
         </Reveal>
       ) : null}
 
-      <Reveal as="h2" className="font-display text-[clamp(1.9rem,4.4vw,3.25rem)] font-semibold uppercase leading-[1.08] tracking-tight text-balance text-white">
+      <Reveal as="h2" className="font-display text-[clamp(1.9rem,4.4vw,3.25rem)] font-semibold uppercase leading-[1.16] tracking-tight text-balance text-white">
         {title}
       </Reveal>
 

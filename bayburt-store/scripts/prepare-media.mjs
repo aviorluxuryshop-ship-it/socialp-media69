@@ -65,12 +65,16 @@ async function prepareKit(slug, file) {
   const cropHeight = bottom - top + 1
   const scale = Math.min(1, OUTPUT_MAX / Math.max(cropWidth, cropHeight))
 
-  const out = await sharp(source)
+  const trimmed = sharp(source)
     .ensureAlpha()
     .extract({ left, top, width: cropWidth, height: cropHeight })
     .resize(Math.round(cropWidth * scale), Math.round(cropHeight * scale), { fit: 'fill' })
-    .png({ compressionLevel: 9 })
-    .toFile(join(JERSEY_DIR, `${slug}.png`))
+
+  const out = await trimmed.clone().png({ compressionLevel: 9 }).toFile(join(JERSEY_DIR, `${slug}.png`))
+
+  // The 3D stage uploads the file to WebGL itself, so the image optimiser
+  // never touches it — this is the copy it actually loads.
+  await trimmed.clone().webp({ quality: 86, alphaQuality: 92 }).toFile(join(JERSEY_DIR, `${slug}.webp`))
 
   console.log(`forma  ${slug}  ${width}x${height} -> ${out.width}x${out.height}`)
 }

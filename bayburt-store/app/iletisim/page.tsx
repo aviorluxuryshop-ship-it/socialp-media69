@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { ContactForm } from '@/components/contact/ContactForm'
 import { ContactGrid } from '@/components/contact/ContactGrid'
 import { GoldRule } from '@/components/ui/GoldRule'
 import { Reveal, RevealGroup, RevealItem } from '@/components/ui/Reveal'
@@ -50,7 +51,7 @@ export default function ContactPage() {
           <Reveal
             as="h1"
             delay={0.06}
-            className="mt-6 max-w-3xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[0.98] tracking-tight text-balance text-white"
+            className="mt-6 max-w-3xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
           >
             Kapımız açık
           </Reveal>
@@ -155,6 +156,25 @@ export default function ContactPage() {
                 </ul>
               </Reveal>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="form">
+        <div className="container">
+          <div className="max-w-2xl">
+            <SectionHeading eyebrow="Mesaj" title={<span id="form">Bize yazın</span>} />
+            <Reveal
+              as="p"
+              delay={0.08}
+              className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-smoke"
+            >
+              Formu doldurun, mesajınız kendi e-posta uygulamanızda hazır olarak açılsın —
+              göndermeden önce son hâlini görürsünüz.
+            </Reveal>
+            <Reveal delay={0.14}>
+              <ContactForm />
+            </Reveal>
           </div>
         </div>
       </section>

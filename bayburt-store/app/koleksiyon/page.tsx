@@ -10,7 +10,7 @@ import { siteConfig } from '@/data/site'
 
 const title = 'Koleksiyon'
 const description =
-  'Bayburt Store Miras Koleksiyonu’nun hikâyesi: Bayburt Kalesi’nden Hisar, Çoruh Nehri’nden Çoruh, çini motiflerinden Çinimaçın. Her formanın kaynağı, ölçüsü ve anlamı.'
+  'Bayburt Store Miras Koleksiyonu’nun hikâyesi: Bayburt Kalesi’nden Hisar, Çoruh Nehri’nden Çoruh, çini motiflerinden Çinimaçin. Her formanın kaynağı, ölçüsü ve anlamı.'
 
 export const metadata: Metadata = {
   title,
@@ -50,7 +50,7 @@ export default function CollectionPage() {
           <Reveal
             as="h1"
             delay={0.06}
-            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[0.98] tracking-tight text-balance text-white"
+            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
           >
             Geçmişten gelen, geleceğe taşınan
           </Reveal>
@@ -78,7 +78,7 @@ export default function CollectionPage() {
       <section className="border-t border-white/10 py-20 lg:py-28">
         <div className="container">
           <div className="mx-auto max-w-2xl text-center">
-            <Reveal as="h2" className="font-display text-[clamp(1.7rem,4vw,2.75rem)] font-semibold uppercase leading-tight tracking-tight text-balance text-white">
+            <Reveal as="h2" className="font-display text-[clamp(1.7rem,4vw,2.75rem)] font-semibold uppercase leading-[1.14] tracking-tight text-balance text-white">
               Üçü bir arada
             </Reveal>
             <Reveal as="p" delay={0.08} className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-smoke">
