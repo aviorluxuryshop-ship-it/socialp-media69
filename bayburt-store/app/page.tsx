@@ -105,7 +105,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center lg:hidden">
+      <div
+        data-hero-head
+        className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center lg:hidden"
+      >
         <p className="font-sans text-[10px] uppercase tracking-luxe text-white/85 [text-shadow:0_1px_14px_rgba(5,5,5,0.95)] sm:text-[11px]">
           Bayburtspor
         </p>

@@ -99,13 +99,17 @@ export function JerseyViewer({ product }: { product: Product }) {
           />
         ) : null}
 
-        <span className="pointer-events-none absolute bottom-5 left-5 hidden font-sans text-[11px] uppercase tracking-wider2 text-smoke opacity-0 transition-opacity duration-500 group-hover:opacity-100 lg:block">
-          Yakınlaştırmak için üzerine gelin
-        </span>
+      </div>
 
-        <span className="pointer-events-none absolute right-5 top-5 font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
+      {/* Under the frame, not over the garment: small type on a kit cannot be
+          read, whichever kit it is. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5">
+        <p className="font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
           {product.colorway}
-        </span>
+        </p>
+        <p className="hidden font-sans text-[11px] uppercase tracking-wider2 text-ash lg:block">
+          Yakınlaştırmak için üzerine gelin
+        </p>
       </div>
 
       {views.length > 1 ? (

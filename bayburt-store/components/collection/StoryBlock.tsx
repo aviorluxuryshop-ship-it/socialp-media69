@@ -43,17 +43,16 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
     >
       <div className="container">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Visual plate */}
+          {/* Visual plate. The caption sits under it, never on the garment:
+              small grey type over a kit is unreadable whichever kit it is. */}
+          <div className={cn(isReversed && 'lg:order-2')}>
           <motion.div
             initial={{ opacity: 0, scale: 0.97 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={viewportOnce}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
             data-reveal
-            className={cn(
-              'relative aspect-[4/5] overflow-hidden rounded-sm border border-white/10 bg-graphite-dark sm:aspect-[5/4] lg:aspect-[4/5]',
-              isReversed && 'lg:order-2',
-            )}
+            className="relative aspect-[4/5] overflow-hidden rounded-sm border border-white/10 bg-graphite-dark sm:aspect-[5/4] lg:aspect-[4/5]"
           >
             <span
               aria-hidden
@@ -85,10 +84,12 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
               />
             </motion.div>
 
-            <span className="absolute bottom-6 left-6 font-sans text-[11px] uppercase tracking-wider2 text-smoke">
-              {String(index + 1).padStart(2, '0')} · {product.kind}
-            </span>
           </motion.div>
+
+            <p className="mt-4 font-sans text-[11px] uppercase tracking-wider2 text-smoke">
+              {String(index + 1).padStart(2, '0')} · {product.kind}
+            </p>
+          </div>
 
           {/* Narrative column */}
           <motion.div
