@@ -80,25 +80,39 @@ async function prepareKit(slug, file) {
 }
 
 /**
- * The backdrop has a shop button painted into its foot, and the page draws a
- * real one of its own — two buttons, one of them dead. This lifts the painted
- * one out.
+ * The backdrop has type painted into its foot — a shop button, and the three
+ * kit names with their kind lines — and the page sets all of it live. Painted
+ * in, a name sits inside the same picture as the kit above it, with no way to
+ * put air between them; lifted out, each belongs to a band of its own.
  *
- * The ground under it is flat obsidian with a slow vertical fall, so each row
- * is refilled by blending the colour just left of the box into the colour just
- * right of it, and the seam is feathered back into the original.
+ * The ground under all of it is flat obsidian with a slow vertical fall, so
+ * each row is refilled by blending the colour just left of the box into the
+ * colour just right of it, and the seam is feathered back into the original.
  */
-const SHOP_BUTTON = { left: 0.4019, top: 0.8779, right: 0.5975, bottom: 0.9578 }
+const PAINTED = [
+  // The shop button at the foot.
+  { left: 0.4019, top: 0.8779, right: 0.5975, bottom: 0.9578 },
+  // The three kit names and their kind lines. The page sets these itself, in
+  // a band of their own below the kits, so that a name is never part of the
+  // same picture as the garment above it.
+  { left: 0.1650, top: 0.7690, right: 0.8250, bottom: 0.8600 },
+]
 const FEATHER = 7
 
-async function eraseShopButton(source) {
+async function erasePaintedType(source) {
   const { data, info } = await sharp(source).removeAlpha().raw().toBuffer({ resolveWithObject: true })
   const { width, height, channels } = info
 
-  const x0 = Math.round(SHOP_BUTTON.left * width)
-  const x1 = Math.round(SHOP_BUTTON.right * width)
-  const y0 = Math.round(SHOP_BUTTON.top * height)
-  const y1 = Math.round(SHOP_BUTTON.bottom * height)
+  for (const box of PAINTED) eraseBox(data, width, height, channels, box)
+
+  return sharp(data, { raw: { width, height, channels } }).jpeg({ quality: 96 }).toBuffer()
+}
+
+function eraseBox(data, width, height, channels, box) {
+  const x0 = Math.round(box.left * width)
+  const x1 = Math.round(box.right * width)
+  const y0 = Math.round(box.top * height)
+  const y1 = Math.round(box.bottom * height)
   const SAMPLE = 20
 
   const median = (values) => {
@@ -131,8 +145,6 @@ async function eraseShopButton(source) {
       }
     }
   }
-
-  return sharp(data, { raw: { width, height, channels } }).jpeg({ quality: 96 }).toBuffer()
 }
 
 /**
@@ -153,7 +165,7 @@ async function buildHeroPlate(file) {
   const width = meta.width ?? 1600
   const height = meta.height ?? 901
 
-  const cleaned = await eraseShopButton(source)
+  const cleaned = await erasePaintedType(source)
   const plate = sharp(cleaned)
 
   await plate.clone().jpeg({ quality: 84, mozjpeg: true }).toFile(join(HERO_DIR, 'plate.jpg'))
