@@ -84,7 +84,14 @@ const HOVER_STEP = 0.18
  * off-centre and the kit is lifted to match — which on a small phone is the
  * difference between a readable page and a kit sitting on its own name.
  */
+/**
+ * Fallback only. In portrait the real guard is the foot of the live wordmark
+ * plus PORTRAIT_HEAD_GAP: its height comes out of a clamp, so measuring it
+ * beats guessing — guessing left the kit's collar a few pixels under the
+ * tagline on a phone.
+ */
 const PORTRAIT_GUARD_TOP = 138
+const PORTRAIT_HEAD_GAP = 30
 
 /**
  * What has to fit below the kit in portrait, in pixels: the name, its kind,
@@ -234,18 +241,23 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
       // Portrait crops the plate too hard to align to; it shows one kit at a
       // time and slides instead, so there it is one size for all three.
+      const head = document.querySelector('[data-hero-head]')
+      const headFoot = head
+        ? head.getBoundingClientRect().bottom - container!.getBoundingClientRect().top
+        : PORTRAIT_GUARD_TOP
+      const guardTop = Math.max(headFoot + PORTRAIT_HEAD_GAP, PORTRAIT_GUARD_TOP)
+
       // The label hangs a fixed fraction of the kit below it, so the kit and
       // that gap together have to fit the space the foot stack leaves.
       const usable = Math.max(
-        clientHeight - PORTRAIT_GUARD_TOP - PORTRAIT_FOOT_STACK - PORTRAIT_NAME_GAP,
-        clientHeight * 0.26,
+        clientHeight - guardTop - PORTRAIT_FOOT_STACK - PORTRAIT_NAME_GAP,
+        clientHeight * 0.24,
       )
       const bandHeight = usable / 1.02
       const scale = portrait
         ? Math.min(visibleWidth * 0.86, bandHeight * worldPerPixel)
         : (slots[0]?.scale ?? 1)
-      const portraitY =
-        (clientHeight / 2 - (PORTRAIT_GUARD_TOP + bandHeight / 2)) * worldPerPixel
+      const portraitY = (clientHeight / 2 - (guardTop + bandHeight / 2)) * worldPerPixel
 
       // Never less than a screen apart: on a short phone the kit is small
       // enough that a gap sized off the kit alone leaves its neighbour
