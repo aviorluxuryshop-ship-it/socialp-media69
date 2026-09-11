@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ShoppingCart } from 'lucide-react'
 
 import { KitSelector } from '@/components/hero/KitSelector'
 import { products } from '@/data/products'
@@ -89,18 +87,21 @@ export default function HomePage() {
           />
           <KitSelector products={products} />
 
-          {/* Anchored to the plate, not to the window, and on desktop stacked
-              below the kit names by a fixed distance — 24px of air above the
-              names, the names themselves, then 30px before the button — so
-              the four things never close up on a short window. */}
-          <div className="absolute inset-x-0 bottom-7 z-20 flex justify-center sm:bottom-9 lg:bottom-auto lg:top-[calc(74.5%+101px)]">
-            <Link
-              href="/koleksiyon"
-              className="group inline-flex items-center gap-3.5 border border-white/25 bg-obsidian/40 px-9 py-4 font-sans text-[11px] uppercase tracking-luxe text-white backdrop-blur-sm transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200 lg:py-3"
+          {/* The kits are the buttons. This says so — anchored to the plate,
+              not to the window, and on desktop stacked below the kit names by
+              a fixed distance so the four things never close up on a short
+              window. */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-10 z-20 flex justify-center px-6 sm:bottom-12 lg:bottom-auto lg:top-[calc(74.5%+103px)]">
+            <p
+              data-hero-cue
+              className="flex items-center gap-3.5 text-balance text-center font-sans text-[11px] uppercase tracking-luxe text-gold-300"
             >
-              <ShoppingCart className="h-4 w-4" aria-hidden />
-              Alışveriş yap
-            </Link>
+              {/* The rules only read as rules beside a single line; at phone
+                  width the sentence wraps and they would hang off one edge. */}
+              <span aria-hidden className="hidden h-px w-7 bg-gold-600/70 sm:block" />
+              Bir forma seçin, alışverişe başlayın
+              <span aria-hidden className="hidden h-px w-7 bg-gold-600/70 sm:block" />
+            </p>
           </div>
         </div>
       </div>

@@ -95,11 +95,11 @@ const PORTRAIT_HEAD_GAP = 30
 
 /**
  * What has to fit below the kit in portrait, in pixels: the name, its kind,
- * the carousel dots, the shop button, and the gaps between all four. The kit
+ * the carousel dots, the line that says to pick one, and the gaps. The kit
  * is sized to what is left rather than to a guessed fraction, so the four
  * never close up on a short phone or run into each other on a tall tablet.
  */
-const PORTRAIT_FOOT_STACK = 246
+const PORTRAIT_FOOT_STACK = 208
 
 /** Air between the kit's hem and its name, on top of the anchor's own gap. */
 const PORTRAIT_NAME_GAP = 18
@@ -509,7 +509,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const dots = dotsRef.current
       if (dots && layout.portrait && labelFoot > 0) {
         // Never into the strip the shop button needs, however tall the kit.
-        const floor = bounds.height - 124
+        const floor = bounds.height - 86
         dots.style.top = `${Math.round(Math.min(labelFoot + 16, floor))}px`
       }
     }
