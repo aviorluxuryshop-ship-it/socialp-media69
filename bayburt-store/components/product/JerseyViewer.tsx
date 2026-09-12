@@ -1,54 +1,29 @@
 'use client'
 
-import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
-import { useCallback, useState, type PointerEvent } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useState } from 'react'
 
 import { JerseyImage } from '@/components/ui/JerseyImage'
 import { LUXE_EASE } from '@/lib/motion'
 import type { Product } from '@/data/products'
 import { cn } from '@/lib/utils'
 
-const ZOOM = 1.55
-
+/**
+ * The kit is shown, not inspected. There is no zoom under the pointer: a
+ * shirt that jumps and slides while you look at it is harder to read than one
+ * that sits still, and there is nothing on a phone to hover with anyway.
+ */
 export function JerseyViewer({ product }: { product: Product }) {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isZoomed, setIsZoomed] = useState(false)
 
   const views = product.media.views
   const activeView = views[activeIndex] ?? views[0]
-
-  // Pointer-tracked origin, spring-damped so the zoom glides instead of snapping.
-  const originX = useMotionValue(50)
-  const originY = useMotionValue(50)
-  const smoothX = useSpring(originX, { stiffness: 120, damping: 22, mass: 0.5 })
-  const smoothY = useSpring(originY, { stiffness: 120, damping: 22, mass: 0.5 })
-  const transformOrigin = useMotionTemplate`${smoothX}% ${smoothY}%`
-
-  const handlePointerMove = useCallback(
-    (event: PointerEvent<HTMLDivElement>) => {
-      const bounds = event.currentTarget.getBoundingClientRect()
-      originX.set(((event.clientX - bounds.left) / bounds.width) * 100)
-      originY.set(((event.clientY - bounds.top) / bounds.height) * 100)
-    },
-    [originX, originY],
-  )
-
-  const handlePointerLeave = useCallback(() => {
-    setIsZoomed(false)
-    originX.set(50)
-    originY.set(50)
-  }, [originX, originY])
 
   if (!activeView) return null
 
   return (
     <div className="flex flex-col gap-5">
-      <div
-        onPointerMove={handlePointerMove}
-        onPointerEnter={() => setIsZoomed(true)}
-        onPointerLeave={handlePointerLeave}
-        className="group relative aspect-square overflow-hidden rounded-sm border border-white/10 bg-graphite-dark"
-      >
+      <div className="relative aspect-square overflow-hidden rounded-sm border border-white/10 bg-graphite-dark">
         <span
           aria-hidden
           className="absolute inset-0"
@@ -61,12 +36,7 @@ export function JerseyViewer({ product }: { product: Product }) {
           className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.4)_0%,transparent_34%,rgba(5,5,5,0.55)_100%)]"
         />
 
-        <motion.div
-          style={{ transformOrigin }}
-          animate={{ scale: isZoomed ? ZOOM : 1 }}
-          transition={{ duration: 0.9, ease: LUXE_EASE }}
-          className="absolute inset-[7%]"
-        >
+        <div className="absolute inset-[7%]">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={activeView.src}
@@ -85,20 +55,12 @@ export function JerseyViewer({ product }: { product: Product }) {
               />
             </motion.div>
           </AnimatePresence>
-        </motion.div>
+        </div>
 
-        {product.media.video ? (
-          <video
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-            src={product.media.video.src}
-            poster={product.media.video.poster}
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        ) : null}
-
+        {/* The product film used to fade in under the pointer. With the
+            inspection gone there is nothing left to reveal it, and an
+            invisible clip playing on loop is only a drain, so it is not
+            mounted. `media.video` stays in the data for a later surface. */}
       </div>
 
       {/* Under the frame, not over the garment: small type on a kit cannot be
@@ -106,9 +68,6 @@ export function JerseyViewer({ product }: { product: Product }) {
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5">
         <p className="font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
           {product.colorway}
-        </p>
-        <p className="hidden font-sans text-[11px] uppercase tracking-wider2 text-ash lg:block">
-          Yakınlaştırmak için üzerine gelin
         </p>
       </div>
 

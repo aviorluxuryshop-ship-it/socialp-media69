@@ -49,6 +49,7 @@ export default function CollectionPage() {
 
           <Reveal
             as="h1"
+            from="above"
             delay={0.06}
             className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
           >
