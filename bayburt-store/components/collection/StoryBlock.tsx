@@ -39,7 +39,13 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
       ref={sectionRef}
       id={product.slug}
       aria-labelledby={`${product.slug}-baslik`}
-      className="scroll-mt-24 border-t border-white/10 py-20 lg:py-32"
+      className={cn(
+        'scroll-mt-24 border-t border-white/14 py-20 lg:py-32',
+        // Every other block sits a shade above the ground. Three identical
+        // dark bands in a row read as one; alternating them gives the scroll
+        // somewhere to land.
+        isReversed ? 'bg-graphite-dark' : 'bg-obsidian',
+      )}
     >
       <div className="container">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
@@ -52,7 +58,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
             viewport={viewportOnce}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
             data-reveal
-            className="relative aspect-[4/5] overflow-hidden rounded-sm border border-white/10 bg-graphite-dark sm:aspect-[5/4] lg:aspect-[4/5]"
+            className="relative aspect-[4/5] overflow-hidden rounded-sm border border-white/14 bg-graphite-dark sm:aspect-[5/4] lg:aspect-[4/5]"
           >
             <span
               aria-hidden
@@ -134,7 +140,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
               {product.story.motifs.map((motif) => (
                 <li
                   key={motif}
-                  className="border border-white/12 px-3.5 py-2 font-sans text-[11px] uppercase tracking-wider2 text-ash"
+                  className="border border-white/16 px-3.5 py-2 font-sans text-[11px] uppercase tracking-wider2 text-ash"
                 >
                   {motif}
                 </li>
@@ -147,7 +153,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
             >
               <Link
                 href={`/koleksiyon/${product.slug}`}
-                className="group inline-flex items-center gap-3 border border-white/15 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+                className="group inline-flex items-center gap-3 border border-white/20 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
               >
                 Formayı incele
                 <ArrowRight

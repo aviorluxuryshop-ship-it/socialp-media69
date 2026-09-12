@@ -7,7 +7,7 @@ export function Footer() {
   const year = 2025
 
   return (
-    <footer className="relative border-t border-white/10 bg-obsidian">
+    <footer className="relative border-t border-white/14 bg-obsidian">
       <div className="container py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr_1fr]">
           <div>
@@ -55,7 +55,7 @@ export function Footer() {
 
         </div>
 
-        <div className="mt-14 flex flex-col gap-5 border-t border-white/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-5 border-t border-white/14 pt-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-sans text-[11px] uppercase tracking-wider2 text-ash">
             © {year} {siteConfig.name} · Tüm hakları saklıdır
           </p>

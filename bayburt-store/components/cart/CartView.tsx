@@ -24,7 +24,7 @@ export function CartView() {
 
   if (resolved.length === 0) {
     return (
-      <div className="border border-white/10 bg-graphite-dark px-6 py-14 text-center sm:px-10">
+      <div className="border border-white/14 bg-graphite-dark px-6 py-14 text-center sm:px-10">
         <p className="font-display text-xl uppercase tracking-wider2 text-white">Sepetiniz boş</p>
         <p className="mx-auto mt-3 max-w-sm font-sans text-sm text-smoke">
           Miras Koleksiyonu’nda üç forma var. Birini seçin, bedeninizi belirleyin ve buraya geri
@@ -49,7 +49,7 @@ export function CartView() {
           return (
             <li
               key={key}
-              className="flex flex-col gap-5 border border-white/10 bg-graphite-dark p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6"
+              className="flex flex-col gap-5 border border-white/14 bg-graphite-dark p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6"
             >
               <Link
                 href={`/koleksiyon/${line.slug}`}
@@ -78,7 +78,7 @@ export function CartView() {
               </div>
 
               <div className="flex items-center justify-between gap-5 sm:flex-col sm:items-end sm:gap-3">
-                <div className="flex items-center border border-white/15">
+                <div className="flex items-center border border-white/20">
                   <button
                     type="button"
                     onClick={() => setQuantity(line.slug, line.size, line.quantity - 1)}
@@ -122,10 +122,10 @@ export function CartView() {
         })}
       </ul>
 
-      <aside className="border border-white/10 bg-graphite-dark p-6 sm:p-7 lg:sticky lg:top-28">
+      <aside className="border border-white/14 bg-graphite-dark p-6 sm:p-7 lg:sticky lg:top-28">
         <h2 className="font-display text-lg uppercase tracking-wider2 text-white">Sepet özeti</h2>
 
-        <dl className="mt-6 space-y-3 border-t border-white/10 pt-6 font-sans text-sm">
+        <dl className="mt-6 space-y-3 border-t border-white/14 pt-6 font-sans text-sm">
           <div className="flex items-baseline justify-between gap-4">
             <dt className="text-ash">Ara toplam</dt>
             <dd className="text-white">{formatPrice(total)}</dd>
@@ -136,7 +136,7 @@ export function CartView() {
           </div>
         </dl>
 
-        <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-white/10 pt-6">
+        <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-white/14 pt-6">
           <span className="font-sans text-[11px] uppercase tracking-wider2 text-ash">Toplam</span>
           <span className="font-display text-2xl text-white">{formatPrice(total)}</span>
         </div>

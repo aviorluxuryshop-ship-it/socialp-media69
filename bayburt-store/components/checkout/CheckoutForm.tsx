@@ -152,7 +152,7 @@ export function CheckoutForm() {
 
   if (isReady && resolved.length === 0) {
     return (
-      <div className="border border-white/10 bg-graphite-dark px-6 py-14 text-center sm:px-10">
+      <div className="border border-white/14 bg-graphite-dark px-6 py-14 text-center sm:px-10">
         <p className="font-display text-xl uppercase tracking-wider2 text-white">Sepetiniz boş</p>
         <p className="mx-auto mt-3 max-w-sm font-sans text-sm text-smoke">
           Sipariş bilgilerini doldurmadan önce sepetinize bir forma ekleyin.
@@ -215,7 +215,7 @@ export function CheckoutForm() {
               required: true,
               'aria-invalid': Boolean(problem),
               'aria-describedby': describedBy,
-              className: cn(field, problem ? 'border-red-400/70' : 'border-white/15'),
+              className: cn(field, problem ? 'border-red-400/70' : 'border-white/20'),
             }
             return (
               <div key={f.name} className={cn(f.full && 'sm:col-span-2')}>
@@ -276,10 +276,10 @@ export function CheckoutForm() {
         </p>
       </form>
 
-      <aside className="border border-white/10 bg-graphite-dark p-6 sm:p-7 lg:sticky lg:top-28">
+      <aside className="border border-white/14 bg-graphite-dark p-6 sm:p-7 lg:sticky lg:top-28">
         <h2 className="font-display text-lg uppercase tracking-wider2 text-white">Sipariş özeti</h2>
 
-        <ul className="mt-6 space-y-5 border-t border-white/10 pt-6">
+        <ul className="mt-6 space-y-5 border-t border-white/14 pt-6">
           {resolved.map((line) => (
             <li key={lineKey(line.slug, line.size)} className="flex items-start justify-between gap-4">
               <div className="min-w-0">
@@ -300,7 +300,7 @@ export function CheckoutForm() {
           ))}
         </ul>
 
-        <dl className="mt-6 space-y-3 border-t border-white/10 pt-6 font-sans text-sm">
+        <dl className="mt-6 space-y-3 border-t border-white/14 pt-6 font-sans text-sm">
           <div className="flex items-baseline justify-between gap-4">
             <dt className="text-ash">Ara toplam</dt>
             <dd className="text-white">{formatPrice(total)}</dd>
@@ -311,7 +311,7 @@ export function CheckoutForm() {
           </div>
         </dl>
 
-        <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-white/10 pt-6">
+        <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-white/14 pt-6">
           <span className="font-sans text-[11px] uppercase tracking-wider2 text-ash">Toplam</span>
           <span className="font-display text-2xl text-white">{formatPrice(total)}</span>
         </div>

@@ -4,12 +4,14 @@
 
 @layer base {
   :root {
-    --obsidian: #050505;
-    --graphite: #18181b;
+    --obsidian: #1c1c21;
+    --graphite: #2e2e36;
     --gold: #d4af37;
     --gold-soft: #e4cb7c;
     --paper: #ffffff;
-    --hairline: rgba(255, 255, 255, 0.1);
+    /* A hairline has to be seen to be a line. At 0.1 over a lifted ground it
+       was a rumour. */
+    --hairline: rgba(255, 255, 255, 0.18);
     --header-height: 76px;
 
     /*

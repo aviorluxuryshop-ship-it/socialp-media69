@@ -72,7 +72,7 @@ export function FullMenu() {
                   >
                     <Link
                       href={item.href}
-                      className="group flex items-baseline gap-5 border-b border-white/10 py-5 sm:gap-8"
+                      className="group flex items-baseline gap-5 border-b border-white/14 py-5 sm:gap-8"
                     >
                       <span className="w-8 shrink-0 font-sans text-[11px] tracking-wider2 text-gold-600">
                         {String(index + 1).padStart(2, '0')}
@@ -103,7 +103,7 @@ export function FullMenu() {
                   <li key={product.slug}>
                     <Link
                       href={`/koleksiyon/${product.slug}`}
-                      className="group flex items-center justify-between border-b border-white/10 py-4"
+                      className="group flex items-center justify-between border-b border-white/14 py-4"
                     >
                       <span className="flex items-center gap-4">
                         <span
@@ -144,7 +144,7 @@ export function FullMenu() {
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="mt-16 border-t border-white/10 pt-6 font-sans text-[11px] uppercase tracking-wider2 text-ash"
+          className="mt-16 border-t border-white/14 pt-6 font-sans text-[11px] uppercase tracking-wider2 text-ash"
         >
           Geçmişten gelen, geleceğe taşınan.
         </motion.p>

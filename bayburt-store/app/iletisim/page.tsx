@@ -76,13 +76,13 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="magaza">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="magaza">
         <div className="container">
           <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
             <div>
               <SectionHeading eyebrow="Mağaza" title={<span id="magaza">{contact.store.name}</span>} />
 
-              <RevealGroup as="dl" className="mt-10 divide-y divide-white/10 border-y border-white/10">
+              <RevealGroup as="dl" className="mt-10 divide-y divide-white/10 border-y border-white/14">
                 <RevealItem className="grid gap-2 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
                   <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
                     Adres
@@ -121,7 +121,7 @@ export default function ContactPage() {
             <div>
               <SectionHeading eyebrow="Departmanlar" title="Doğrudan yazın" />
 
-              <RevealGroup as="ul" className="mt-10 divide-y divide-white/10 border-y border-white/10">
+              <RevealGroup as="ul" className="mt-10 divide-y divide-white/10 border-y border-white/14">
                 {DEPARTMENTS.map((department) => (
                   <RevealItem as="li" key={department.label}>
                     <a
@@ -161,7 +161,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="form">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="form">
         <div className="container">
           <div className="max-w-2xl">
             <SectionHeading eyebrow="Mesaj" title={<span id="form">Bize yazın</span>} />

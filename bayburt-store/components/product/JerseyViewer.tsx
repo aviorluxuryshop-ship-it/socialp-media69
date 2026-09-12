@@ -23,7 +23,7 @@ export function JerseyViewer({ product }: { product: Product }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="relative aspect-square overflow-hidden rounded-sm border border-white/10 bg-graphite-dark">
+      <div className="relative aspect-square overflow-hidden rounded-sm border border-white/14 bg-graphite-dark">
         <span
           aria-hidden
           className="absolute inset-0"
@@ -88,7 +88,7 @@ export function JerseyViewer({ product }: { product: Product }) {
               onClick={() => setActiveIndex(index)}
               className={cn(
                 'group relative aspect-square overflow-hidden rounded-sm border bg-graphite-dark transition-colors duration-500 ease-luxe',
-                isActive ? 'border-gold-600/70' : 'border-white/10 hover:border-white/25',
+                isActive ? 'border-gold-600/70' : 'border-white/14 hover:border-white/25',
               )}
             >
               <span className="absolute inset-x-[10%] bottom-[24%] top-[6%]">

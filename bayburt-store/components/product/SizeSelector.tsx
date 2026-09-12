@@ -53,7 +53,7 @@ export function SizeSelector({ sizes, value, onChange, invalid = false, groupId 
                 'relative flex h-12 items-center justify-center border font-sans text-[13px] tracking-wider2 transition-colors duration-500 ease-luxe',
                 isActive
                   ? 'border-transparent text-obsidian'
-                  : 'border-white/15 text-smoke hover:border-white/35 hover:text-white',
+                  : 'border-white/20 text-smoke hover:border-white/35 hover:text-white',
               )}
             >
               {isActive ? (

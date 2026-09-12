@@ -87,7 +87,15 @@ const organisationSchema = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang={siteConfig.language} className={`${jost.variable} ${inter.variable}`}>
-      <body className="min-h-screen bg-obsidian font-sans antialiased">
+      <body className="relative min-h-screen bg-obsidian font-sans antialiased">
+        {/* Ambient light. Flat black behind every page made the site read as a
+            hole with type in it; this is a warm gold wash at the head and a
+            cool one low down, both far too soft to notice as gradients, which
+            together give the ground somewhere to go. */}
+        <span
+          aria-hidden
+          className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(120%_70%_at_50%_-10%,rgba(212,175,55,0.10)_0%,transparent_60%),radial-gradient(90%_60%_at_50%_110%,rgba(228,238,255,0.05)_0%,transparent_60%)]"
+        />
         <script
           type="application/ld+json"
           // Structured data is generated from local config, never user input.

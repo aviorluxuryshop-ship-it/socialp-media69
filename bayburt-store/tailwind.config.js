@@ -15,16 +15,25 @@ module.exports = {
     },
     extend: {
       colors: {
+        /*
+         * Lifted off black. #050505 is the colour of a switched-off screen —
+         * against it the artwork was the only thing in the room and every
+         * page behind the hero read as a hole. These are still night, but
+         * night with something in it: a faint warm cast so the gold has
+         * somewhere to sit, and enough separation between the ground and the
+         * panels that a card reads as a card rather than a border drawn on
+         * nothing. Every grey above them moves with them.
+         */
         obsidian: {
-          DEFAULT: '#050505',
+          DEFAULT: '#1C1C21',
           50: '#F7F7F8',
-          900: '#0A0A0A',
-          950: '#050505',
+          900: '#24242B',
+          950: '#141418',
         },
         graphite: {
-          DEFAULT: '#18181B',
-          light: '#27272A',
-          dark: '#111113',
+          DEFAULT: '#2E2E36',
+          light: '#3A3A44',
+          dark: '#26262D',
         },
         gold: {
           DEFAULT: '#D4AF37',
@@ -38,9 +47,12 @@ module.exports = {
           800: '#6E5715',
           900: '#4A3A0D',
         },
-        smoke: '#A1A1AA',
-        // Lifted to clear 4.5:1 on obsidian; #71717A measured 4.2:1.
-        ash: '#7B7B86',
+        // Body copy and its quieter sibling. Both rise with the ground under
+        // them — a grey that cleared 4.5:1 on near-black does not clear it on
+        // a lifted one, and the whole point of lifting was to be easier to
+        // read, not harder.
+        smoke: '#D0D0D9',
+        ash: '#A8A8B4',
       },
       fontFamily: {
         display: ['var(--font-display)', 'Jost', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'sans-serif'],
