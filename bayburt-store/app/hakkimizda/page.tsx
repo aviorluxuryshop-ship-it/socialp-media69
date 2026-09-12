@@ -90,14 +90,14 @@ export default function AboutPage() {
             as="h1"
             from="above"
             delay={0.06}
-            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
+            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-ink"
           >
             Bir şehrin hafızası, bir kulübün rengi
           </Reveal>
           <Reveal
             as="p"
             delay={0.12}
-            className="mt-8 max-w-2xl font-sans text-base leading-relaxed text-pretty text-smoke"
+            className="mt-8 max-w-2xl font-sans text-base leading-relaxed text-pretty text-ink-soft"
           >
             Bayburt Store, Bayburtspor’un resmî mağazasıdır. İşimiz forma satmaktan ibaret değil:
             şehrin kendine dair bildiklerini giyilebilir hâle getirmek.
@@ -110,13 +110,13 @@ export default function AboutPage() {
 
       <section className="py-4 lg:py-8" aria-label="Rakamlar">
         <div className="container">
-          <RevealGroup className="grid gap-px overflow-hidden border border-white/14 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="grid gap-px overflow-hidden border border-ink/14 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
             {FIGURES.map((figure) => (
-              <RevealItem key={figure.label} className="bg-obsidian px-7 py-9">
-                <p className="font-display text-3xl font-semibold tracking-tight text-gold-400">
+              <RevealItem key={figure.label} className="bg-paper px-7 py-9">
+                <p className="font-display text-3xl font-semibold tracking-tight text-gold-800">
                   {figure.value}
                 </p>
-                <p className="mt-3 font-sans text-[11px] uppercase tracking-wider2 text-ash">
+                <p className="mt-3 font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">
                   {figure.label}
                 </p>
               </RevealItem>
@@ -125,27 +125,27 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="hikaye">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="hikaye">
         <div className="container">
           <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
             <SectionHeading eyebrow="Hikâye" title={<span id="hikaye">Neden Bayburt</span>} />
 
             <div className="space-y-6">
-              <Reveal as="p" className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke">
+              <Reveal as="p" className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft">
                 Bayburt küçük bir şehirdir; bunu bir eksiklik gibi anlatmayı sevmeyiz. Küçük şehirlerde
                 hafıza dağılmaz, birikir. Kale her sabah aynı yerdedir, nehir aynı yataktan geçer,
                 çini aynı fırından çıkar.
               </Reveal>
-              <Reveal as="p" delay={0.06} className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke">
+              <Reveal as="p" delay={0.06} className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft">
                 Bir kulüp bu birikimin en görünür hâlidir. Kırk yıl önce tribünde duran adamla bugün
                 orada duran çocuk aynı rengi giyer. Renk değişmediği için, aradaki mesafe de kapanır.
               </Reveal>
-              <Reveal as="p" delay={0.12} className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke">
+              <Reveal as="p" delay={0.12} className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft">
                 Miras Koleksiyonu bu yüzden nostalji değil. Geçmişi tekrar etmiyoruz; ondan ölçü
                 alıyoruz. Kalenin burç aralığı bir çubuk genişliği oluyor, nehrin akıntısı bir baskı
                 deseni, çininin sabrı bir yüzey işlemi.
               </Reveal>
-              <Reveal as="p" delay={0.18} className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke">
+              <Reveal as="p" delay={0.18} className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft">
                 Sonuç, tribünde de sokakta da duran bir giysi. Formanın işi maçta bitmez.
               </Reveal>
             </div>
@@ -153,24 +153,24 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="zaman">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="zaman">
         <div className="container">
           <SectionHeading eyebrow="Zaman çizgisi" title={<span id="zaman">1969’dan bugüne</span>} />
 
-          <RevealGroup as="ol" className="mt-14 border-t border-white/14">
+          <RevealGroup as="ol" className="mt-14 border-t border-ink/14">
             {TIMELINE.map((entry) => (
               <RevealItem
                 as="li"
                 key={entry.year}
-                className="grid gap-4 border-b border-white/14 py-9 lg:grid-cols-[180px_220px_1fr] lg:items-baseline lg:gap-10"
+                className="grid gap-4 border-b border-ink/14 py-9 lg:grid-cols-[180px_220px_1fr] lg:items-baseline lg:gap-10"
               >
-                <span className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
+                <span className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
                   {entry.year}
                 </span>
-                <h3 className="font-display text-xl uppercase tracking-wider2 text-white">
+                <h3 className="font-display text-xl uppercase tracking-wider2 text-ink">
                   {entry.heading}
                 </h3>
-                <p className="max-w-prose font-sans text-sm leading-relaxed text-pretty text-ash">
+                <p className="max-w-prose font-sans text-sm leading-relaxed text-pretty text-ink-mute">
                   {entry.body}
                 </p>
               </RevealItem>
@@ -179,20 +179,20 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="ilkeler">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="ilkeler">
         <div className="container">
           <SectionHeading eyebrow="İlkeler" title={<span id="ilkeler">Nasıl çalışıyoruz</span>} />
 
           <RevealGroup className="mt-14 grid gap-10 lg:grid-cols-3 lg:gap-14">
             {VALUES.map((value, index) => (
               <RevealItem key={value.heading}>
-                <p className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
+                <p className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
                   {String(index + 1).padStart(2, '0')}
                 </p>
-                <h3 className="mt-5 font-display text-xl uppercase tracking-wider2 text-white">
+                <h3 className="mt-5 font-display text-xl uppercase tracking-wider2 text-ink">
                   {value.heading}
                 </h3>
-                <p className="mt-4 max-w-prose font-sans text-sm leading-relaxed text-pretty text-ash">
+                <p className="mt-4 max-w-prose font-sans text-sm leading-relaxed text-pretty text-ink-mute">
                   {value.body}
                 </p>
               </RevealItem>
@@ -202,7 +202,7 @@ export default function AboutPage() {
           <Reveal className="mt-16">
             <Link
               href="/koleksiyon"
-              className="group inline-flex items-center gap-3 border border-white/20 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+              className="group inline-flex items-center gap-3 border border-ink/25 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-ink transition-colors duration-500 ease-luxe hover:border-gold-700 hover:text-gold-800"
             >
               Koleksiyonu gör
               <ArrowRight

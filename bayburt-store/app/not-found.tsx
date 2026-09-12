@@ -19,10 +19,10 @@ export default function NotFound() {
       />
       <div className="container relative">
         <p className="eyebrow">Hata 404</p>
-        <h1 className="mt-6 max-w-3xl font-display text-[clamp(2.2rem,6vw,4rem)] font-semibold uppercase leading-[1] tracking-tight text-balance text-white">
+        <h1 className="mt-6 max-w-3xl font-display text-[clamp(2.2rem,6vw,4rem)] font-semibold uppercase leading-[1] tracking-tight text-balance text-ink">
           Bu sayfa koleksiyonda yok
         </h1>
-        <p className="mt-7 max-w-xl font-sans text-[15px] leading-relaxed text-pretty text-smoke">
+        <p className="mt-7 max-w-xl font-sans text-[15px] leading-relaxed text-pretty text-ink-soft">
           Adres değişmiş ya da forma yayından kalkmış olabilir. Miras Koleksiyonu’ndaki üç forma
           aşağıda duruyor.
         </p>
@@ -32,7 +32,7 @@ export default function NotFound() {
             <li key={product.slug}>
               <Link
                 href={`/koleksiyon/${product.slug}`}
-                className="group inline-flex items-center gap-2.5 border border-white/20 px-6 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+                className="group inline-flex items-center gap-2.5 border border-ink/25 px-6 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-ink transition-colors duration-500 ease-luxe hover:border-gold-700 hover:text-gold-800"
               >
                 {product.displayName}
                 <ArrowRight
@@ -47,7 +47,7 @@ export default function NotFound() {
         <p className="mt-10">
           <Link
             href="/"
-            className="link-underline font-sans text-[11px] uppercase tracking-luxe text-smoke hover:text-white"
+            className="link-underline font-sans text-[11px] uppercase tracking-luxe text-ink-soft hover:text-ink"
           >
             Anasayfaya dön
           </Link>

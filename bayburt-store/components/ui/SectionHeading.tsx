@@ -26,7 +26,7 @@ export function SectionHeading({
         </Reveal>
       ) : null}
 
-      <Reveal as="h2" from="above" className="font-display text-[clamp(1.9rem,4.4vw,3.25rem)] font-semibold uppercase leading-[1.16] tracking-tight text-balance text-white">
+      <Reveal as="h2" from="above" className="font-display text-[clamp(1.9rem,4.4vw,3.25rem)] font-semibold uppercase leading-[1.16] tracking-tight text-balance text-ink">
         {title}
       </Reveal>
 
@@ -35,7 +35,7 @@ export function SectionHeading({
           as="p"
           delay={0.08}
           className={cn(
-            'mt-6 max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke',
+            'mt-6 max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft',
             align === 'center' && 'mx-auto',
           )}
         >

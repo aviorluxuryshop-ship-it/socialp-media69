@@ -69,17 +69,14 @@ export function Header() {
         <div
           className={cn(
             'container relative flex h-[var(--header-height)] items-center justify-between gap-6 transition-[filter] duration-500 ease-luxe',
+            // Over the plate the type is ink with a white halo: white type
+            // there needs a strip of shade behind it, and the strip is exactly
+            // what should not be on the artwork. Off the plate the pages are
+            // paper, so ink is simply the colour of the page — no halo needed,
+            // and none wanted.
             !isScrolled && !isOpen && onPlate
-              // Ink, not light. Over the pale head of the plate white type
-              // needs a strip of shade behind it to be read at all, and the
-              // strip is exactly what should not be there — so the type goes
-              // dark instead and carries a soft white halo, which holds it off
-              // the light ground and off the dark patterning at the right
-              // edge alike. No band, and nothing to read through.
-              ? 'text-obsidian [&_*]:!text-obsidian drop-shadow-[0_0_2px_rgba(255,255,255,0.98)] drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] [text-shadow:0_0_2px_rgba(255,255,255,0.98),0_0_7px_rgba(255,255,255,0.92),0_0_16px_rgba(255,255,255,0.8),0_0_32px_rgba(255,255,255,0.6)]'
-              : !isScrolled && !isOpen
-                ? '[text-shadow:0_1px_2px_rgba(5,5,5,0.9),0_0_12px_rgba(5,5,5,0.8)]'
-                : '',
+              ? 'text-ink [&_*]:!text-ink drop-shadow-[0_0_2px_rgba(255,255,255,0.98)] drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] [text-shadow:0_0_2px_rgba(255,255,255,0.98),0_0_7px_rgba(255,255,255,0.92),0_0_16px_rgba(255,255,255,0.8),0_0_32px_rgba(255,255,255,0.6)]'
+              : 'text-ink',
           )}
         >
           <Link
@@ -87,10 +84,10 @@ export function Header() {
             className="group flex items-baseline gap-2.5 whitespace-nowrap"
             aria-label={`${siteConfig.name} — anasayfa`}
           >
-            <span className="font-display text-[15px] font-semibold uppercase tracking-[0.3em] text-white transition-colors duration-500 group-hover:text-gold-300 sm:text-base">
+            <span className="font-display text-[15px] font-semibold uppercase tracking-[0.3em] text-ink transition-colors duration-500 group-hover:text-gold-800 sm:text-base">
               Bayburt
             </span>
-            <span className="font-sans text-[10px] uppercase tracking-luxe text-white/90 transition-colors duration-500 group-hover:text-gold-500">
+            <span className="font-sans text-[10px] uppercase tracking-luxe text-ink-soft transition-colors duration-500 group-hover:text-gold-800">
               Store
             </span>
           </Link>
@@ -98,18 +95,18 @@ export function Header() {
           <nav aria-label="Kısayollar" className="hidden items-center gap-9 md:flex">
             <Link
               href="/koleksiyon"
-              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-white/90 transition-colors duration-300 hover:text-gold-300"
+              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-ink transition-colors duration-300 hover:text-gold-800"
             >
               Koleksiyon
             </Link>
             <Link
               href="/hakkimizda"
-              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-white/90 transition-colors duration-300 hover:text-gold-300"
+              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-ink transition-colors duration-300 hover:text-gold-800"
             >
               Hakkımızda
             </Link>
-            <span className="h-4 w-px bg-white/15" aria-hidden />
-            <span className="font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
+            <span className="h-4 w-px bg-ink/20" aria-hidden />
+            <span className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
               69
             </span>
           </nav>
@@ -129,11 +126,11 @@ export function Header() {
               // bar, and its halo is tightened so the three rules keep a white
               // edge even where the artwork behind them goes near-black.
               !isScrolled && !isOpen && onPlate
-                ? 'text-obsidian [&_*]:!text-obsidian drop-shadow-[0_0_1.5px_rgba(255,255,255,1)] drop-shadow-[0_0_4px_rgba(255,255,255,1)] drop-shadow-[0_0_9px_rgba(255,255,255,0.95)]'
-                : 'text-white hover:text-gold-300',
+                ? 'text-ink [&_*]:!text-ink drop-shadow-[0_0_1.5px_rgba(255,255,255,1)] drop-shadow-[0_0_4px_rgba(255,255,255,1)] drop-shadow-[0_0_9px_rgba(255,255,255,0.95)]'
+                : 'text-ink hover:text-gold-800',
             )}
           >
-            <span className="hidden font-sans text-[11px] uppercase tracking-wider2 text-white transition-colors duration-300 group-hover:text-gold-300 sm:inline">
+            <span className="hidden font-sans text-[11px] uppercase tracking-wider2 text-ink transition-colors duration-300 group-hover:text-gold-800 sm:inline">
               {isOpen ? 'Kapat' : 'Menü'}
             </span>
             <HamburgerIcon isOpen={isOpen} />

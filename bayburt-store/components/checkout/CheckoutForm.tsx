@@ -152,14 +152,14 @@ export function CheckoutForm() {
 
   if (isReady && resolved.length === 0) {
     return (
-      <div className="border border-white/14 bg-graphite-dark px-6 py-14 text-center sm:px-10">
-        <p className="font-display text-xl uppercase tracking-wider2 text-white">Sepetiniz boş</p>
-        <p className="mx-auto mt-3 max-w-sm font-sans text-sm text-smoke">
+      <div className="border border-ink/14 bg-paper-raised px-6 py-14 text-center sm:px-10">
+        <p className="font-display text-xl uppercase tracking-wider2 text-ink">Sepetiniz boş</p>
+        <p className="mx-auto mt-3 max-w-sm font-sans text-sm text-ink-soft">
           Sipariş bilgilerini doldurmadan önce sepetinize bir forma ekleyin.
         </p>
         <Link
           href="/koleksiyon"
-          className="mt-8 inline-flex items-center gap-3 border border-white/20 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+          className="mt-8 inline-flex items-center gap-3 border border-ink/25 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-ink transition-colors duration-500 ease-luxe hover:border-gold-700 hover:text-gold-800"
         >
           Koleksiyona git
           <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -169,17 +169,17 @@ export function CheckoutForm() {
   }
 
   const field =
-    'w-full border bg-white/[0.03] px-4 py-3.5 font-sans text-base text-white placeholder:text-ash transition-colors duration-300 focus:border-gold-600 focus:outline-none focus:ring-1 focus:ring-gold-600/40 sm:text-sm'
-  const label = 'mb-2.5 block font-sans text-[11px] uppercase tracking-wider2 text-gold-600'
+    'w-full border bg-white/[0.03] px-4 py-3.5 font-sans text-base text-ink placeholder:text-ink-mute transition-colors duration-300 focus:border-gold-600 focus:outline-none focus:ring-1 focus:ring-gold-600/40 sm:text-sm'
+  const label = 'mb-2.5 block font-sans text-[11px] uppercase tracking-wider2 text-gold-800'
   const errorList = (Object.keys(errors) as FieldName[]).filter((k) => errors[k])
 
   return (
     <div className="grid gap-12 lg:grid-cols-[1fr_22rem] lg:items-start lg:gap-14">
       <form onSubmit={handleSubmit} noValidate>
-        <h2 className="font-display text-lg uppercase tracking-wider2 text-white">
+        <h2 className="font-display text-lg uppercase tracking-wider2 text-ink">
           Teslimat bilgileri
         </h2>
-        <p className="mt-2 font-sans text-sm text-smoke">Tüm alanlar zorunludur.</p>
+        <p className="mt-2 font-sans text-sm text-ink-soft">Tüm alanlar zorunludur.</p>
 
         {submitted && errorList.length > 0 ? (
           <div
@@ -215,7 +215,7 @@ export function CheckoutForm() {
               required: true,
               'aria-invalid': Boolean(problem),
               'aria-describedby': describedBy,
-              className: cn(field, problem ? 'border-red-400/70' : 'border-white/20'),
+              className: cn(field, problem ? 'border-red-400/70' : 'border-ink/25'),
             }
             return (
               <div key={f.name} className={cn(f.full && 'sm:col-span-2')}>
@@ -262,63 +262,63 @@ export function CheckoutForm() {
         {handoff ? (
           <p
             role="status"
-            className="mt-5 border border-gold-600/40 bg-gold-500/[0.06] px-5 py-4 font-sans text-sm text-gold-200"
+            className="mt-5 border border-gold-600/40 bg-gold-500/[0.06] px-5 py-4 font-sans text-sm text-gold-800"
           >
             {handoff} Bilgileriniz eksiksiz — ödeme sağlayıcısı bağlandığında bu adımdan
             sağlayıcının kendi güvenli sayfasına geçeceksiniz.
           </p>
         ) : null}
 
-        <p className="mt-5 flex items-start gap-2.5 font-sans text-[12px] leading-relaxed text-ash">
-          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-600" aria-hidden />
+        <p className="mt-5 flex items-start gap-2.5 font-sans text-[12px] leading-relaxed text-ink-mute">
+          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-800" aria-hidden />
           Kart bilgileriniz bu sitede hiçbir aşamada istenmez ve saklanmaz. Ödeme, sağlayıcının
           kendi güvenli sayfasında alınır.
         </p>
       </form>
 
-      <aside className="border border-white/14 bg-graphite-dark p-6 sm:p-7 lg:sticky lg:top-28">
-        <h2 className="font-display text-lg uppercase tracking-wider2 text-white">Sipariş özeti</h2>
+      <aside className="border border-ink/14 bg-paper-raised p-6 sm:p-7 lg:sticky lg:top-28">
+        <h2 className="font-display text-lg uppercase tracking-wider2 text-ink">Sipariş özeti</h2>
 
-        <ul className="mt-6 space-y-5 border-t border-white/14 pt-6">
+        <ul className="mt-6 space-y-5 border-t border-ink/14 pt-6">
           {resolved.map((line) => (
             <li key={lineKey(line.slug, line.size)} className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <p className="font-display text-sm uppercase tracking-wider2 text-white">
+                <p className="font-display text-sm uppercase tracking-wider2 text-ink">
                   {line.product.displayName}
                 </p>
-                <p className="mt-1 font-sans text-[11px] uppercase tracking-wider2 text-ash">
+                <p className="mt-1 font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">
                   Beden {line.size} · {line.quantity} adet
                 </p>
-                <p className="mt-1 font-sans text-[12px] text-smoke">
+                <p className="mt-1 font-sans text-[12px] text-ink-soft">
                   Birim {formatPrice(line.unitPrice, line.product.currencySymbol)}
                 </p>
               </div>
-              <p className="shrink-0 font-sans text-sm text-white">
+              <p className="shrink-0 font-sans text-sm text-ink">
                 {formatPrice(line.lineTotal, line.product.currencySymbol)}
               </p>
             </li>
           ))}
         </ul>
 
-        <dl className="mt-6 space-y-3 border-t border-white/14 pt-6 font-sans text-sm">
+        <dl className="mt-6 space-y-3 border-t border-ink/14 pt-6 font-sans text-sm">
           <div className="flex items-baseline justify-between gap-4">
-            <dt className="text-ash">Ara toplam</dt>
-            <dd className="text-white">{formatPrice(total)}</dd>
+            <dt className="text-ink-mute">Ara toplam</dt>
+            <dd className="text-ink">{formatPrice(total)}</dd>
           </div>
           <div className="flex items-baseline justify-between gap-4">
-            <dt className="text-ash">Kargo</dt>
-            <dd className="text-gold-500">Ücretsiz</dd>
+            <dt className="text-ink-mute">Kargo</dt>
+            <dd className="text-gold-800">Ücretsiz</dd>
           </div>
         </dl>
 
-        <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-white/14 pt-6">
-          <span className="font-sans text-[11px] uppercase tracking-wider2 text-ash">Toplam</span>
-          <span className="font-display text-2xl text-white">{formatPrice(total)}</span>
+        <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-ink/14 pt-6">
+          <span className="font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">Toplam</span>
+          <span className="font-display text-2xl text-ink">{formatPrice(total)}</span>
         </div>
 
         <Link
           href="/sepet"
-          className="mt-6 block text-center font-sans text-[11px] uppercase tracking-wider2 text-ash transition-colors duration-300 hover:text-white"
+          className="mt-6 block text-center font-sans text-[11px] uppercase tracking-wider2 text-ink-mute transition-colors duration-300 hover:text-ink"
         >
           Sepeti düzenle
         </Link>

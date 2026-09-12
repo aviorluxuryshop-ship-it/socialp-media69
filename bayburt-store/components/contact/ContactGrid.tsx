@@ -59,10 +59,10 @@ export function ContactGrid() {
       whileInView="visible"
       viewport={viewportOnce}
       data-reveal
-      className="grid gap-px overflow-hidden border border-white/14 bg-white/10 sm:grid-cols-2"
+      className="grid gap-px overflow-hidden border border-ink/14 bg-white/10 sm:grid-cols-2"
     >
       {CARDS.map(({ icon: Icon, ...card }) => (
-        <motion.li key={card.label} variants={fadeUp(20)} className="bg-obsidian">
+        <motion.li key={card.label} variants={fadeUp(20)} className="bg-paper">
           <a
             href={card.href}
             {...(card.external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
@@ -79,22 +79,22 @@ export function ContactGrid() {
 
             <span className="relative flex items-start justify-between gap-6">
               <span className="flex items-center gap-3">
-                <Icon className="h-4 w-4 text-gold-500" aria-hidden />
-                <span className="font-sans text-[11px] uppercase tracking-wider2 text-ash">
+                <Icon className="h-4 w-4 text-gold-800" aria-hidden />
+                <span className="font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">
                   {card.label}
                 </span>
               </span>
               <ArrowUpRight
-                className="h-4 w-4 text-ash transition-all duration-500 ease-luxe group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-400"
+                className="h-4 w-4 text-ink-mute transition-all duration-500 ease-luxe group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-800"
                 aria-hidden
               />
             </span>
 
             <span className="relative">
-              <span className="block break-words font-display text-lg uppercase tracking-wider2 text-white transition-colors duration-500 group-hover:text-gold-200 sm:text-xl">
+              <span className="block break-words font-display text-lg uppercase tracking-wider2 text-ink transition-colors duration-500 group-hover:text-gold-800 sm:text-xl">
                 {card.value}
               </span>
-              <span className="mt-3 block font-sans text-sm text-ash">{card.detail}</span>
+              <span className="mt-3 block font-sans text-sm text-ink-mute">{card.detail}</span>
             </span>
           </a>
         </motion.li>

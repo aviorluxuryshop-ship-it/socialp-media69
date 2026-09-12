@@ -51,7 +51,7 @@ export default function CollectionPage() {
             as="h1"
             from="above"
             delay={0.06}
-            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
+            className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-ink"
           >
             Geçmişten gelen, geleceğe taşınan
           </Reveal>
@@ -59,7 +59,7 @@ export default function CollectionPage() {
           <Reveal
             as="p"
             delay={0.12}
-            className="mt-8 max-w-2xl font-sans text-base leading-relaxed text-pretty text-smoke"
+            className="mt-8 max-w-2xl font-sans text-base leading-relaxed text-pretty text-ink-soft"
           >
             Üç forma tasarlanmadı; okundu. Bayburt’un kalıcı işaretleri ölçüye çevrildi,
             sonra kumaşa. Aşağıda her birinin nereden geldiği anlatılıyor.
@@ -76,19 +76,19 @@ export default function CollectionPage() {
         <StoryBlock key={product.slug} product={product} index={index} />
       ))}
 
-      <section className="border-t border-white/14 py-20 lg:py-28">
+      <section className="border-t border-ink/14 py-20 lg:py-28">
         <div className="container">
           <div className="mx-auto max-w-2xl text-center">
-            <Reveal as="h2" className="font-display text-[clamp(1.7rem,4vw,2.75rem)] font-semibold uppercase leading-[1.14] tracking-tight text-balance text-white">
+            <Reveal as="h2" className="font-display text-[clamp(1.7rem,4vw,2.75rem)] font-semibold uppercase leading-[1.14] tracking-tight text-balance text-ink">
               Üçü bir arada
             </Reveal>
-            <Reveal as="p" delay={0.08} className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-smoke">
+            <Reveal as="p" delay={0.08} className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-ink-soft">
               Üç forma ayrı ayrı durur, yan yana geldiğinde şehrin tamamını anlatır.
             </Reveal>
             <Reveal delay={0.14} className="mt-10">
               <Link
                 href="/koleksiyon/hisar"
-                className="group inline-flex items-center gap-3 border border-gold-600/60 bg-gold-500/5 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-gold-300 transition-colors duration-500 ease-luxe hover:bg-gold-500/10 hover:text-gold-100"
+                className="group inline-flex items-center gap-3 border border-gold-600/60 bg-gold-500/5 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-gold-800 transition-colors duration-500 ease-luxe hover:bg-gold-500/10 hover:text-gold-100"
               >
                 Alışverişe başla
                 <ArrowRight
