@@ -107,6 +107,17 @@ const PORTRAIT_NAME_GAP = 18
 const CAMERA_Z = 6
 
 /**
+ * The idle float. Not a reaction to anything — the kits rise and settle on
+ * their own, a couple of pixels, the way a shirt hung on a line does. This is
+ * the one thing that moves: no turning, no growing, no stepping forward, and
+ * nothing at all that answers the pointer. The three drift out of phase so
+ * they read as three shirts rather than one sliding panel.
+ */
+const FLOAT_AMPLITUDE = 0.022
+const FLOAT_SPEED = 0.62
+const FLOAT_PHASE = 2.1
+
+/**
  * How much bigger a kit reads than the artwork gives it. One, now: nothing
  * grows. The term stays because the safe-band maths below is written in it.
  */
@@ -161,6 +172,9 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     const rayPointer = new THREE.Vector2(-2, -2)
     const raycaster = new THREE.Raycaster()
     const projected = new THREE.Vector3()
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const clock = new THREE.Clock()
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.toneMapping = THREE.ACESFilmicToneMapping
@@ -396,6 +410,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
     function tick() {
       frame = requestAnimationFrame(tick)
+      const time = clock.getElapsedTime()
 
       // Pick, so a click knows which kit it landed on.
       if (nodes.length && rayPointer.x > -1.5) {
@@ -410,16 +425,21 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       // One lighting state. Nothing about it depends on where the pointer is.
 
       nodes.forEach((node) => {
-        // Square to the camera and still. The only thing that moves a kit is
-        // the carousel sliding the next one into the middle on a phone.
+        // Square to the camera, always. A kit never turns and never steps
+        // toward you; it only breathes where it stands, and on a phone the
+        // carousel slides the next one into the middle.
         node.group.rotation.set(0, 0, 0)
         node.group.position.z = 0
+
+        const float = prefersReducedMotion
+          ? 0
+          : Math.sin(time * FLOAT_SPEED + node.index * FLOAT_PHASE) * FLOAT_AMPLITUDE
 
         const slot = layout.slots[node.index]
         const baseX = layout.portrait
           ? (node.index - focusRef.current) * layout.gap
           : (slot?.x ?? 0)
-        const baseY = layout.portrait ? layout.portraitY : (slot?.y ?? 0)
+        const baseY = (layout.portrait ? layout.portraitY : (slot?.y ?? 0)) + float
         node.group.position.x += (baseX - node.group.position.x) * 0.09
         node.group.position.y += (baseY - node.group.position.y) * 0.08
 
