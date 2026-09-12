@@ -4,7 +4,7 @@ import type { Transition, Variants } from 'framer-motion'
 export const LUXE_EASE = [0.16, 1, 0.3, 1] as const
 
 export const baseTransition: Transition = {
-  duration: 0.9,
+  duration: 1.05,
   ease: LUXE_EASE,
 }
 
@@ -20,8 +20,18 @@ export const staggerContainer = (
 })
 
 /** Vertical reveal used for headings, paragraphs and cards. */
-export const fadeUp = (distance = 24): Variants => ({
+export const fadeUp = (distance = 34): Variants => ({
   hidden: { opacity: 0, y: distance },
+  visible: { opacity: 1, y: 0, transition: baseTransition },
+})
+
+/**
+ * Names and titles settle down into place rather than rising into it. The
+ * opposite direction to the copy around them is what makes a heading read as
+ * the thing that arrives first.
+ */
+export const settleDown = (distance = 26): Variants => ({
+  hidden: { opacity: 0, y: -distance },
   visible: { opacity: 1, y: 0, transition: baseTransition },
 })
 
@@ -73,10 +83,16 @@ export const overlayLink: Variants = {
   exit: { opacity: 0, y: 18, transition: { duration: 0.28, ease: LUXE_EASE } },
 }
 
-/** Viewport defaults for scroll-triggered reveals. */
 /**
+ * Viewport defaults for scroll-triggered reveals.
+ *
+ * Not once: a block plays again whenever it is scrolled back to, which is what
+ * makes the page feel driven by the scroll rather than by a page load.
+ *
  * A block reveals as soon as a tenth of it is in view. At a quarter, a tall
  * story block sits blank through the first screen of scrolling it — and a
- * block taller than four screens would never reach the threshold at all.
+ * block taller than four screens would never reach the threshold at all. The
+ * bottom margin lets a block start just before its top edge is properly on
+ * screen, so the movement is already under way by the time you read it.
  */
-export const viewportOnce = { once: true, amount: 0.1 } as const
+export const viewportOnce = { once: false, amount: 0.12, margin: '0px 0px -8% 0px' } as const

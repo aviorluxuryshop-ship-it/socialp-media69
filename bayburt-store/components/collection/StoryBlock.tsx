@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRef } from 'react'
 
 import { JerseyImage } from '@/components/ui/JerseyImage'
-import { fadeUp, staggerContainer, viewportOnce } from '@/lib/motion'
+import { fadeUp, settleDown, staggerContainer, viewportOnce } from '@/lib/motion'
 import type { Product, ProductSlug } from '@/data/products'
 import { cn, formatPrice } from '@/lib/utils'
 
@@ -30,8 +30,8 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
     offset: ['start end', 'end start'],
   })
 
-  // Gentle counter-scroll: the kit floats against the narrative column.
-  const kitY = useTransform(scrollYProgress, [0, 1], [48, -48])
+  // The motif behind the kit drifts with the scroll; the kit itself does not.
+  // A shirt that slides while you read about it is a shirt you cannot look at.
   const motifY = useTransform(scrollYProgress, [0, 1], [-30, 30])
 
   return (
@@ -75,14 +75,14 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
               className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.5)_0%,transparent_35%,rgba(5,5,5,0.6)_100%)]"
             />
 
-            <motion.div style={{ y: kitY }} className="absolute inset-[8%]">
+            <div className="absolute inset-[8%]">
               <JerseyImage
                 src={product.media.views[0]?.src ?? ''}
                 alt={product.media.views[0]?.alt ?? product.displayName}
                 sizes="(max-width: 1024px) 88vw, 46vw"
                 className="drop-shadow-[0_32px_52px_rgba(0,0,0,0.6)]"
               />
-            </motion.div>
+            </div>
 
           </motion.div>
 
@@ -106,7 +106,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
 
             <motion.h2
               id={`${product.slug}-baslik`}
-              variants={fadeUp(22)}
+              variants={settleDown(24)}
               className="mt-5 font-display text-[clamp(2rem,5vw,3.5rem)] font-semibold uppercase leading-[1.14] tracking-tight text-white"
             >
               {product.displayName}

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
 
-import { fadeUp, staggerContainer, viewportOnce } from '@/lib/motion'
+import { fadeUp, settleDown, staggerContainer, viewportOnce } from '@/lib/motion'
 
 /**
  * Static element map. Building the motion component inline
@@ -37,17 +37,26 @@ interface RevealProps {
   delay?: number
   distance?: number
   as?: RevealTag
+  /** Headings settle down into place; everything else rises into it. */
+  from?: 'below' | 'above'
 }
 
-/** Single element that rises into place the first time it enters the viewport. */
-export function Reveal({ children, className, delay = 0, distance = 24, as = 'div' }: RevealProps) {
+/** Single element that moves into place whenever it enters the viewport. */
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  distance = 34,
+  as = 'div',
+  from = 'below',
+}: RevealProps) {
   const Component = MOTION_TAGS[as]
 
   return (
     <Component
       data-reveal
       className={className}
-      variants={fadeUp(distance)}
+      variants={from === 'above' ? settleDown(distance) : fadeUp(distance)}
       initial="hidden"
       whileInView="visible"
       viewport={viewportOnce}
@@ -70,8 +79,8 @@ interface RevealGroupProps {
 export function RevealGroup({
   children,
   className,
-  stagger = 0.12,
-  delayChildren = 0.05,
+  stagger = 0.14,
+  delayChildren = 0.08,
   as = 'div',
 }: RevealGroupProps) {
   const Component = MOTION_TAGS[as]
@@ -95,13 +104,24 @@ interface RevealItemProps {
   className?: string
   distance?: number
   as?: RevealTag
+  from?: 'below' | 'above'
 }
 
-export function RevealItem({ children, className, distance = 20, as = 'div' }: RevealItemProps) {
+export function RevealItem({
+  children,
+  className,
+  distance = 28,
+  as = 'div',
+  from = 'below',
+}: RevealItemProps) {
   const Component = MOTION_TAGS[as]
 
   return (
-    <Component data-reveal className={className} variants={fadeUp(distance)}>
+    <Component
+      data-reveal
+      className={className}
+      variants={from === 'above' ? settleDown(distance) : fadeUp(distance)}
+    >
       {children}
     </Component>
   )
