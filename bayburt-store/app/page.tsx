@@ -45,7 +45,7 @@ export default function HomePage() {
       {/* The stage frame: the whole space under the header on a phone, the
           plate's own proportion on a desktop, so the wordmark painted at its
           head and the kit names at its foot are always both in view. */}
-      <div className="absolute inset-x-0 bottom-0 top-[var(--header-height)] lg:inset-0 lg:flex lg:items-center lg:justify-center lg:pt-[var(--header-height)]">
+      <div className="absolute inset-x-0 bottom-0 top-[var(--header-height)] lg:top-0">
         <div className="relative h-full w-full lg:h-[var(--plate-h)] lg:w-[var(--plate-w)]">
           {/* Two plates, not one crop. The landscape banner is unreadable at
               phone width, so portrait gets its own composition. */}
