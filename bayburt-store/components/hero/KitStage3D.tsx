@@ -233,6 +233,15 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const maxScale =
         ((PLATE_SAFE_BOTTOM - PLATE_SAFE_TOP) * plateHeight * worldPerPixel) / HOVER_GROWTH
 
+      // The plate is cropped, so its foot is no longer a fixed fraction of the
+      // frame. Publish where it actually lands: the kit names and the cue line
+      // hang off this, not off a percentage that only held while the plate and
+      // the frame were the same box.
+      container!.parentElement?.style.setProperty(
+        '--plate-foot',
+        `${Math.round(plateTop + PLATE_SAFE_BOTTOM * plateHeight)}px`,
+      )
+
       const slots = PLATE_KIT.map((kit) => ({
         x: (plateLeft + kit.x * plateWidth - clientWidth / 2) * worldPerPixel,
         y: (clientHeight / 2 - (plateTop + PLATE_KIT_Y * plateHeight)) * worldPerPixel,
@@ -585,7 +594,11 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
           'pointer-events-none absolute inset-x-0 z-20 hidden transition-opacity duration-1000 ease-luxe lg:block',
           isReady ? 'opacity-100' : 'opacity-0',
         )}
-        style={{ top: NAME_BAND_TOP, marginTop: NAME_BAND_GAP, height: NAME_BAND_HEIGHT }}
+        style={{
+          top: `var(--plate-foot, ${NAME_BAND_TOP})`,
+          marginTop: NAME_BAND_GAP,
+          height: NAME_BAND_HEIGHT,
+        }}
       >
         {products.map((product, index) => (
           <div

@@ -27,9 +27,18 @@
     --plate-h: calc(var(--plate-w) / var(--plate-ratio));
   }
 
+  /*
+   * On a desktop the plate fills the whole space under the header rather than
+   * sitting at its own proportion inside it: letterboxed into a wide window it
+   * left a dead margin down each side. It is drawn object-cover, so the crop
+   * falls on the top and bottom of the artwork, and the stage reads the
+   * covered box back out so the kits and their names still stand exactly where
+   * the plate paints them.
+   */
   @media (min-width: 1024px) {
     :root {
-      --plate-w: min(100vw, calc((100svh - var(--header-height)) * var(--plate-ratio)));
+      --plate-w: 100vw;
+      --plate-h: calc(100svh - var(--header-height));
     }
   }
 
