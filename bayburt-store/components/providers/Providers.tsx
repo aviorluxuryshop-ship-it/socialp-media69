@@ -3,6 +3,7 @@
 import { MotionConfig } from 'framer-motion'
 import type { ReactNode } from 'react'
 
+import { CartProvider } from '@/components/providers/CartProvider'
 import { MenuProvider } from '@/components/providers/MenuProvider'
 
 /**
@@ -12,7 +13,9 @@ import { MenuProvider } from '@/components/providers/MenuProvider'
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <MotionConfig reducedMotion="user">
-      <MenuProvider>{children}</MenuProvider>
+      <CartProvider>
+        <MenuProvider>{children}</MenuProvider>
+      </CartProvider>
     </MotionConfig>
   )
 }

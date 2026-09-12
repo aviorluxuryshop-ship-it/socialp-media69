@@ -13,8 +13,9 @@ interface AddToCartButtonProps {
 }
 
 /**
- * Showcase-only checkout affordance: it confirms visually and resets itself.
- * No cart state is persisted anywhere.
+ * Confirms the add and resets itself. The cart itself is the caller's
+ * business: `onAdd` returns false when there is a reason not to — no size
+ * chosen, most often — and then nothing is confirmed.
  */
 export function AddToCartButton({ onAdd, className }: AddToCartButtonProps) {
   const [isAdded, setIsAdded] = useState(false)
