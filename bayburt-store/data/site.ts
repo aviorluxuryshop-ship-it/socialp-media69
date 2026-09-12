@@ -16,8 +16,16 @@ export const siteConfig = {
   collection: 'Miras Koleksiyonu',
   locale: 'tr_TR',
   language: 'tr',
-  /** Override in production with NEXT_PUBLIC_SITE_URL. */
-  url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') ?? 'https://bayburtstore.com',
+  /**
+   * Where the site actually answers. There is no domain yet, so this is the
+   * deployment's own address rather than a name nobody owns: canonical tags,
+   * the sitemap and every absolute URL in the structured data have to point at
+   * something that resolves, or they are worse than absent. Set
+   * NEXT_PUBLIC_SITE_URL the day a domain exists and everything follows.
+   */
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') ??
+    'https://socialp-media69-asb3.vercel.app',
   tagline: 'Geçmişten gelen, geleceğe taşınan.',
   description:
     'Bayburt Store — Bayburtspor Miras Koleksiyonu. Hisar, Çoruh ve Çinimaçin formaları; şehrin kalesinden, nehrinden ve çini motiflerinden doğan üç tasarım.',

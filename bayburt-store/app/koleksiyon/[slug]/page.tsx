@@ -73,8 +73,10 @@ export default async function ProductPage({ params }: PageProps) {
     name: `${siteConfig.name} ${product.displayName} ${product.kind}`,
     description: `${product.tagline} ${product.story.paragraphs[0] ?? ''}`.trim(),
     sku: product.sku,
-    gtin13: product.gtin,
-    mpn: product.sku,
+    // No gtin13 and no mpn. A barcode is a claim that a specific article
+    // exists in the global registry under that number; ours are placeholders,
+    // and a wrong one points a shopping engine at somebody else's product.
+    // Put them back when the real ones are issued.
     color: product.colorway,
     material: product.fabric,
     category: 'Apparel > Sportswear > Football Shirts',

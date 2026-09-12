@@ -74,17 +74,14 @@ const organisationSchema = {
   legalName: siteConfig.legalName,
   url: siteConfig.url,
   description: siteConfig.description,
-  telephone: contact.phone,
-  email: contact.email,
   currenciesAccepted: 'TRY',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: contact.store.addressLine,
-    addressLocality: siteConfig.city,
-    postalCode: contact.store.postalCode,
-    addressCountry: 'TR',
-  },
-  sameAs: [contact.instagramHref],
+  // No telephone, no street address, no social profiles. Structured data is a
+  // claim made to a search engine, and a wrong phone number or a shopfront
+  // that is not there is a claim that costs someone a journey. The contact
+  // page carries whatever the store wants to publish; this carries only what
+  // can be stood behind. Add PostalAddress and sameAs here once the real
+  // details are confirmed.
+  areaServed: { '@type': 'Country', name: 'Türkiye' },
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

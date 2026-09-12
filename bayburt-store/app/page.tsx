@@ -106,9 +106,14 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* The page's only h1. On a desktop the title is painted into the plate,
+          so this block is taken off the screen — but off the screen, not out
+          of the document: `hidden` would drop the heading from the
+          accessibility tree and leave the page with no h1 at all at the width
+          most people read it. */}
       <div
         data-hero-head
-        className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center lg:hidden"
+        className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height)+1.25rem)] z-10 text-center lg:sr-only"
       >
         <p className="font-sans text-[10px] uppercase tracking-luxe text-white/85 [text-shadow:0_1px_14px_rgba(5,5,5,0.95)] sm:text-[11px]">
           Bayburtspor
