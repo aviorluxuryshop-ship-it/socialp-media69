@@ -104,7 +104,7 @@ export const products: Product[] = [
       views: [
         {
           src: '/images/jerseys/hisar.png',
-          alt: 'Hisar çubuklu forma: altın sarı zemin üzerinde siyah dikey çubuklar, siyah polo yaka ve altın biyeler.',
+          alt: 'Bayburtspor Hisar forması — çubuklu forma: altın sarı zemin üzerinde siyah dikey çubuklar, siyah polo yaka ve altın biyeler.',
           label: 'Ön',
         },
       ],
@@ -186,7 +186,7 @@ export const products: Product[] = [
       views: [
         {
           src: '/images/jerseys/coruh.png',
-          alt: 'Çoruh beyaz forma: beyaz zemin üzerinde merkezden geçen siyah ve altın dikey bant, siyah–altın V yaka.',
+          alt: 'Bayburtspor Çoruh forması — beyaz forma: beyaz zemin üzerinde merkezden geçen siyah ve altın dikey bant, siyah–altın V yaka.',
           label: 'Ön',
         },
       ],
@@ -268,7 +268,7 @@ export const products: Product[] = [
       views: [
         {
           src: '/images/jerseys/cinimacin.png',
-          alt: 'Çinimaçin siyah forma: obsidyen zemin üzerinde ton sür ton çini motifleri ve altın V yaka.',
+          alt: 'Bayburtspor Çinimaçin forması — siyah forma: obsidyen zemin üzerinde ton sür ton çini motifleri ve altın V yaka.',
           label: 'Ön',
         },
       ],
