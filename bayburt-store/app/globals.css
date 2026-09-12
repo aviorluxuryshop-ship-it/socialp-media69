@@ -11,7 +11,7 @@
     --paper: #ffffff;
     /* A hairline has to be seen to be a line. At 0.1 over a lifted ground it
        was a rumour. */
-    --hairline: rgba(255, 255, 255, 0.18);
+    --hairline: rgba(23, 23, 28, 0.16);
     --header-height: 76px;
 
     /*
@@ -109,16 +109,18 @@
 
 @layer components {
   /* Wordmark and section eyebrows share one tracking scale. */
+  /* On paper. The dark surfaces that are left — the hero, the footer, the
+     menu — set their own colour where they use these. */
   .eyebrow {
-    @apply font-sans text-[11px] uppercase tracking-luxe text-gold-500;
+    @apply font-sans text-[11px] uppercase tracking-luxe text-gold-800;
   }
 
   .eyebrow-muted {
-    @apply font-sans text-[11px] uppercase tracking-luxe text-smoke;
+    @apply font-sans text-[11px] uppercase tracking-luxe text-ink-mute;
   }
 
   .hairline {
-    @apply block h-px w-full bg-white/10;
+    @apply block h-px w-full bg-[rgba(23,23,28,0.14)];
   }
 
   .gold-text {

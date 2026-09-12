@@ -141,16 +141,16 @@ export default async function ProductPage({ params }: PageProps) {
         />
 
         <div className="container relative">
-          <nav aria-label="Konum" className="mb-10 flex flex-wrap items-center gap-2 font-sans text-[11px] uppercase tracking-wider2 text-ash">
-            <Link href="/" className="transition-colors duration-300 hover:text-white">
+          <nav aria-label="Konum" className="mb-10 flex flex-wrap items-center gap-2 font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">
+            <Link href="/" className="transition-colors duration-300 hover:text-ink">
               Anasayfa
             </Link>
             <span aria-hidden>/</span>
-            <Link href="/koleksiyon" className="transition-colors duration-300 hover:text-white">
+            <Link href="/koleksiyon" className="transition-colors duration-300 hover:text-ink">
               Koleksiyon
             </Link>
             <span aria-hidden>/</span>
-            <span className="text-smoke">{product.displayName}</span>
+            <span className="text-ink-soft">{product.displayName}</span>
           </nav>
 
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
@@ -159,23 +159,23 @@ export default async function ProductPage({ params }: PageProps) {
             <div className="lg:pt-4">
               <p className="eyebrow">{product.edition}</p>
 
-              <h1 className="mt-5 font-display text-[clamp(2.2rem,5.5vw,3.75rem)] font-semibold uppercase leading-[1] tracking-tight text-white">
+              <h1 className="mt-5 font-display text-[clamp(2.2rem,5.5vw,3.75rem)] font-semibold uppercase leading-[1] tracking-tight text-ink">
                 {product.displayName}
               </h1>
 
-              <p className="mt-3 font-sans text-sm uppercase tracking-wider2 text-smoke">
+              <p className="mt-3 font-sans text-sm uppercase tracking-wider2 text-ink-soft">
                 {product.kind} · {product.subtitle}
               </p>
 
-              <p className="mt-7 max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke">
+              <p className="mt-7 max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft">
                 {product.tagline} {product.story.paragraphs[0]}
               </p>
 
               <div className="mt-9 flex items-end gap-4">
-                <span className="font-sans text-[26px] font-medium tracking-tight text-white">
+                <span className="font-sans text-[26px] font-medium tracking-tight text-ink">
                   {formatPrice(product.price)}
                 </span>
-                <span className="ml-auto pb-1.5 font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
+                <span className="ml-auto pb-1.5 font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
                   {siteConfig.plate} · {product.colorway}
                 </span>
               </div>
@@ -192,7 +192,7 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="teknik">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="teknik">
         <div className="container">
           <SectionHeading
             eyebrow="Teknik"
@@ -201,16 +201,16 @@ export default async function ProductPage({ params }: PageProps) {
           />
 
           <div className="mt-14 grid gap-14 lg:grid-cols-2 lg:gap-20">
-            <RevealGroup as="dl" className="divide-y divide-white/10 border-y border-white/14">
+            <RevealGroup as="dl" className="divide-y divide-white/10 border-y border-ink/14">
               {product.specs.map((spec) => (
                 <RevealItem
                   key={spec.label}
                   className="grid gap-2 py-5 sm:grid-cols-[160px_1fr] sm:gap-6"
                 >
-                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
+                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
                     {spec.label}
                   </dt>
-                  <dd className="font-sans text-sm leading-relaxed text-smoke">{spec.value}</dd>
+                  <dd className="font-sans text-sm leading-relaxed text-ink-soft">{spec.value}</dd>
                 </RevealItem>
               ))}
             </RevealGroup>
@@ -219,21 +219,21 @@ export default async function ProductPage({ params }: PageProps) {
               <RevealGroup className="space-y-8">
                 {product.features.map((feature) => (
                   <RevealItem key={feature.title}>
-                    <h3 className="font-display text-lg uppercase tracking-wider2 text-white">
+                    <h3 className="font-display text-lg uppercase tracking-wider2 text-ink">
                       {feature.title}
                     </h3>
-                    <p className="mt-3 max-w-prose font-sans text-sm leading-relaxed text-pretty text-ash">
+                    <p className="mt-3 max-w-prose font-sans text-sm leading-relaxed text-pretty text-ink-mute">
                       {feature.description}
                     </p>
                   </RevealItem>
                 ))}
               </RevealGroup>
 
-              <Reveal className="mt-12 border-t border-white/14 pt-8">
+              <Reveal className="mt-12 border-t border-ink/14 pt-8">
                 <p className="eyebrow-muted mb-5">Bakım</p>
                 <ul className="grid gap-2.5 sm:grid-cols-2">
                   {product.care.map((line) => (
-                    <li key={line} className="font-sans text-sm text-ash">
+                    <li key={line} className="font-sans text-sm text-ink-mute">
                       {line}
                     </li>
                   ))}
@@ -244,7 +244,7 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="hikaye">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="hikaye">
         <div className="container">
           <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
             <div>
@@ -254,7 +254,7 @@ export default async function ProductPage({ params }: PageProps) {
               <Reveal
                 as="h2"
                 delay={0.06}
-                className="mt-5 font-display text-[clamp(1.8rem,4.2vw,2.9rem)] font-semibold uppercase leading-[1.14] tracking-tight text-white"
+                className="mt-5 font-display text-[clamp(1.8rem,4.2vw,2.9rem)] font-semibold uppercase leading-[1.14] tracking-tight text-ink"
               >
                 <span id="hikaye">{product.story.heading}</span>
               </Reveal>
@@ -266,7 +266,7 @@ export default async function ProductPage({ params }: PageProps) {
                   as="p"
                   key={paragraph.slice(0, 24)}
                   delay={index * 0.06}
-                  className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke"
+                  className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft"
                 >
                   {paragraph}
                 </Reveal>
@@ -274,7 +274,7 @@ export default async function ProductPage({ params }: PageProps) {
               <Reveal delay={0.2} className="pt-4">
                 <Link
                   href={`/koleksiyon#${product.slug}`}
-                  className="group inline-flex items-center gap-2.5 font-sans text-[11px] uppercase tracking-luxe text-gold-400 transition-colors duration-500 hover:text-gold-200"
+                  className="group inline-flex items-center gap-2.5 font-sans text-[11px] uppercase tracking-luxe text-gold-800 transition-colors duration-500 hover:text-gold-800"
                 >
                   Koleksiyon hikâyesinin tamamı
                   <ArrowRight
@@ -288,7 +288,7 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="digerleri">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="digerleri">
         <div className="container">
           <SectionHeading eyebrow="Koleksiyonun devamı" title={<span id="digerleri">Diğer formalar</span>} />
 
@@ -297,7 +297,7 @@ export default async function ProductPage({ params }: PageProps) {
               <RevealItem key={item.slug}>
                 <Link
                   href={`/koleksiyon/${item.slug}`}
-                  className="group relative flex items-center gap-7 overflow-hidden rounded-sm border border-white/14 bg-graphite-dark p-6 transition-colors duration-700 ease-luxe hover:border-gold-600/40 sm:p-8"
+                  className="group relative flex items-center gap-7 overflow-hidden rounded-sm border border-ink/14 bg-graphite-dark p-6 transition-colors duration-700 ease-luxe hover:border-gold-700/40 sm:p-8"
                 >
                   <span
                     aria-hidden
@@ -315,13 +315,13 @@ export default async function ProductPage({ params }: PageProps) {
                     />
                   </span>
                   <span className="relative">
-                    <span className="block font-sans text-[11px] uppercase tracking-wider2 text-ash">
+                    <span className="block font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">
                       {item.kind}
                     </span>
-                    <span className="mt-2 block font-display text-2xl font-semibold uppercase tracking-wide text-white">
+                    <span className="mt-2 block font-display text-2xl font-semibold uppercase tracking-wide text-ink">
                       {item.displayName}
                     </span>
-                    <span className="mt-3 block font-sans text-sm text-smoke">
+                    <span className="mt-3 block font-sans text-sm text-ink-soft">
                       {formatPrice(item.price)}
                     </span>
                   </span>

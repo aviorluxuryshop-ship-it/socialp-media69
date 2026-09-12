@@ -7,15 +7,15 @@ export function Footer() {
   const year = 2025
 
   return (
-    <footer className="relative border-t border-white/14 bg-obsidian">
+    <footer className="relative border-t border-ink/14 bg-paper">
       <div className="container py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr_1fr]">
           <div>
-            <p className="font-display text-lg font-semibold uppercase tracking-[0.28em] text-white">
+            <p className="font-display text-lg font-semibold uppercase tracking-[0.28em] text-ink">
               Bayburt
-              <span className="ml-2 font-sans text-[10px] tracking-luxe text-gold-500">Store</span>
+              <span className="ml-2 font-sans text-[10px] tracking-luxe text-gold-800">Store</span>
             </p>
-            <p className="mt-5 max-w-xs font-sans text-sm leading-relaxed text-ash">
+            <p className="mt-5 max-w-xs font-sans text-sm leading-relaxed text-ink-mute">
               {siteConfig.collection} — şehrin kalesinden, nehrinden ve çinisinden gelen üç
               forma.
             </p>
@@ -28,7 +28,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="link-underline font-sans text-sm text-smoke transition-colors duration-300 hover:text-white"
+                    className="link-underline font-sans text-sm text-ink-soft transition-colors duration-300 hover:text-ink"
                   >
                     {item.label}
                   </Link>
@@ -44,7 +44,7 @@ export function Footer() {
                 <li key={product.slug}>
                   <Link
                     href={`/koleksiyon/${product.slug}`}
-                    className="link-underline font-sans text-sm text-smoke transition-colors duration-300 hover:text-white"
+                    className="link-underline font-sans text-sm text-ink-soft transition-colors duration-300 hover:text-ink"
                   >
                     {product.displayName}
                   </Link>
@@ -55,8 +55,8 @@ export function Footer() {
 
         </div>
 
-        <div className="mt-14 flex flex-col gap-5 border-t border-white/14 pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-sans text-[11px] uppercase tracking-wider2 text-ash">
+        <div className="mt-14 flex flex-col gap-5 border-t border-ink/14 pt-7 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">
             © {year} {siteConfig.name} · Tüm hakları saklıdır
           </p>
         </div>

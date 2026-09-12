@@ -34,7 +34,7 @@ export default function CheckoutPage() {
           as="h1"
           from="above"
           delay={0.06}
-          className="mt-5 font-display text-[clamp(2.2rem,6vw,3.75rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
+          className="mt-5 font-display text-[clamp(2.2rem,6vw,3.75rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-ink"
         >
           Sipariş bilgileri
         </Reveal>

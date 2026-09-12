@@ -40,11 +40,11 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
       id={product.slug}
       aria-labelledby={`${product.slug}-baslik`}
       className={cn(
-        'scroll-mt-24 border-t border-white/14 py-20 lg:py-32',
+        'scroll-mt-24 border-t border-ink/14 py-20 lg:py-32',
         // Every other block sits a shade above the ground. Three identical
         // dark bands in a row read as one; alternating them gives the scroll
         // somewhere to land.
-        isReversed ? 'bg-graphite-dark' : 'bg-obsidian',
+        isReversed ? 'bg-paper-sunk' : 'bg-paper',
       )}
     >
       <div className="container">
@@ -58,7 +58,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
             viewport={viewportOnce}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
             data-reveal
-            className="relative aspect-[4/5] overflow-hidden rounded-sm border border-white/14 bg-graphite-dark sm:aspect-[5/4] lg:aspect-[4/5]"
+            className="relative aspect-[4/5] overflow-hidden rounded-sm border border-ink/14 bg-graphite-dark sm:aspect-[5/4] lg:aspect-[4/5]"
           >
             <span
               aria-hidden
@@ -92,7 +92,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
 
           </motion.div>
 
-            <p className="mt-4 font-sans text-[11px] uppercase tracking-wider2 text-smoke">
+            <p className="mt-4 font-sans text-[11px] uppercase tracking-wider2 text-ink-soft">
               {String(index + 1).padStart(2, '0')} · {product.kind}
             </p>
           </div>
@@ -113,14 +113,14 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
             <motion.h2
               id={`${product.slug}-baslik`}
               variants={settleDown(24)}
-              className="mt-5 font-display text-[clamp(2rem,5vw,3.5rem)] font-semibold uppercase leading-[1.14] tracking-tight text-white"
+              className="mt-5 font-display text-[clamp(2rem,5vw,3.5rem)] font-semibold uppercase leading-[1.14] tracking-tight text-ink"
             >
               {product.displayName}
             </motion.h2>
 
             <motion.p
               variants={fadeUp(18)}
-              className="mt-3 font-display text-lg uppercase tracking-wider2 text-gold-500"
+              className="mt-3 font-display text-lg uppercase tracking-wider2 text-gold-800"
             >
               {product.story.heading}
             </motion.p>
@@ -129,7 +129,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
               {product.story.paragraphs.map((paragraph) => (
                 <p
                   key={paragraph.slice(0, 24)}
-                  className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-smoke"
+                  className="max-w-prose font-sans text-[15px] leading-relaxed text-pretty text-ink-soft"
                 >
                   {paragraph}
                 </p>
@@ -140,7 +140,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
               {product.story.motifs.map((motif) => (
                 <li
                   key={motif}
-                  className="border border-white/16 px-3.5 py-2 font-sans text-[11px] uppercase tracking-wider2 text-ash"
+                  className="border border-ink/16 px-3.5 py-2 font-sans text-[11px] uppercase tracking-wider2 text-ink-mute"
                 >
                   {motif}
                 </li>
@@ -153,7 +153,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
             >
               <Link
                 href={`/koleksiyon/${product.slug}`}
-                className="group inline-flex items-center gap-3 border border-white/20 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+                className="group inline-flex items-center gap-3 border border-ink/25 px-7 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-ink transition-colors duration-500 ease-luxe hover:border-gold-700 hover:text-gold-800"
               >
                 Formayı incele
                 <ArrowRight
@@ -161,7 +161,7 @@ export function StoryBlock({ product, index }: StoryBlockProps) {
                   aria-hidden
                 />
               </Link>
-              <span className="font-sans text-sm text-ash">{formatPrice(product.price)}</span>
+              <span className="font-sans text-sm text-ink-mute">{formatPrice(product.price)}</span>
             </motion.div>
           </motion.div>
         </div>

@@ -52,14 +52,14 @@ export default function ContactPage() {
             as="h1"
             from="above"
             delay={0.06}
-            className="mt-6 max-w-3xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-white"
+            className="mt-6 max-w-3xl font-display text-[clamp(2.4rem,7vw,5rem)] font-semibold uppercase leading-[1.1] tracking-tight text-balance text-ink"
           >
             Kapımız açık
           </Reveal>
           <Reveal
             as="p"
             delay={0.12}
-            className="mt-8 max-w-xl font-sans text-base leading-relaxed text-pretty text-smoke"
+            className="mt-8 max-w-xl font-sans text-base leading-relaxed text-pretty text-ink-soft"
           >
             Mağazamız Bayburt merkezde. Beden, stok ve koleksiyon sorularınız için telefonla ulaşın
             ya da doğrudan gelin — formaların hepsi vitrinde.
@@ -76,18 +76,18 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="magaza">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="magaza">
         <div className="container">
           <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
             <div>
               <SectionHeading eyebrow="Mağaza" title={<span id="magaza">{contact.store.name}</span>} />
 
-              <RevealGroup as="dl" className="mt-10 divide-y divide-white/10 border-y border-white/14">
+              <RevealGroup as="dl" className="mt-10 divide-y divide-white/10 border-y border-ink/14">
                 <RevealItem className="grid gap-2 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
+                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
                     Adres
                   </dt>
-                  <dd className="font-sans text-sm leading-relaxed text-smoke">
+                  <dd className="font-sans text-sm leading-relaxed text-ink-soft">
                     {contact.store.addressLine}
                     <br />
                     {contact.store.district} · {contact.store.postalCode}
@@ -96,21 +96,21 @@ export default function ContactPage() {
                   </dd>
                 </RevealItem>
                 <RevealItem className="grid gap-2 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
+                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
                     Çalışma saatleri
                   </dt>
-                  <dd className="font-sans text-sm leading-relaxed text-smoke">
+                  <dd className="font-sans text-sm leading-relaxed text-ink-soft">
                     {contact.store.hours}
                     <br />
                     Pazar kapalı
                   </dd>
                 </RevealItem>
                 <RevealItem className="grid gap-2 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
+                  <dt className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
                     Telefon
                   </dt>
-                  <dd className="font-sans text-sm leading-relaxed text-smoke">
-                    <a href={contact.phoneHref} className="link-underline hover:text-white">
+                  <dd className="font-sans text-sm leading-relaxed text-ink-soft">
+                    <a href={contact.phoneHref} className="link-underline hover:text-ink">
                       {contact.phone}
                     </a>
                   </dd>
@@ -121,17 +121,17 @@ export default function ContactPage() {
             <div>
               <SectionHeading eyebrow="Departmanlar" title="Doğrudan yazın" />
 
-              <RevealGroup as="ul" className="mt-10 divide-y divide-white/10 border-y border-white/14">
+              <RevealGroup as="ul" className="mt-10 divide-y divide-white/10 border-y border-ink/14">
                 {DEPARTMENTS.map((department) => (
                   <RevealItem as="li" key={department.label}>
                     <a
                       href={department.href}
                       className="group flex flex-wrap items-baseline justify-between gap-3 py-5"
                     >
-                      <span className="font-sans text-[11px] uppercase tracking-wider2 text-ash">
+                      <span className="font-sans text-[11px] uppercase tracking-wider2 text-ink-mute">
                         {department.label}
                       </span>
-                      <span className="font-sans text-sm text-smoke transition-colors duration-500 group-hover:text-gold-300">
+                      <span className="font-sans text-sm text-ink-soft transition-colors duration-500 group-hover:text-gold-800">
                         {department.value}
                       </span>
                     </a>
@@ -148,9 +148,9 @@ export default function ContactPage() {
                         href={social.href}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="link-underline font-sans text-sm text-smoke transition-colors duration-300 hover:text-white"
+                        className="link-underline font-sans text-sm text-ink-soft transition-colors duration-300 hover:text-ink"
                       >
-                        {social.label} <span className="text-ash">{social.handle}</span>
+                        {social.label} <span className="text-ink-mute">{social.handle}</span>
                       </a>
                     </li>
                   ))}
@@ -161,14 +161,14 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="form">
+      <section className="border-t border-ink/14 py-20 lg:py-28" aria-labelledby="form">
         <div className="container">
           <div className="max-w-2xl">
             <SectionHeading eyebrow="Mesaj" title={<span id="form">Bize yazın</span>} />
             <Reveal
               as="p"
               delay={0.08}
-              className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-smoke"
+              className="mt-6 font-sans text-[15px] leading-relaxed text-pretty text-ink-soft"
             >
               Formu doldurun, mesajınız kendi e-posta uygulamanızda hazır olarak açılsın —
               göndermeden önce son hâlini görürsünüz.

@@ -23,7 +23,7 @@ export function JerseyViewer({ product }: { product: Product }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="relative aspect-square overflow-hidden rounded-sm border border-white/14 bg-graphite-dark">
+      <div className="relative aspect-square overflow-hidden rounded-sm border border-ink/14 bg-graphite-dark">
         <span
           aria-hidden
           className="absolute inset-0"
@@ -66,7 +66,7 @@ export function JerseyViewer({ product }: { product: Product }) {
       {/* Under the frame, not over the garment: small type on a kit cannot be
           read, whichever kit it is. */}
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5">
-        <p className="font-sans text-[11px] uppercase tracking-wider2 text-gold-500">
+        <p className="font-sans text-[11px] uppercase tracking-wider2 text-gold-800">
           {product.colorway}
         </p>
       </div>
@@ -88,7 +88,7 @@ export function JerseyViewer({ product }: { product: Product }) {
               onClick={() => setActiveIndex(index)}
               className={cn(
                 'group relative aspect-square overflow-hidden rounded-sm border bg-graphite-dark transition-colors duration-500 ease-luxe',
-                isActive ? 'border-gold-600/70' : 'border-white/14 hover:border-white/25',
+                isActive ? 'border-gold-600/70' : 'border-ink/14 hover:border-ink/30',
               )}
             >
               <span className="absolute inset-x-[10%] bottom-[24%] top-[6%]">
@@ -109,7 +109,7 @@ export function JerseyViewer({ product }: { product: Product }) {
               <span
                 className={cn(
                   'absolute inset-x-0 bottom-0 py-2.5 text-center font-sans text-[10px] uppercase tracking-wider2 transition-colors duration-500',
-                  isActive ? 'text-gold-400' : 'text-ash',
+                  isActive ? 'text-gold-300' : 'text-smoke',
                 )}
               >
                 {view.label}

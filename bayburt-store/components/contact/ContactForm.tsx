@@ -52,8 +52,8 @@ export function ContactForm() {
   }
 
   const field =
-    'w-full border border-white/20 bg-white/[0.03] px-4 py-3.5 font-sans text-sm text-white placeholder:text-ash transition-colors duration-300 focus:border-gold-600 focus:outline-none focus:ring-1 focus:ring-gold-600/40'
-  const label = 'mb-2.5 block font-sans text-[11px] uppercase tracking-wider2 text-gold-600'
+    'w-full border border-ink/25 bg-white/[0.03] px-4 py-3.5 font-sans text-sm text-ink placeholder:text-ink-mute transition-colors duration-300 focus:border-gold-600 focus:outline-none focus:ring-1 focus:ring-gold-600/40'
+  const label = 'mb-2.5 block font-sans text-[11px] uppercase tracking-wider2 text-gold-800'
 
   return (
     <form onSubmit={handleSubmit} className="mt-10 space-y-5" noValidate>
@@ -104,7 +104,7 @@ export function ContactForm() {
           className={cn(field, 'appearance-none')}
         >
           {SUBJECTS.map((option) => (
-            <option key={option} value={option} className="bg-obsidian text-white">
+            <option key={option} value={option} className="bg-paper text-ink">
               {option}
             </option>
           ))}
@@ -130,13 +130,13 @@ export function ContactForm() {
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-1">
         <button
           type="submit"
-          className="group inline-flex items-center gap-3 border border-white/25 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-200"
+          className="group inline-flex items-center gap-3 border border-ink/30 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-ink transition-colors duration-500 ease-luxe hover:border-gold-500 hover:text-gold-800"
         >
           <Send className="h-3.5 w-3.5" aria-hidden />
           Mesajı gönder
         </button>
 
-        <p className="font-sans text-[11px] uppercase tracking-wider2 text-ash" role="status">
+        <p className="font-sans text-[11px] uppercase tracking-wider2 text-ink-mute" role="status">
           {touched && missing
             ? 'Ad soyad ve mesaj alanlarını doldurun'
             : `Mesaj ${contact.email} adresine gider`}

@@ -47,12 +47,31 @@ module.exports = {
           800: '#6E5715',
           900: '#4A3A0D',
         },
-        // Body copy and its quieter sibling. Both rise with the ground under
-        // them — a grey that cleared 4.5:1 on near-black does not clear it on
-        // a lifted one, and the whole point of lifting was to be easier to
-        // read, not harder.
+        // Body copy and its quieter sibling, for the dark surfaces that are
+        // left: the hero, the footer, the menu, and the plates the kits stand
+        // on.
         smoke: '#D0D0D9',
         ash: '#A8A8B4',
+
+        /*
+         * Daylight. The pages behind the hero are read, not looked at, and
+         * black pages are tiring to read — so the ground is paper and the type
+         * is ink. Warm, not blue-white: the whole identity is gold, and gold
+         * on a cold white reads as mustard.
+         *
+         * The kit plates stay dark on purpose. Coruh is a white shirt cut out
+         * of its background; on a white ground it would simply disappear.
+         */
+        paper: {
+          DEFAULT: '#F4F2ED',
+          raised: '#FFFFFF',
+          sunk: '#EAE7DF',
+        },
+        ink: {
+          DEFAULT: '#17171C',
+          soft: '#45454F',
+          mute: '#5E5E6A',
+        },
       },
       fontFamily: {
         display: ['var(--font-display)', 'Jost', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'sans-serif'],
