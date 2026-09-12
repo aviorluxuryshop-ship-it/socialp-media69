@@ -38,7 +38,7 @@
   @media (min-width: 1024px) {
     :root {
       --plate-w: 100vw;
-      --plate-h: calc(100svh - var(--header-height));
+      --plate-h: 100svh;
     }
   }
 

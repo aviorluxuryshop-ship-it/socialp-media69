@@ -134,25 +134,6 @@ const REGIONS = [
   { left: '64%', width: '36%', lift: 'rgba(212,175,55,0.16)' },
 ]
 
-/**
- * Rim light per kit: gold for Hisar, daylight for Çoruh, and for Çinimaçin a
- * a neutral white rather than gold — a warm rim multiplies into a black
- * garment and turns it olive, and a black kit should stay black when a light
- * is brought to it. Its gold trim picks up the light on its own.
- */
-const RIM_COLOURS = [0xffc247, 0xeef3ff, 0xf6f4f0]
-
-/**
- * The backdrop is three regions — the castle and its gold light, the river
- * and the city in daylight, the dark patterned right. Selecting a kit lifts
- * the region it belongs to and lets the other two fall back.
- */
-const REGIONS = [
-  { left: '0%', width: '40%', lift: 'rgba(233,162,28,0.22)' },
-  { left: '38%', width: '28%', lift: 'rgba(228,238,255,0.20)' },
-  { left: '64%', width: '36%', lift: 'rgba(212,175,55,0.16)' },
-]
-
 export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
   const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -270,15 +251,6 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       // The names and the cue line hang off this, not off a percentage that
       // only held while the plate and the frame were the same box.
       container!.parentElement?.style.setProperty('--plate-foot', `${Math.round(foot)}px`)
-
-      // The plate is cropped, so its foot is no longer a fixed fraction of the
-      // frame. Publish where it actually lands: the kit names and the cue line
-      // hang off this, not off a percentage that only held while the plate and
-      // the frame were the same box.
-      container!.parentElement?.style.setProperty(
-        '--plate-foot',
-        `${Math.round(plateTop + PLATE_SAFE_BOTTOM * plateHeight)}px`,
-      )
 
       const slots = PLATE_KIT.map((kit) => ({
         x: (plateLeft + kit.x * plateWidth - clientWidth / 2) * worldPerPixel,

@@ -96,6 +96,10 @@ const PAINTED = [
   // a band of their own below the kits, so that a name is never part of the
   // same picture as the garment above it.
   { left: 0.1650, top: 0.7690, right: 0.8250, bottom: 0.8600 },
+  // The plate runs under the bar now, and the painted "BAYBURTSPOR" landed
+  // straight on top of the shortcut links. The page says the name itself — in
+  // the bar, and in the copy under it — so the artwork does not have to.
+  { left: 0.3730, top: 0.0100, right: 0.6130, bottom: 0.0540 },
 ]
 const FEATHER = 7
 
