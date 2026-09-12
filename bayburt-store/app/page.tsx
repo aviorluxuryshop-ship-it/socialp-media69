@@ -91,7 +91,7 @@ export default function HomePage() {
               not to the window, and on desktop stacked below the kit names by
               a fixed distance so the four things never close up on a short
               window. */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-10 z-20 flex justify-center px-6 sm:bottom-12 lg:bottom-auto lg:top-[calc(74.5%+103px)]">
+          <div className="pointer-events-none absolute inset-x-0 bottom-10 z-20 flex justify-center px-6 sm:bottom-12 lg:bottom-auto lg:top-[calc(var(--plate-foot,74.5%)+103px)]">
             <p
               data-hero-cue
               className="flex items-center gap-3.5 text-balance text-center font-sans text-[11px] uppercase tracking-luxe text-gold-300"
