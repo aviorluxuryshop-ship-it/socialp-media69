@@ -63,11 +63,11 @@ export default function HomePage() {
             fill
             priority
             sizes="100vw"
-            className="hidden object-cover object-center lg:block"
+            className="hidden object-cover object-top lg:block"
           />
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.62)_0%,rgba(5,5,5,0.46)_20%,rgba(5,5,5,0.2)_34%,transparent_46%,transparent_64%,rgba(5,5,5,0.78)_100%)] lg:bg-none"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.62)_0%,rgba(5,5,5,0.46)_20%,rgba(5,5,5,0.2)_34%,transparent_46%,transparent_64%,rgba(5,5,5,0.78)_100%)] lg:bg-[linear-gradient(180deg,transparent_0%,transparent_50%,rgba(5,5,5,0.3)_68%,rgba(5,5,5,0.72)_84%,rgba(5,5,5,0.92)_100%)]"
           />
 
           {/* A pool of shadow under each kit. The valley behind them is pale,
@@ -94,7 +94,7 @@ export default function HomePage() {
           <div className="pointer-events-none absolute inset-x-0 bottom-10 z-20 flex justify-center px-6 sm:bottom-12 lg:bottom-auto lg:top-[calc(var(--plate-foot,74.5%)+103px)]">
             <p
               data-hero-cue
-              className="flex items-center gap-3.5 text-balance text-center font-sans text-[11px] uppercase tracking-luxe text-gold-300"
+              className="flex items-center gap-3.5 text-balance text-center font-sans text-[11px] uppercase tracking-luxe text-gold-300 [text-shadow:0_1px_3px_rgba(5,5,5,0.95),0_2px_16px_rgba(5,5,5,0.9)]"
             >
               {/* The rules only read as rules beside a single line; at phone
                   width the sentence wraps and they would hang off one edge. */}

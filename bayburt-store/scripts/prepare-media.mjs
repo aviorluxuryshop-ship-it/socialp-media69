@@ -166,11 +166,22 @@ async function buildHeroPlate(file) {
   const height = meta.height ?? 901
 
   const cleaned = await erasePaintedType(source)
-  const plate = sharp(cleaned)
 
-  await plate.clone().jpeg({ quality: 84, mozjpeg: true }).toFile(join(HERO_DIR, 'plate.jpg'))
-  await plate.clone().webp({ quality: 80 }).toFile(join(HERO_DIR, 'plate.webp'))
-  console.log(`hero    plate ${width}x${height}`)
+  // The plate runs the full width of the window now, so on a wide display the
+  // browser was stretching a 1600px artwork to 2560 with its own cheap filter
+  // and the result read as soft. Enlarging it here instead — Lanczos, then a
+  // light unsharp pass to put back the edge the resample costs — does not
+  // invent detail, but it is a visibly cleaner enlargement than the browser's,
+  // and it means the plate is never scaled up at display time.
+  const PLATE_WIDTH = 2560
+  const plateHeight = Math.round((PLATE_WIDTH * height) / width)
+  const plate = sharp(cleaned)
+    .resize(PLATE_WIDTH, plateHeight, { kernel: sharp.kernel.lanczos3 })
+    .sharpen({ sigma: 0.7, m1: 0.4, m2: 0.9 })
+
+  await plate.clone().jpeg({ quality: 88, mozjpeg: true }).toFile(join(HERO_DIR, 'plate.jpg'))
+  await plate.clone().webp({ quality: 84 }).toFile(join(HERO_DIR, 'plate.webp'))
+  console.log(`hero    plate ${PLATE_WIDTH}x${plateHeight} (kaynak ${width}x${height})`)
 
   // The plate keeps its own proportion on desktop, so a wide window shows
   // ground either side of it. This is that ground: the same artwork reduced

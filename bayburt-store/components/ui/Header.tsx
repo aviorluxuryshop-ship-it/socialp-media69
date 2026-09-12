@@ -55,18 +55,32 @@ export function Header() {
             : 'border-b border-transparent bg-transparent',
         )}
       >
-        {/* The hero's head is near-white artwork, and white type on it is
-            unreadable. This wash sits under the bar until the scrolled state
-            takes over, so the links always have ground of their own. */}
+        {/* At the top of the page the bar has no ground of its own: the plate
+            is meant to run under it, wordmark and all, not stop at a black
+            strip. What is left is a breath of shade that the artwork still
+            reads through — the type carries its own shadow for the rest, which
+            is what makes it legible over the near-white head of the plate
+            without putting a lid on it. */}
         <span
           aria-hidden
           className={cn(
-            'pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--header-height)+2.5rem)] bg-[linear-gradient(180deg,rgba(5,5,5,0.94)_0%,rgba(5,5,5,0.86)_46%,rgba(5,5,5,0.4)_78%,transparent_100%)] transition-opacity duration-500 ease-luxe',
+            'pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--header-height)+3.5rem)] bg-[linear-gradient(180deg,rgba(5,5,5,0.58)_0%,rgba(5,5,5,0.42)_44%,rgba(5,5,5,0.16)_74%,transparent_100%)] transition-opacity duration-500 ease-luxe',
             isScrolled && !isOpen ? 'opacity-0' : 'opacity-100',
           )}
         />
 
-        <div className="container relative flex h-[var(--header-height)] items-center justify-between gap-6">
+        {/* Unscrolled, the bar floats on the artwork, so every mark in it —
+            type and the three rules of the menu button alike — carries its own
+            shadow. Scrolled, the bar has a solid ground again and the shadow
+            would only smear the type, so it goes. */}
+        <div
+          className={cn(
+            'container relative flex h-[var(--header-height)] items-center justify-between gap-6 transition-[filter] duration-500 ease-luxe',
+            isScrolled && !isOpen
+              ? ''
+              : 'drop-shadow-[0_1px_3px_rgba(5,5,5,0.92)] [text-shadow:0_1px_3px_rgba(5,5,5,0.95),0_2px_14px_rgba(5,5,5,0.8)]',
+          )}
+        >
           <Link
             href="/"
             className="group flex items-baseline gap-2.5 whitespace-nowrap"
@@ -75,7 +89,7 @@ export function Header() {
             <span className="font-display text-[15px] font-semibold uppercase tracking-[0.3em] text-white transition-colors duration-500 group-hover:text-gold-300 sm:text-base">
               Bayburt
             </span>
-            <span className="font-sans text-[10px] uppercase tracking-luxe text-smoke transition-colors duration-500 group-hover:text-gold-500">
+            <span className="font-sans text-[10px] uppercase tracking-luxe text-white/90 transition-colors duration-500 group-hover:text-gold-500">
               Store
             </span>
           </Link>
@@ -83,13 +97,13 @@ export function Header() {
           <nav aria-label="Kısayollar" className="hidden items-center gap-9 md:flex">
             <Link
               href="/koleksiyon"
-              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-smoke transition-colors duration-300 hover:text-white"
+              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-white/90 transition-colors duration-300 hover:text-gold-300"
             >
               Koleksiyon
             </Link>
             <Link
               href="/hakkimizda"
-              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-smoke transition-colors duration-300 hover:text-white"
+              className="link-underline font-sans text-[11px] uppercase tracking-wider2 text-white/90 transition-colors duration-300 hover:text-gold-300"
             >
               Hakkımızda
             </Link>
@@ -106,7 +120,7 @@ export function Header() {
             aria-controls="tam-ekran-menu"
             className="group -mr-2 flex items-center gap-3 px-2 py-3 text-white transition-colors duration-300 hover:text-gold-300"
           >
-            <span className="hidden font-sans text-[11px] uppercase tracking-wider2 text-smoke transition-colors duration-300 group-hover:text-white sm:inline">
+            <span className="hidden font-sans text-[11px] uppercase tracking-wider2 text-white transition-colors duration-300 group-hover:text-gold-300 sm:inline">
               {isOpen ? 'Kapat' : 'Menü'}
             </span>
             <HamburgerIcon isOpen={isOpen} />

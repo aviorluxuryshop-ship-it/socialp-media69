@@ -108,8 +108,31 @@ const CAMERA_Z = 6
 /** How much bigger a hovered kit reads: the lift, plus the step's perspective. */
 const HOVER_GROWTH = HOVER_SCALE * (CAMERA_Z / (CAMERA_Z - HOVER_STEP))
 
-/** Kits stand on the middle of the safe band. */
-const PLATE_KIT_Y = (PLATE_SAFE_TOP + PLATE_SAFE_BOTTOM) / 2
+/**
+ * Room kept clear under the kits, in pixels: the gap to the names, the two
+ * lines of the name itself, the gap to the cue line, the cue line, and a
+ * margin under that. The band is never allowed to sit lower than this leaves.
+ */
+const FOOT_STACK = NAME_BAND_GAP + NAME_BAND_HEIGHT + 36 + 18 + 28
+
+/**
+ * Rim light per kit: gold for Hisar, daylight for Çoruh, and for Çinimaçin a
+ * a neutral white rather than gold — a warm rim multiplies into a black
+ * garment and turns it olive, and a black kit should stay black when a light
+ * is brought to it. Its gold trim picks up the light on its own.
+ */
+const RIM_COLOURS = [0xffc247, 0xeef3ff, 0xf6f4f0]
+
+/**
+ * The backdrop is three regions — the castle and its gold light, the river
+ * and the city in daylight, the dark patterned right. Selecting a kit lifts
+ * the region it belongs to and lets the other two fall back.
+ */
+const REGIONS = [
+  { left: '0%', width: '40%', lift: 'rgba(233,162,28,0.22)' },
+  { left: '38%', width: '28%', lift: 'rgba(228,238,255,0.20)' },
+  { left: '64%', width: '36%', lift: 'rgba(212,175,55,0.16)' },
+]
 
 /**
  * Rim light per kit: gold for Hisar, daylight for Çoruh, and for Çinimaçin a
@@ -221,17 +244,32 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
       const portrait = aspect < 0.95
       const worldPerPixel = visibleHeight / Math.max(clientHeight, 1)
 
-      // The plate is object-cover: work out its rendered box, then stand each
-      // kit on the one painted into it.
+      // The plate is object-cover, pinned to its own head. Everything the
+      // artwork has to say — the wordmark, the line under it — is painted
+      // across its top, so a crop taken off both ends eats the title on a
+      // short window. Taken off the foot it only eats dark ground.
       const plateWidth = aspect > PLATE_ASPECT ? clientWidth : clientHeight * PLATE_ASPECT
       const plateHeight = aspect > PLATE_ASPECT ? clientWidth / PLATE_ASPECT : clientHeight
       const plateLeft = (clientWidth - plateWidth) / 2
-      const plateTop = (clientHeight - plateHeight) / 2
+      const plateTop = 0
 
-      // Nothing may grow out of the safe band, however the window is shaped:
-      // the ceiling is the band itself, less the room hover needs.
-      const maxScale =
-        ((PLATE_SAFE_BOTTOM - PLATE_SAFE_TOP) * plateHeight * worldPerPixel) / HOVER_GROWTH
+      // Where the kits stand. The painted foot is the honest answer, but on a
+      // wide, short window it lands past the bottom of the frame and takes the
+      // names and the cue line with it — so the band is also held far enough
+      // up that the stack below it still fits on screen.
+      const paintedFoot = plateTop + PLATE_SAFE_BOTTOM * plateHeight
+      const bandTop = plateTop + PLATE_SAFE_TOP * plateHeight
+      const footCeiling = clientHeight - FOOT_STACK
+      const foot = Math.max(Math.min(paintedFoot, footCeiling), bandTop + 120)
+      const kitCentre = (bandTop + foot) / 2
+
+      // Nothing may grow out of the band, however the window is shaped: the
+      // ceiling is the band itself, less the room hover needs.
+      const maxScale = ((foot - bandTop) * worldPerPixel) / HOVER_GROWTH
+
+      // The names and the cue line hang off this, not off a percentage that
+      // only held while the plate and the frame were the same box.
+      container!.parentElement?.style.setProperty('--plate-foot', `${Math.round(foot)}px`)
 
       // The plate is cropped, so its foot is no longer a fixed fraction of the
       // frame. Publish where it actually lands: the kit names and the cue line
@@ -244,7 +282,7 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
       const slots = PLATE_KIT.map((kit) => ({
         x: (plateLeft + kit.x * plateWidth - clientWidth / 2) * worldPerPixel,
-        y: (clientHeight / 2 - (plateTop + PLATE_KIT_Y * plateHeight)) * worldPerPixel,
+        y: (clientHeight / 2 - kitCentre) * worldPerPixel,
         scale: Math.min(kit.height * plateHeight * worldPerPixel, maxScale),
       }))
 
@@ -609,12 +647,13 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
             <p
               className={cn(
                 'font-display text-2xl uppercase leading-[1.1] tracking-wider2 transition-colors duration-500',
+                '[text-shadow:0_2px_4px_rgba(5,5,5,0.95),0_3px_20px_rgba(5,5,5,0.9)]',
                 activeIndex === index ? 'text-gold-300' : 'text-white',
               )}
             >
               {product.displayName}
             </p>
-            <p className="mt-1.5 font-sans text-[11px] uppercase tracking-wider2 text-smoke">
+            <p className="mt-1.5 font-sans text-[11px] uppercase tracking-wider2 text-white/80 [text-shadow:0_1px_3px_rgba(5,5,5,0.95),0_2px_16px_rgba(5,5,5,0.9)]">
               {product.kind}
             </p>
           </div>
