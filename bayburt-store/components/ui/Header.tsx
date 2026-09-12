@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 import { FullMenu } from '@/components/ui/FullMenu'
@@ -38,6 +39,9 @@ function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
 
 export function Header() {
   const { isOpen, toggle } = useMenu()
+  // Only the home page puts near-white artwork under the bar. Everywhere else
+  // the page behind it is obsidian and the type stays light.
+  const onPlate = usePathname() === '/'
   const [isScrolled, setIsScrolled] = useState(false)
   const { scrollY } = useScroll()
 
@@ -55,30 +59,27 @@ export function Header() {
             : 'border-b border-transparent bg-transparent',
         )}
       >
-        {/* At the top of the page the bar has no ground of its own: the plate
-            is meant to run under it, wordmark and all, not stop at a black
-            strip. What is left is a breath of shade that the artwork still
-            reads through — the type carries its own shadow for the rest, which
-            is what makes it legible over the near-white head of the plate
-            without putting a lid on it. */}
-        <span
-          aria-hidden
-          className={cn(
-            'pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--header-height)+3.5rem)] bg-[linear-gradient(180deg,rgba(5,5,5,0.58)_0%,rgba(5,5,5,0.42)_44%,rgba(5,5,5,0.16)_74%,transparent_100%)] transition-opacity duration-500 ease-luxe',
-            isScrolled && !isOpen ? 'opacity-0' : 'opacity-100',
-          )}
-        />
-
-        {/* Unscrolled, the bar floats on the artwork, so every mark in it —
-            type and the three rules of the menu button alike — carries its own
-            shadow. Scrolled, the bar has a solid ground again and the shadow
-            would only smear the type, so it goes. */}
+        {/* Unscrolled there is no bar: the plate runs to the top of the
+            window with nothing laid over it, and every mark in the header —
+            type and the three rules of the menu button alike — is held up by
+            a halo of its own instead. Tight and dark, so it reads as a shadow
+            on the artwork rather than as a strip across it. Scrolled, the bar
+            has solid ground again and the halo would only smear the type, so
+            it goes. */}
         <div
           className={cn(
             'container relative flex h-[var(--header-height)] items-center justify-between gap-6 transition-[filter] duration-500 ease-luxe',
-            isScrolled && !isOpen
-              ? ''
-              : 'drop-shadow-[0_1px_3px_rgba(5,5,5,0.92)] [text-shadow:0_1px_3px_rgba(5,5,5,0.95),0_2px_14px_rgba(5,5,5,0.8)]',
+            !isScrolled && !isOpen && onPlate
+              // Ink, not light. Over the pale head of the plate white type
+              // needs a strip of shade behind it to be read at all, and the
+              // strip is exactly what should not be there — so the type goes
+              // dark instead and carries a soft white halo, which holds it off
+              // the light ground and off the dark patterning at the right
+              // edge alike. No band, and nothing to read through.
+              ? 'text-obsidian [&_*]:!text-obsidian drop-shadow-[0_0_2px_rgba(255,255,255,0.98)] drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] [text-shadow:0_0_2px_rgba(255,255,255,0.98),0_0_7px_rgba(255,255,255,0.92),0_0_16px_rgba(255,255,255,0.8),0_0_32px_rgba(255,255,255,0.6)]'
+              : !isScrolled && !isOpen
+                ? '[text-shadow:0_1px_2px_rgba(5,5,5,0.9),0_0_12px_rgba(5,5,5,0.8)]'
+                : '',
           )}
         >
           <Link
@@ -118,7 +119,19 @@ export function Header() {
             onClick={toggle}
             aria-expanded={isOpen}
             aria-controls="tam-ekran-menu"
-            className="group -mr-2 flex items-center gap-3 px-2 py-3 text-white transition-colors duration-300 hover:text-gold-300"
+            className={cn(
+              'group -mr-2 flex items-center gap-3 px-2 py-3 transition-colors duration-300',
+              // The right edge of the plate is pale at one window shape and
+              // near-black at the next, so no single ink reads there. This one
+              // takes the inverse of whatever it lands on, which needs no
+              // ground of its own at either end.
+              // Over the plate the menu button is ink like the rest of the
+              // bar, and its halo is tightened so the three rules keep a white
+              // edge even where the artwork behind them goes near-black.
+              !isScrolled && !isOpen && onPlate
+                ? 'text-obsidian [&_*]:!text-obsidian drop-shadow-[0_0_1.5px_rgba(255,255,255,1)] drop-shadow-[0_0_4px_rgba(255,255,255,1)] drop-shadow-[0_0_9px_rgba(255,255,255,0.95)]'
+                : 'text-white hover:text-gold-300',
+            )}
           >
             <span className="hidden font-sans text-[11px] uppercase tracking-wider2 text-white transition-colors duration-300 group-hover:text-gold-300 sm:inline">
               {isOpen ? 'Kapat' : 'Menü'}
