@@ -72,7 +72,7 @@ export function KitCard3D({ product, index, priority = false }: KitCard3DProps) 
         >
           <div
             className={cn(
-              'preserve-3d relative flex aspect-[3/4] flex-col overflow-hidden rounded-sm border border-white/10 bg-graphite-dark',
+              'preserve-3d relative flex aspect-[3/4] flex-col overflow-hidden rounded-sm border border-white/14 bg-graphite-dark',
               'transition-[border-color,box-shadow] duration-700 ease-luxe group-hover:border-gold-600/45 group-focus-within:border-gold-600/45',
               'shadow-kit',
             )}
@@ -122,7 +122,7 @@ export function KitCard3D({ product, index, priority = false }: KitCard3DProps) 
               <h3 className="mt-2 font-display text-2xl font-semibold uppercase tracking-wide text-white sm:text-[26px]">
                 {product.displayName}
               </h3>
-              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+              <div className="mt-4 flex items-center justify-between border-t border-white/14 pt-4">
                 <span className="font-sans text-sm text-smoke">{formatPrice(product.price)}</span>
                 <span className="inline-flex items-center gap-1.5 font-sans text-[11px] uppercase tracking-wider2 text-gold-400">
                   İncele

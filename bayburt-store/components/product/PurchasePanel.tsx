@@ -75,7 +75,7 @@ export function PurchasePanel({ product }: { product: Product }) {
         ) : null}
       </div>
 
-      <ul className="space-y-3 border-t border-white/10 pt-7">
+      <ul className="space-y-3 border-t border-white/14 pt-7">
         {ASSURANCES.map(({ icon: Icon, label }) => (
           <li key={label} className="flex items-center gap-3 font-sans text-sm text-ash">
             <Icon className="h-4 w-4 shrink-0 text-gold-600" aria-hidden />

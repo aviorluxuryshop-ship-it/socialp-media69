@@ -43,9 +43,12 @@ export function AddToCartButton({ onAdd, className }: AddToCartButtonProps) {
       aria-live="polite"
       className={cn(
         'group relative flex h-14 w-full items-center justify-center overflow-hidden border font-sans text-[11px] uppercase tracking-luxe transition-colors duration-500 ease-luxe',
+        // Gold, filled. The one thing on the page you are meant to press should
+        // not be the faintest mark on it — a hairline outline on a dark ground
+        // reads as a disabled control, not as the way forward.
         isAdded
           ? 'border-gold-500 text-obsidian'
-          : 'border-white/20 text-white hover:border-gold-600 hover:text-gold-200',
+          : 'border-gold-500 bg-gold-500 text-obsidian hover:border-gold-400 hover:bg-gold-400',
         className,
       )}
     >

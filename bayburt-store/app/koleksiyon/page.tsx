@@ -76,7 +76,7 @@ export default function CollectionPage() {
         <StoryBlock key={product.slug} product={product} index={index} />
       ))}
 
-      <section className="border-t border-white/10 py-20 lg:py-28">
+      <section className="border-t border-white/14 py-20 lg:py-28">
         <div className="container">
           <div className="mx-auto max-w-2xl text-center">
             <Reveal as="h2" className="font-display text-[clamp(1.7rem,4vw,2.75rem)] font-semibold uppercase leading-[1.14] tracking-tight text-balance text-white">

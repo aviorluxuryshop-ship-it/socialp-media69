@@ -59,7 +59,7 @@ export function ContactGrid() {
       whileInView="visible"
       viewport={viewportOnce}
       data-reveal
-      className="grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2"
+      className="grid gap-px overflow-hidden border border-white/14 bg-white/10 sm:grid-cols-2"
     >
       {CARDS.map(({ icon: Icon, ...card }) => (
         <motion.li key={card.label} variants={fadeUp(20)} className="bg-obsidian">

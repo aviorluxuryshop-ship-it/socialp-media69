@@ -55,7 +55,7 @@ export function Header() {
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-luxe',
           isScrolled && !isOpen
-            ? 'border-b border-white/10 bg-obsidian/80 backdrop-blur-xl'
+            ? 'border-b border-white/14 bg-obsidian/80 backdrop-blur-xl'
             : 'border-b border-transparent bg-transparent',
         )}
       >

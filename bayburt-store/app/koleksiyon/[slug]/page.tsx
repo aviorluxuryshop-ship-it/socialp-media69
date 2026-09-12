@@ -192,7 +192,7 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="teknik">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="teknik">
         <div className="container">
           <SectionHeading
             eyebrow="Teknik"
@@ -201,7 +201,7 @@ export default async function ProductPage({ params }: PageProps) {
           />
 
           <div className="mt-14 grid gap-14 lg:grid-cols-2 lg:gap-20">
-            <RevealGroup as="dl" className="divide-y divide-white/10 border-y border-white/10">
+            <RevealGroup as="dl" className="divide-y divide-white/10 border-y border-white/14">
               {product.specs.map((spec) => (
                 <RevealItem
                   key={spec.label}
@@ -229,7 +229,7 @@ export default async function ProductPage({ params }: PageProps) {
                 ))}
               </RevealGroup>
 
-              <Reveal className="mt-12 border-t border-white/10 pt-8">
+              <Reveal className="mt-12 border-t border-white/14 pt-8">
                 <p className="eyebrow-muted mb-5">Bakım</p>
                 <ul className="grid gap-2.5 sm:grid-cols-2">
                   {product.care.map((line) => (
@@ -244,7 +244,7 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="hikaye">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="hikaye">
         <div className="container">
           <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
             <div>
@@ -288,7 +288,7 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="digerleri">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="digerleri">
         <div className="container">
           <SectionHeading eyebrow="Koleksiyonun devamı" title={<span id="digerleri">Diğer formalar</span>} />
 
@@ -297,7 +297,7 @@ export default async function ProductPage({ params }: PageProps) {
               <RevealItem key={item.slug}>
                 <Link
                   href={`/koleksiyon/${item.slug}`}
-                  className="group relative flex items-center gap-7 overflow-hidden rounded-sm border border-white/10 bg-graphite-dark p-6 transition-colors duration-700 ease-luxe hover:border-gold-600/40 sm:p-8"
+                  className="group relative flex items-center gap-7 overflow-hidden rounded-sm border border-white/14 bg-graphite-dark p-6 transition-colors duration-700 ease-luxe hover:border-gold-600/40 sm:p-8"
                 >
                   <span
                     aria-hidden

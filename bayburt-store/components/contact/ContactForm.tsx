@@ -52,7 +52,7 @@ export function ContactForm() {
   }
 
   const field =
-    'w-full border border-white/15 bg-white/[0.03] px-4 py-3.5 font-sans text-sm text-white placeholder:text-ash transition-colors duration-300 focus:border-gold-600 focus:outline-none focus:ring-1 focus:ring-gold-600/40'
+    'w-full border border-white/20 bg-white/[0.03] px-4 py-3.5 font-sans text-sm text-white placeholder:text-ash transition-colors duration-300 focus:border-gold-600 focus:outline-none focus:ring-1 focus:ring-gold-600/40'
   const label = 'mb-2.5 block font-sans text-[11px] uppercase tracking-wider2 text-gold-600'
 
   return (

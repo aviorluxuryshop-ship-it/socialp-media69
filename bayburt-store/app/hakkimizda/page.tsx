@@ -110,7 +110,7 @@ export default function AboutPage() {
 
       <section className="py-4 lg:py-8" aria-label="Rakamlar">
         <div className="container">
-          <RevealGroup className="grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="grid gap-px overflow-hidden border border-white/14 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
             {FIGURES.map((figure) => (
               <RevealItem key={figure.label} className="bg-obsidian px-7 py-9">
                 <p className="font-display text-3xl font-semibold tracking-tight text-gold-400">
@@ -125,7 +125,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="hikaye">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="hikaye">
         <div className="container">
           <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
             <SectionHeading eyebrow="Hikâye" title={<span id="hikaye">Neden Bayburt</span>} />
@@ -153,16 +153,16 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="zaman">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="zaman">
         <div className="container">
           <SectionHeading eyebrow="Zaman çizgisi" title={<span id="zaman">1969’dan bugüne</span>} />
 
-          <RevealGroup as="ol" className="mt-14 border-t border-white/10">
+          <RevealGroup as="ol" className="mt-14 border-t border-white/14">
             {TIMELINE.map((entry) => (
               <RevealItem
                 as="li"
                 key={entry.year}
-                className="grid gap-4 border-b border-white/10 py-9 lg:grid-cols-[180px_220px_1fr] lg:items-baseline lg:gap-10"
+                className="grid gap-4 border-b border-white/14 py-9 lg:grid-cols-[180px_220px_1fr] lg:items-baseline lg:gap-10"
               >
                 <span className="font-sans text-[11px] uppercase tracking-wider2 text-gold-600">
                   {entry.year}
@@ -179,7 +179,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 py-20 lg:py-28" aria-labelledby="ilkeler">
+      <section className="border-t border-white/14 py-20 lg:py-28" aria-labelledby="ilkeler">
         <div className="container">
           <SectionHeading eyebrow="İlkeler" title={<span id="ilkeler">Nasıl çalışıyoruz</span>} />
 
@@ -202,7 +202,7 @@ export default function AboutPage() {
           <Reveal className="mt-16">
             <Link
               href="/koleksiyon"
-              className="group inline-flex items-center gap-3 border border-white/15 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+              className="group inline-flex items-center gap-3 border border-white/20 px-8 py-4 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
             >
               Koleksiyonu gör
               <ArrowRight

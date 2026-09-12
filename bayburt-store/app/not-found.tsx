@@ -32,7 +32,7 @@ export default function NotFound() {
             <li key={product.slug}>
               <Link
                 href={`/koleksiyon/${product.slug}`}
-                className="group inline-flex items-center gap-2.5 border border-white/15 px-6 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
+                className="group inline-flex items-center gap-2.5 border border-white/20 px-6 py-3.5 font-sans text-[11px] uppercase tracking-luxe text-white transition-colors duration-500 ease-luxe hover:border-gold-600 hover:text-gold-300"
               >
                 {product.displayName}
                 <ArrowRight
