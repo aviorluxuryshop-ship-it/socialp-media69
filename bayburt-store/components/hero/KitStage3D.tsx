@@ -70,13 +70,12 @@ const NAME_BAND_GAP = 24
 const NAME_BAND_HEIGHT = 47
 
 /**
- * The kits do not answer the pointer. No lift, no step toward the camera, no
- * rim change and no dimming of the others — a kit is a photograph of a shirt
- * and it stands still. Kept as constants at 1 and 0 so the layout maths
- * below, and the checks that mirror it, stay in one piece.
+ * Hover lift, kept deliberately small. The kit also steps toward the camera,
+ * which magnifies it again — at 6 units back a step of 0.18 is another 3% —
+ * so the two together stay inside the safe band and clear of the neighbours.
  */
-const HOVER_SCALE = 1
-const HOVER_STEP = 0
+const HOVER_SCALE = 1.03
+const HOVER_STEP = 0.18
 
 /**
  * Portrait keeps this much room, in pixels, at each end of the stage: the
@@ -106,25 +105,30 @@ const PORTRAIT_FOOT_STACK = 208
 const PORTRAIT_NAME_GAP = 18
 const CAMERA_Z = 6
 
-/**
- * The idle float. Not a reaction to anything — the kits rise and settle on
- * their own, a couple of pixels, the way a shirt hung on a line does. This is
- * the one thing that moves: no turning, no growing, no stepping forward, and
- * nothing at all that answers the pointer. The three drift out of phase so
- * they read as three shirts rather than one sliding panel.
- */
-const FLOAT_AMPLITUDE = 0.022
-const FLOAT_SPEED = 0.62
-const FLOAT_PHASE = 2.1
-
-/**
- * How much bigger a kit reads than the artwork gives it. One, now: nothing
- * grows. The term stays because the safe-band maths below is written in it.
- */
+/** How much bigger a hovered kit reads: the lift, plus the step's perspective. */
 const HOVER_GROWTH = HOVER_SCALE * (CAMERA_Z / (CAMERA_Z - HOVER_STEP))
 
 /** Kits stand on the middle of the safe band. */
 const PLATE_KIT_Y = (PLATE_SAFE_TOP + PLATE_SAFE_BOTTOM) / 2
+
+/**
+ * Rim light per kit: gold for Hisar, daylight for Çoruh, and for Çinimaçin a
+ * a neutral white rather than gold — a warm rim multiplies into a black
+ * garment and turns it olive, and a black kit should stay black when a light
+ * is brought to it. Its gold trim picks up the light on its own.
+ */
+const RIM_COLOURS = [0xffc247, 0xeef3ff, 0xf6f4f0]
+
+/**
+ * The backdrop is three regions — the castle and its gold light, the river
+ * and the city in daylight, the dark patterned right. Selecting a kit lifts
+ * the region it belongs to and lets the other two fall back.
+ */
+const REGIONS = [
+  { left: '0%', width: '40%', lift: 'rgba(233,162,28,0.22)' },
+  { left: '38%', width: '28%', lift: 'rgba(228,238,255,0.20)' },
+  { left: '64%', width: '36%', lift: 'rgba(212,175,55,0.16)' },
+]
 
 export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
   const router = useRouter()
@@ -169,12 +173,12 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
     let disposed = false
     const nodes: KitNode[] = []
+    const pointer = new THREE.Vector2(0, 0)
     const rayPointer = new THREE.Vector2(-2, -2)
     const raycaster = new THREE.Raycaster()
     const projected = new THREE.Vector3()
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const clock = new THREE.Clock()
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.toneMapping = THREE.ACESFilmicToneMapping
@@ -191,6 +195,8 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     key.position.set(2.4, 3.2, 4.2)
     scene.add(key)
 
+    const rimBase = new THREE.Color(0xd4af37)
+    const rimTarget = new THREE.Color(0xd4af37)
     const rim = new THREE.DirectionalLight(0xd4af37, 1.9)
     rim.position.set(-3.4, 1.4, -2.6)
     scene.add(rim)
@@ -354,11 +360,13 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
     function onPointerMove(event: PointerEvent) {
       const bounds = container!.getBoundingClientRect()
-      rayPointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1
-      rayPointer.y = -(((event.clientY - bounds.top) / bounds.height) * 2 - 1)
+      pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1
+      pointer.y = -(((event.clientY - bounds.top) / bounds.height) * 2 - 1)
+      rayPointer.copy(pointer)
     }
 
     function onPointerLeave() {
+      pointer.set(0, 0)
       rayPointer.set(-2, -2)
       setActive(null)
     }
@@ -406,13 +414,14 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
     const resizeObserver = new ResizeObserver(() => measure())
     resizeObserver.observe(container)
 
+    const clock = new THREE.Clock()
     let frame = 0
 
     function tick() {
       frame = requestAnimationFrame(tick)
       const time = clock.getElapsedTime()
 
-      // Pick, so a click knows which kit it landed on.
+      // Hover pick.
       if (nodes.length && rayPointer.x > -1.5) {
         raycaster.setFromCamera(rayPointer, camera)
         const hits = raycaster.intersectObjects(nodes.map((node) => node.picker))
@@ -422,32 +431,62 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
         setActive(hitIndex)
       }
 
-      // One lighting state. Nothing about it depends on where the pointer is.
+      const active = activeRef.current
+      const highlight = layout.portrait ? focusRef.current : active
+      rimTarget.set(highlight === null ? rimBase.getHex() : RIM_COLOURS[highlight] ?? rimBase.getHex())
+      rim.color.lerp(rimTarget, 0.06)
+      // Restrained: at full strength the rim draws a bright outline around the
+      // silhouette, which reads as a halo rather than as light.
+      rim.intensity += ((highlight === null ? 1.9 : 2.2) - rim.intensity) * 0.06
+      key.intensity += ((highlight === null ? 2.4 : 2.7) - key.intensity) * 0.06
 
       nodes.forEach((node) => {
-        // Square to the camera, always. A kit never turns and never steps
-        // toward you; it only breathes where it stands, and on a phone the
-        // carousel slides the next one into the middle.
-        node.group.rotation.set(0, 0, 0)
-        node.group.position.z = 0
+        const isActive = node.index === active
+        const sway = prefersReducedMotion ? 0 : Math.sin(time * 0.42 + node.index * 1.7) * 0.17
+        const bob = prefersReducedMotion ? 0 : Math.sin(time * 0.62 + node.index * 2.1) * 0.022
 
-        const float = prefersReducedMotion
-          ? 0
-          : Math.sin(time * FLOAT_SPEED + node.index * FLOAT_PHASE) * FLOAT_AMPLITUDE
+        const isFocused = layout.portrait ? node.index === focusRef.current : isActive
+        const targetRotation = isFocused ? sway * 0.25 : sway
+        // At rest a kit is exactly the size the artwork gives it; the lift on
+        // hover is small because the step forward and the region light behind
+        // it carry most of the emphasis.
+        const base = layout.portrait ? layout.scale : (layout.slots[node.index]?.scale ?? layout.scale)
+        const targetScale = base * (isFocused ? HOVER_SCALE : layout.portrait ? 0.82 : 1)
+        const targetZ = isFocused ? (layout.portrait ? 0.2 : HOVER_STEP) : 0
+
+        node.group.rotation.y += (targetRotation - node.group.rotation.y) * 0.06
+        node.group.rotation.z += (sway * 0.06 - node.group.rotation.z) * 0.06
+        node.group.position.z += (targetZ - node.group.position.z) * 0.07
 
         const slot = layout.slots[node.index]
         const baseX = layout.portrait
           ? (node.index - focusRef.current) * layout.gap
           : (slot?.x ?? 0)
-        const baseY = (layout.portrait ? layout.portraitY : (slot?.y ?? 0)) + float
+        const baseY = (layout.portrait ? layout.portraitY : (slot?.y ?? 0)) + bob
         node.group.position.x += (baseX - node.group.position.x) * 0.09
         node.group.position.y += (baseY - node.group.position.y) * 0.08
 
-        node.group.scale.setScalar(layout.portrait ? layout.scale : (slot?.scale ?? layout.scale))
-        node.materials.forEach((material) => material.color.setScalar(1))
+        const currentScale = node.group.scale.x
+        node.group.scale.setScalar(currentScale + (targetScale - currentScale) * 0.08)
+
+        // Dim by darkening rather than fading, which keeps the shells opaque.
+        const lit = layout.portrait ? node.index === focusRef.current : active === null || isActive
+        const targetTint = lit ? 1 : 0.34
+        node.materials.forEach((material) => {
+          material.color.setScalar(material.color.r + (targetTint - material.color.r) * 0.08)
+        })
       })
 
-      // The camera does not follow the pointer either.
+      // Camera drifts with the pointer — a slow studio dolly, not a swing.
+      // Only under a mouse: on a phone the pointer is wherever the last tap
+      // landed, so the drift leaves the kit sitting off-centre after someone
+      // presses a carousel dot.
+      const drifts = !prefersReducedMotion && !layout.portrait
+      const driftX = drifts ? pointer.x * 0.42 : 0
+      const driftY = drifts ? pointer.y * 0.26 : 0
+      camera.position.x += (driftX - camera.position.x) * 0.045
+      camera.position.y += (driftY - camera.position.y) * 0.045
+      camera.lookAt(0, 0, 0)
 
       renderer.render(scene, camera)
 
@@ -498,7 +537,42 @@ export function KitStage3D({ products, onUnsupported }: KitStage3DProps) {
 
   return (
     <div ref={containerRef} className="absolute inset-0 cursor-pointer">
+      {/* The stage answers the selection, not just the kit. The region of the
+          backdrop the chosen kit belongs to lifts; the other two recede. */}
+      {REGIONS.map((region, index) => {
+        const selected = (isPortrait ? focusIndex : activeIndex) === index
+        const anySelected = (isPortrait ? focusIndex : activeIndex) !== null
+        return (
+          <span key={`region-${region.left}`} aria-hidden className="pointer-events-none">
+            <span
+              className="pointer-events-none absolute inset-y-0 mix-blend-screen transition-opacity duration-[900ms] ease-luxe"
+              style={{
+                left: isPortrait ? '0%' : region.left,
+                width: isPortrait ? '100%' : region.width,
+                opacity: selected ? 1 : 0,
+                background: `radial-gradient(62% 58% at 50% 48%, ${region.lift}, transparent 74%)`,
+              }}
+            />
+            <span
+              // Faded at both edges: a hard-edged veil draws the seams
+              // between regions as visible bands.
+              className="pointer-events-none absolute inset-y-0 transition-opacity duration-[900ms] ease-luxe"
+              style={{
+                left: region.left,
+                width: region.width,
+                opacity: !isPortrait && anySelected && !selected ? 0.44 : 0,
+                background:
+                  'linear-gradient(90deg, rgba(5,5,5,0) 0%, rgba(5,5,5,1) 26%, rgba(5,5,5,1) 74%, rgba(5,5,5,0) 100%)',
+              }}
+            />
+          </span>
+        )
+      })}
 
+      {/* Above the region lights: an absolutely positioned sibling paints over
+          a static one whatever the DOM order, so the canvas is lifted out of
+          flow to sit on top of them — the lights belong behind the kits, not
+          washed across them. */}
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full" aria-hidden />
 
 
