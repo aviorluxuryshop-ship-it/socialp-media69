@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
@@ -123,6 +124,17 @@ export function FullMenu() {
               </ul>
             </motion.div>
 
+            {/* The cart sits below the collection rather than in the four-item
+                nav: it is a state of this visit, not a place on the site. */}
+            <motion.div variants={overlayLink} custom={7} initial="hidden" animate="visible" exit="exit">
+              <Link
+                href="/sepet"
+                className="group inline-flex items-center gap-3 font-sans text-[11px] uppercase tracking-luxe text-ash transition-colors duration-500 hover:text-gold-300"
+              >
+                <ShoppingBag className="h-3.5 w-3.5" aria-hidden />
+                Sepet
+              </Link>
+            </motion.div>
           </div>
         </div>
 

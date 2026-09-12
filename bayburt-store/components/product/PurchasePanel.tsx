@@ -1,11 +1,13 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Ruler, ShieldCheck, Truck } from 'lucide-react'
+import { ArrowRight, Ruler, ShieldCheck, Truck } from 'lucide-react'
+import Link from 'next/link'
 import { useCallback, useState } from 'react'
 
 import { AddToCartButton } from '@/components/product/AddToCartButton'
 import { SizeSelector } from '@/components/product/SizeSelector'
+import { useCart } from '@/components/providers/CartProvider'
 import { LUXE_EASE } from '@/lib/motion'
 import type { Product, SizeOption } from '@/data/products'
 
@@ -16,6 +18,7 @@ const ASSURANCES = [
 ]
 
 export function PurchasePanel({ product }: { product: Product }) {
+  const { add, count } = useCart()
   const [size, setSize] = useState<SizeOption | null>(null)
   const [invalid, setInvalid] = useState(false)
 
@@ -29,8 +32,9 @@ export function PurchasePanel({ product }: { product: Product }) {
       setInvalid(true)
       return false
     }
+    add(product.slug, size)
     return true
-  }, [size])
+  }, [add, product.slug, size])
 
   return (
     <div className="space-y-8">
@@ -60,9 +64,15 @@ export function PurchasePanel({ product }: { product: Product }) {
           ) : null}
         </AnimatePresence>
 
-        <p className="mt-4 font-sans text-[11px] uppercase tracking-wider2 text-ash">
-          Vitrin gösterimi · Ödeme akışı bu sürümde kapalıdır
-        </p>
+        {count > 0 ? (
+          <Link
+            href="/sepet"
+            className="mt-4 inline-flex items-center gap-2.5 font-sans text-[11px] uppercase tracking-wider2 text-gold-400 transition-colors duration-300 hover:text-gold-200"
+          >
+            Sepete git · {count} ürün
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          </Link>
+        ) : null}
       </div>
 
       <ul className="space-y-3 border-t border-white/10 pt-7">
