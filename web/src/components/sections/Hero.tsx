@@ -8,9 +8,9 @@ import { anchors, homePath } from '@/lib/dict';
 /**
  * Cinematic hero.
  *
- * Depth is built from real layers rather than an effect: a darkened backdrop
- * plate, then project photography floating on a CSS 3D stage at different
- * z-depths, with the headline deliberately sandwiched between those layers so
+ * Depth is built from real layers rather than an effect: project photography
+ * floats on a CSS 3D stage at different z-depths, with the headline deliberately
+ * sandwiched between those layers so
  * type and image occlude each other. The pointer drives each layer at a
  * different rate (`data-depth`) and tilts the whole stage a few degrees
  * (`data-tilt`); scroll sinks the composition (`data-hero-*`).
@@ -26,21 +26,8 @@ export function Hero({ dict, locale }: { dict: Dict; locale: Locale }) {
       className="relative isolate grid min-h-[100svh] grid-rows-[1fr_auto] overflow-hidden pt-24 grain"
       aria-labelledby="hero-title"
     >
-      {/* --- Backdrop plate ------------------------------------------------ */}
+      {/* --- Backdrop ------------------------------------------------------- */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div data-hero-bed data-depth="14" className="absolute -inset-[6%]">
-          <Picture
-            id="mekan-video-kurulum"
-            alt=""
-            sizes="100vw"
-            priority
-            position="50% 42%"
-            className="cover opacity-40"
-          />
-        </div>
-        {/* Two-stop scrim keeps the headline legible over any part of the plate. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/40" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,transparent_20%,var(--color-ink)_100%)]" />
         <div className="glow" />
       </div>
 
@@ -60,17 +47,6 @@ export function Hero({ dict, locale }: { dict: Dict; locale: Locale }) {
             </div>
           </div>
 
-          {/* Deepest layer, only where there is room to spare. */}
-          <div
-            data-depth="14"
-            data-parallax="-6"
-            className="absolute left-[2%] top-[9%] hidden w-[11vw] max-w-[9rem] 2xl:block"
-            style={{ transform: 'translateZ(-170px)' }}
-          >
-            <div data-img-reveal className="media aspect-[4/5] opacity-55">
-              <Picture id="restoran-masa" alt="" sizes="11vw" className="cover" />
-            </div>
-          </div>
         </div>
       </div>
 
