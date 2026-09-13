@@ -173,16 +173,9 @@ export function Motion() {
         // immediately.
         const start = document.documentElement.classList.contains('is-intro') ? 1.05 : 0.1;
 
-        // Applied immediately, not at tween start, so there is no flash of the
-        // un-animated plate during the delay.
-        gsap.set(q('[data-hero-bed]'), { scale: 1.12, opacity: 0 });
-
         const intro = gsap.timeline({ delay: start, defaults: { ease: 'expo.out' } });
 
-        // 1. Backdrop plate eases out of a slight over-scale.
-        intro.to(q('[data-hero-bed]'), { scale: 1, opacity: 1, duration: 1.6 }, 0);
-
-        // 2. Floating frames wipe open and settle back from over-scale.
+        // 1. Floating frames wipe open and settle back from over-scale.
         const frames = q('[data-img-reveal]');
         if (frames.length) {
           intro
@@ -194,10 +187,10 @@ export function Motion() {
             );
         }
 
-        // 3. Headline wipes up, line by line.
+        // 2. Headline wipes up, line by line.
         intro.to(q('h1 .line-mask > span'), { y: '0%', duration: 1.1, stagger: 0.09 }, 0.35);
 
-        // 4. Lead copy and CTAs follow shortly after the heading.
+        // 3. Lead copy and CTAs follow shortly after the heading.
         intro.to(
           q('[data-reveal]'),
           { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: EASE_OUT },
@@ -206,12 +199,10 @@ export function Motion() {
 
         // Hero exit: the whole composition sinks and dims as it leaves.
         const copy = heroEl.querySelector<HTMLElement>('[data-hero-copy]');
-        const bed = heroEl.querySelector<HTMLElement>('[data-hero-bed]');
         const out = gsap.timeline({
           scrollTrigger: { trigger: heroEl, start: 'top top', end: 'bottom top', scrub: 0.6 },
         });
         if (copy) out.to(copy, { yPercent: -26, opacity: 0, ease: 'none' }, 0);
-        if (bed) out.to(bed, { yPercent: 14, scale: 1.08, ease: 'none' }, 0);
       }
     });
 

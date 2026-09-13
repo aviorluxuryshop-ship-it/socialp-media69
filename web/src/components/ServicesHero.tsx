@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * Pinned, scroll-scrubbed product hero.
  *
- * The section pins for 3200px of scroll while a GSAP timeline drives the real
+ * The section pins for 2700px of scroll while a GSAP timeline drives the real
  * Three.js rig — rotation, dolly and framing all read straight off scroll
  * progress, so the model turns as you scroll and reverses when you scroll back.
  *
@@ -70,7 +70,8 @@ export function ServicesHero({ dict }: { dict: Dict }) {
       const w = () => mount.clientWidth || 1;
       const h = () => mount.clientHeight || 1;
       const small = window.matchMedia('(max-width: 1023px)').matches;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, small ? 1.5 : 2));
+      // 1.5 is indistinguishable from 2 at this size and far cheaper on laptop GPUs.
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       renderer.setSize(w(), h());
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
@@ -112,7 +113,24 @@ export function ServicesHero({ dict }: { dict: Dict }) {
       scene.add(floor);
 
       const rig = new THREE.Group();
+      rig.visible = false; // shown once its shaders are compiled
       scene.add(rig);
+
+      /*
+       * Draw on demand, and only while the stage is on screen. A free-running
+       * render loop kept integrated GPUs busy the whole time the page was open,
+       * which is what made the rest of the site stutter on desktop.
+       */
+      let dirty = true;
+      let onScreen = false;
+      const invalidate = () => {
+        dirty = true;
+      };
+      const io = new IntersectionObserver(([entry]) => {
+        onScreen = entry.isIntersecting;
+        if (onScreen) invalidate();
+      });
+      io.observe(section);
 
       const draco = new DRACOLoader();
       draco.setDecoderPath('/draco/');
@@ -172,12 +190,24 @@ export function ServicesHero({ dict }: { dict: Dict }) {
         };
         fitView();
         fitRef.current = fitView;
-        setReady(true);
         rig.rotation.set(ANGLES[0].rotX, ANGLES[0].rotY, 0);
         rig.position.set(ANGLES[0].x, ANGLES[0].y, ANGLES[0].z);
 
+        // Compile the model's shaders in parallel where the browser supports it;
+        // compiling them on the first draw froze the page for a moment.
+        renderer
+          .compileAsync(pivot, view, scene)
+          .catch(() => undefined)
+          .then(() => {
+            if (disposed) return;
+            rig.visible = true;
+            invalidate();
+            setReady(true);
+          });
+
         // ---- Scroll-scrubbed timeline -----------------------------------
         const tl = gsap.timeline({
+          onUpdate: invalidate,
           scrollTrigger: {
             trigger: section,
             start: 'top top',
@@ -206,7 +236,11 @@ export function ServicesHero({ dict }: { dict: Dict }) {
         ScrollTrigger.refresh();
       });
 
-      const render = () => renderer.render(scene, view);
+      const render = () => {
+        if (!dirty || !onScreen) return;
+        dirty = false;
+        renderer.render(scene, view);
+      };
       gsap.ticker.add(render);
 
       const onResize = () => {
@@ -214,6 +248,7 @@ export function ServicesHero({ dict }: { dict: Dict }) {
         view.aspect = w() / h();
         view.updateProjectionMatrix();
         fitRef.current?.();
+        invalidate();
         ScrollTrigger.refresh();
       };
       const ro = new ResizeObserver(onResize);
@@ -222,6 +257,7 @@ export function ServicesHero({ dict }: { dict: Dict }) {
       cleanup = () => {
         gsap.ticker.remove(render);
         ro.disconnect();
+        io.disconnect();
         ScrollTrigger.getAll().forEach((t) => {
           if (t.trigger === section) t.kill();
         });
@@ -237,7 +273,7 @@ export function ServicesHero({ dict }: { dict: Dict }) {
       disposed = true;
       cleanup?.();
     };
-  }, [mobile]);
+  }, []);
 
   return (
     <div ref={sectionRef} className="relative h-[100svh] w-full overflow-hidden bg-[#f4f4f2] text-ink">
