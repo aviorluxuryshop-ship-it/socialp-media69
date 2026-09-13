@@ -66,7 +66,7 @@ export function ContactGrid() {
           <a
             href={card.href}
             {...(card.external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-            className="group relative flex h-full flex-col justify-between gap-12 p-8 transition-colors duration-700 ease-luxe hover:bg-graphite-dark lg:p-10"
+            className="group relative flex h-full flex-col justify-between gap-12 p-8 transition-colors duration-700 ease-luxe hover:bg-paper-sunk lg:p-10"
           >
             <span
               aria-hidden
