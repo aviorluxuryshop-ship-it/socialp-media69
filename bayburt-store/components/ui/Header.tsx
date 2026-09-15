@@ -60,6 +60,16 @@ export function Header() {
           isScrolled && !isOpen
             ? 'border-b border-ink/14 bg-paper/90 backdrop-blur-xl'
             : 'border-b border-transparent bg-transparent',
+          // On a phone over the hero the bar keeps no ground at any scroll
+          // position: the portrait plate is dark the whole way down, so white
+          // type reads against it without anything laid underneath.
+          //
+          // On the paper pages it keeps one, because there the ground changes
+          // as you scroll — a kit plate is a dark window passing under a bar
+          // holding ink, and through a fully transparent bar the wordmark
+          // simply disappears each time one goes by. The ground is paper, so
+          // on a paper page there is nothing to see until that happens.
+          onPlate && 'max-lg:border-transparent max-lg:bg-transparent max-lg:backdrop-blur-none',
         )}
       >
         {/* Unscrolled on the hero there is no bar at all: the plate runs to
@@ -78,6 +88,13 @@ export function Header() {
             !isScrolled && !isOpen && onPlate
               ? 'text-ink [&_*]:!text-ink drop-shadow-[0_0_2px_rgba(255,255,255,0.98)] drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] [text-shadow:0_0_2px_rgba(255,255,255,0.98),0_0_7px_rgba(255,255,255,0.92),0_0_16px_rgba(255,255,255,0.8),0_0_32px_rgba(255,255,255,0.6)]'
               : 'text-ink',
+            // Phones do not get the halo. A glow around dark letters is a
+            // smear at that size; the answer there is the other one — give the
+            // type the colour its ground calls for. The portrait plate is dark
+            // at its head, so on the hero that colour is white, and on every
+            // paper page it is ink.
+            'max-lg:!drop-shadow-none max-lg:[text-shadow:none]',
+            onPlate ? 'max-lg:!text-white max-lg:[&_*]:!text-white' : 'max-lg:!text-ink',
           )}
         >
           <Link
@@ -125,6 +142,8 @@ export function Header() {
               !isScrolled && !isOpen && onPlate
                 ? 'text-ink [&_*]:!text-ink drop-shadow-[0_0_1.5px_rgba(255,255,255,1)] drop-shadow-[0_0_4px_rgba(255,255,255,1)] drop-shadow-[0_0_9px_rgba(255,255,255,0.95)]'
                 : 'text-ink hover:text-gold-800',
+              'max-lg:!drop-shadow-none',
+              onPlate ? 'max-lg:!text-white max-lg:[&_*]:!text-white' : 'max-lg:!text-ink',
             )}
           >
             <span className="hidden font-sans text-[11px] uppercase tracking-wider2 text-ink transition-colors duration-300 group-hover:text-gold-800 sm:inline">
