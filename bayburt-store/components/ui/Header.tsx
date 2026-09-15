@@ -39,8 +39,8 @@ function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
 
 export function Header() {
   const { isOpen, toggle } = useMenu()
-  // Only the home page puts near-white artwork under the bar. Everywhere else
-  // the page behind it is obsidian and the type stays light.
+  // Only the home page puts artwork under an unscrolled bar; every other page
+  // is paper, where ink needs no help to be read.
   const onPlate = usePathname() === '/'
   const [isScrolled, setIsScrolled] = useState(false)
   const { scrollY } = useScroll()
@@ -54,18 +54,29 @@ export function Header() {
       <header
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-luxe',
+          // Scrolled, the bar needs a ground of its own, and on a paper site
+          // that ground is paper — including over the hero, where a black
+          // strip was the one thing the plate was never supposed to have.
           isScrolled && !isOpen
-            ? 'border-b border-white/14 bg-obsidian/80 backdrop-blur-xl'
+            ? 'border-b border-ink/14 bg-paper/90 backdrop-blur-xl'
             : 'border-b border-transparent bg-transparent',
+          // On a phone over the hero the bar keeps no ground at any scroll
+          // position: the portrait plate is dark the whole way down, so white
+          // type reads against it without anything laid underneath.
+          //
+          // On the paper pages it keeps one, because there the ground changes
+          // as you scroll — a kit plate is a dark window passing under a bar
+          // holding ink, and through a fully transparent bar the wordmark
+          // simply disappears each time one goes by. The ground is paper, so
+          // on a paper page there is nothing to see until that happens.
+          onPlate && 'max-lg:border-transparent max-lg:bg-transparent max-lg:backdrop-blur-none',
         )}
       >
-        {/* Unscrolled there is no bar: the plate runs to the top of the
-            window with nothing laid over it, and every mark in the header —
-            type and the three rules of the menu button alike — is held up by
-            a halo of its own instead. Tight and dark, so it reads as a shadow
-            on the artwork rather than as a strip across it. Scrolled, the bar
-            has solid ground again and the halo would only smear the type, so
-            it goes. */}
+        {/* Unscrolled on the hero there is no bar at all: the plate runs to
+            the top of the window with nothing laid over it, and every mark in
+            the header is held up by a halo of its own instead. Scrolled, or on
+            any paper page, the bar has ground again and the halo would only
+            smear the type, so it goes. */}
         <div
           className={cn(
             'container relative flex h-[var(--header-height)] items-center justify-between gap-6 transition-[filter] duration-500 ease-luxe',
@@ -77,6 +88,13 @@ export function Header() {
             !isScrolled && !isOpen && onPlate
               ? 'text-ink [&_*]:!text-ink drop-shadow-[0_0_2px_rgba(255,255,255,0.98)] drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] [text-shadow:0_0_2px_rgba(255,255,255,0.98),0_0_7px_rgba(255,255,255,0.92),0_0_16px_rgba(255,255,255,0.8),0_0_32px_rgba(255,255,255,0.6)]'
               : 'text-ink',
+            // Phones do not get the halo. A glow around dark letters is a
+            // smear at that size; the answer there is the other one — give the
+            // type the colour its ground calls for. The portrait plate is dark
+            // at its head, so on the hero that colour is white, and on every
+            // paper page it is ink.
+            'max-lg:!drop-shadow-none max-lg:[text-shadow:none]',
+            onPlate ? 'max-lg:!text-white max-lg:[&_*]:!text-white' : 'max-lg:!text-ink',
           )}
         >
           <Link
@@ -118,16 +136,14 @@ export function Header() {
             aria-controls="tam-ekran-menu"
             className={cn(
               'group -mr-2 flex items-center gap-3 px-2 py-3 transition-colors duration-300',
-              // The right edge of the plate is pale at one window shape and
-              // near-black at the next, so no single ink reads there. This one
-              // takes the inverse of whatever it lands on, which needs no
-              // ground of its own at either end.
               // Over the plate the menu button is ink like the rest of the
               // bar, and its halo is tightened so the three rules keep a white
               // edge even where the artwork behind them goes near-black.
               !isScrolled && !isOpen && onPlate
                 ? 'text-ink [&_*]:!text-ink drop-shadow-[0_0_1.5px_rgba(255,255,255,1)] drop-shadow-[0_0_4px_rgba(255,255,255,1)] drop-shadow-[0_0_9px_rgba(255,255,255,0.95)]'
                 : 'text-ink hover:text-gold-800',
+              'max-lg:!drop-shadow-none',
+              onPlate ? 'max-lg:!text-white max-lg:[&_*]:!text-white' : 'max-lg:!text-ink',
             )}
           >
             <span className="hidden font-sans text-[11px] uppercase tracking-wider2 text-ink transition-colors duration-300 group-hover:text-gold-800 sm:inline">

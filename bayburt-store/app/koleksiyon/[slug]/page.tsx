@@ -297,7 +297,7 @@ export default async function ProductPage({ params }: PageProps) {
               <RevealItem key={item.slug}>
                 <Link
                   href={`/koleksiyon/${item.slug}`}
-                  className="group relative flex items-center gap-7 overflow-hidden rounded-sm border border-ink/14 bg-graphite-dark p-6 transition-colors duration-700 ease-luxe hover:border-gold-700/40 sm:p-8"
+                  className="group relative flex items-center gap-7 overflow-hidden rounded-sm border border-ink/14 bg-paper-raised p-6 transition-colors duration-700 ease-luxe hover:border-gold-800/50 sm:p-8"
                 >
                   <span
                     aria-hidden
