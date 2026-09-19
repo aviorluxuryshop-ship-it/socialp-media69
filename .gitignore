@@ -8,8 +8,6 @@ web/.next/
 web/out/
 bayburt-store/.next/
 bayburt-store/out/
-tagone-store/.next/
-tagone-store/out/
 .vercel
 
 # local QA artefacts and reference material (not part of the site)
@@ -31,4 +29,3 @@ yarn-error.log*
 web/media-src/
 web/public.zip
 web/tsconfig.tsbuildinfo
-tagone-store/tsconfig.tsbuildinfo
