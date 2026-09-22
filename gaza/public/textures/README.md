@@ -1,13 +1,14 @@
 # Gerçek ürün görselleri buraya
 
-Bu klasöre aşağıdaki 4 dosyayı ekleyin (GAZA kutusunun önden/arkadan/sağdan/soldan referans fotoğrafları):
+GAZA kutusunun 4 referans fotoğrafını bu klasöre şu adlarla ekleyin:
 
-- `onden.jpg`
-- `arkadan.jpg`
-- `sagdan.jpg`
-- `soldan.jpg`
+- `onden.jpg` — önden
+- `sagdan.jpg` — sağdan (öne bakarken sağ taraf)
+- `arkadan.jpg` — arkadan
+- `soldan.jpg` — soldan
 
-Dosyalar buraya eklenir eklenmez `src/lib/canLabelTexture.ts` otomatik olarak
-bunları kullanmaya başlar ve şu anki yer tutucu (placeholder) etiket yerine
-gerçek ambalaj görselini 3D kutunun üzerine sarar. Kod tarafında hiçbir
-değişiklik gerekmez.
+Her fotoğraf düz karşıdan çekilmiş olmalı ve kutunun sağ–sol kenarlarından,
+üst jant ile alt taban hizasından sıkıca kırpılmalı.
+
+Dördü de bulunduğunda `src/lib/canLabelTexture.ts` bunları otomatik olarak
+3D kutunun etiketine sarar (yer tutucu etiketin yerine geçer). Kod değişikliği gerekmez.

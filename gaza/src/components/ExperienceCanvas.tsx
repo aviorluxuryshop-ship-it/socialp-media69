@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { PerformanceMonitor } from '@react-three/drei'
 import { ProductScene, type Quality } from './canvas/ProductScene'
 import { isMobileViewport, isWebGLAvailable, prefersReducedMotion } from '@/lib/webgl'
 import { StaticFallback } from './StaticFallback'
@@ -7,9 +8,10 @@ import { CanvasErrorBoundary } from './CanvasErrorBoundary'
 
 /** Per-tier renderer settings. */
 const RENDER = {
-  high: { dpr: [1, 2] as [number, number], frameloop: 'always' as const, shadows: true },
+  // DPR starts at maxDpr and PerformanceMonitor drops it to minDpr if the frame rate can't hold
+  high: { maxDpr: 1.75, minDpr: 1, frameloop: 'always' as const, shadows: true },
   // demand: frames are only drawn while scrolling or while the camera is still settling
-  low: { dpr: [1, 1.5] as [number, number], frameloop: 'demand' as const, shadows: false },
+  low: { maxDpr: 1.5, minDpr: 1, frameloop: 'demand' as const, shadows: false },
 }
 
 /**
@@ -19,13 +21,12 @@ const RENDER = {
  */
 export function ExperienceCanvas() {
   const [env, setEnv] = useState<{ webgl: boolean; quality: Quality; reducedMotion: boolean } | null>(null)
+  const [dpr, setDpr] = useState(1)
 
   useEffect(() => {
-    setEnv({
-      webgl: isWebGLAvailable(),
-      quality: isMobileViewport() ? 'low' : 'high',
-      reducedMotion: prefersReducedMotion(),
-    })
+    const quality: Quality = isMobileViewport() ? 'low' : 'high'
+    setEnv({ webgl: isWebGLAvailable(), quality, reducedMotion: prefersReducedMotion() })
+    setDpr(Math.min(window.devicePixelRatio || 1, RENDER[quality].maxDpr))
   }, [])
 
   if (!env) return null
@@ -34,10 +35,12 @@ export function ExperienceCanvas() {
   const settings = RENDER[env.quality]
 
   return (
-    <div className="fixed inset-0 -z-10" aria-hidden="true">
+    // lvh: the canvas keeps the large-viewport height, so a phone's address bar sliding
+    // in and out doesn't resize (and re-frame) the scene mid-scroll
+    <div className="fixed inset-x-0 top-0 -z-10 h-[100lvh]" aria-hidden="true">
       <CanvasErrorBoundary>
         <Canvas
-          dpr={settings.dpr}
+          dpr={dpr}
           frameloop={settings.frameloop}
           shadows={settings.shadows}
           gl={{ antialias: env.quality === 'low', powerPreference: 'high-performance', stencil: false }}
@@ -46,6 +49,15 @@ export function ExperienceCanvas() {
             gl.domElement.addEventListener('webglcontextlost', (event) => event.preventDefault())
           }}
         >
+          {/* only on the continuous loop: in demand mode idle frames would read as a frame-rate drop */}
+          {settings.frameloop === 'always' && (
+            <PerformanceMonitor
+              flipflops={3}
+              onDecline={() => setDpr(settings.minDpr)}
+              onIncline={() => setDpr(Math.min(window.devicePixelRatio || 1, settings.maxDpr))}
+              onFallback={() => setDpr(settings.minDpr)}
+            />
+          )}
           <Suspense fallback={null}>
             <ProductScene quality={env.quality} reducedMotion={env.reducedMotion} />
           </Suspense>

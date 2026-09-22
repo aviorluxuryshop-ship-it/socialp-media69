@@ -22,7 +22,7 @@ export const SCENE = {
   damping: 4.2,
   /** Opening reveal: the can rises out of the dark while the lights come up. */
   introSeconds: 2.4,
-  introRise: 0.18,
+  introRise: 0.1,
   introTurn: 0.9,
   introDolly: 0.8,
   /** Idle hover on desktop — just enough to read as suspended, not bouncing. */
@@ -32,6 +32,9 @@ export const SCENE = {
   /** Aspect below which the portrait framing kicks in, and where desktop framing is fully on. */
   portraitBelow: 0.8,
   landscapeFrom: 1.25,
+  /** Landscape windows shorter than this (px) start pulling back by the frame's shortZoom; fully at shortBelow − shortRange. */
+  shortBelow: 940,
+  shortRange: 340,
 }
 
 /**
@@ -113,6 +116,8 @@ export function ProductScene({ quality, reducedMotion }: ProductSceneProps) {
       scratch.pos.y += f.mobileY
       scratch.target.y += f.mobileY
     } else {
+      const short = THREE.MathUtils.clamp((SCENE.shortBelow - state.size.height) / SCENE.shortRange, 0, 1)
+      scratch.pos.sub(scratch.target).multiplyScalar(1 + (f.shortZoom - 1) * short).add(scratch.target)
       const wide = THREE.MathUtils.clamp((aspect - SCENE.portraitBelow) / (SCENE.landscapeFrom - SCENE.portraitBelow), 0, 1)
       scratch.pos.x += f.desktopX * wide
       scratch.target.x += f.desktopX * wide
@@ -152,7 +157,7 @@ export function ProductScene({ quality, reducedMotion }: ProductSceneProps) {
     }
     if (keyLight.current) keyLight.current.intensity = lights.current.key * 2.4 * k
     if (rimLight.current) rimLight.current.intensity = lights.current.rim * 3.2 * k
-    scene.environmentIntensity = lights.current.env * (0.35 + 0.65 * k)
+    scene.environmentIntensity = lights.current.env * (0.15 + 0.85 * k)
 
     colors.live.lerpColors(colors.cold, colors.warm, lights.current.warmth)
     if (scene.fog) scene.fog.color.copy(colors.live)

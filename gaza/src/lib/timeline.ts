@@ -45,10 +45,16 @@ export type Frame = {
   desktopX: number
   mobileY: number
   mobileZoom: number
+  /**
+   * Extra pull-back on short landscape windows (laptops), for scenes whose
+   * copy sits under the can: the copy is a fixed pixel height, so on a short
+   * window it takes a bigger share of the screen and the can must make room.
+   */
+  shortZoom: number
 }
 
-type FrameInput = Omit<Frame, 't' | 'keyLight' | 'rimLight' | 'envIntensity' | 'glow' | 'warmth' | 'aroma' | 'dof' | 'desktopX' | 'mobileY' | 'mobileZoom'> &
-  Partial<Pick<Frame, 'keyLight' | 'rimLight' | 'envIntensity' | 'glow' | 'warmth' | 'aroma' | 'dof' | 'desktopX' | 'mobileY' | 'mobileZoom'>>
+type FrameInput = Omit<Frame, 't' | 'keyLight' | 'rimLight' | 'envIntensity' | 'glow' | 'warmth' | 'aroma' | 'dof' | 'desktopX' | 'mobileY' | 'mobileZoom' | 'shortZoom'> &
+  Partial<Pick<Frame, 'keyLight' | 'rimLight' | 'envIntensity' | 'glow' | 'warmth' | 'aroma' | 'dof' | 'desktopX' | 'mobileY' | 'mobileZoom' | 'shortZoom'>>
 
 const DEFAULTS = {
   keyLight: 1.1,
@@ -61,6 +67,7 @@ const DEFAULTS = {
   desktopX: 0,
   mobileY: 0,
   mobileZoom: 1.25,
+  shortZoom: 1,
 }
 
 const TURN = Math.PI * 2
@@ -72,7 +79,7 @@ function key(scene: SceneId, at: number, frame: FrameInput): Frame {
 /** Copy on the left (desktop) / top (mobile): shared framing for those scenes. */
 const SIDE_COPY = { desktopX: -0.42, mobileY: 0.36, mobileZoom: 1.6 }
 /** Copy along the bottom: the can is framed high. */
-const BOTTOM_COPY = { mobileY: 0, mobileZoom: 1.18 }
+const BOTTOM_COPY = { mobileY: 0, mobileZoom: 1.18, shortZoom: 1.35 }
 
 export const TIMELINE: Frame[] = [
   // HERO — the can, slightly angled, framed high above the title
@@ -83,9 +90,9 @@ export const TIMELINE: Frame[] = [
   key('urun', 0, { pos: [0, 0.03, 3.05], lookAt: [0, 0, 0], fov: 30, rotY: -0.55, glow: 0.55, ...SIDE_COPY }),
   key('urun', 1, { pos: [0.06, 0.06, 2.8], lookAt: [0, 0.02, 0], fov: 29, rotY: -0.8, keyLight: 1.18, glow: 0.5, warmth: 0.25, ...SIDE_COPY }),
 
-  // SAHNE 2 — 360°: a full turn, the camera rising over the back and settling
+  // SAHNE 2 — 360°: a full turn with a beat on the back (u=0 faces the lens at rotY = −π), camera rising over it
   key('hikaye', 0, { pos: [0, 0.04, 3.15], lookAt: [0, 0, 0], fov: 30, rotY: -0.9, ...SIDE_COPY }),
-  key('hikaye', 0.5, { pos: [0.24, 0.3, 3.05], lookAt: [0, 0.02, 0], fov: 30, rotY: -0.9 - Math.PI, rimLight: 1.25, ...SIDE_COPY }),
+  key('hikaye', 0.5, { pos: [0.24, 0.3, 3.05], lookAt: [0, 0.02, 0], fov: 30, rotY: -Math.PI, rimLight: 1.25, ...SIDE_COPY }),
   key('hikaye', 1, { pos: [0, 0.06, 3.1], lookAt: [0, 0, 0], fov: 30, rotY: -TURN, ...SIDE_COPY }),
 
   // SAHNE 3 — macro: wordmark → orange → metal of the neck → lid and tab
@@ -137,5 +144,6 @@ export function sampleTimeline(progress: number): Frame {
     desktopX: lerp(a.desktopX, b.desktopX, k),
     mobileY: lerp(a.mobileY, b.mobileY, k),
     mobileZoom: lerp(a.mobileZoom, b.mobileZoom, k),
+    shortZoom: lerp(a.shortZoom, b.shortZoom, k),
   }
 }
