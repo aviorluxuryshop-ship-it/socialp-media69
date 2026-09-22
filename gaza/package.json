@@ -1,0 +1,41 @@
+{
+  "name": "gaza-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GAZA — Portakallı ve Çay Aromalı İçecek — sinematik 3D ürün deneyimi",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
+    "@react-three/drei": "^10.0.4",
+    "@react-three/fiber": "^9.0.4",
+    "@react-three/postprocessing": "^3.1.2",
+    "clsx": "^2.1.1",
+    "gsap": "^3.12.7",
+    "lenis": "^1.1.20",
+    "postprocessing": "^6.39.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@types/three": "^0.171.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.39.5",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}
