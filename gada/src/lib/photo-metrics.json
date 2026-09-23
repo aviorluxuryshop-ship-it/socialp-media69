@@ -1,0 +1,11 @@
+{
+  "heightToWidth": 2.7656,
+  "flavors": {
+    "limon": {
+      "printedColor": "#F3D00E"
+    },
+    "seftali": {
+      "printedColor": "#ED6D0B"
+    }
+  }
+}

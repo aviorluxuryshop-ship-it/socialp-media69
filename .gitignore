@@ -28,6 +28,6 @@ web/media-src/
 web/public.zip
 web/tsconfig.tsbuildinfo
 
-# gaza build output
-gaza/dist/
-gaza/tsconfig*.tsbuildinfo
+# gada build output
+gada/dist/
+gada/tsconfig*.tsbuildinfo
