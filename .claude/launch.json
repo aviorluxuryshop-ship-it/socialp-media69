@@ -4,9 +4,22 @@
     {
       "name": "socialp",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000,
       "cwd": "web"
+    },
+    {
+      "name": "gada",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3001,
+      "cwd": "gada"
     }
   ]
 }

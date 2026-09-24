@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --header-h: 4.5rem;
+    color-scheme: light;
+  }
+
+  html {
+    background: theme('colors.paper.DEFAULT');
+    color: theme('colors.ink.DEFAULT');
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* No background on body: the story's fixed backdrop sits between the
+     root's paper and the page, and a body ground would cover it. */
+  body {
+    @apply font-sans antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background: theme('colors.lemon.DEFAULT');
+    color: theme('colors.ink.DEFAULT');
+  }
+
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  [id] {
+    scroll-margin-top: 0;
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-sans text-eyebrow font-semibold uppercase;
+  }
+
+  .display {
+    @apply font-display font-normal;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    font-variation-settings: 'SOFT' 50, 'WONK' 0;
+  }
+
+  .lede {
+    @apply text-ink-soft;
+    font-size: clamp(1.0625rem, 0.98rem + 0.35vw, 1.25rem);
+    line-height: 1.65;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-current opacity-15;
+  }
+
+  /* Story copy that passes over the can on a phone gets a sheet of paper. */
+  .story-card {
+    @apply rounded-[1.25rem] p-6 max-lg:bg-paper/85 max-lg:shadow-[0_1px_0_rgba(27,26,20,0.06)] max-lg:backdrop-blur-md lg:p-0;
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .balance {
+    text-wrap: balance;
+  }
+}
+
+/* Without WebGL the story still shows the product: a still sits in each beat. */
+.webgl-fallback {
+  display: none;
+}
+html.no-webgl .webgl-fallback {
+  display: block;
+}
+/* Turning the can by hand needs the 3D can. */
+html.no-webgl [data-beat='etkilesim'] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
