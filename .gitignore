@@ -6,7 +6,12 @@ node_modules/
 # build output
 web/.next/
 web/out/
+akademi-royal/.next/
+akademi-royal/out/
 .vercel
+
+# generated
+akademi-royal/prisma/generated/
 
 # local QA artefacts and reference material (not part of the site)
 .qa/

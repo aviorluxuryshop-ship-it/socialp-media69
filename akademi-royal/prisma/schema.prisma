@@ -1,0 +1,642 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============ ENUMS ============
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum StudentStatus {
+  LEAD
+  ACTIVE
+  COMPLETED
+  FROZEN
+  WITHDRAWN
+}
+
+enum EnrollmentStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum CourseGroupStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum SessionStatus {
+  SCHEDULED
+  DONE
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  EXCUSED
+  LATE
+}
+
+enum InstallmentStatus {
+  PENDING
+  PAID
+  PARTIAL
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  BANK_TRANSFER
+  CHECK
+  OTHER
+}
+
+enum TransactionType {
+  DEBIT
+  CREDIT
+  REFUND
+  DISCOUNT
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ExpenseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PAID
+}
+
+enum TrainerPayType {
+  HOURLY
+  MONTHLY
+  PER_SESSION
+  FIXED
+}
+
+enum CalendarEventType {
+  CLASS
+  EXAM
+  MEETING
+  TASK_DUE
+  STAFF_LEAVE
+  HOLIDAY
+  OTHER
+}
+
+enum RelatedEntityType {
+  STUDENT
+  COURSE_GROUP
+  EXPENSE
+  TASK
+  STAFF
+  ENROLLMENT
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum FinancialAccountType {
+  CASH
+  BANK
+  POS
+  OTHER
+}
+
+enum TransactionDirection {
+  IN
+  OUT
+}
+
+// ============ KİMLİK & YETKİ ============
+
+model Branch {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Student[]
+  staff    Staff[]
+  groups   CourseGroup[]
+  expenses Expense[]
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  users       User[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id     String @id @default(cuid())
+  code   String @unique // "students.view_all", "payments.approve"
+  module String
+  action String // "view_own" | "view_all" | "create" | "edit" | "delete" | "approve"
+
+  roles RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model User {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  roleId       String
+  status       UserStatus @default(ACTIVE)
+  lastLoginAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  role          Role       @relation(fields: [roleId], references: [id])
+  staff         Staff?
+  tasksAssigned Task[]     @relation("TaskAssignee")
+  tasksCreated  Task[]     @relation("TaskCreator")
+  auditLogs     AuditLog[]
+
+  @@index([roleId])
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  userId    String
+  action    AuditAction
+  tableName String
+  recordId  String
+  oldValues Json?
+  newValues Json?
+  createdAt DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([tableName, recordId])
+}
+
+// ============ PERSONELLER ============
+
+model Staff {
+  id           String    @id @default(cuid())
+  userId       String?   @unique
+  branchId     String?
+  fullName     String
+  phone        String?
+  email        String?
+  position     String
+  hireDate     DateTime
+  birthDate    DateTime?
+  address      String?
+  salaryAmount Decimal?  @db.Decimal(12, 2)
+  isActive     Boolean   @default(true)
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user         User?           @relation(fields: [userId], references: [id])
+  branch       Branch?         @relation(fields: [branchId], references: [id])
+  trainer      Trainer?
+  documents    StaffDocument[]
+  courseGroups CourseGroup[]
+
+  @@index([branchId])
+}
+
+model Trainer {
+  id        String         @id @default(cuid())
+  staffId   String         @unique
+  specialty String
+  payType   TrainerPayType
+  payRate   Decimal        @db.Decimal(12, 2)
+  bio       String?
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+}
+
+model StaffDocument {
+  id               String   @id @default(cuid())
+  staffId          String
+  type             String // "CONTRACT" | "ID_COPY" | "DIPLOMA" ...
+  fileUrl          String
+  uploadedByUserId String
+  createdAt        DateTime @default(now())
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+}
+
+// ============ ÖĞRENCİLER ============
+
+model Student {
+  id                   String        @id @default(cuid())
+  branchId             String?
+  fullName             String
+  nationalId           String?
+  phone                String
+  email                String?
+  birthDate            DateTime?
+  address              String?
+  source               String? // "instagram", "referans", "walk-in" ...
+  status               StudentStatus @default(LEAD)
+  assignedConsultantId String? // danışman ataması (User.id)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  branch       Branch?              @relation(fields: [branchId], references: [id])
+  notes        StudentNote[]
+  documents    StudentDocument[]
+  enrollments  GroupEnrollment[]
+  transactions AccountTransaction[]
+  payments     Payment[]
+  attendance   Attendance[]
+
+  @@index([branchId])
+  @@index([status])
+}
+
+model StudentNote {
+  id           String   @id @default(cuid())
+  studentId    String
+  authorUserId String
+  note         String
+  createdAt    DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model StudentDocument {
+  id               String   @id @default(cuid())
+  studentId        String
+  enrollmentId     String? // sözleşme hangi kayıttan üretildi
+  templateId       String?
+  type             String // "ID_COPY" | "CONTRACT" | "CERTIFICATE" ...
+  fileUrl          String
+  uploadedByUserId String
+  createdAt        DateTime @default(now())
+
+  student    Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  enrollment GroupEnrollment?  @relation(fields: [enrollmentId], references: [id])
+  template   ContractTemplate? @relation(fields: [templateId], references: [id])
+}
+
+// ============ EĞİTİMLER ============
+
+model Course {
+  id            String   @id @default(cuid())
+  name          String
+  category      String?
+  description   String?
+  durationHours Int?
+  defaultPrice  Decimal  @db.Decimal(12, 2)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  groups            CourseGroup[]
+  contractTemplates ContractTemplate[]
+}
+
+model Classroom {
+  id       String  @id @default(cuid())
+  name     String
+  capacity Int?
+  location String?
+  branchId String?
+
+  scheduleSlots CourseGroupScheduleSlot[]
+  sessions      CourseSession[]
+}
+
+model CourseGroup {
+  id        String            @id @default(cuid())
+  courseId  String
+  trainerId String // Staff.id
+  branchId  String?
+  code      String            @unique // "PY-2026-01"
+  startDate DateTime
+  endDate   DateTime?
+  capacity  Int?
+  status    CourseGroupStatus @default(PLANNED)
+  createdAt DateTime          @default(now())
+
+  course        Course                    @relation(fields: [courseId], references: [id])
+  trainer       Staff                     @relation(fields: [trainerId], references: [id])
+  branch        Branch?                   @relation(fields: [branchId], references: [id])
+  scheduleSlots CourseGroupScheduleSlot[]
+  sessions      CourseSession[]
+  enrollments   GroupEnrollment[]
+
+  @@index([courseId])
+  @@index([trainerId])
+}
+
+model CourseGroupScheduleSlot {
+  id            String  @id @default(cuid())
+  courseGroupId String
+  dayOfWeek     Int // 0=Pazartesi ... 6=Pazar
+  startTime     String // "18:00"
+  endTime       String // "20:00"
+  classroomId   String?
+
+  courseGroup CourseGroup @relation(fields: [courseGroupId], references: [id], onDelete: Cascade)
+  classroom   Classroom?  @relation(fields: [classroomId], references: [id])
+}
+
+model CourseSession {
+  id            String        @id @default(cuid())
+  courseGroupId String
+  sessionDate   DateTime
+  startTime     String
+  endTime       String
+  topic         String?
+  classroomId   String?
+  status        SessionStatus @default(SCHEDULED)
+
+  courseGroup CourseGroup  @relation(fields: [courseGroupId], references: [id], onDelete: Cascade)
+  classroom   Classroom?   @relation(fields: [classroomId], references: [id])
+  attendance  Attendance[]
+
+  @@index([courseGroupId])
+}
+
+model GroupEnrollment {
+  id              String           @id @default(cuid())
+  studentId       String
+  courseGroupId   String
+  enrolledAt      DateTime         @default(now())
+  status          EnrollmentStatus @default(PENDING)
+  withdrawnAt     DateTime?
+  withdrawnReason String?
+
+  student     Student            @relation(fields: [studentId], references: [id])
+  courseGroup CourseGroup        @relation(fields: [courseGroupId], references: [id])
+  pricing     EnrollmentPricing?
+  certificate Certificate?
+  documents   StudentDocument[]
+
+  @@unique([studentId, courseGroupId])
+}
+
+model Certificate {
+  id            String   @id @default(cuid())
+  enrollmentId  String   @unique
+  certificateNo String   @unique
+  issuedAt      DateTime @default(now())
+  fileUrl       String?
+
+  enrollment GroupEnrollment @relation(fields: [enrollmentId], references: [id])
+}
+
+model Attendance {
+  id        String           @id @default(cuid())
+  sessionId String
+  studentId String
+  status    AttendanceStatus
+  note      String?
+
+  session CourseSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student Student       @relation(fields: [studentId], references: [id])
+
+  @@unique([sessionId, studentId])
+}
+
+// ============ SÖZLEŞME ŞABLONLARI ============
+
+model ContractTemplate {
+  id       String  @id @default(cuid())
+  name     String
+  courseId String? // null = tüm eğitimlerde kullanılabilir genel şablon
+  bodyHtml String // {{studentName}}, {{totalAmount}}, {{installmentCount}} gibi placeholder'lar
+  isActive Boolean @default(true)
+
+  course    Course?           @relation(fields: [courseId], references: [id])
+  documents StudentDocument[]
+}
+
+// ============ HESAPLARIM (ÖDEME / CARİ HESAP / FİNANSAL HESAPLAR) ============
+
+model FinancialAccount {
+  id             String               @id @default(cuid())
+  name           String // "Ana Kasa", "Garanti Bankası", "iPara POS"
+  type           FinancialAccountType
+  openingBalance Decimal              @default(0) @db.Decimal(12, 2)
+  isActive       Boolean              @default(true)
+  createdAt      DateTime             @default(now())
+
+  entries  FinancialAccountEntry[]
+  payments Payment[]
+  expenses Expense[]
+}
+
+model FinancialAccountEntry {
+  id               String               @id @default(cuid())
+  accountId        String
+  direction        TransactionDirection
+  amount           Decimal              @db.Decimal(12, 2)
+  description      String?
+  relatedPaymentId String?
+  relatedExpenseId String?
+  createdByUserId  String
+  occurredAt       DateTime             @default(now())
+
+  account FinancialAccount @relation(fields: [accountId], references: [id])
+
+  @@index([accountId, occurredAt])
+}
+
+model EnrollmentPricing {
+  id               String  @id @default(cuid())
+  enrollmentId     String  @unique
+  totalAmount      Decimal @db.Decimal(12, 2)
+  discountAmount   Decimal @default(0) @db.Decimal(12, 2)
+  finalAmount      Decimal @db.Decimal(12, 2)
+  installmentCount Int     @default(1)
+  currency         String  @default("TRY")
+
+  enrollment   GroupEnrollment @relation(fields: [enrollmentId], references: [id])
+  installments Installment[]
+}
+
+model Installment {
+  id         String            @id @default(cuid())
+  pricingId  String
+  sequenceNo Int
+  amount     Decimal           @db.Decimal(12, 2)
+  paidAmount Decimal           @default(0) @db.Decimal(12, 2)
+  dueDate    DateTime
+  status     InstallmentStatus @default(PENDING)
+
+  pricing  EnrollmentPricing @relation(fields: [pricingId], references: [id])
+  payments Payment[]
+
+  @@index([dueDate, status])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  studentId         String
+  installmentId     String?
+  accountId         String // hangi hesaba (kasa/banka/pos) girdi
+  amount            Decimal       @db.Decimal(12, 2)
+  method            PaymentMethod
+  receiptNo         String?
+  paidAt            DateTime      @default(now())
+  collectedByUserId String
+  note              String?
+
+  student     Student          @relation(fields: [studentId], references: [id])
+  installment Installment?     @relation(fields: [installmentId], references: [id])
+  account     FinancialAccount @relation(fields: [accountId], references: [id])
+
+  @@index([studentId])
+}
+
+model AccountTransaction {
+  id              String          @id @default(cuid())
+  studentId       String
+  type            TransactionType
+  amount          Decimal         @db.Decimal(12, 2)
+  description     String?
+  createdByUserId String
+  createdAt       DateTime        @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@index([studentId])
+}
+
+// ============ MASRAFLAR ============
+
+model ExpenseCategory {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  expenses Expense[]
+}
+
+model Expense {
+  id               String        @id @default(cuid())
+  categoryId       String
+  branchId         String?
+  accountId        String? // hangi hesaptan çıktı, ödendiğinde set edilir
+  amount           Decimal       @db.Decimal(12, 2)
+  expenseDate      DateTime
+  description      String?
+  paymentMethod    PaymentMethod
+  status           ExpenseStatus @default(PENDING)
+  documentUrl      String?
+  createdByUserId  String
+  approvedByUserId String?
+  approvedAt       DateTime?
+  createdAt        DateTime      @default(now())
+
+  category ExpenseCategory   @relation(fields: [categoryId], references: [id])
+  branch   Branch?           @relation(fields: [branchId], references: [id])
+  account  FinancialAccount? @relation(fields: [accountId], references: [id])
+
+  @@index([categoryId])
+  @@index([expenseDate])
+}
+
+// ============ GÖREVLER ============
+
+model Task {
+  id                String             @id @default(cuid())
+  title             String
+  description       String?
+  assignedToUserId  String? // null = görev havuzunda, personel üstlenebilir
+  createdByUserId   String
+  dueDate           DateTime?
+  priority          TaskPriority       @default(MEDIUM)
+  status            TaskStatus         @default(TODO)
+  relatedEntityType RelatedEntityType?
+  relatedEntityId   String?
+  claimedAt         DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime           @default(now())
+
+  assignedTo User?         @relation("TaskAssignee", fields: [assignedToUserId], references: [id])
+  createdBy  User          @relation("TaskCreator", fields: [createdByUserId], references: [id])
+  comments   TaskComment[]
+
+  @@index([assignedToUserId, status])
+  @@index([relatedEntityType, relatedEntityId])
+}
+
+model TaskComment {
+  id        String   @id @default(cuid())
+  taskId    String
+  userId    String
+  comment   String
+  createdAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+// ============ TAKVİM ============
+
+model CalendarEvent {
+  id                String             @id @default(cuid())
+  title             String
+  type              CalendarEventType
+  startsAt          DateTime
+  endsAt            DateTime?
+  allDay            Boolean            @default(false)
+  description       String?
+  createdByUserId   String
+  relatedEntityType RelatedEntityType?
+  relatedEntityId   String?
+  createdAt         DateTime           @default(now())
+
+  @@index([startsAt])
+}
+
+// ============ AYARLAR ============
+
+model SystemSetting {
+  key             String   @id
+  value           Json
+  updatedByUserId String?
+  updatedAt       DateTime @updatedAt
+}
