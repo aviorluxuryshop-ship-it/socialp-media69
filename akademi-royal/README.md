@@ -10,16 +10,26 @@ yönetmeyi amaçlar.
 - Next.js (App Router) + TypeScript
 - Tailwind CSS v4
 - PostgreSQL + Prisma ORM
-- Auth ve RBAC (Faz 0 kapsamında eklenecek)
+- Credentials tabanlı Auth (bcrypt + jose imzalı httpOnly cookie) + rol/izin tabanlı RBAC
 
 ## Kurulum
 
 ```bash
 npm install
-cp .env.example .env   # DATABASE_URL'i kendi PostgreSQL bağlantınıza göre düzenleyin
+cp .env.example .env   # DATABASE_URL ve SESSION_SECRET'i düzenleyin
 npm run prisma:migrate
+npm run prisma:seed
 npm run dev
 ```
+
+### İlk giriş
+
+Seed script aşağıdaki yönetici hesabını oluşturur:
+
+- **E-posta:** `admin@akademiroyal.com`
+- **Şifre:** `AkademiRoyal2026!`
+
+Üretim ortamına geçmeden önce bu şifreyi değiştirin.
 
 ## Veri Modeli
 
@@ -46,7 +56,7 @@ tabloları üzerinden yönetilir; yeni rol eklemek şema değişikliği gerektir
 
 | Faz | Modül | Durum |
 |---|---|---|
-| 0 | Altyapı: Auth, Roller/Yetkiler, temel layout, Ayarlar | Devam ediyor (proje iskeleti + veri modeli hazır; Auth/RBAC bekliyor) |
+| 0 | Altyapı: Auth, Roller/Yetkiler, temel layout, Ayarlar | ✅ Tamamlandı |
 | 1 | Personeller | Bekliyor |
 | 2 | Eğitimler (Kurslar + Gruplar + Ders Programı) | Bekliyor |
 | 3 | Öğrenciler | Bekliyor |
