@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --header-h: 84px;
+    /* Overwritten per product page root — see ProductExperience. */
+    --accent: #e8832e;
+    --accent-deep: #c4631a;
+    --accent-leaf: #3e8f5c;
+  }
+
+  * {
+    border-color: rgba(237, 237, 239, 0.12);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    background-color: #0a0a0b;
+  }
+
+  body {
+    background-color: #0a0a0b;
+    color: #ededef;
+    font-feature-settings: 'cv11', 'ss01';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    color: #0a0a0b;
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(237, 237, 239, 0.18);
+    border-radius: 999px;
+  }
+
+  /* Respect it for real: every GSAP tween the scene builds checks this
+     before it runs, but the few CSS transitions still get the same promise. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* The canvas sits fixed behind the whole scroll track; content scrolls
+     over it in normal flow. This is what stops each act from reading as a
+     boxed-off <section> — there is only ever one surface underneath. */
+  .scene-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .scene-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 11, 0.55) 0%,
+      rgba(10, 10, 11, 0) 18%,
+      rgba(10, 10, 11, 0) 78%,
+      rgba(10, 10, 11, 0.6) 100%
+    );
+  }
+
+  .scene-track {
+    position: relative;
+    z-index: 2;
+  }
+
+  .scene-act {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Copy always sits in front of the canvas, but a bright can behind a pale
+     word is still a legibility problem, not just a layering one — every act
+     gets the same soft cast shadow so type reads on any frame underneath. */
+  .scene-act h1,
+  .scene-act h2,
+  .scene-act p,
+  .scene-act li,
+  .scene-act dt,
+  .scene-act dd {
+    text-shadow: 0 2px 20px rgba(10, 10, 11, 0.55);
+  }
+
+  /* For the two spots where the copy is dense and small (the nutrition
+     table, the manufacturer block) rather than a few big words — a cast
+     shadow alone isn't reliable contrast once the can's own bright label is
+     directly behind it, so those get an actual backdrop. */
+  .info-panel {
+    background: rgba(10, 10, 11, 0.46);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+  }
+}
