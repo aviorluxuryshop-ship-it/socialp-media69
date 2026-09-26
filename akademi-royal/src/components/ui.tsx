@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 
-export function PageHeader({ title, description, action }: { title: string; description?: string; action?: ReactNode }) {
+export function PageHeader({ title, description, action }: { title: string; description?: ReactNode; action?: ReactNode }) {
   return (
     <div className="mb-6 flex items-start justify-between gap-4">
       <div>
