@@ -23,12 +23,16 @@ export function Button({
   type = 'button',
   variant = 'primary',
   className = '',
+  disabled = false,
+  onClick,
 }: {
   children: ReactNode;
   href?: string;
   type?: 'button' | 'submit';
   variant?: 'primary' | 'secondary' | 'danger';
   className?: string;
+  disabled?: boolean;
+  onClick?: () => void;
 }) {
   const base = 'inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition disabled:opacity-60';
   const styles = {
@@ -45,7 +49,7 @@ export function Button({
     );
   }
   return (
-    <button type={type} className={`${base} ${styles} ${className}`}>
+    <button type={type} disabled={disabled} onClick={onClick} className={`${base} ${styles} ${className}`}>
       {children}
     </button>
   );

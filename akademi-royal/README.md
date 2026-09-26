@@ -57,7 +57,7 @@ tabloları üzerinden yönetilir; yeni rol eklemek şema değişikliği gerektir
 | Faz | Modül | Durum |
 |---|---|---|
 | 0 | Altyapı: Auth, Roller/Yetkiler, temel layout, Ayarlar | ✅ Tamamlandı |
-| 1 | Personeller | Bekliyor |
+| 1 | Personeller | ✅ Tamamlandı |
 | 2 | Eğitimler (Kurslar + Gruplar + Ders Programı) | Bekliyor |
 | 3 | Öğrenciler | Bekliyor |
 | 4 | Hesaplarım (Ödeme / Cari Hesap / Kasa-Banka-POS) | Bekliyor |
