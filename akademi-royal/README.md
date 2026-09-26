@@ -59,7 +59,7 @@ tabloları üzerinden yönetilir; yeni rol eklemek şema değişikliği gerektir
 | 0 | Altyapı: Auth, Roller/Yetkiler, temel layout, Ayarlar | ✅ Tamamlandı |
 | 1 | Personeller | ✅ Tamamlandı |
 | 2 | Eğitimler (Kurslar + Gruplar + Ders Programı) | ✅ Tamamlandı |
-| 3 | Öğrenciler | Bekliyor |
+| 3 | Öğrenciler | ✅ Tamamlandı |
 | 4 | Hesaplarım (Ödeme / Cari Hesap / Kasa-Banka-POS) | Bekliyor |
 | 5 | Takvim & Planlama | Bekliyor |
 | 6 | Masraflar | Bekliyor |
