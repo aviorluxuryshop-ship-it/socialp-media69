@@ -65,7 +65,35 @@ tabloları üzerinden yönetilir; yeni rol eklemek şema değişikliği gerektir
 | 6 | Masraflar | ✅ Tamamlandı |
 | 7 | Görevler | ✅ Tamamlandı |
 | 8 | Raporlar | ✅ Tamamlandı |
-| 9 | Dashboard (nihai hali) | Bekliyor |
+| 9 | Dashboard (nihai hali) | ✅ Tamamlandı |
 
 Her faz, bir önceki fazın verisine bağımlı olacak şekilde sıralandı (örn. bir
 öğrenci bir eğitim grubuna kaydolabilmesi için Eğitimler modülü önce hazır olmalı).
+10 fazın tamamı tamamlandı ve her biri Playwright ile uçtan uca (gerçek tarayıcıda,
+gerçek PostgreSQL üzerinde) doğrulandı.
+
+## Bilinen Kapsam Dışı Konular / Sonraki Adımlar
+
+Aşağıdakiler bilinçli olarak bu ilk sürümün kapsamı dışında bırakıldı; şema
+bunlara hazır (gerekli tablolar mevcut) ama arayüz/iş mantığı henüz yazılmadı:
+
+- **Sözleşme/PDF üretimi**: `ContractTemplate` modeli hazır ama şablon
+  düzenleme ve PDF çıktısı arayüzü yok.
+- **Dosya/belge yükleme**: `StudentDocument`/`StaffDocument` tabloları var
+  ama gerçek dosya depolama (S3/Blob) entegre edilmedi.
+- **Yoklama (Attendance)**: `CourseSession` ve `Attendance` tabloları hazır;
+  takvimde dersler ders programından "sanal" olarak hesaplanıyor ama somut
+  oturum/yoklama kaydı tutulmuyor.
+- **Ayarlar modülü**: Kurum bilgisi, kullanıcı/rol yönetimi arayüzü henüz
+  yok (roller ve izinler şu an sadece `prisma/seed.ts` üzerinden yönetiliyor).
+- **Bildirimler**: Vade yaklaşan taksit, atanan görev gibi otomatik
+  bildirimler (e-posta/SMS/sistem içi) henüz yok.
+
+## Bilinen Bir Next.js Davranışı
+
+Bazı silme işlemlerinden hemen sonra (aynı sayfaya yönlendirildiğinde) arayüz
+bir an için eski veriyi gösterebilir; bu, Next.js'in kendi belgelerinde
+belirtilen, `revalidatePath`'in "bir sonraki ziyarette" tam etkili olduğu
+bilinen geçici bir davranıştır (bkz. Next.js `revalidatePath` dokümantasyonu).
+Sayfa yenilendiğinde veya farklı bir sayfaya geçilip geri dönüldüğünde veri
+her zaman doğru görünür; veritabanı katmanı bu durumdan etkilenmez.
