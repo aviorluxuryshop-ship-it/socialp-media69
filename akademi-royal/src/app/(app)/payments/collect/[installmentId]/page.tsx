@@ -17,7 +17,8 @@ export default async function CollectPaymentPage({ params }: { params: Promise<{
   });
   if (!installment) notFound();
 
-  const accounts = await prisma.financialAccount.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } });
+  const accountRows = await prisma.financialAccount.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } });
+  const accounts = accountRows.map((a) => ({ id: a.id, name: a.name }));
   const remaining = Number(installment.amount) - Number(installment.paidAmount);
 
   return (

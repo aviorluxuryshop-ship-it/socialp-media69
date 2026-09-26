@@ -2,6 +2,7 @@ import type {
   CalendarEventType,
   CourseGroupStatus,
   EnrollmentStatus,
+  ExpenseStatus,
   FinancialAccountType,
   PaymentMethod,
   StudentStatus,
@@ -67,3 +68,10 @@ export const CALENDAR_EVENT_TYPE_LABELS: Record<CalendarEventType, string> = {
 // Manuel etkinlik oluşturma formunda gösterilecek tipler — CLASS (ders programından
 // otomatik türetilir) ve TASK_DUE (Görevler modülünden otomatik yansır) hariç.
 export const MANUAL_CALENDAR_EVENT_TYPES: CalendarEventType[] = ['EXAM', 'MEETING', 'STAFF_LEAVE', 'HOLIDAY', 'OTHER'];
+
+export const EXPENSE_STATUS_LABELS: Record<ExpenseStatus, string> = {
+  PENDING: 'Bekliyor',
+  APPROVED: 'Onaylandı',
+  REJECTED: 'Reddedildi',
+  PAID: 'Ödendi',
+};
