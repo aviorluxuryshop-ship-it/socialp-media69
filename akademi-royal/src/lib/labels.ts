@@ -1,4 +1,5 @@
 import type {
+  CalendarEventType,
   CourseGroupStatus,
   EnrollmentStatus,
   FinancialAccountType,
@@ -52,3 +53,17 @@ export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
   CHECK: 'Çek',
   OTHER: 'Diğer',
 };
+
+export const CALENDAR_EVENT_TYPE_LABELS: Record<CalendarEventType, string> = {
+  CLASS: 'Ders',
+  EXAM: 'MEB Sınavı',
+  MEETING: 'Toplantı',
+  TASK_DUE: 'Görev Son Tarihi',
+  STAFF_LEAVE: 'Personel İzni',
+  HOLIDAY: 'Tatil',
+  OTHER: 'Diğer',
+};
+
+// Manuel etkinlik oluşturma formunda gösterilecek tipler — CLASS (ders programından
+// otomatik türetilir) ve TASK_DUE (Görevler modülünden otomatik yansır) hariç.
+export const MANUAL_CALENDAR_EVENT_TYPES: CalendarEventType[] = ['EXAM', 'MEETING', 'STAFF_LEAVE', 'HOLIDAY', 'OTHER'];
