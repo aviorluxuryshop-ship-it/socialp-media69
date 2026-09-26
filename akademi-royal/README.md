@@ -63,7 +63,7 @@ tabloları üzerinden yönetilir; yeni rol eklemek şema değişikliği gerektir
 | 4 | Hesaplarım (Ödeme / Cari Hesap / Kasa-Banka-POS) | ✅ Tamamlandı |
 | 5 | Takvim & Planlama | ✅ Tamamlandı |
 | 6 | Masraflar | ✅ Tamamlandı |
-| 7 | Görevler | Bekliyor |
+| 7 | Görevler | ✅ Tamamlandı |
 | 8 | Raporlar | Bekliyor |
 | 9 | Dashboard (nihai hali) | Bekliyor |
 

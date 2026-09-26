@@ -6,6 +6,8 @@ import type {
   FinancialAccountType,
   PaymentMethod,
   StudentStatus,
+  TaskPriority,
+  TaskStatus,
   TrainerPayType,
 } from '@prisma/client';
 
@@ -74,4 +76,18 @@ export const EXPENSE_STATUS_LABELS: Record<ExpenseStatus, string> = {
   APPROVED: 'Onaylandı',
   REJECTED: 'Reddedildi',
   PAID: 'Ödendi',
+};
+
+export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
+  TODO: 'Yapılacak',
+  IN_PROGRESS: 'Devam Ediyor',
+  DONE: 'Tamamlandı',
+  CANCELLED: 'İptal Edildi',
+};
+
+export const TASK_PRIORITY_LABELS: Record<TaskPriority, string> = {
+  LOW: 'Düşük',
+  MEDIUM: 'Orta',
+  HIGH: 'Yüksek',
+  URGENT: 'Acil',
 };
