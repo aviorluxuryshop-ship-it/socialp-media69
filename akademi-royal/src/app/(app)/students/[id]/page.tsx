@@ -6,7 +6,7 @@ import { Badge, Button, Card, PageHeader } from '@/components/ui';
 import { ConfirmForm } from '@/components/ConfirmForm';
 import { EnrollmentStatusSelect } from '../EnrollmentStatusSelect';
 import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
-import { ENROLLMENT_STATUS_LABELS, STUDENT_STATUS_LABELS } from '@/lib/labels';
+import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHOD_LABELS, STUDENT_STATUS_LABELS } from '@/lib/labels';
 import {
   addStudentNoteAction,
   deleteEnrollmentAction,
@@ -33,8 +33,12 @@ export default async function StudentDetailPage({
         orderBy: { enrolledAt: 'desc' },
         include: {
           courseGroup: { include: { course: true, trainer: { select: { fullName: true } } } },
-          pricing: { include: { installments: true } },
+          pricing: { include: { installments: { orderBy: { sequenceNo: 'asc' } } } },
         },
+      },
+      payments: {
+        orderBy: { paidAt: 'desc' },
+        include: { account: { select: { name: true } } },
       },
     },
   });
@@ -42,6 +46,7 @@ export default async function StudentDetailPage({
 
   const canEdit = hasPermission(user, 'students.edit');
   const canDelete = hasPermission(user, 'students.delete');
+  const canCollect = hasPermission(user, 'payments.create');
 
   const totals = student.enrollments.reduce(
     (acc, e) => {
@@ -98,9 +103,6 @@ export default async function StudentDetailPage({
             <Row label="Ödenen">{formatCurrencyTR(totals.paid)}</Row>
             <Row label="Kalan">{formatCurrencyTR(totals.total - totals.paid)}</Row>
           </dl>
-          <p className="mt-4 text-xs text-[var(--color-royal-dim)]">
-            Ödeme alma ve hesap ekstresi Faz 4&apos;te Hesaplarım modülünden yapılacak.
-          </p>
         </Card>
 
         <Card>
@@ -156,10 +158,29 @@ export default async function StudentDetailPage({
                       Eğitmen: {e.courseGroup.trainer.fullName} · Başlangıç: {formatDateTR(e.courseGroup.startDate)}
                     </p>
                     {e.pricing && (
-                      <p className="mt-1 text-sm text-[var(--color-royal-dim)]">
-                        Ücret: {formatCurrencyTR(e.pricing.finalAmount as never)} · Ödenen: {formatCurrencyTR(paid)} · Kalan:{' '}
-                        {formatCurrencyTR(Number(e.pricing.finalAmount) - paid)} ({e.pricing.installmentCount} taksit)
-                      </p>
+                      <>
+                        <p className="mt-1 text-sm text-[var(--color-royal-dim)]">
+                          Ücret: {formatCurrencyTR(e.pricing.finalAmount as never)} · Ödenen: {formatCurrencyTR(paid)} · Kalan:{' '}
+                          {formatCurrencyTR(Number(e.pricing.finalAmount) - paid)} ({e.pricing.installmentCount} taksit)
+                        </p>
+                        <ul className="mt-2 space-y-1 text-xs text-[var(--color-royal-dim)]">
+                          {e.pricing.installments.map((inst) => (
+                            <li key={inst.id} className="flex items-center gap-2">
+                              <span>
+                                {inst.sequenceNo}. taksit — {formatDateTR(inst.dueDate)} — {formatCurrencyTR(inst.amount as never)}
+                              </span>
+                              <Badge tone={inst.status === 'PAID' ? 'success' : inst.status === 'PARTIAL' ? 'warning' : 'default'}>
+                                {inst.status === 'PAID' ? 'Ödendi' : inst.status === 'PARTIAL' ? 'Kısmi' : 'Bekliyor'}
+                              </Badge>
+                              {canCollect && inst.status !== 'PAID' && (
+                                <Link href={`/payments/collect/${inst.id}`} className="text-[var(--color-royal)] hover:underline">
+                                  Tahsil Et
+                                </Link>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -185,6 +206,36 @@ export default async function StudentDetailPage({
               </Card>
             );
           })}
+        </div>
+      )}
+
+      <PageHeader title="Ödeme Geçmişi" />
+      {student.payments.length === 0 ? (
+        <p className="text-sm text-[var(--color-royal-dim)]">Henüz ödeme kaydı yok.</p>
+      ) : (
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
+              <tr>
+                <th className="px-4 py-2 font-medium">Tarih</th>
+                <th className="px-4 py-2 font-medium">Tutar</th>
+                <th className="px-4 py-2 font-medium">Yöntem</th>
+                <th className="px-4 py-2 font-medium">Hesap</th>
+                <th className="px-4 py-2 font-medium">Açıklama</th>
+              </tr>
+            </thead>
+            <tbody>
+              {student.payments.map((p) => (
+                <tr key={p.id} className="border-t border-[var(--color-mist)]">
+                  <td className="px-4 py-2">{formatDateTR(p.paidAt)}</td>
+                  <td className="px-4 py-2">{formatCurrencyTR(p.amount as never)}</td>
+                  <td className="px-4 py-2">{PAYMENT_METHOD_LABELS[p.method]}</td>
+                  <td className="px-4 py-2">{p.account.name}</td>
+                  <td className="px-4 py-2">{p.note ?? p.receiptNo ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

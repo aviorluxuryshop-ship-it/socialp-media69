@@ -60,7 +60,7 @@ tabloları üzerinden yönetilir; yeni rol eklemek şema değişikliği gerektir
 | 1 | Personeller | ✅ Tamamlandı |
 | 2 | Eğitimler (Kurslar + Gruplar + Ders Programı) | ✅ Tamamlandı |
 | 3 | Öğrenciler | ✅ Tamamlandı |
-| 4 | Hesaplarım (Ödeme / Cari Hesap / Kasa-Banka-POS) | Bekliyor |
+| 4 | Hesaplarım (Ödeme / Cari Hesap / Kasa-Banka-POS) | ✅ Tamamlandı |
 | 5 | Takvim & Planlama | Bekliyor |
 | 6 | Masraflar | Bekliyor |
 | 7 | Görevler | Bekliyor |

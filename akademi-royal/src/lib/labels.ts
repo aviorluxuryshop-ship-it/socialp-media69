@@ -1,4 +1,11 @@
-import type { CourseGroupStatus, EnrollmentStatus, StudentStatus, TrainerPayType } from '@prisma/client';
+import type {
+  CourseGroupStatus,
+  EnrollmentStatus,
+  FinancialAccountType,
+  PaymentMethod,
+  StudentStatus,
+  TrainerPayType,
+} from '@prisma/client';
 
 export const PAY_TYPE_LABELS: Record<TrainerPayType, string> = {
   HOURLY: 'Saatlik',
@@ -29,4 +36,19 @@ export const ENROLLMENT_STATUS_LABELS: Record<EnrollmentStatus, string> = {
   ACTIVE: 'Devam Ediyor',
   COMPLETED: 'Tamamlandı',
   CANCELLED: 'İptal Edildi',
+};
+
+export const FINANCIAL_ACCOUNT_TYPE_LABELS: Record<FinancialAccountType, string> = {
+  CASH: 'Kasa',
+  BANK: 'Banka',
+  POS: 'POS',
+  OTHER: 'Diğer',
+};
+
+export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+  CASH: 'Nakit',
+  CREDIT_CARD: 'Kredi Kartı',
+  BANK_TRANSFER: 'Havale/EFT',
+  CHECK: 'Çek',
+  OTHER: 'Diğer',
 };
