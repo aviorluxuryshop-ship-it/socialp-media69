@@ -64,7 +64,7 @@ tabloları üzerinden yönetilir; yeni rol eklemek şema değişikliği gerektir
 | 5 | Takvim & Planlama | ✅ Tamamlandı |
 | 6 | Masraflar | ✅ Tamamlandı |
 | 7 | Görevler | ✅ Tamamlandı |
-| 8 | Raporlar | Bekliyor |
+| 8 | Raporlar | ✅ Tamamlandı |
 | 9 | Dashboard (nihai hali) | Bekliyor |
 
 Her faz, bir önceki fazın verisine bağımlı olacak şekilde sıralandı (örn. bir
