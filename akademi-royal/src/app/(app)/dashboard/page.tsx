@@ -37,7 +37,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <PageHeader title="Dashboard" description={`Hoş geldiniz, ${user.name}.`} />
+      <PageHeader title="Dashboard" description={`Hoş geldiniz, ${user.name}.`} showBack={false} />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         <Kpi label="Bu Ay Yeni Öğrenci" value={String(summary.newStudents)} />
@@ -75,10 +75,10 @@ export default async function DashboardPage() {
                     href={`/calendar?year=${year}&month=${month}&day=${iso}`}
                     className={`flex h-9 flex-col items-center justify-center rounded text-xs hover:bg-[var(--color-mist)] ${
                       inMonth ? '' : 'text-[var(--color-royal-dim)] opacity-40'
-                    } ${iso === todayIso ? 'bg-[var(--color-royal)] text-white hover:bg-[var(--color-royal)]' : ''}`}
+                    } ${iso === todayIso ? 'bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent)]' : ''}`}
                   >
                     <span>{d.getDate()}</span>
-                    {count > 0 && <span className={`mt-0.5 h-1 w-1 rounded-full ${iso === todayIso ? 'bg-white' : 'bg-[var(--color-royal)]'}`} />}
+                    {count > 0 && <span className={`mt-0.5 h-1 w-1 rounded-full ${iso === todayIso ? 'bg-[var(--color-surface)]' : 'bg-[var(--color-accent)]'}`} />}
                   </Link>
                 );
               })}

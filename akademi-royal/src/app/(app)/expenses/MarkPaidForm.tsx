@@ -24,7 +24,7 @@ export function MarkPaidForm({ expenseId, accounts }: { expenseId: string; accou
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-[var(--color-royal)] px-2 py-1 text-xs text-white hover:opacity-90 disabled:opacity-60"
+        className="rounded-md bg-[var(--color-accent)] px-2 py-1 text-xs text-white hover:opacity-90 disabled:opacity-60"
       >
         {pending ? '…' : 'Öde'}
       </button>

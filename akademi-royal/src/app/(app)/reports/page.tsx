@@ -85,7 +85,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               <thead className="text-[var(--color-royal-dim)]">
                 <tr>
                   <th className="py-2 pr-4 font-medium">Eğitim</th>
-                  <th className="py-2 pr-4 font-medium">Kayıt</th>
+                  <th className="py-2 pr-4 font-medium">Satış Adedi</th>
                   <th className="py-2 pr-4 font-medium">Ciro</th>
                   <th className="py-2 pr-4 font-medium">Bekliyor</th>
                   <th className="py-2 pr-4 font-medium">Devam Ediyor</th>

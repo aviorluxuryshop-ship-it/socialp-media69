@@ -77,7 +77,7 @@ export default async function TaskDetailPage({ params }: { params: Promise<{ id:
                 placeholder="Yorum ekle…"
                 className="flex-1 rounded-md border border-[var(--color-mist)] px-3 py-1.5 text-sm outline-none focus:border-[var(--color-royal)]"
               />
-              <button type="submit" className="rounded-md bg-[var(--color-royal)] px-3 py-1.5 text-sm font-medium text-white hover:opacity-90">
+              <button type="submit" className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-white hover:opacity-90">
                 Ekle
               </button>
             </form>

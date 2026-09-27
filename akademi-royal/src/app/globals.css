@@ -3,12 +3,30 @@
 @theme {
   --color-ink: #0b0b0f;
   --color-paper: #ffffff;
+  --color-surface: #ffffff;
   --color-royal: #2c2f4a;
   --color-royal-dim: #5a5e82;
   --color-mist: #e7e7ec;
+  --color-accent: #2c2f4a;
+}
+
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-ink: #e8e9f3;
+  --color-paper: #101019;
+  --color-surface: #1a1c28;
+  --color-royal: #a7abe9;
+  --color-royal-dim: #8b8fb5;
+  --color-mist: #2a2c3c;
+  --color-accent: #4d52a0;
 }
 
 body {
   background: var(--color-paper);
   color: var(--color-ink);
+  transition: background-color 0.15s ease, color 0.15s ease;
 }

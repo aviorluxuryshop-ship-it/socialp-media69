@@ -72,6 +72,33 @@ Her faz, bir önceki fazın verisine bağımlı olacak şekilde sıralandı (ör
 10 fazın tamamı tamamlandı ve her biri Playwright ile uçtan uca (gerçek tarayıcıda,
 gerçek PostgreSQL üzerinde) doğrulandı.
 
+## İlk Kullanıcı Geri Bildirimleri Sonrası Eklenenler
+
+10 fazın tamamlanmasının ardından gelen kullanım geri bildirimleriyle eklenen
+geliştirmeler:
+
+- Eğitim süresi artık **gün** cinsinden tutuluyor (önceden saat).
+- Kenar menü **gizlenip açılabiliyor** (üstteki `⟨⟨` / `☰ Menü` düğmesi).
+- **Koyu/Açık mod** düğmesi (üst bardaki 🌙/☀️), tercih tarayıcıda saklanıyor.
+- Akademi Royal **logosu** kenar menüde ve giriş ekranında.
+- Öğrenci durumları (Aday/Aktif/Mezun/Dondu/Ayrıldı) **renkli rozetlerle** gösteriliyor.
+- Öğrenci ve eğitim grubu silme işlemleri artık kayıt/ödeme geçmişi olsa bile
+  **kademeli (cascade) silme** ile çalışıyor; kullanıcı güçlü bir uyarıyla onaylıyor.
+- Eğitim grubu detayından doğrudan **"+ Öğrenci Ekle"** ile kayıtlı bir öğrenci gruba dahil edilebiliyor.
+- Her sayfada bir **"← Geri"** düğmesi var.
+- Masraflar artık onaylandıktan/ödendikten sonra da **düzenlenebiliyor ve silinebiliyor**
+  (ödenmiş bir masrafı silmek/düzenlemek ilgili kasa/banka hareketini de günceller).
+- Hesaplarım: **Kredi Kartı** hesap tipi eklendi, hesaplar **pasife alınabiliyor veya
+  (hareketi yoksa) silinebiliyor**, hesaplar arası **transfer** ekranı eklendi.
+- Personel detayında **panel girişi** oluşturulabiliyor: e-posta/şifre/rol atanarak
+  personel kendi bilgileriyle sisteme giriş yapabiliyor; rol, şifre ve aktif/pasif
+  durumu daha sonra da yönetilebiliyor.
+- Takvim & Planlama'ya **filtre** eklendi (Tümü / Eğitimler / Görevler / Tahsilat
+  Günleri / Ödeme Günleri) ve bekleyen taksit/masraf günleri artık takvimde
+  otomatik görünüyor; bir güne tıklamak o günün tüm planlarını listeliyor.
+- Raporlar sayfasındaki eğitim raporu sütunu "Satış Adedi" olarak netleştirildi
+  (kategoriye göre gider ve tarih aralığı filtreleri zaten mevcuttu).
+
 ## Bilinen Kapsam Dışı Konular / Sonraki Adımlar
 
 Aşağıdakiler bilinçli olarak bu ilk sürümün kapsamı dışında bırakıldı; şema

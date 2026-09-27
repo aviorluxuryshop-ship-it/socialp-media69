@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { hasPermission, requirePermission } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Badge, Button, EmptyState, PageHeader } from '@/components/ui';
@@ -19,6 +20,7 @@ export default async function ExpensesPage() {
   const accounts = accountRows.map((a) => ({ id: a.id, name: a.name }));
 
   const canCreate = hasPermission(user, 'expenses.create');
+  const canEdit = hasPermission(user, 'expenses.edit');
   const canApprove = hasPermission(user, 'expenses.approve');
   const canDelete = hasPermission(user, 'expenses.delete');
 
@@ -46,7 +48,7 @@ export default async function ExpensesPage() {
       {expenses.length === 0 ? (
         <EmptyState title="Kayıtlı masraf yok" description="Yeni Masraf butonuyla ilk kaydı oluşturabilirsiniz." />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-x-auto rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>
@@ -87,10 +89,19 @@ export default async function ExpensesPage() {
                         </>
                       )}
                       {canApprove && e.status === 'APPROVED' && <MarkPaidForm expenseId={e.id} accounts={accounts} />}
-                      {canDelete && e.status !== 'PAID' && (
+                      {canEdit && (
+                        <Link href={`/expenses/${e.id}/edit`} className="text-xs text-[var(--color-royal)] hover:underline">
+                          Düzenle
+                        </Link>
+                      )}
+                      {canDelete && (
                         <ConfirmForm
                           action={deleteExpenseAction.bind(null, e.id)}
-                          confirmText="Bu masraf silinsin mi?"
+                          confirmText={
+                            e.status === 'PAID'
+                              ? 'Bu masraf ödendi olarak işaretlenmiş; silmek ilgili kasa/banka hareketini de geri alacak. Emin misiniz?'
+                              : 'Bu masraf silinsin mi?'
+                          }
                           className="text-xs text-red-600 hover:underline"
                         >
                           Sil

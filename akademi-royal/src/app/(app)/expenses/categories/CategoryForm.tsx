@@ -18,7 +18,7 @@ export function CategoryForm() {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-[var(--color-royal)] px-3 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
+        className="rounded-md bg-[var(--color-accent)] px-3 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
       >
         {pending ? 'Ekleniyor…' : 'Ekle'}
       </button>

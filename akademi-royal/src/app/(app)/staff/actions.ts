@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { Prisma, TrainerPayType } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { requirePermission } from '@/lib/auth';
+import { hashPassword, requirePermission } from '@/lib/auth';
 import { emptyToNull, parseDate, parseDecimal } from '@/lib/form-utils';
 
 export type FormState = { error?: string };
@@ -89,4 +89,83 @@ export async function deleteStaffAction(id: string) {
   }
   revalidatePath('/staff');
   redirect('/staff');
+}
+
+export type LoginFormState = { error?: string };
+
+export async function createStaffLoginAction(staffId: string, _prev: LoginFormState, formData: FormData): Promise<LoginFormState> {
+  await requirePermission('staff.edit');
+
+  const staff = await prisma.staff.findUnique({ where: { id: staffId } });
+  if (!staff) return { error: 'Personel bulunamadı.' };
+  if (staff.userId) return { error: 'Bu personelin zaten bir panel girişi var.' };
+
+  const email = emptyToNull(formData.get('email'));
+  const password = emptyToNull(formData.get('password'));
+  const roleId = emptyToNull(formData.get('roleId'));
+  if (!email || !password || !roleId) {
+    return { error: 'E-posta, şifre ve rol zorunludur.' };
+  }
+  if (password.length < 8) {
+    return { error: 'Şifre en az 8 karakter olmalıdır.' };
+  }
+
+  const passwordHash = await hashPassword(password);
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({ data: { name: staff.fullName, email, passwordHash, roleId } });
+      await tx.staff.update({ where: { id: staffId }, data: { userId: user.id } });
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      return { error: 'Bu e-posta adresi zaten kullanılıyor.' };
+    }
+    throw err;
+  }
+
+  revalidatePath(`/staff/${staffId}`);
+  redirect(`/staff/${staffId}`);
+}
+
+export async function updateStaffLoginRoleAction(staffId: string, formData: FormData) {
+  await requirePermission('staff.edit');
+  const staff = await prisma.staff.findUnique({ where: { id: staffId } });
+  if (!staff?.userId) return;
+
+  const roleId = emptyToNull(formData.get('roleId'));
+  if (!roleId) return;
+
+  await prisma.user.update({ where: { id: staff.userId }, data: { roleId } });
+  revalidatePath(`/staff/${staffId}`);
+}
+
+export async function resetStaffLoginPasswordAction(
+  staffId: string,
+  _prev: LoginFormState,
+  formData: FormData,
+): Promise<LoginFormState> {
+  await requirePermission('staff.edit');
+  const staff = await prisma.staff.findUnique({ where: { id: staffId } });
+  if (!staff?.userId) return { error: 'Bu personelin bir panel girişi yok.' };
+
+  const password = emptyToNull(formData.get('password'));
+  if (!password || password.length < 8) {
+    return { error: 'Şifre en az 8 karakter olmalıdır.' };
+  }
+
+  const passwordHash = await hashPassword(password);
+  await prisma.user.update({ where: { id: staff.userId }, data: { passwordHash } });
+  revalidatePath(`/staff/${staffId}`);
+  return {};
+}
+
+export async function toggleStaffLoginStatusAction(staffId: string) {
+  await requirePermission('staff.edit');
+  const staff = await prisma.staff.findUnique({ where: { id: staffId } });
+  if (!staff?.userId) return;
+
+  const staffUser = await prisma.user.findUniqueOrThrow({ where: { id: staff.userId } });
+  await prisma.user.update({ where: { id: staff.userId }, data: { status: staffUser.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' } });
+  revalidatePath(`/staff/${staffId}`);
 }

@@ -6,7 +6,7 @@ import { Badge, Button, Card, PageHeader } from '@/components/ui';
 import { ConfirmForm } from '@/components/ConfirmForm';
 import { EnrollmentStatusSelect } from '../EnrollmentStatusSelect';
 import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
-import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHOD_LABELS, STUDENT_STATUS_LABELS } from '@/lib/labels';
+import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHOD_LABELS, STUDENT_STATUS_LABELS, STUDENT_STATUS_TONES } from '@/lib/labels';
 import {
   addStudentNoteAction,
   deleteEnrollmentAction,
@@ -67,10 +67,14 @@ export default async function StudentDetailPage({
         action={
           <div className="flex gap-2">
             {canEdit && <Button href={`/students/${student.id}/edit`} variant="secondary">Düzenle</Button>}
-            {canDelete && student.enrollments.length === 0 && (
+            {canDelete && (
               <ConfirmForm
                 action={deleteStudentAction.bind(null, student.id)}
-                confirmText="Bu öğrenci kalıcı olarak silinsin mi?"
+                confirmText={
+                  student.enrollments.length > 0
+                    ? 'Bu öğrenci ve tüm eğitim kayıtları, ödeme geçmişi kalıcı olarak silinecek. Bu işlem geri alınamaz. Emin misiniz?'
+                    : 'Bu öğrenci kalıcı olarak silinsin mi?'
+                }
                 className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white transition hover:opacity-90"
               >
                 Sil
@@ -86,7 +90,7 @@ export default async function StudentDetailPage({
         <Card>
           <h2 className="mb-3 text-sm font-semibold text-[var(--color-royal)]">Kişisel Bilgiler</h2>
           <dl className="space-y-2 text-sm">
-            <Row label="Durum"><Badge>{STUDENT_STATUS_LABELS[student.status]}</Badge></Row>
+            <Row label="Durum"><Badge tone={STUDENT_STATUS_TONES[student.status]}>{STUDENT_STATUS_LABELS[student.status]}</Badge></Row>
             <Row label="TC Kimlik">{student.nationalId ?? '—'}</Row>
             <Row label="E-posta">{student.email ?? '—'}</Row>
             <Row label="Doğum Tarihi">{formatDateTR(student.birthDate)}</Row>
@@ -127,7 +131,7 @@ export default async function StudentDetailPage({
                 placeholder="Görüşme notu ekle…"
                 className="flex-1 rounded-md border border-[var(--color-mist)] px-3 py-1.5 text-sm outline-none focus:border-[var(--color-royal)]"
               />
-              <button type="submit" className="rounded-md bg-[var(--color-royal)] px-3 py-1.5 text-sm font-medium text-white hover:opacity-90">
+              <button type="submit" className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-white hover:opacity-90">
                 Ekle
               </button>
             </form>
@@ -136,6 +140,7 @@ export default async function StudentDetailPage({
       </div>
 
       <PageHeader
+        showBack={false}
         title="Eğitim Bilgileri"
         action={canEdit ? <Button href={`/students/${student.id}/enroll`}>+ Eğitime Kaydet</Button> : undefined}
       />
@@ -209,11 +214,11 @@ export default async function StudentDetailPage({
         </div>
       )}
 
-      <PageHeader title="Ödeme Geçmişi" />
+      <PageHeader title="Ödeme Geçmişi" showBack={false} />
       {student.payments.length === 0 ? (
         <p className="text-sm text-[var(--color-royal-dim)]">Henüz ödeme kaydı yok.</p>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>

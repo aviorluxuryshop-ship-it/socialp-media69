@@ -35,6 +35,14 @@ export const STUDENT_STATUS_LABELS: Record<StudentStatus, string> = {
   WITHDRAWN: 'Ayrıldı',
 };
 
+export const STUDENT_STATUS_TONES: Record<StudentStatus, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
+  LEAD: 'info',
+  ACTIVE: 'success',
+  COMPLETED: 'default',
+  FROZEN: 'warning',
+  WITHDRAWN: 'danger',
+};
+
 export const ENROLLMENT_STATUS_LABELS: Record<EnrollmentStatus, string> = {
   PENDING: 'Bekliyor',
   ACTIVE: 'Devam Ediyor',
@@ -43,9 +51,10 @@ export const ENROLLMENT_STATUS_LABELS: Record<EnrollmentStatus, string> = {
 };
 
 export const FINANCIAL_ACCOUNT_TYPE_LABELS: Record<FinancialAccountType, string> = {
-  CASH: 'Kasa',
+  CASH: 'Nakit',
   BANK: 'Banka',
   POS: 'POS',
+  CREDIT_CARD: 'Kredi Kartı',
   OTHER: 'Diğer',
 };
 
@@ -70,6 +79,31 @@ export const CALENDAR_EVENT_TYPE_LABELS: Record<CalendarEventType, string> = {
 // Manuel etkinlik oluşturma formunda gösterilecek tipler — CLASS (ders programından
 // otomatik türetilir) ve TASK_DUE (Görevler modülünden otomatik yansır) hariç.
 export const MANUAL_CALENDAR_EVENT_TYPES: CalendarEventType[] = ['EXAM', 'MEETING', 'STAFF_LEAVE', 'HOLIDAY', 'OTHER'];
+
+// Takvimde otomatik türetilen, CalendarEventType enum'ında olmayan ek öğe tipleri
+// (CLASS ve TASK_DUE zaten CALENDAR_EVENT_TYPE_LABELS içinde tanımlı).
+export const EXTRA_CALENDAR_ITEM_LABELS: Record<string, string> = {
+  COLLECTION: 'Tahsilat Günü',
+  EXPENSE_DUE: 'Ödeme Günü',
+};
+
+export const CALENDAR_FILTERS = [
+  { key: 'all', label: 'Tümü' },
+  { key: 'courses', label: 'Eğitimler' },
+  { key: 'tasks', label: 'Görevler' },
+  { key: 'collections', label: 'Tahsilat Günleri' },
+  { key: 'payments', label: 'Ödeme Günleri' },
+] as const;
+
+export type CalendarFilterKey = (typeof CALENDAR_FILTERS)[number]['key'];
+
+export const CALENDAR_FILTER_TYPES: Record<CalendarFilterKey, string[] | null> = {
+  all: null,
+  courses: ['CLASS'],
+  tasks: ['TASK_DUE'],
+  collections: ['COLLECTION'],
+  payments: ['EXPENSE_DUE'],
+};
 
 export const EXPENSE_STATUS_LABELS: Record<ExpenseStatus, string> = {
   PENDING: 'Bekliyor',

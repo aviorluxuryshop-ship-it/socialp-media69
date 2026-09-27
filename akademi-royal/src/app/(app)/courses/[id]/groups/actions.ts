@@ -55,16 +55,41 @@ export async function saveCourseGroupAction(_prev: FormState, formData: FormData
 
 export async function deleteCourseGroupAction(courseId: string, groupId: string) {
   await requirePermission('courses.delete');
-  try {
-    await prisma.courseGroup.delete({ where: { id: groupId } });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
-      redirect(
-        `/courses/${courseId}/groups/${groupId}?error=${encodeURIComponent('Bu gruba kayıtlı öğrenci veya ders programı var, önce onları kaldırın.')}`,
-      );
+
+  await prisma.$transaction(async (tx) => {
+    const enrollments = await tx.groupEnrollment.findMany({ where: { courseGroupId: groupId }, select: { id: true } });
+    const enrollmentIds = enrollments.map((e) => e.id);
+
+    if (enrollmentIds.length) {
+      const pricings = await tx.enrollmentPricing.findMany({ where: { enrollmentId: { in: enrollmentIds } }, select: { id: true } });
+      const pricingIds = pricings.map((p) => p.id);
+
+      if (pricingIds.length) {
+        const installments = await tx.installment.findMany({ where: { pricingId: { in: pricingIds } }, select: { id: true } });
+        const installmentIds = installments.map((i) => i.id);
+        if (installmentIds.length) {
+          await tx.payment.deleteMany({ where: { installmentId: { in: installmentIds } } });
+        }
+        await tx.installment.deleteMany({ where: { pricingId: { in: pricingIds } } });
+        await tx.enrollmentPricing.deleteMany({ where: { id: { in: pricingIds } } });
+      }
+
+      await tx.certificate.deleteMany({ where: { enrollmentId: { in: enrollmentIds } } });
+      await tx.studentDocument.deleteMany({ where: { enrollmentId: { in: enrollmentIds } } });
+      await tx.groupEnrollment.deleteMany({ where: { id: { in: enrollmentIds } } });
     }
-    throw err;
-  }
+
+    const sessions = await tx.courseSession.findMany({ where: { courseGroupId: groupId }, select: { id: true } });
+    const sessionIds = sessions.map((s) => s.id);
+    if (sessionIds.length) {
+      await tx.attendance.deleteMany({ where: { sessionId: { in: sessionIds } } });
+      await tx.courseSession.deleteMany({ where: { id: { in: sessionIds } } });
+    }
+
+    await tx.courseGroupScheduleSlot.deleteMany({ where: { courseGroupId: groupId } });
+    await tx.courseGroup.delete({ where: { id: groupId } });
+  });
+
   revalidatePath(`/courses/${courseId}`);
   redirect(`/courses/${courseId}`);
 }

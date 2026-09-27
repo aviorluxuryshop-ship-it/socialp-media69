@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { hasPermission, requirePermission } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { Badge, Button, Card, PageHeader } from '@/components/ui';
+import { Badge, Button, Card, EmptyState, PageHeader } from '@/components/ui';
 import { ConfirmForm } from '@/components/ConfirmForm';
-import { formatDateTR } from '@/lib/form-utils';
-import { COURSE_GROUP_STATUS_LABELS, DAY_LABELS } from '@/lib/labels';
+import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
+import { COURSE_GROUP_STATUS_LABELS, DAY_LABELS, ENROLLMENT_STATUS_LABELS } from '@/lib/labels';
 import { addScheduleSlotAction, deleteCourseGroupAction, deleteScheduleSlotAction } from '../actions';
 
 export default async function CourseGroupDetailPage({
@@ -25,6 +25,10 @@ export default async function CourseGroupDetailPage({
       course: { select: { id: true, name: true } },
       trainer: { select: { fullName: true } },
       scheduleSlots: { orderBy: { dayOfWeek: 'asc' } },
+      enrollments: {
+        orderBy: { enrolledAt: 'desc' },
+        include: { student: { select: { id: true, fullName: true, phone: true } }, pricing: { include: { installments: true } } },
+      },
       _count: { select: { enrollments: true } },
     },
   });
@@ -32,6 +36,7 @@ export default async function CourseGroupDetailPage({
 
   const canEdit = hasPermission(user, 'courses.edit');
   const canDelete = hasPermission(user, 'courses.delete');
+  const canEnroll = hasPermission(user, 'students.edit');
 
   return (
     <div>
@@ -45,10 +50,14 @@ export default async function CourseGroupDetailPage({
         action={
           <div className="flex gap-2">
             {canEdit && <Button href={`/courses/${courseId}/groups/${group.id}/edit`} variant="secondary">Düzenle</Button>}
-            {canDelete && group._count.enrollments === 0 && (
+            {canDelete && (
               <ConfirmForm
                 action={deleteCourseGroupAction.bind(null, courseId, group.id)}
-                confirmText="Bu grup kalıcı olarak silinsin mi?"
+                confirmText={
+                  group._count.enrollments > 0
+                    ? 'Bu grup, kayıtlı tüm öğrenci kayıtları ve ödeme geçmişi ile birlikte kalıcı olarak silinecek. Bu işlem geri alınamaz. Emin misiniz?'
+                    : 'Bu grup kalıcı olarak silinsin mi?'
+                }
                 className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white transition hover:opacity-90"
               >
                 Sil
@@ -71,9 +80,6 @@ export default async function CourseGroupDetailPage({
             <Row label="Kayıtlı Öğrenci">{group._count.enrollments}</Row>
             <Row label="Durum"><Badge>{COURSE_GROUP_STATUS_LABELS[group.status]}</Badge></Row>
           </dl>
-          <p className="mt-4 text-xs text-[var(--color-royal-dim)]">
-            Öğrenci kaydı Faz 3&apos;te Öğrenciler modülünden bu gruba yapılabilecek.
-          </p>
         </Card>
 
         <Card>
@@ -121,6 +127,48 @@ export default async function CourseGroupDetailPage({
           )}
         </Card>
       </div>
+
+      <PageHeader
+        title="Kayıtlı Öğrenciler"
+        showBack={false}
+        action={canEnroll ? <Button href={`/courses/${courseId}/groups/${group.id}/enroll`}>+ Öğrenci Ekle</Button> : undefined}
+      />
+      {group.enrollments.length === 0 ? (
+        <EmptyState title="Bu gruba henüz öğrenci eklenmemiş" description="Öğrenci Ekle butonuyla kayıtlı bir öğrenciyi bu gruba dahil edebilirsiniz." />
+      ) : (
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
+              <tr>
+                <th className="px-4 py-2 font-medium">Öğrenci</th>
+                <th className="px-4 py-2 font-medium">Telefon</th>
+                <th className="px-4 py-2 font-medium">Ödenen / Toplam</th>
+                <th className="px-4 py-2 font-medium">Durum</th>
+              </tr>
+            </thead>
+            <tbody>
+              {group.enrollments.map((e) => {
+                const paid = e.pricing?.installments.reduce((sum, i) => sum + Number(i.paidAmount), 0) ?? 0;
+                const total = e.pricing ? Number(e.pricing.finalAmount) : 0;
+                return (
+                  <tr key={e.id} className="border-t border-[var(--color-mist)] hover:bg-[var(--color-mist)]/30">
+                    <td className="px-4 py-2">
+                      <Link href={`/students/${e.student.id}`} className="font-medium text-[var(--color-royal)] hover:underline">
+                        {e.student.fullName}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-2">{e.student.phone}</td>
+                    <td className="px-4 py-2">{e.pricing ? `${formatCurrencyTR(paid)} / ${formatCurrencyTR(total)}` : '—'}</td>
+                    <td className="px-4 py-2">
+                      <Badge>{ENROLLMENT_STATUS_LABELS[e.status]}</Badge>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

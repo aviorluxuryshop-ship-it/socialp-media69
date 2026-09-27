@@ -62,7 +62,7 @@ export default async function CourseDetailPage({
         <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
           <div>
             <dt className="text-[var(--color-royal-dim)]">Süre</dt>
-            <dd className="font-medium text-[var(--color-royal)]">{course.durationHours ? `${course.durationHours} saat` : '—'}</dd>
+            <dd className="font-medium text-[var(--color-royal)]">{course.durationDays ? `${course.durationDays} gün` : '—'}</dd>
           </div>
           <div>
             <dt className="text-[var(--color-royal-dim)]">Standart Ücret</dt>
@@ -77,6 +77,7 @@ export default async function CourseDetailPage({
       </Card>
 
       <PageHeader
+        showBack={false}
         title="Gruplar / Sınıflar"
         action={canCreateGroup ? <Button href={`/courses/${course.id}/groups/new`}>+ Yeni Grup</Button> : undefined}
       />
@@ -84,7 +85,7 @@ export default async function CourseDetailPage({
       {course.groups.length === 0 ? (
         <EmptyState title="Bu eğitim için henüz grup açılmamış" description="Yeni Grup butonuyla bir sınıf oluşturabilirsiniz." />
       ) : (
-        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>

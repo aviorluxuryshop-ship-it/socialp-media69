@@ -12,7 +12,8 @@ export type FormState = { error?: string };
 const PAYMENT_METHODS: PaymentMethod[] = ['CASH', 'CREDIT_CARD', 'BANK_TRANSFER', 'CHECK', 'OTHER'];
 
 export async function saveExpenseAction(_prev: FormState, formData: FormData): Promise<FormState> {
-  const user = await requirePermission('expenses.create');
+  const id = emptyToNull(formData.get('id'));
+  const user = await requirePermission(id ? 'expenses.edit' : 'expenses.create');
 
   const categoryId = emptyToNull(formData.get('categoryId'));
   const amount = parseDecimal(formData.get('amount'));
@@ -23,16 +24,27 @@ export async function saveExpenseAction(_prev: FormState, formData: FormData): P
 
   const methodRaw = String(formData.get('paymentMethod') ?? 'CASH');
   const paymentMethod = PAYMENT_METHODS.includes(methodRaw as PaymentMethod) ? (methodRaw as PaymentMethod) : 'CASH';
+  const description = emptyToNull(formData.get('description'));
+
+  if (id) {
+    const existing = await prisma.expense.findUnique({ where: { id } });
+    if (!existing) return { error: 'Masraf bulunamadı.' };
+
+    await prisma.$transaction(async (tx) => {
+      await tx.expense.update({ where: { id }, data: { categoryId, amount, expenseDate, paymentMethod, description } });
+
+      // Zaten ödenmiş bir masrafın tutarı değiştiyse, ilişkili kasa/banka hareketini de güncelle.
+      if (existing.status === 'PAID' && Number(existing.amount) !== amount) {
+        await tx.financialAccountEntry.updateMany({ where: { relatedExpenseId: id }, data: { amount } });
+      }
+    });
+
+    revalidatePath('/expenses');
+    redirect('/expenses');
+  }
 
   await prisma.expense.create({
-    data: {
-      categoryId,
-      amount,
-      expenseDate,
-      paymentMethod,
-      description: emptyToNull(formData.get('description')),
-      createdByUserId: user.id,
-    },
+    data: { categoryId, amount, expenseDate, paymentMethod, description, createdByUserId: user.id },
   });
 
   revalidatePath('/expenses');
@@ -84,8 +96,16 @@ export async function markExpensePaidAction(_prev: FormState, formData: FormData
 export async function deleteExpenseAction(id: string) {
   await requirePermission('expenses.delete');
   const expense = await prisma.expense.findUnique({ where: { id } });
-  if (!expense || expense.status === 'PAID') return;
-  await prisma.expense.delete({ where: { id } });
+  if (!expense) return;
+
+  await prisma.$transaction(async (tx) => {
+    // Ödenmiş bir masraf siliniyorsa, kasa/banka hesabındaki ilgili hareketi de geri al.
+    if (expense.status === 'PAID') {
+      await tx.financialAccountEntry.deleteMany({ where: { relatedExpenseId: id } });
+    }
+    await tx.expense.delete({ where: { id } });
+  });
+
   revalidatePath('/expenses');
 }
 

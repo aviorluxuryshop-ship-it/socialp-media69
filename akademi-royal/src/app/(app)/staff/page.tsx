@@ -35,7 +35,7 @@ export default async function StaffPage({ searchParams }: { searchParams: Promis
       {staff.length === 0 ? (
         <EmptyState title="Kayıtlı personel yok" description="Yeni Personel butonuyla ilk kaydı oluşturabilirsiniz." />
       ) : (
-        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>

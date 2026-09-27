@@ -45,14 +45,30 @@ export async function saveStudentAction(_prev: FormState, formData: FormData): P
 
 export async function deleteStudentAction(id: string) {
   await requirePermission('students.delete');
-  try {
-    await prisma.student.delete({ where: { id } });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
-      redirect(`/students/${id}?error=${encodeURIComponent('Bu öğrencinin eğitim kaydı veya ödeme geçmişi var, önce onları kaldırın.')}`);
+
+  await prisma.$transaction(async (tx) => {
+    const enrollments = await tx.groupEnrollment.findMany({ where: { studentId: id }, select: { id: true } });
+    const enrollmentIds = enrollments.map((e) => e.id);
+
+    await tx.payment.deleteMany({ where: { studentId: id } });
+    await tx.accountTransaction.deleteMany({ where: { studentId: id } });
+
+    if (enrollmentIds.length) {
+      const pricings = await tx.enrollmentPricing.findMany({ where: { enrollmentId: { in: enrollmentIds } }, select: { id: true } });
+      const pricingIds = pricings.map((p) => p.id);
+      if (pricingIds.length) {
+        await tx.installment.deleteMany({ where: { pricingId: { in: pricingIds } } });
+        await tx.enrollmentPricing.deleteMany({ where: { id: { in: pricingIds } } });
+      }
+      await tx.certificate.deleteMany({ where: { enrollmentId: { in: enrollmentIds } } });
+      await tx.groupEnrollment.deleteMany({ where: { id: { in: enrollmentIds } } });
     }
-    throw err;
-  }
+
+    await tx.studentDocument.deleteMany({ where: { studentId: id } });
+    await tx.studentNote.deleteMany({ where: { studentId: id } });
+    await tx.student.delete({ where: { id } });
+  });
+
   revalidatePath('/students');
   redirect('/students');
 }
@@ -115,6 +131,11 @@ export async function createEnrollmentAction(_prev: FormState, formData: FormDat
   }
 
   revalidatePath(`/students/${studentId}`);
+  const returnTo = emptyToNull(formData.get('returnTo'));
+  if (returnTo) {
+    revalidatePath(returnTo);
+    redirect(returnTo);
+  }
   redirect(`/students/${studentId}`);
 }
 

@@ -31,8 +31,17 @@ export default async function PaymentsPage() {
     <div>
       <PageHeader
         title="Hesaplarım"
-        description="Ödemeler, cari hesaplar, kasa/banka/POS."
-        action={canCreate ? <Button href="/payments/accounts/new">+ Yeni Hesap</Button> : undefined}
+        description="Ödemeler, cari hesaplar, kasa/banka/POS/kredi kartı."
+        action={
+          canCreate ? (
+            <div className="flex gap-2">
+              <Button href="/payments/transfer" variant="secondary">
+                Hesaplar Arası Transfer
+              </Button>
+              <Button href="/payments/accounts/new">+ Yeni Hesap</Button>
+            </div>
+          ) : undefined
+        }
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -47,11 +56,11 @@ export default async function PaymentsPage() {
         ))}
       </div>
 
-      <PageHeader title="Bekleyen Tahsilatlar" />
+      <PageHeader title="Bekleyen Tahsilatlar" showBack={false} />
       {pendingInstallments.length === 0 ? (
         <EmptyState title="Bekleyen tahsilat yok" description="Tüm taksitler tahsil edilmiş." />
       ) : (
-        <div className="mb-6 overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="mb-6 overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>
@@ -93,11 +102,11 @@ export default async function PaymentsPage() {
         </div>
       )}
 
-      <PageHeader title="Son Tahsilatlar" />
+      <PageHeader title="Son Tahsilatlar" showBack={false} />
       {recentPayments.length === 0 ? (
         <EmptyState title="Henüz tahsilat yapılmamış" />
       ) : (
-        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>

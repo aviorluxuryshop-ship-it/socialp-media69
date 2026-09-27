@@ -30,7 +30,7 @@ export async function getMonthCalendarItems(year: number, month: number): Promis
   const rangeEnd = new Date(year, month, 0);
   const rangeEndInclusive = new Date(year, month, 0, 23, 59, 59, 999);
 
-  const [groups, events, tasks] = await Promise.all([
+  const [groups, events, tasks, installments, expenses] = await Promise.all([
     prisma.courseGroup.findMany({
       where: {
         status: { in: ['PLANNED', 'ACTIVE'] },
@@ -41,6 +41,14 @@ export async function getMonthCalendarItems(year: number, month: number): Promis
     }),
     prisma.calendarEvent.findMany({ where: { startsAt: { gte: rangeStart, lte: rangeEndInclusive } } }),
     prisma.task.findMany({ where: { dueDate: { gte: rangeStart, lte: rangeEndInclusive }, status: { not: 'CANCELLED' } } }),
+    prisma.installment.findMany({
+      where: { dueDate: { gte: rangeStart, lte: rangeEndInclusive }, status: { in: ['PENDING', 'PARTIAL', 'OVERDUE'] } },
+      include: { pricing: { include: { enrollment: { include: { student: true } } } } },
+    }),
+    prisma.expense.findMany({
+      where: { expenseDate: { gte: rangeStart, lte: rangeEndInclusive }, status: { in: ['PENDING', 'APPROVED'] } },
+      include: { category: true },
+    }),
   ]);
 
   const items: CalendarItem[] = [];
@@ -83,6 +91,29 @@ export async function getMonthCalendarItems(year: number, month: number): Promis
   for (const t of tasks) {
     if (!t.dueDate) continue;
     items.push({ id: `task-${t.id}`, date: isoDate(t.dueDate), type: 'TASK_DUE', title: `Görev: ${t.title}`, deletable: false, href: '/tasks' });
+  }
+
+  for (const i of installments) {
+    const studentId = i.pricing.enrollment.studentId;
+    items.push({
+      id: `installment-${i.id}`,
+      date: isoDate(i.dueDate),
+      type: 'COLLECTION',
+      title: `Tahsilat: ${i.pricing.enrollment.student.fullName} (${i.sequenceNo}/${i.pricing.installmentCount}. taksit)`,
+      deletable: false,
+      href: `/students/${studentId}`,
+    });
+  }
+
+  for (const e of expenses) {
+    items.push({
+      id: `expense-${e.id}`,
+      date: isoDate(e.expenseDate),
+      type: 'EXPENSE_DUE',
+      title: `Ödeme: ${e.category.name}${e.description ? ` — ${e.description}` : ''}`,
+      deletable: false,
+      href: '/expenses',
+    });
   }
 
   return items;

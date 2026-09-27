@@ -32,3 +32,6 @@ yarn-error.log*
 web/media-src/
 web/public.zip
 web/tsconfig.tsbuildinfo
+
+# akademi-royal build artefacts
+akademi-royal/tsconfig.tsbuildinfo

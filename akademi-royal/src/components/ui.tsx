@@ -1,10 +1,22 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
+import { BackButton } from './BackButton';
 
-export function PageHeader({ title, description, action }: { title: string; description?: ReactNode; action?: ReactNode }) {
+export function PageHeader({
+  title,
+  description,
+  action,
+  showBack = true,
+}: {
+  title: string;
+  description?: ReactNode;
+  action?: ReactNode;
+  showBack?: boolean;
+}) {
   return (
     <div className="mb-6 flex items-start justify-between gap-4">
       <div>
+        {showBack && <BackButton />}
         <h1 className="text-xl font-semibold text-[var(--color-royal)]">{title}</h1>
         {description && <p className="mt-1 text-sm text-[var(--color-royal-dim)]">{description}</p>}
       </div>
@@ -14,7 +26,7 @@ export function PageHeader({ title, description, action }: { title: string; desc
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-lg border border-[var(--color-mist)] bg-white p-5 ${className}`}>{children}</div>;
+  return <div className={`rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)] p-5 ${className}`}>{children}</div>;
 }
 
 export function Button({
@@ -36,7 +48,7 @@ export function Button({
 }) {
   const base = 'inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition disabled:opacity-60';
   const styles = {
-    primary: 'bg-[var(--color-royal)] text-white hover:opacity-90',
+    primary: 'bg-[var(--color-accent)] text-white hover:opacity-90',
     secondary: 'border border-[var(--color-mist)] text-[var(--color-royal)] hover:bg-[var(--color-mist)]',
     danger: 'bg-red-600 text-white hover:opacity-90',
   }[variant];
@@ -64,12 +76,13 @@ export function EmptyState({ title, description }: { title: string; description?
   );
 }
 
-export function Badge({ children, tone = 'default' }: { children: ReactNode; tone?: 'default' | 'success' | 'warning' | 'danger' }) {
+export function Badge({ children, tone = 'default' }: { children: ReactNode; tone?: 'default' | 'success' | 'warning' | 'danger' | 'info' }) {
   const styles = {
     default: 'bg-[var(--color-mist)] text-[var(--color-royal)]',
     success: 'bg-emerald-100 text-emerald-700',
     warning: 'bg-amber-100 text-amber-700',
     danger: 'bg-red-100 text-red-700',
+    info: 'bg-sky-100 text-sky-700',
   }[tone];
   return <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${styles}`}>{children}</span>;
 }

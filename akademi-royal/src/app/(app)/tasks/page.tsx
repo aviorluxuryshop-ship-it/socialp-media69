@@ -58,7 +58,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
             key={f.key}
             href={`/tasks?filter=${f.key}`}
             className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-              filter === f.key ? 'bg-[var(--color-royal)] text-white' : 'border border-[var(--color-mist)] text-[var(--color-royal)]'
+              filter === f.key ? 'bg-[var(--color-accent)] text-white' : 'border border-[var(--color-mist)] text-[var(--color-royal)]'
             }`}
           >
             {f.label}
@@ -73,7 +73,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
           {tasks.map((t) => {
             const overdue = t.dueDate && t.dueDate < today && t.status !== 'DONE' && t.status !== 'CANCELLED';
             return (
-              <div key={t.id} className="rounded-lg border border-[var(--color-mist)] bg-white p-4">
+              <div key={t.id} className="rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <Link href={`/tasks/${t.id}`} className="font-medium text-[var(--color-royal)] hover:underline">
@@ -92,7 +92,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
                   <div className="flex items-center gap-2">
                     {!t.assignedTo && canEdit ? (
                       <form action={claimTaskAction.bind(null, t.id)}>
-                        <button type="submit" className="rounded-md bg-[var(--color-royal)] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">
+                        <button type="submit" className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">
                           Görevi Üstlen
                         </button>
                       </form>

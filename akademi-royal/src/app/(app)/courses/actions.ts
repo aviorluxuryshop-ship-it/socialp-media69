@@ -19,13 +19,13 @@ export async function saveCourseAction(_prev: FormState, formData: FormData): Pr
     return { error: 'Eğitim adı ve ücreti zorunludur.' };
   }
 
-  const durationRaw = emptyToNull(formData.get('durationHours'));
+  const durationRaw = emptyToNull(formData.get('durationDays'));
 
   const data = {
     name,
     category: emptyToNull(formData.get('category')),
     description: emptyToNull(formData.get('description')),
-    durationHours: durationRaw ? Number(durationRaw) : null,
+    durationDays: durationRaw ? Number(durationRaw) : null,
     defaultPrice,
     isActive: formData.get('isActive') === 'on',
   };

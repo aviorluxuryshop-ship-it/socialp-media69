@@ -32,7 +32,7 @@ export default async function ExpenseCategoriesPage({ searchParams }: { searchPa
       {categories.length === 0 ? (
         <EmptyState title="Kategori yok" />
       ) : (
-        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>

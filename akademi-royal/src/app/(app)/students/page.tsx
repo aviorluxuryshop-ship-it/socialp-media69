@@ -3,7 +3,7 @@ import { hasPermission, requirePermission } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Badge, Button, EmptyState, PageHeader, inputClass } from '@/components/ui';
 import { formatCurrencyTR } from '@/lib/form-utils';
-import { STUDENT_STATUS_LABELS } from '@/lib/labels';
+import { STUDENT_STATUS_LABELS, STUDENT_STATUS_TONES } from '@/lib/labels';
 
 export default async function StudentsPage({ searchParams }: { searchParams: Promise<{ q?: string; status?: string }> }) {
   const user = await requirePermission('students.view');
@@ -58,7 +58,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
       {students.length === 0 ? (
         <EmptyState title="Kayıtlı öğrenci yok" description="Yeni Öğrenci butonuyla ilk kaydı oluşturabilirsiniz." />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-x-auto rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>
@@ -98,7 +98,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
                     <td className="px-4 py-2">{totals.total ? formatCurrencyTR(totals.paid) : '—'}</td>
                     <td className="px-4 py-2">{totals.total ? formatCurrencyTR(remaining) : '—'}</td>
                     <td className="px-4 py-2">
-                      <Badge>{STUDENT_STATUS_LABELS[s.status]}</Badge>
+                      <Badge tone={STUDENT_STATUS_TONES[s.status]}>{STUDENT_STATUS_LABELS[s.status]}</Badge>
                     </td>
                   </tr>
                 );

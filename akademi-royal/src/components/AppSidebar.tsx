@@ -16,7 +16,7 @@ export function AppSidebar({ items }: { items: { key: string; label: string; hre
             href={item.href}
             className={`rounded-md px-3 py-2 text-sm font-medium transition ${
               active
-                ? 'bg-[var(--color-royal)] text-white'
+                ? 'bg-[var(--color-accent)] text-white'
                 : 'text-[var(--color-royal)] hover:bg-[var(--color-mist)]'
             }`}
           >

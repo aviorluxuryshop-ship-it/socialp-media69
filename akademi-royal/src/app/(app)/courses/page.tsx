@@ -23,7 +23,7 @@ export default async function CoursesPage() {
       {courses.length === 0 ? (
         <EmptyState title="Kayıtlı eğitim yok" description="Yeni Eğitim butonuyla ilk programı oluşturabilirsiniz." />
       ) : (
-        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-white">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-mist)] bg-[var(--color-surface)]">
           <table className="w-full text-left text-sm">
             <thead className="bg-[var(--color-mist)]/50 text-[var(--color-royal-dim)]">
               <tr>
@@ -44,7 +44,7 @@ export default async function CoursesPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-2">{c.category ?? '—'}</td>
-                  <td className="px-4 py-2">{c.durationHours ? `${c.durationHours} saat` : '—'}</td>
+                  <td className="px-4 py-2">{c.durationDays ? `${c.durationDays} gün` : '—'}</td>
                   <td className="px-4 py-2">{formatCurrencyTR(c.defaultPrice as never)}</td>
                   <td className="px-4 py-2">{c._count.groups}</td>
                   <td className="px-4 py-2">

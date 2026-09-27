@@ -2,14 +2,14 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { FinancialAccountType, PaymentMethod, Prisma } from '@prisma/client';
+import { FinancialAccountType, PaymentMethod } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { requirePermission } from '@/lib/auth';
 import { emptyToNull, parseDecimal } from '@/lib/form-utils';
 
 export type FormState = { error?: string };
 
-const ACCOUNT_TYPES: FinancialAccountType[] = ['CASH', 'BANK', 'POS', 'OTHER'];
+const ACCOUNT_TYPES: FinancialAccountType[] = ['CASH', 'BANK', 'POS', 'CREDIT_CARD', 'OTHER'];
 const PAYMENT_METHODS: PaymentMethod[] = ['CASH', 'CREDIT_CARD', 'BANK_TRANSFER', 'CHECK', 'OTHER'];
 
 export async function saveAccountAction(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -25,6 +25,84 @@ export async function saveAccountAction(_prev: FormState, formData: FormData): P
 
   revalidatePath('/payments');
   redirect(`/payments/accounts/${account.id}`);
+}
+
+export async function toggleAccountActiveAction(id: string) {
+  await requirePermission('payments.edit');
+  const account = await prisma.financialAccount.findUniqueOrThrow({ where: { id } });
+  await prisma.financialAccount.update({ where: { id }, data: { isActive: !account.isActive } });
+  revalidatePath('/payments');
+  revalidatePath(`/payments/accounts/${id}`);
+}
+
+export async function deleteAccountAction(id: string) {
+  await requirePermission('payments.delete');
+
+  const [entryCount, paymentCount, expenseCount] = await Promise.all([
+    prisma.financialAccountEntry.count({ where: { accountId: id } }),
+    prisma.payment.count({ where: { accountId: id } }),
+    prisma.expense.count({ where: { accountId: id } }),
+  ]);
+
+  if (entryCount > 0 || paymentCount > 0 || expenseCount > 0) {
+    redirect(
+      `/payments/accounts/${id}?error=${encodeURIComponent('Bu hesapta hareket geçmişi var, silinemez. Bunun yerine hesabı pasife alabilirsiniz.')}`,
+    );
+  }
+
+  await prisma.financialAccount.delete({ where: { id } });
+  revalidatePath('/payments');
+  redirect('/payments');
+}
+
+export async function transferBetweenAccountsAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  const user = await requirePermission('payments.create');
+
+  const fromAccountId = emptyToNull(formData.get('fromAccountId'));
+  const toAccountId = emptyToNull(formData.get('toAccountId'));
+  const amount = parseDecimal(formData.get('amount'));
+  const description = emptyToNull(formData.get('description'));
+
+  if (!fromAccountId || !toAccountId || amount === null || amount <= 0) {
+    return { error: 'Kaynak hesap, hedef hesap ve geçerli bir tutar zorunludur.' };
+  }
+  if (fromAccountId === toAccountId) {
+    return { error: 'Kaynak ve hedef hesap aynı olamaz.' };
+  }
+
+  const [fromAccount, toAccount] = await Promise.all([
+    prisma.financialAccount.findUnique({ where: { id: fromAccountId } }),
+    prisma.financialAccount.findUnique({ where: { id: toAccountId } }),
+  ]);
+  if (!fromAccount || !toAccount) return { error: 'Hesap bulunamadı.' };
+
+  const note = description ? ` — ${description}` : '';
+
+  await prisma.$transaction([
+    prisma.financialAccountEntry.create({
+      data: {
+        accountId: fromAccountId,
+        direction: 'OUT',
+        amount,
+        description: `Hesaplar arası transfer → ${toAccount.name}${note}`,
+        createdByUserId: user.id,
+      },
+    }),
+    prisma.financialAccountEntry.create({
+      data: {
+        accountId: toAccountId,
+        direction: 'IN',
+        amount,
+        description: `Hesaplar arası transfer ← ${fromAccount.name}${note}`,
+        createdByUserId: user.id,
+      },
+    }),
+  ]);
+
+  revalidatePath('/payments');
+  revalidatePath(`/payments/accounts/${fromAccountId}`);
+  revalidatePath(`/payments/accounts/${toAccountId}`);
+  redirect('/payments');
 }
 
 export async function collectPaymentAction(_prev: FormState, formData: FormData): Promise<FormState> {

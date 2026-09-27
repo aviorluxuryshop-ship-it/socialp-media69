@@ -11,7 +11,7 @@ type CourseFormData = {
   name: string;
   category: string | null;
   description: string | null;
-  durationHours: number | null;
+  durationDays: number | null;
   defaultPrice: unknown;
   isActive: boolean;
 };
@@ -33,12 +33,12 @@ export function CourseForm({ course }: { course?: CourseFormData }) {
           <input id="category" name="category" defaultValue={course?.category ?? ''} className={inputClass} />
         </div>
         <div>
-          <FieldLabel htmlFor="durationHours">Süre (saat)</FieldLabel>
+          <FieldLabel htmlFor="durationDays">Süre (gün)</FieldLabel>
           <input
-            id="durationHours"
-            name="durationHours"
+            id="durationDays"
+            name="durationDays"
             type="number"
-            defaultValue={course?.durationHours ?? ''}
+            defaultValue={course?.durationDays ?? ''}
             className={inputClass}
           />
         </div>
