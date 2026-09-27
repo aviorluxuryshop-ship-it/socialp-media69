@@ -7,7 +7,7 @@ import { TASK_PRIORITY_LABELS } from '@/lib/labels';
 
 const initialState: FormState = {};
 
-export function TaskForm({ users }: { users: { id: string; name: string }[] }) {
+export function TaskForm({ staff }: { staff: { id: string; name: string }[] }) {
   const [state, formAction, pending] = useActionState(saveTaskAction, initialState);
 
   return (
@@ -38,12 +38,12 @@ export function TaskForm({ users }: { users: { id: string; name: string }[] }) {
           </select>
         </div>
         <div>
-          <FieldLabel htmlFor="assignedToUserId">Atanan Personel</FieldLabel>
-          <select id="assignedToUserId" name="assignedToUserId" defaultValue="" className={inputClass}>
+          <FieldLabel htmlFor="assignedToStaffId">Atanan Personel</FieldLabel>
+          <select id="assignedToStaffId" name="assignedToStaffId" defaultValue="" className={inputClass}>
             <option value="">Havuzda bırak</option>
-            {users.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.name}
+            {staff.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
               </option>
             ))}
           </select>

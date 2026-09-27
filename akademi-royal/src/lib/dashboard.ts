@@ -1,4 +1,8 @@
 import { prisma } from '@/lib/prisma';
+import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
+import { STUDENT_STATUS_LABELS, TASK_PRIORITY_LABELS } from '@/lib/labels';
+
+export type DashboardDrilldownRow = { id: string; label: string; sub: string; href: string };
 
 function monthStart(d = new Date()) {
   return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -90,4 +94,81 @@ export async function getWeeklyIncomeExpense() {
       .reduce((sum, e) => sum + Number(e.amount), 0);
     return { iso, label: new Intl.DateTimeFormat('tr-TR', { weekday: 'short' }).format(date), income, expense };
   });
+}
+
+export async function getDashboardDrilldowns(): Promise<Record<string, DashboardDrilldownRow[]>> {
+  const from = monthStart();
+  const to = monthEndInclusive();
+
+  const [newStudents, enrollments, expenses, payments, pendingInstallments, pendingTasks] = await Promise.all([
+    prisma.student.findMany({
+      where: { createdAt: { gte: from, lte: to } },
+      select: { id: true, fullName: true, phone: true, status: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.enrollmentPricing.findMany({
+      where: { enrollment: { enrolledAt: { gte: from, lte: to } } },
+      include: { enrollment: { include: { student: true, courseGroup: { include: { course: true } } } } },
+      orderBy: { enrollment: { enrolledAt: 'desc' } },
+    }),
+    prisma.expense.findMany({
+      where: { expenseDate: { gte: from, lte: to }, status: { not: 'REJECTED' } },
+      include: { category: true },
+      orderBy: { expenseDate: 'desc' },
+    }),
+    prisma.payment.findMany({
+      where: { paidAt: { gte: from, lte: to } },
+      include: { student: { select: { id: true, fullName: true } } },
+      orderBy: { paidAt: 'desc' },
+    }),
+    prisma.installment.findMany({
+      where: { status: { in: ['PENDING', 'PARTIAL'] } },
+      include: { pricing: { include: { enrollment: { include: { student: true, courseGroup: { include: { course: true } } } } } } },
+      orderBy: { dueDate: 'asc' },
+    }),
+    prisma.task.findMany({
+      where: { status: { in: ['TODO', 'IN_PROGRESS'] } },
+      include: { assignedTo: { select: { fullName: true } } },
+      orderBy: [{ dueDate: 'asc' }, { createdAt: 'desc' }],
+    }),
+  ]);
+
+  return {
+    newStudents: newStudents.map((s) => ({
+      id: s.id,
+      label: s.fullName,
+      sub: `${s.phone} · ${STUDENT_STATUS_LABELS[s.status]}`,
+      href: `/students/${s.id}`,
+    })),
+    revenue: enrollments.map((e) => ({
+      id: e.id,
+      label: `${e.enrollment.student.fullName} — ${e.enrollment.courseGroup.course.name}`,
+      sub: formatCurrencyTR(e.finalAmount as never),
+      href: `/students/${e.enrollment.studentId}`,
+    })),
+    expenses: expenses.map((e) => ({
+      id: e.id,
+      label: `${e.category.name}${e.description ? ` — ${e.description}` : ''}`,
+      sub: `${formatCurrencyTR(e.amount as never)} · ${formatDateTR(e.expenseDate)}`,
+      href: '/expenses',
+    })),
+    payments: payments.map((p) => ({
+      id: p.id,
+      label: p.student.fullName,
+      sub: `${formatCurrencyTR(p.amount as never)} · ${formatDateTR(p.paidAt)}`,
+      href: `/students/${p.student.id}`,
+    })),
+    pendingInstallments: pendingInstallments.map((i) => ({
+      id: i.id,
+      label: `${i.pricing.enrollment.student.fullName} — ${i.pricing.enrollment.courseGroup.course.name}`,
+      sub: `${formatCurrencyTR(Number(i.amount) - Number(i.paidAmount))} · Vade: ${formatDateTR(i.dueDate)}`,
+      href: `/students/${i.pricing.enrollment.studentId}`,
+    })),
+    pendingTasks: pendingTasks.map((t) => ({
+      id: t.id,
+      label: t.title,
+      sub: `${TASK_PRIORITY_LABELS[t.priority]} · ${t.assignedTo?.fullName ?? 'Havuzda'}${t.dueDate ? ' · ' + formatDateTR(t.dueDate) : ''}`,
+      href: `/tasks/${t.id}`,
+    })),
+  };
 }

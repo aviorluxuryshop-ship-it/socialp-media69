@@ -16,14 +16,15 @@ export default async function TaskDetailPage({ params }: { params: Promise<{ id:
   const task = await prisma.task.findUnique({
     where: { id },
     include: {
-      assignedTo: { select: { id: true, name: true } },
+      assignedTo: { select: { id: true, fullName: true } },
       createdBy: { select: { name: true } },
       comments: { orderBy: { createdAt: 'asc' } },
     },
   });
   if (!task) notFound();
 
-  const users = await prisma.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true, name: true }, orderBy: { name: 'asc' } });
+  const staffRows = await prisma.staff.findMany({ where: { isActive: true }, select: { id: true, fullName: true }, orderBy: { fullName: 'asc' } });
+  const staff = staffRows.map((s) => ({ id: s.id, name: s.fullName }));
   const commentAuthorIds = [...new Set(task.comments.map((c) => c.userId))];
   const commentAuthors = await prisma.user.findMany({ where: { id: { in: commentAuthorIds } }, select: { id: true, name: true } });
   const authorNameById = new Map(commentAuthors.map((a) => [a.id, a.name]));
@@ -101,14 +102,14 @@ export default async function TaskDetailPage({ params }: { params: Promise<{ id:
               <dt className="text-[var(--color-royal-dim)]">Atanan</dt>
               <dd>
                 {canEdit ? (
-                  <AssignSelect action={assignTaskAction.bind(null, task.id)} defaultValue={task.assignedTo?.id ?? ''} users={users} />
+                  <AssignSelect action={assignTaskAction.bind(null, task.id)} defaultValue={task.assignedTo?.id ?? ''} staff={staff} />
                 ) : (
-                  task.assignedTo?.name ?? 'Havuzda'
+                  task.assignedTo?.fullName ?? 'Havuzda'
                 )}
               </dd>
             </div>
           </dl>
-          {!task.assignedTo && canEdit && (
+          {!task.assignedTo && canEdit && user.staffId && (
             <form action={claimTaskAction.bind(null, task.id)} className="mt-4">
               <Button type="submit" className="w-full">
                 Görevi Üstlen

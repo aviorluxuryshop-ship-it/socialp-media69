@@ -20,7 +20,7 @@ export async function saveTaskAction(_prev: FormState, formData: FormData): Prom
 
   const priorityRaw = String(formData.get('priority') ?? 'MEDIUM');
   const priority = PRIORITIES.includes(priorityRaw as TaskPriority) ? (priorityRaw as TaskPriority) : 'MEDIUM';
-  const assignedToUserId = emptyToNull(formData.get('assignedToUserId'));
+  const assignedToStaffId = emptyToNull(formData.get('assignedToStaffId'));
 
   await prisma.task.create({
     data: {
@@ -28,7 +28,7 @@ export async function saveTaskAction(_prev: FormState, formData: FormData): Prom
       description: emptyToNull(formData.get('description')),
       dueDate: parseDate(formData.get('dueDate')),
       priority,
-      assignedToUserId,
+      assignedToStaffId,
       createdByUserId: user.id,
     },
   });
@@ -55,12 +55,14 @@ export async function updateTaskStatusAction(taskId: string, formData: FormData)
 
 export async function claimTaskAction(taskId: string) {
   const user = await requirePermission('tasks.edit');
+  if (!user.staffId) return;
+
   const task = await prisma.task.findUnique({ where: { id: taskId } });
-  if (!task || task.assignedToUserId) return;
+  if (!task || task.assignedToStaffId) return;
 
   await prisma.task.update({
     where: { id: taskId },
-    data: { assignedToUserId: user.id, claimedAt: new Date(), status: task.status === 'TODO' ? 'IN_PROGRESS' : task.status },
+    data: { assignedToStaffId: user.staffId, claimedAt: new Date(), status: task.status === 'TODO' ? 'IN_PROGRESS' : task.status },
   });
 
   revalidatePath('/tasks');
@@ -68,11 +70,11 @@ export async function claimTaskAction(taskId: string) {
 
 export async function assignTaskAction(taskId: string, formData: FormData) {
   await requirePermission('tasks.edit');
-  const userId = emptyToNull(formData.get('userId'));
+  const staffId = emptyToNull(formData.get('staffId'));
 
   await prisma.task.update({
     where: { id: taskId },
-    data: { assignedToUserId: userId, claimedAt: userId ? new Date() : null },
+    data: { assignedToStaffId: staffId, claimedAt: staffId ? new Date() : null },
   });
 
   revalidatePath('/tasks');

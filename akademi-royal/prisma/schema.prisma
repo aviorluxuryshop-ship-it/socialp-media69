@@ -198,10 +198,9 @@ model User {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
-  role          Role       @relation(fields: [roleId], references: [id])
-  staff         Staff?
-  tasksAssigned Task[]     @relation("TaskAssignee")
-  tasksCreated  Task[]     @relation("TaskCreator")
+  role         Role       @relation(fields: [roleId], references: [id])
+  staff        Staff?
+  tasksCreated Task[]     @relation("TaskCreator")
   auditLogs     AuditLog[]
 
   @@index([roleId])
@@ -241,11 +240,12 @@ model Staff {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  user         User?           @relation(fields: [userId], references: [id])
-  branch       Branch?         @relation(fields: [branchId], references: [id])
-  trainer      Trainer?
-  documents    StaffDocument[]
-  courseGroups CourseGroup[]
+  user          User?           @relation(fields: [userId], references: [id])
+  branch        Branch?         @relation(fields: [branchId], references: [id])
+  trainer       Trainer?
+  documents     StaffDocument[]
+  courseGroups  CourseGroup[]
+  tasksAssigned Task[]          @relation("TaskAssignee")
 
   @@index([branchId])
 }
@@ -589,7 +589,7 @@ model Task {
   id                String             @id @default(cuid())
   title             String
   description       String?
-  assignedToUserId  String? // null = görev havuzunda, personel üstlenebilir
+  assignedToStaffId String? // null = görev havuzunda, personel üstlenebilir
   createdByUserId   String
   dueDate           DateTime?
   priority          TaskPriority       @default(MEDIUM)
@@ -600,11 +600,11 @@ model Task {
   completedAt       DateTime?
   createdAt         DateTime           @default(now())
 
-  assignedTo User?         @relation("TaskAssignee", fields: [assignedToUserId], references: [id])
+  assignedTo Staff?        @relation("TaskAssignee", fields: [assignedToStaffId], references: [id])
   createdBy  User          @relation("TaskCreator", fields: [createdByUserId], references: [id])
   comments   TaskComment[]
 
-  @@index([assignedToUserId, status])
+  @@index([assignedToStaffId, status])
   @@index([relatedEntityType, relatedEntityId])
 }
 

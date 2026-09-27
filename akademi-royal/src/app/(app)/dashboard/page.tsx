@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { requirePermission } from '@/lib/auth';
 import { getMonthCalendarItems, getMonthGridDays, isoDate } from '@/lib/calendar';
-import { getMonthlySummary, getRecentStudents, getWeeklyIncomeExpense } from '@/lib/dashboard';
+import { getDashboardDrilldowns, getMonthlySummary, getRecentStudents, getWeeklyIncomeExpense } from '@/lib/dashboard';
 import { Badge, Card, PageHeader } from '@/components/ui';
+import { KpiBoard, type Kpi } from '@/components/KpiBoard';
+import { MiniCalendarBoard } from '@/components/MiniCalendarBoard';
 import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
 import { ENROLLMENT_STATUS_LABELS } from '@/lib/labels';
 
-const DAY_HEADERS = ['P', 'S', 'Ç', 'P', 'C', 'C', 'P'];
 const MONTH_NAMES = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
 
 export default async function DashboardPage() {
@@ -18,8 +19,9 @@ export default async function DashboardPage() {
   const todayIso = isoDate(now);
 
   const gridDays = getMonthGridDays(year, month);
-  const [summary, recentStudents, weekly, monthItems] = await Promise.all([
+  const [summary, drilldowns, recentStudents, weekly, monthItems] = await Promise.all([
     getMonthlySummary(),
+    getDashboardDrilldowns(),
     getRecentStudents(5),
     getWeeklyIncomeExpense(),
     getMonthCalendarItems(year, month),
@@ -31,22 +33,71 @@ export default async function DashboardPage() {
     list.push(item);
     itemsByDay.set(item.date, list);
   }
-  const todayItems = (itemsByDay.get(todayIso) ?? []).sort((a, b) => (a.time ?? '').localeCompare(b.time ?? ''));
+
+  const calendarDays = gridDays.map((d) => {
+    const iso = isoDate(d);
+    return {
+      iso,
+      day: d.getDate(),
+      inMonth: d.getMonth() + 1 === month,
+      items: (itemsByDay.get(iso) ?? []).map((it) => ({ id: it.id, title: it.title, time: it.time, href: it.href })),
+    };
+  });
 
   const maxWeekly = Math.max(...weekly.map((d) => Math.max(d.income, d.expense)), 1);
+
+  const kpis: Kpi[] = [
+    {
+      key: 'newStudents',
+      label: 'Bu Ay Yeni Öğrenci',
+      value: String(summary.newStudents),
+      rows: drilldowns.newStudents,
+      emptyText: 'Bu ay henüz yeni öğrenci kaydı yok.',
+    },
+    {
+      key: 'revenue',
+      label: 'Bu Ayın Cirosu',
+      value: formatCurrencyTR(summary.revenueThisMonth),
+      rows: drilldowns.revenue,
+      emptyText: 'Bu ay henüz kayıt/ciro yok.',
+    },
+    {
+      key: 'expenses',
+      label: 'Bu Ayın Masrafı',
+      value: formatCurrencyTR(summary.expensesThisMonth),
+      tone: 'text-red-600',
+      rows: drilldowns.expenses,
+      emptyText: 'Bu ay henüz masraf kaydı yok.',
+    },
+    {
+      key: 'payments',
+      label: 'Bu Ay Tahsil Edilen',
+      value: formatCurrencyTR(summary.collectedThisMonth),
+      tone: 'text-emerald-700',
+      rows: drilldowns.payments,
+      emptyText: 'Bu ay henüz tahsilat yok.',
+    },
+    {
+      key: 'pendingInstallments',
+      label: 'Bekleyen Tahsilat',
+      value: formatCurrencyTR(summary.pendingTotal),
+      rows: drilldowns.pendingInstallments,
+      emptyText: 'Bekleyen tahsilat yok.',
+    },
+    {
+      key: 'pendingTasks',
+      label: 'Bekleyen Görev',
+      value: String(summary.pendingTasks),
+      rows: drilldowns.pendingTasks,
+      emptyText: 'Bekleyen görev yok.',
+    },
+  ];
 
   return (
     <div>
       <PageHeader title="Dashboard" description={`Hoş geldiniz, ${user.name}.`} showBack={false} />
 
-      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        <Kpi label="Bu Ay Yeni Öğrenci" value={String(summary.newStudents)} />
-        <Kpi label="Bu Ayın Cirosu" value={formatCurrencyTR(summary.revenueThisMonth)} />
-        <Kpi label="Bu Ayın Masrafı" value={formatCurrencyTR(summary.expensesThisMonth)} tone="text-red-600" />
-        <Kpi label="Bu Ay Tahsil Edilen" value={formatCurrencyTR(summary.collectedThisMonth)} tone="text-emerald-700" />
-        <Kpi label="Bekleyen Tahsilat" value={formatCurrencyTR(summary.pendingTotal)} />
-        <Kpi label="Bekleyen Görev" value={String(summary.pendingTasks)} />
-      </div>
+      <KpiBoard kpis={kpis} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
@@ -59,46 +110,7 @@ export default async function DashboardPage() {
                 Tümünü Gör →
               </Link>
             </div>
-            <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-[var(--color-royal-dim)]">
-              {DAY_HEADERS.map((d, i) => (
-                <div key={i}>{d}</div>
-              ))}
-            </div>
-            <div className="mt-1 grid grid-cols-7 gap-1">
-              {gridDays.map((d) => {
-                const iso = isoDate(d);
-                const inMonth = d.getMonth() + 1 === month;
-                const count = itemsByDay.get(iso)?.length ?? 0;
-                return (
-                  <Link
-                    key={iso}
-                    href={`/calendar?year=${year}&month=${month}&day=${iso}`}
-                    className={`flex h-9 flex-col items-center justify-center rounded text-xs hover:bg-[var(--color-mist)] ${
-                      inMonth ? '' : 'text-[var(--color-royal-dim)] opacity-40'
-                    } ${iso === todayIso ? 'bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent)]' : ''}`}
-                  >
-                    <span>{d.getDate()}</span>
-                    {count > 0 && <span className={`mt-0.5 h-1 w-1 rounded-full ${iso === todayIso ? 'bg-[var(--color-surface)]' : 'bg-[var(--color-accent)]'}`} />}
-                  </Link>
-                );
-              })}
-            </div>
-          </Card>
-
-          <Card>
-            <h2 className="mb-3 text-sm font-semibold text-[var(--color-royal)]">Bugünün Planları</h2>
-            {todayItems.length === 0 ? (
-              <p className="text-sm text-[var(--color-royal-dim)]">Bugün için planlanmış bir etkinlik yok.</p>
-            ) : (
-              <ul className="space-y-2 text-sm">
-                {todayItems.map((it) => (
-                  <li key={it.id} className="flex items-center gap-2">
-                    <span className="w-12 shrink-0 text-xs text-[var(--color-royal-dim)]">{it.time ?? 'Tüm gün'}</span>
-                    <span>{it.title}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <MiniCalendarBoard todayIso={todayIso} days={calendarDays} />
           </Card>
 
           <Card>
@@ -168,14 +180,5 @@ export default async function DashboardPage() {
         </Card>
       </div>
     </div>
-  );
-}
-
-function Kpi({ label, value, tone }: { label: string; value: string; tone?: string }) {
-  return (
-    <Card>
-      <p className="text-xs text-[var(--color-royal-dim)]">{label}</p>
-      <p className={`mt-1 text-lg font-semibold ${tone ?? 'text-[var(--color-royal)]'}`}>{value}</p>
-    </Card>
   );
 }

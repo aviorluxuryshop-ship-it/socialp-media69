@@ -24,21 +24,22 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
 
   const where: Prisma.TaskWhereInput =
     filter === 'pool'
-      ? { assignedToUserId: null, status: { notIn: ['DONE', 'CANCELLED'] } }
+      ? { assignedToStaffId: null, status: { notIn: ['DONE', 'CANCELLED'] } }
       : filter === 'all'
         ? {}
         : filter === 'done'
           ? { status: 'DONE' }
-          : { assignedToUserId: user.id, status: { notIn: ['DONE', 'CANCELLED'] } };
+          : { assignedToStaffId: user.staffId ?? '__none__', status: { notIn: ['DONE', 'CANCELLED'] } };
 
-  const [tasks, users] = await Promise.all([
+  const [tasks, staffRows] = await Promise.all([
     prisma.task.findMany({
       where,
-      include: { assignedTo: { select: { id: true, name: true } }, createdBy: { select: { name: true } } },
+      include: { assignedTo: { select: { id: true, fullName: true } }, createdBy: { select: { name: true } } },
       orderBy: [{ dueDate: 'asc' }, { createdAt: 'desc' }],
     }),
-    prisma.user.findMany({ where: { status: 'ACTIVE' }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+    prisma.staff.findMany({ where: { isActive: true }, select: { id: true, fullName: true }, orderBy: { fullName: 'asc' } }),
   ]);
+  const staff = staffRows.map((s) => ({ id: s.id, name: s.fullName }));
 
   const canEdit = hasPermission(user, 'tasks.edit');
   const canCreate = hasPermission(user, 'tasks.create');
@@ -90,16 +91,16 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {!t.assignedTo && canEdit ? (
+                    {!t.assignedTo && canEdit && user.staffId ? (
                       <form action={claimTaskAction.bind(null, t.id)}>
                         <button type="submit" className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">
                           Görevi Üstlen
                         </button>
                       </form>
                     ) : canEdit ? (
-                      <AssignSelect action={assignTaskAction.bind(null, t.id)} defaultValue={t.assignedTo?.id ?? ''} users={users} />
+                      <AssignSelect action={assignTaskAction.bind(null, t.id)} defaultValue={t.assignedTo?.id ?? ''} staff={staff} />
                     ) : (
-                      <span className="text-xs text-[var(--color-royal-dim)]">{t.assignedTo?.name ?? 'Havuzda'}</span>
+                      <span className="text-xs text-[var(--color-royal-dim)]">{t.assignedTo?.fullName ?? 'Havuzda'}</span>
                     )}
                     {canEdit ? (
                       <TaskStatusSelect action={updateTaskStatusAction.bind(null, t.id)} defaultValue={t.status} />
