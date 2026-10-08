@@ -87,31 +87,38 @@ export async function createEnrollmentAction(_prev: FormState, formData: FormDat
 
   const studentId = emptyToNull(formData.get('studentId'));
   const courseId = emptyToNull(formData.get('courseId'));
-  let courseGroupId = emptyToNull(formData.get('courseGroupId'));
   const totalAmount = parseDecimal(formData.get('totalAmount'));
   const discountAmount = parseDecimal(formData.get('discountAmount')) ?? 0;
   const installmentCount = Math.max(1, Number(formData.get('installmentCount')) || 1);
 
-  if (!studentId || (!courseGroupId && !courseId) || totalAmount === null) {
+  if (!studentId || !courseId || totalAmount === null) {
     return { error: 'Eğitim ve toplam ücret zorunludur.' };
   }
 
-  // Eğitim doğrudan seçildiğinde (grup seçimi olmadan), o eğitime ait en uygun
-  // (devam eden, yoksa en güncel planlanan) grubu otomatik seç.
-  if (!courseGroupId && courseId) {
-    const groups = await prisma.courseGroup.findMany({
-      where: { courseId, status: { in: ['ACTIVE', 'PLANNED'] } },
-      orderBy: { startDate: 'desc' },
-    });
-    const group = groups.find((g) => g.status === 'ACTIVE') ?? groups.find((g) => g.status === 'PLANNED');
-    if (!group) {
-      return { error: 'Bu eğitim için açık (devam eden veya planlanan) bir grup yok. Önce Eğitimler modülünden bir grup oluşturun.' };
-    }
-    courseGroupId = group.id;
-  }
+  // Öğrenci doğrudan bir eğitime kaydediliyor; arka planda o eğitimin en uygun
+  // (devam eden, yoksa en güncel planlanan) grubu kullanılır, yoksa otomatik açılır.
+  // Kullanıcıya "eğitim grubu" diye bir kavram hiç gösterilmez.
+  const existingGroups = await prisma.courseGroup.findMany({
+    where: { courseId, status: { in: ['ACTIVE', 'PLANNED'] } },
+    orderBy: { startDate: 'desc' },
+  });
+  const existingGroup = existingGroups.find((g) => g.status === 'ACTIVE') ?? existingGroups.find((g) => g.status === 'PLANNED');
 
-  if (!courseGroupId) {
-    return { error: 'Eğitim grubu belirlenemedi.' };
+  let courseGroupId: string;
+  if (existingGroup) {
+    courseGroupId = existingGroup.id;
+  } else {
+    const course = await prisma.course.findUnique({ where: { id: courseId } });
+    if (!course) return { error: 'Eğitim bulunamadı.' };
+    const autoGroup = await prisma.courseGroup.create({
+      data: {
+        courseId,
+        code: `${course.name.replace(/\s+/g, '-').slice(0, 24).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`,
+        startDate: new Date(),
+        status: 'ACTIVE',
+      },
+    });
+    courseGroupId = autoGroup.id;
   }
 
   const finalAmount = Math.max(0, totalAmount - discountAmount);

@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { requirePermission } from '@/lib/auth';
 import { emptyToNull, parseDate } from '@/lib/form-utils';
@@ -13,39 +12,51 @@ export async function saveMebProcessAction(_prev: FormState, formData: FormData)
   const id = emptyToNull(formData.get('id'));
   const user = await requirePermission(id ? 'meb.edit' : 'meb.create');
 
-  const enrollmentId = emptyToNull(formData.get('enrollmentId'));
-  const expiresAt = parseDate(formData.get('expiresAt'));
+  const courseId = emptyToNull(formData.get('courseId'));
+  const completionDate = parseDate(formData.get('completionDate'));
   const groupNumber = emptyToNull(formData.get('groupNumber'));
-  const returnTo = emptyToNull(formData.get('returnTo'));
+  const capacityRaw = emptyToNull(formData.get('capacity'));
+  const capacity = capacityRaw ? Number(capacityRaw) : null;
 
-  if (!enrollmentId || !expiresAt) {
-    return { error: 'Eğitim kaydı ve süreç dolma tarihi zorunludur.' };
+  if (!courseId || !completionDate) {
+    return { error: 'Eğitim ve süreç tamamlanma tarihi zorunludur.' };
   }
 
-  try {
-    if (id) {
-      await prisma.mebProcess.update({ where: { id }, data: { expiresAt, groupNumber } });
-    } else {
-      await prisma.mebProcess.create({ data: { enrollmentId, expiresAt, groupNumber, createdByUserId: user.id } });
-    }
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-      return { error: 'Bu eğitim kaydı için zaten bir MEB süreci var.' };
-    }
-    throw err;
+  if (id) {
+    await prisma.mebProcess.update({ where: { id }, data: { groupNumber, completionDate, capacity } });
+    revalidatePath('/meb');
+    revalidatePath(`/meb/${id}`);
+    redirect(`/meb/${id}`);
   }
+
+  const process = await prisma.mebProcess.create({
+    data: { courseId, groupNumber, completionDate, capacity, createdByUserId: user.id },
+  });
 
   revalidatePath('/meb');
-  if (returnTo) {
-    revalidatePath(returnTo);
-    redirect(returnTo);
-  }
-  redirect('/meb');
+  redirect(`/meb/${process.id}`);
 }
 
-export async function deleteMebProcessAction(returnTo: string, id: string) {
+export async function deleteMebProcessAction(id: string) {
   await requirePermission('meb.delete');
   await prisma.mebProcess.delete({ where: { id } });
   revalidatePath('/meb');
-  revalidatePath(returnTo);
+  redirect('/meb');
+}
+
+export async function addStudentToMebProcessAction(mebProcessId: string, formData: FormData) {
+  await requirePermission('meb.edit');
+  const enrollmentId = emptyToNull(formData.get('enrollmentId'));
+  if (!enrollmentId) return;
+
+  await prisma.groupEnrollment.update({ where: { id: enrollmentId }, data: { mebProcessId } });
+  revalidatePath(`/meb/${mebProcessId}`);
+  revalidatePath('/meb');
+}
+
+export async function removeStudentFromMebProcessAction(mebProcessId: string, enrollmentId: string) {
+  await requirePermission('meb.edit');
+  await prisma.groupEnrollment.update({ where: { id: enrollmentId }, data: { mebProcessId: null } });
+  revalidatePath(`/meb/${mebProcessId}`);
+  revalidatePath('/meb');
 }

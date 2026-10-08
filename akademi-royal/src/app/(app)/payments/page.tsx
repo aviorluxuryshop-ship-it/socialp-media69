@@ -5,6 +5,16 @@ import { getAccountsWithBalances } from '@/lib/accounting';
 import { Badge, Button, Card, EmptyState, PageHeader } from '@/components/ui';
 import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
 import { FINANCIAL_ACCOUNT_TYPE_LABELS, PAYMENT_METHOD_LABELS } from '@/lib/labels';
+import { IconBank, IconCard, IconCash, IconPos } from '@/components/icons';
+import type { FinancialAccountType } from '@prisma/client';
+
+const ACCOUNT_VISUALS: Record<FinancialAccountType, { icon: typeof IconCash; iconClass: string; borderClass: string }> = {
+  CASH: { icon: IconCash, iconClass: 'bg-emerald-100 text-emerald-600', borderClass: 'border-l-emerald-400' },
+  BANK: { icon: IconBank, iconClass: 'bg-sky-100 text-sky-600', borderClass: 'border-l-sky-400' },
+  POS: { icon: IconPos, iconClass: 'bg-violet-100 text-violet-600', borderClass: 'border-l-violet-400' },
+  CREDIT_CARD: { icon: IconCard, iconClass: 'bg-amber-100 text-amber-600', borderClass: 'border-l-amber-400' },
+  OTHER: { icon: IconBank, iconClass: 'bg-slate-100 text-slate-600', borderClass: 'border-l-slate-400' },
+};
 
 export default async function PaymentsPage() {
   const user = await requirePermission('payments.view');
@@ -45,15 +55,22 @@ export default async function PaymentsPage() {
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {accounts.map((a) => (
-          <Card key={a.id}>
-            <Link href={`/payments/accounts/${a.id}`} className="font-medium text-[var(--color-royal)] hover:underline">
-              {a.name}
+        {accounts.map((a) => {
+          const visual = ACCOUNT_VISUALS[a.type];
+          const Icon = visual.icon;
+          return (
+            <Link key={a.id} href={`/payments/accounts/${a.id}`}>
+              <Card className={`border-l-4 ${visual.borderClass} transition hover:-translate-y-0.5 hover:shadow-md`}>
+                <div className={`mb-2 flex h-8 w-8 items-center justify-center rounded-md ${visual.iconClass}`}>
+                  <Icon className="h-4 w-4" />
+                </div>
+                <p className="font-medium text-[var(--color-royal)] hover:underline">{a.name}</p>
+                <p className="text-xs text-[var(--color-royal-dim)]">{FINANCIAL_ACCOUNT_TYPE_LABELS[a.type]}</p>
+                <p className="mt-2 text-lg font-semibold text-[var(--color-royal)]">{formatCurrencyTR(a.balance)}</p>
+              </Card>
             </Link>
-            <p className="text-xs text-[var(--color-royal-dim)]">{FINANCIAL_ACCOUNT_TYPE_LABELS[a.type]}</p>
-            <p className="mt-2 text-lg font-semibold text-[var(--color-royal)]">{formatCurrencyTR(a.balance)}</p>
-          </Card>
-        ))}
+          );
+        })}
       </div>
 
       <PageHeader title="Bekleyen Tahsilatlar" showBack={false} />

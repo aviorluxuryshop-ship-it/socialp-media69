@@ -7,13 +7,13 @@ import { ConfirmForm } from '@/components/ConfirmForm';
 import { EnrollmentStatusSelect } from '../EnrollmentStatusSelect';
 import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
 import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHOD_LABELS, STUDENT_STATUS_LABELS, STUDENT_STATUS_TONES } from '@/lib/labels';
+import { IconCourse, IconExam, IconMoney } from '@/components/icons';
 import {
   addStudentNoteAction,
   deleteEnrollmentAction,
   deleteStudentAction,
   updateEnrollmentStatusAction,
 } from '../actions';
-import { MebForm } from '../../meb/MebForm';
 
 export default async function StudentDetailPage({
   params,
@@ -33,9 +33,9 @@ export default async function StudentDetailPage({
       enrollments: {
         orderBy: { enrolledAt: 'desc' },
         include: {
-          courseGroup: { include: { course: true, trainer: { select: { fullName: true } } } },
+          courseGroup: { include: { course: true } },
           pricing: { include: { installments: { orderBy: { sequenceNo: 'asc' } } } },
-          mebProcess: true,
+          mebProcess: { select: { id: true, groupNumber: true, completionDate: true } },
         },
       },
       payments: {
@@ -49,8 +49,6 @@ export default async function StudentDetailPage({
   const canEdit = hasPermission(user, 'students.edit');
   const canDelete = hasPermission(user, 'students.delete');
   const canCollect = hasPermission(user, 'payments.create');
-  const canCreateMeb = hasPermission(user, 'meb.create');
-  const canEditMeb = hasPermission(user, 'meb.edit');
 
   const totals = student.enrollments.reduce(
     (acc, e) => {
@@ -104,13 +102,28 @@ export default async function StudentDetailPage({
           </dl>
         </Card>
 
-        <Card>
-          <h2 className="mb-3 text-sm font-semibold text-[var(--color-royal)]">Cari Özet</h2>
+        <Card className="border-l-4 border-l-emerald-500">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--color-royal)]">
+            <IconMoney className="h-4 w-4 text-emerald-600" /> Cari Özet
+          </h2>
           <dl className="space-y-2 text-sm">
             <Row label="Toplam Eğitim Ücreti">{formatCurrencyTR(totals.total)}</Row>
             <Row label="Ödenen">{formatCurrencyTR(totals.paid)}</Row>
             <Row label="Kalan">{formatCurrencyTR(totals.total - totals.paid)}</Row>
           </dl>
+          {totals.total > 0 && (
+            <div className="mt-3">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--color-mist)]">
+                <div
+                  className="h-2 rounded-full bg-emerald-500"
+                  style={{ width: `${Math.min(100, Math.round((totals.paid / totals.total) * 100))}%` }}
+                />
+              </div>
+              <p className="mt-1 text-right text-xs text-[var(--color-royal-dim)]">
+                {Math.round((totals.paid / totals.total) * 100)}% ödendi
+              </p>
+            </div>
+          )}
         </Card>
 
         <Card>
@@ -155,34 +168,53 @@ export default async function StudentDetailPage({
         <div className="space-y-3">
           {student.enrollments.map((e) => {
             const paid = e.pricing?.installments.reduce((sum, i) => sum + Number(i.paidAmount), 0) ?? 0;
+            const total = e.pricing ? Number(e.pricing.finalAmount) : 0;
+            const remaining = total - paid;
+            const pct = total > 0 ? Math.min(100, Math.round((paid / total) * 100)) : 0;
             const hasPayments = paid > 0;
             return (
-              <Card key={e.id}>
+              <Card key={e.id} className="border-l-4 border-l-[var(--color-accent)]">
                 <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <Link href={`/courses/${e.courseGroup.courseId}/groups/${e.courseGroup.id}`} className="font-medium text-[var(--color-royal)] hover:underline">
-                      {e.courseGroup.course.name} — {e.courseGroup.code}
+                  <div className="min-w-[220px] flex-1">
+                    <Link
+                      href={`/courses/${e.courseGroup.courseId}`}
+                      className="flex items-center gap-2 font-medium text-[var(--color-royal)] hover:underline"
+                    >
+                      <IconCourse className="h-4 w-4 text-[var(--color-royal-dim)]" />
+                      {e.courseGroup.course.name}
                     </Link>
-                    <p className="mt-1 text-sm text-[var(--color-royal-dim)]">
-                      Eğitmen: {e.courseGroup.trainer.fullName} · Başlangıç: {formatDateTR(e.courseGroup.startDate)}
-                    </p>
+                    <p className="mt-1 text-xs text-[var(--color-royal-dim)]">Kayıt Tarihi: {formatDateTR(e.enrolledAt)}</p>
+
                     {e.pricing && (
                       <>
-                        <p className="mt-1 text-sm text-[var(--color-royal-dim)]">
-                          Ücret: {formatCurrencyTR(e.pricing.finalAmount as never)} · Ödenen: {formatCurrencyTR(paid)} · Kalan:{' '}
-                          {formatCurrencyTR(Number(e.pricing.finalAmount) - paid)} ({e.pricing.installmentCount} taksit)
-                        </p>
-                        <ul className="mt-2 space-y-1 text-xs text-[var(--color-royal-dim)]">
+                        <div className="mt-3 flex items-center gap-3 text-sm">
+                          <span className="text-[var(--color-royal-dim)]">Ücret:</span>
+                          <span className="font-medium text-[var(--color-royal)]">{formatCurrencyTR(total)}</span>
+                          <span className="text-emerald-700">Ödenen: {formatCurrencyTR(paid)}</span>
+                          <span className={remaining > 0 ? 'text-amber-700' : 'text-[var(--color-royal-dim)]'}>
+                            Kalan: {formatCurrencyTR(remaining)}
+                          </span>
+                        </div>
+                        <div className="mt-2 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-[var(--color-mist)]">
+                          <div className="h-1.5 rounded-full bg-emerald-500" style={{ width: `${pct}%` }} />
+                        </div>
+
+                        <ul className="mt-3 flex flex-wrap gap-2 text-xs">
                           {e.pricing.installments.map((inst) => (
-                            <li key={inst.id} className="flex items-center gap-2">
+                            <li
+                              key={inst.id}
+                              className="flex items-center gap-1.5 rounded-full border border-[var(--color-mist)] px-2.5 py-1"
+                            >
+                              <span
+                                className={`h-1.5 w-1.5 rounded-full ${
+                                  inst.status === 'PAID' ? 'bg-emerald-500' : inst.status === 'PARTIAL' ? 'bg-amber-500' : 'bg-[var(--color-royal-dim)]'
+                                }`}
+                              />
                               <span>
                                 {inst.sequenceNo}. taksit — {formatDateTR(inst.dueDate)} — {formatCurrencyTR(inst.amount as never)}
                               </span>
-                              <Badge tone={inst.status === 'PAID' ? 'success' : inst.status === 'PARTIAL' ? 'warning' : 'default'}>
-                                {inst.status === 'PAID' ? 'Ödendi' : inst.status === 'PARTIAL' ? 'Kısmi' : 'Bekliyor'}
-                              </Badge>
                               {canCollect && inst.status !== 'PAID' && (
-                                <Link href={`/payments/collect/${inst.id}`} className="text-[var(--color-royal)] hover:underline">
+                                <Link href={`/payments/collect/${inst.id}`} className="font-medium text-[var(--color-royal)] hover:underline">
                                   Tahsil Et
                                 </Link>
                               )}
@@ -191,7 +223,20 @@ export default async function StudentDetailPage({
                         </ul>
                       </>
                     )}
+
+                    <div className="mt-3 flex items-center gap-2 text-xs text-[var(--color-royal-dim)]">
+                      <IconExam className="h-3.5 w-3.5" />
+                      {e.mebProcess ? (
+                        <Link href={`/meb/${e.mebProcess.id}`} className="text-[var(--color-royal)] hover:underline">
+                          MEB Grubu{e.mebProcess.groupNumber ? ` #${e.mebProcess.groupNumber}` : ''} — Tamamlanma:{' '}
+                          {formatDateTR(e.mebProcess.completionDate)}
+                        </Link>
+                      ) : (
+                        <span>MEB sürecine henüz eklenmedi</span>
+                      )}
+                    </div>
                   </div>
+
                   <div className="flex items-center gap-2">
                     {canEdit ? (
                       <EnrollmentStatusSelect
@@ -211,30 +256,6 @@ export default async function StudentDetailPage({
                       </ConfirmForm>
                     )}
                   </div>
-                </div>
-
-                <div className="mt-3 border-t border-[var(--color-mist)] pt-3">
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-royal-dim)]">
-                    MEB Sınav Süreci — {e.courseGroup.course.name}
-                  </h3>
-                  {e.mebProcess ? (
-                    <div className="flex flex-wrap items-center gap-3 text-sm">
-                      <span>Grup No: {e.mebProcess.groupNumber ?? '—'}</span>
-                      <span>Süreç Dolma Tarihi: {formatDateTR(e.mebProcess.expiresAt)}</span>
-                      {canEditMeb && (
-                        <Link href={`/meb/${e.mebProcess.id}/edit`} className="text-xs text-[var(--color-royal)] hover:underline">
-                          Düzenle
-                        </Link>
-                      )}
-                    </div>
-                  ) : canCreateMeb ? (
-                    <MebForm
-                      enrollments={[{ id: e.id, label: e.courseGroup.course.name }]}
-                      returnTo={`/students/${student.id}`}
-                    />
-                  ) : (
-                    <p className="text-sm text-[var(--color-royal-dim)]">Bu eğitim kaydı için henüz MEB süreci girilmemiş.</p>
-                  )}
                 </div>
               </Card>
             );
@@ -258,13 +279,18 @@ export default async function StudentDetailPage({
               </tr>
             </thead>
             <tbody>
-              {student.payments.map((p) => (
-                <tr key={p.id} className="border-t border-[var(--color-mist)]">
+              {student.payments.map((p, i) => (
+                <tr
+                  key={p.id}
+                  className={`border-t border-[var(--color-mist)] ${i % 2 === 1 ? 'bg-[var(--color-mist)]/20' : ''}`}
+                >
                   <td className="px-4 py-2">{formatDateTR(p.paidAt)}</td>
-                  <td className="px-4 py-2">{formatCurrencyTR(p.amount as never)}</td>
-                  <td className="px-4 py-2">{PAYMENT_METHOD_LABELS[p.method]}</td>
+                  <td className="px-4 py-2 font-medium text-emerald-700">{formatCurrencyTR(p.amount as never)}</td>
+                  <td className="px-4 py-2">
+                    <Badge>{PAYMENT_METHOD_LABELS[p.method]}</Badge>
+                  </td>
                   <td className="px-4 py-2">{p.account.name}</td>
-                  <td className="px-4 py-2">{p.note ?? p.receiptNo ?? '—'}</td>
+                  <td className="px-4 py-2 text-[var(--color-royal-dim)]">{p.note ?? p.receiptNo ?? '—'}</td>
                 </tr>
               ))}
             </tbody>

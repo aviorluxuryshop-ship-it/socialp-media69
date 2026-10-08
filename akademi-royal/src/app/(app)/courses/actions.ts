@@ -39,11 +39,15 @@ export async function saveCourseAction(_prev: FormState, formData: FormData): Pr
 
 export async function deleteCourseAction(id: string) {
   await requirePermission('courses.delete');
+
+  // Hiç öğrenci kaydı olmayan (sistem tarafından otomatik açılmış, boş) gruplar varsa önce onları temizle.
+  await prisma.courseGroup.deleteMany({ where: { courseId: id, enrollments: { none: {} } } });
+
   try {
     await prisma.course.delete({ where: { id } });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
-      redirect(`/courses/${id}?error=${encodeURIComponent('Bu eğitime ait gruplar var, önce onları silin.')}`);
+      redirect(`/courses/${id}?error=${encodeURIComponent('Bu eğitime kayıtlı öğrenciler var, önce onların kaydını kaldırın.')}`);
     }
     throw err;
   }

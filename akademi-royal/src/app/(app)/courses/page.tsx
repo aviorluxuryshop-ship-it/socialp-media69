@@ -8,7 +8,7 @@ export default async function CoursesPage() {
   const user = await requirePermission('courses.view');
 
   const courses = await prisma.course.findMany({
-    include: { _count: { select: { groups: true } } },
+    include: { groups: { select: { _count: { select: { enrollments: true } } } } },
     orderBy: { name: 'asc' },
   });
 
@@ -16,7 +16,7 @@ export default async function CoursesPage() {
     <div>
       <PageHeader
         title="Eğitimler"
-        description="Eğitim programları, gruplar ve ders programı."
+        description="Eğitim programları ve kayıt bilgileri."
         action={hasPermission(user, 'courses.create') ? <Button href="/courses/new">+ Yeni Eğitim</Button> : undefined}
       />
 
@@ -31,27 +31,30 @@ export default async function CoursesPage() {
                 <th className="px-4 py-2 font-medium">Kategori</th>
                 <th className="px-4 py-2 font-medium">Süre</th>
                 <th className="px-4 py-2 font-medium">Ücret</th>
-                <th className="px-4 py-2 font-medium">Grup Sayısı</th>
+                <th className="px-4 py-2 font-medium">Kayıtlı Öğrenci</th>
                 <th className="px-4 py-2 font-medium">Durum</th>
               </tr>
             </thead>
             <tbody>
-              {courses.map((c) => (
-                <tr key={c.id} className="border-t border-[var(--color-mist)] hover:bg-[var(--color-mist)]/30">
-                  <td className="px-4 py-2">
-                    <Link href={`/courses/${c.id}`} className="font-medium text-[var(--color-royal)] hover:underline">
-                      {c.name}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-2">{c.category ?? '—'}</td>
-                  <td className="px-4 py-2">{c.durationDays ? `${c.durationDays} gün` : '—'}</td>
-                  <td className="px-4 py-2">{formatCurrencyTR(c.defaultPrice as never)}</td>
-                  <td className="px-4 py-2">{c._count.groups}</td>
-                  <td className="px-4 py-2">
-                    <Badge tone={c.isActive ? 'success' : 'default'}>{c.isActive ? 'Aktif' : 'Pasif'}</Badge>
-                  </td>
-                </tr>
-              ))}
+              {courses.map((c) => {
+                const enrollmentCount = c.groups.reduce((sum, g) => sum + g._count.enrollments, 0);
+                return (
+                  <tr key={c.id} className="border-t border-[var(--color-mist)] hover:bg-[var(--color-mist)]/30">
+                    <td className="px-4 py-2">
+                      <Link href={`/courses/${c.id}`} className="font-medium text-[var(--color-royal)] hover:underline">
+                        {c.name}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-2">{c.category ?? '—'}</td>
+                    <td className="px-4 py-2">{c.durationDays ? `${c.durationDays} gün` : '—'}</td>
+                    <td className="px-4 py-2">{formatCurrencyTR(c.defaultPrice as never)}</td>
+                    <td className="px-4 py-2">{enrollmentCount}</td>
+                    <td className="px-4 py-2">
+                      <Badge tone={c.isActive ? 'success' : 'default'}>{c.isActive ? 'Aktif' : 'Pasif'}</Badge>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

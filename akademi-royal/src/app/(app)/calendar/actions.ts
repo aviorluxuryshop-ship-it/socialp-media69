@@ -27,8 +27,7 @@ export async function createCalendarEventAction(_prev: FormState, formData: Form
 
   const endsAtRaw = emptyToNull(formData.get('endsAt'));
   const endsAt = endsAtRaw ? new Date(endsAtRaw) : null;
-
-  const returnMonth = `${startsAt.getFullYear()}-${startsAt.getMonth() + 1}`;
+  const returnTo = emptyToNull(formData.get('returnTo'));
 
   await prisma.calendarEvent.create({
     data: {
@@ -43,8 +42,11 @@ export async function createCalendarEventAction(_prev: FormState, formData: Form
   });
 
   revalidatePath('/calendar');
-  const [year, month] = returnMonth.split('-');
-  redirect(`/calendar?year=${year}&month=${month}`);
+  if (returnTo) {
+    revalidatePath(returnTo);
+    redirect(returnTo);
+  }
+  redirect(`/calendar?year=${startsAt.getFullYear()}&month=${startsAt.getMonth() + 1}`);
 }
 
 export async function deleteCalendarEventAction(year: number, month: number, day: string, id: string) {

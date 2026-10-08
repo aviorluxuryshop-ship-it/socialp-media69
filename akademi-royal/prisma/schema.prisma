@@ -340,6 +340,7 @@ model Course {
 
   groups            CourseGroup[]
   contractTemplates ContractTemplate[]
+  mebProcesses      MebProcess[]
 }
 
 model Classroom {
@@ -356,7 +357,7 @@ model Classroom {
 model CourseGroup {
   id        String            @id @default(cuid())
   courseId  String
-  trainerId String // Staff.id
+  trainerId String? // Staff.id — artık arayüzden atanmıyor, otomatik oluşturulan gruplarda boş kalır
   branchId  String?
   code      String            @unique // "PY-2026-01"
   startDate DateTime
@@ -366,7 +367,7 @@ model CourseGroup {
   createdAt DateTime          @default(now())
 
   course        Course                    @relation(fields: [courseId], references: [id])
-  trainer       Staff                     @relation(fields: [trainerId], references: [id])
+  trainer       Staff?                    @relation(fields: [trainerId], references: [id])
   branch        Branch?                   @relation(fields: [branchId], references: [id])
   scheduleSlots CourseGroupScheduleSlot[]
   sessions      CourseSession[]
@@ -414,30 +415,36 @@ model GroupEnrollment {
   withdrawnAt     DateTime?
   withdrawnReason String?
 
-  student     Student            @relation(fields: [studentId], references: [id])
-  courseGroup CourseGroup        @relation(fields: [courseGroupId], references: [id])
-  pricing     EnrollmentPricing?
-  certificate Certificate?
-  documents   StudentDocument[]
-  mebProcess  MebProcess?
+  student      Student            @relation(fields: [studentId], references: [id])
+  courseGroup  CourseGroup        @relation(fields: [courseGroupId], references: [id])
+  pricing      EnrollmentPricing?
+  certificate  Certificate?
+  documents    StudentDocument[]
+  mebProcessId String?
+  mebProcess   MebProcess?        @relation(fields: [mebProcessId], references: [id], onDelete: SetNull)
 
   @@unique([studentId, courseGroupId])
 }
 
 // ============ MEB (MİLLİ EĞİTİM BAKANLIĞI) SINAV SÜRECİ ============
+// Bir MEB süreci, bir eğitime bağlı "sınav grubu"dur: grup numarası, tamamlanma
+// tarihi ve kontenjanı vardır; o eğitime kayıtlı öğrenciler bu gruba eklenir.
 
 model MebProcess {
   id              String   @id @default(cuid())
-  enrollmentId    String   @unique
+  courseId        String
   groupNumber     String?
-  expiresAt       DateTime
+  completionDate  DateTime
+  capacity        Int?
   createdByUserId String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  enrollment GroupEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  course      Course            @relation(fields: [courseId], references: [id])
+  enrollments GroupEnrollment[]
 
-  @@index([expiresAt])
+  @@index([completionDate])
+  @@index([courseId])
 }
 
 model Certificate {

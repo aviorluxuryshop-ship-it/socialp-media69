@@ -110,11 +110,33 @@ geliştirmeler:
   (kayıt sırasında hangi kasa/banka hesabından çıktığı seçiliyor).
 - Raporlar sayfasında gösterilecek bölümler (**Gelir / Gider / Toplam Kayıt-
   Eğitim / Öğrenci Sayısı**) kendiniz seçip detaylandırabiliyorsunuz.
-- Yeni **MEB** modülü: bir öğrencinin her eğitim kaydı için ayrı ayrı MEB
-  (Milli Eğitim Bakanlığı) sınav süreci bilgisi (sınav grup numarası, süreç
-  dolma tarihi) girilebiliyor — hem öğrenci sayfasında ilgili eğitim kaydının
-  altında, hem de üst menüdeki ayrı **MEB** sayfasında (tüm süreçlerin listesi,
-  süresi dolanlar işaretli).
+- Yeni **MEB** modülü eklendi (bkz. aşağıdaki güncelleme notu — kısa süre
+  sonra grup tabanlı bir yapıya geçirildi).
+
+## Eğitim Grubu Kavramının Kaldırılması, MEB'in Sınav Grubuna Dönüşmesi, Görsel Tazeleme
+
+- **"Eğitim Grubu / Sınıf" yönetimi arayüzden tamamen kaldırıldı.** Eğitimler
+  modülünde artık grup/sınıf açma, eğitmen atama, ders programı ekranı yok.
+  Bir öğrenciyi eğitime kaydederken sadece **hangi eğitim** olduğu işaretleniyor;
+  sistem arka planda o eğitimin uygun bir "grubunu" (iç veri modeli için) kendisi
+  bulur ya da hiç yoksa sessizce oluşturur — kullanıcı bunu hiç görmez.
+- **MEB artık bir "sınav grubu" oluşturma modülü.** "Yeni MEB Süreci" önce
+  eğitimi seçtiriyor, ardından grup bilgilerini (sınav grup numarası, süreç
+  tamamlanma tarihi, kontenjan) alıyor; grup oluşturulduktan sonra o eğitime
+  kayıtlı öğrenciler gruba tek tek eklenebiliyor/çıkarılabiliyor. Aynı öğrenci
+  birden fazla eğitim alıyorsa, her eğitim için ayrı bir MEB grubuna eklenir.
+  Öğrenci sayfasında artık sadece hangi MEB grubuna dahil olduğu (varsa) salt
+  okunur olarak gösteriliyor ve o gruba bağlantı veriliyor.
+- **Dashboard** üst KPI kutuları renkli ikon rozetleriyle güncellendi; aylık
+  takvim panosunda bir güne tıklayınca artık **"+ Etkinlik Ekle"** ile sayfadan
+  ayrılmadan hızlıca toplantı/not gibi bir etkinlik eklenebiliyor.
+- **Öğrenci detay sayfası** sadeleştirildi: eğitim kartlarında artık grup
+  kodu/eğitmen satırı yok; ödeme ilerlemesi görsel bir yüzde çubuğuyla,
+  taksitler küçük renkli etiketlerle gösteriliyor; ödeme geçmişi tablosu
+  zebra çizgili ve rozetli.
+- Genel panelde küçük bir görsel tazeleme: kenar menüde modül ikonları,
+  Hesaplarım'daki hesap kartlarında tip bazlı renkli ikonlar (nakit/banka/
+  POS/kredi kartı) eklendi.
 
 ## Bilinen Kapsam Dışı Konular / Sonraki Adımlar
 

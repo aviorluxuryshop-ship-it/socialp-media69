@@ -10,34 +10,22 @@ export default async function EditMebProcessPage({ params }: { params: Promise<{
 
   const process = await prisma.mebProcess.findUnique({
     where: { id },
-    include: {
-      enrollment: {
-        include: {
-          student: { select: { fullName: true } },
-          courseGroup: { include: { course: { select: { name: true } } } },
-        },
-      },
-    },
+    include: { course: { select: { id: true, name: true } } },
   });
   if (!process) notFound();
-
-  const enrollmentOption = {
-    id: process.enrollmentId,
-    label: `${process.enrollment.student.fullName} — ${process.enrollment.courseGroup.course.name}`,
-  };
 
   return (
     <div>
       <PageHeader title="MEB Süreci Düzenle" />
       <Card className="max-w-2xl">
         <MebForm
-          enrollments={[enrollmentOption]}
-          returnTo="/meb"
+          courses={[{ id: process.course.id, name: process.course.name }]}
           defaultValues={{
             id: process.id,
-            enrollmentId: process.enrollmentId,
+            courseId: process.courseId,
             groupNumber: process.groupNumber,
-            expiresAt: process.expiresAt,
+            completionDate: process.completionDate,
+            capacity: process.capacity,
           }}
         />
       </Card>

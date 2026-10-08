@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { requirePermission } from '@/lib/auth';
+import { hasPermission, requirePermission } from '@/lib/auth';
 import { getMonthCalendarItems, getMonthGridDays, isoDate } from '@/lib/calendar';
 import { getDashboardDrilldowns, getMonthlySummary, getRecentStudents, getWeeklyIncomeExpense } from '@/lib/dashboard';
 import { Badge, Card, PageHeader } from '@/components/ui';
@@ -7,11 +7,13 @@ import { KpiBoard, type Kpi } from '@/components/KpiBoard';
 import { MiniCalendarBoard } from '@/components/MiniCalendarBoard';
 import { formatCurrencyTR, formatDateTR } from '@/lib/form-utils';
 import { ENROLLMENT_STATUS_LABELS } from '@/lib/labels';
+import { IconCollected, IconExpense, IconMoney, IconPending, IconStudent, IconTask } from '@/components/icons';
 
 const MONTH_NAMES = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
 
 export default async function DashboardPage() {
   const user = await requirePermission('dashboard.view');
+  const canCreateEvent = hasPermission(user, 'calendar.create');
 
   const now = new Date();
   const year = now.getFullYear();
@@ -53,6 +55,9 @@ export default async function DashboardPage() {
       value: String(summary.newStudents),
       rows: drilldowns.newStudents,
       emptyText: 'Bu ay henüz yeni öğrenci kaydı yok.',
+      icon: <IconStudent />,
+      iconClass: 'bg-sky-100 text-sky-600',
+      borderClass: 'border-l-sky-400',
     },
     {
       key: 'revenue',
@@ -60,6 +65,9 @@ export default async function DashboardPage() {
       value: formatCurrencyTR(summary.revenueThisMonth),
       rows: drilldowns.revenue,
       emptyText: 'Bu ay henüz kayıt/ciro yok.',
+      icon: <IconMoney />,
+      iconClass: 'bg-violet-100 text-violet-600',
+      borderClass: 'border-l-violet-400',
     },
     {
       key: 'expenses',
@@ -68,6 +76,9 @@ export default async function DashboardPage() {
       tone: 'text-red-600',
       rows: drilldowns.expenses,
       emptyText: 'Bu ay henüz masraf kaydı yok.',
+      icon: <IconExpense />,
+      iconClass: 'bg-red-100 text-red-600',
+      borderClass: 'border-l-red-400',
     },
     {
       key: 'payments',
@@ -76,6 +87,9 @@ export default async function DashboardPage() {
       tone: 'text-emerald-700',
       rows: drilldowns.payments,
       emptyText: 'Bu ay henüz tahsilat yok.',
+      icon: <IconCollected />,
+      iconClass: 'bg-emerald-100 text-emerald-600',
+      borderClass: 'border-l-emerald-400',
     },
     {
       key: 'pendingInstallments',
@@ -83,6 +97,9 @@ export default async function DashboardPage() {
       value: formatCurrencyTR(summary.pendingTotal),
       rows: drilldowns.pendingInstallments,
       emptyText: 'Bekleyen tahsilat yok.',
+      icon: <IconPending />,
+      iconClass: 'bg-amber-100 text-amber-600',
+      borderClass: 'border-l-amber-400',
     },
     {
       key: 'pendingTasks',
@@ -90,6 +107,9 @@ export default async function DashboardPage() {
       value: String(summary.pendingTasks),
       rows: drilldowns.pendingTasks,
       emptyText: 'Bekleyen görev yok.',
+      icon: <IconTask />,
+      iconClass: 'bg-indigo-100 text-indigo-600',
+      borderClass: 'border-l-indigo-400',
     },
   ];
 
@@ -110,7 +130,7 @@ export default async function DashboardPage() {
                 Tümünü Gör →
               </Link>
             </div>
-            <MiniCalendarBoard todayIso={todayIso} days={calendarDays} />
+            <MiniCalendarBoard todayIso={todayIso} days={calendarDays} canCreate={canCreateEvent} />
           </Card>
 
           <Card>
