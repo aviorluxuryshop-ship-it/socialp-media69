@@ -98,6 +98,23 @@ geliştirmeler:
   otomatik görünüyor; bir güne tıklamak o günün tüm planlarını listeliyor.
 - Raporlar sayfasındaki eğitim raporu sütunu "Satış Adedi" olarak netleştirildi
   (kategoriye göre gider ve tarih aralığı filtreleri zaten mevcuttu).
+- Görevler artık platform kullanıcılarına değil, doğrudan **personele** atanıyor;
+  panel girişi olmayan personele de iş bölümü yapılabiliyor.
+- Dashboard'daki üst KPI kutuları **tıklanabilir**: her biri altında ilgili
+  kayıtların listesini açıp kapatıyor; aylık takvim panosunda bir güne tıklamak
+  da ayrı bir sayfaya gitmeden altındaki panelde o günün planlarını gösteriyor.
+- Öğrenciyi eğitime kaydederken artık **grup seçilmiyor** — doğrudan eğitim
+  seçiliyor, sistem o eğitimin en uygun (devam eden, yoksa en güncel planlanan)
+  grubunu otomatik buluyor; uygun grup yoksa açık bir hata gösteriyor.
+- Masraf kaydı artık onay beklemeden **doğrudan ödenmiş olarak** kaydediliyor
+  (kayıt sırasında hangi kasa/banka hesabından çıktığı seçiliyor).
+- Raporlar sayfasında gösterilecek bölümler (**Gelir / Gider / Toplam Kayıt-
+  Eğitim / Öğrenci Sayısı**) kendiniz seçip detaylandırabiliyorsunuz.
+- Yeni **MEB** modülü: bir öğrencinin her eğitim kaydı için ayrı ayrı MEB
+  (Milli Eğitim Bakanlığı) sınav süreci bilgisi (sınav grup numarası, süreç
+  dolma tarihi) girilebiliyor — hem öğrenci sayfasında ilgili eğitim kaydının
+  altında, hem de üst menüdeki ayrı **MEB** sayfasında (tüm süreçlerin listesi,
+  süresi dolanlar işaretli).
 
 ## Bilinen Kapsam Dışı Konular / Sonraki Adımlar
 

@@ -15,13 +15,16 @@ type ExpenseFormData = {
   expenseDate: Date;
   paymentMethod: string;
   description: string | null;
+  accountId: string | null;
 };
 
 export function ExpenseForm({
   categories,
+  accounts,
   expense,
 }: {
   categories: { id: string; name: string }[];
+  accounts: { id: string; name: string }[];
   expense?: ExpenseFormData;
 }) {
   const [state, formAction, pending] = useActionState(saveExpenseAction, initialState);
@@ -72,6 +75,19 @@ export function ExpenseForm({
             {Object.entries(PAYMENT_METHOD_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <FieldLabel htmlFor="accountId">Ödemenin Yapılacağı Hesap *</FieldLabel>
+          <select id="accountId" name="accountId" required defaultValue={expense?.accountId ?? ''} className={inputClass}>
+            <option value="" disabled>
+              Seçiniz…
+            </option>
+            {accounts.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.name}
               </option>
             ))}
           </select>

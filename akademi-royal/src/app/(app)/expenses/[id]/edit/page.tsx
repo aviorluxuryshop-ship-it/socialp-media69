@@ -8,11 +8,13 @@ export default async function EditExpensePage({ params }: { params: Promise<{ id
   await requirePermission('expenses.edit');
   const { id } = await params;
 
-  const [expense, categories] = await Promise.all([
+  const [expense, categories, accountRows] = await Promise.all([
     prisma.expense.findUnique({ where: { id } }),
     prisma.expenseCategory.findMany({ orderBy: { name: 'asc' } }),
+    prisma.financialAccount.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } }),
   ]);
   if (!expense) notFound();
+  const accounts = accountRows.map((a) => ({ id: a.id, name: a.name }));
 
   const formValue = { ...expense, amount: expense.amount.toString() };
 
@@ -20,7 +22,7 @@ export default async function EditExpensePage({ params }: { params: Promise<{ id
     <div>
       <PageHeader title="Masrafı Düzenle" description="Gider bilgilerini güncelleyin." />
       <Card className="max-w-lg">
-        <ExpenseForm categories={categories} expense={formValue} />
+        <ExpenseForm categories={categories} accounts={accounts} expense={formValue} />
       </Card>
     </div>
   );

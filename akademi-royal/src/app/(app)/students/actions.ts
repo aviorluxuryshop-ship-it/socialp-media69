@@ -86,13 +86,32 @@ export async function createEnrollmentAction(_prev: FormState, formData: FormDat
   await requirePermission('students.edit');
 
   const studentId = emptyToNull(formData.get('studentId'));
-  const courseGroupId = emptyToNull(formData.get('courseGroupId'));
+  const courseId = emptyToNull(formData.get('courseId'));
+  let courseGroupId = emptyToNull(formData.get('courseGroupId'));
   const totalAmount = parseDecimal(formData.get('totalAmount'));
   const discountAmount = parseDecimal(formData.get('discountAmount')) ?? 0;
   const installmentCount = Math.max(1, Number(formData.get('installmentCount')) || 1);
 
-  if (!studentId || !courseGroupId || totalAmount === null) {
-    return { error: 'Eğitim grubu ve toplam ücret zorunludur.' };
+  if (!studentId || (!courseGroupId && !courseId) || totalAmount === null) {
+    return { error: 'Eğitim ve toplam ücret zorunludur.' };
+  }
+
+  // Eğitim doğrudan seçildiğinde (grup seçimi olmadan), o eğitime ait en uygun
+  // (devam eden, yoksa en güncel planlanan) grubu otomatik seç.
+  if (!courseGroupId && courseId) {
+    const groups = await prisma.courseGroup.findMany({
+      where: { courseId, status: { in: ['ACTIVE', 'PLANNED'] } },
+      orderBy: { startDate: 'desc' },
+    });
+    const group = groups.find((g) => g.status === 'ACTIVE') ?? groups.find((g) => g.status === 'PLANNED');
+    if (!group) {
+      return { error: 'Bu eğitim için açık (devam eden veya planlanan) bir grup yok. Önce Eğitimler modülünden bir grup oluşturun.' };
+    }
+    courseGroupId = group.id;
+  }
+
+  if (!courseGroupId) {
+    return { error: 'Eğitim grubu belirlenemedi.' };
   }
 
   const finalAmount = Math.max(0, totalAmount - discountAmount);

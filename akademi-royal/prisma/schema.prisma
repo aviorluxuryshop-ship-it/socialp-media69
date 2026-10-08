@@ -419,8 +419,25 @@ model GroupEnrollment {
   pricing     EnrollmentPricing?
   certificate Certificate?
   documents   StudentDocument[]
+  mebProcess  MebProcess?
 
   @@unique([studentId, courseGroupId])
+}
+
+// ============ MEB (MİLLİ EĞİTİM BAKANLIĞI) SINAV SÜRECİ ============
+
+model MebProcess {
+  id              String   @id @default(cuid())
+  enrollmentId    String   @unique
+  groupNumber     String?
+  expiresAt       DateTime
+  createdByUserId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  enrollment GroupEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
 }
 
 model Certificate {

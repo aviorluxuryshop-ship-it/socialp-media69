@@ -25,29 +25,72 @@ export async function saveExpenseAction(_prev: FormState, formData: FormData): P
   const methodRaw = String(formData.get('paymentMethod') ?? 'CASH');
   const paymentMethod = PAYMENT_METHODS.includes(methodRaw as PaymentMethod) ? (methodRaw as PaymentMethod) : 'CASH';
   const description = emptyToNull(formData.get('description'));
+  const accountId = emptyToNull(formData.get('accountId'));
+  if (!accountId) return { error: 'Ödemenin yapılacağı hesap zorunludur.' };
 
   if (id) {
     const existing = await prisma.expense.findUnique({ where: { id } });
     if (!existing) return { error: 'Masraf bulunamadı.' };
 
     await prisma.$transaction(async (tx) => {
-      await tx.expense.update({ where: { id }, data: { categoryId, amount, expenseDate, paymentMethod, description } });
+      await tx.expense.update({
+        where: { id },
+        data: { categoryId, amount, expenseDate, paymentMethod, description, accountId, status: 'PAID' },
+      });
 
-      // Zaten ödenmiş bir masrafın tutarı değiştiyse, ilişkili kasa/banka hareketini de güncelle.
-      if (existing.status === 'PAID' && Number(existing.amount) !== amount) {
-        await tx.financialAccountEntry.updateMany({ where: { relatedExpenseId: id }, data: { amount } });
+      if (existing.status === 'PAID') {
+        // Zaten ödenmiş bir masrafın tutarı veya hesabı değiştiyse, ilişkili kasa/banka hareketini de güncelle.
+        await tx.financialAccountEntry.updateMany({ where: { relatedExpenseId: id }, data: { amount, accountId } });
+      } else {
+        await tx.financialAccountEntry.create({
+          data: {
+            accountId,
+            direction: 'OUT',
+            amount,
+            description: `Masraf ödemesi${description ? `: ${description}` : ''}`,
+            relatedExpenseId: id,
+            createdByUserId: user.id,
+          },
+        });
       }
     });
 
     revalidatePath('/expenses');
+    revalidatePath(`/payments/accounts/${accountId}`);
     redirect('/expenses');
   }
 
-  await prisma.expense.create({
-    data: { categoryId, amount, expenseDate, paymentMethod, description, createdByUserId: user.id },
+  // Masraf oluşturulurken onay beklemeden doğrudan ödenmiş olarak kaydedilir.
+  await prisma.$transaction(async (tx) => {
+    const expense = await tx.expense.create({
+      data: {
+        categoryId,
+        amount,
+        expenseDate,
+        paymentMethod,
+        description,
+        accountId,
+        status: 'PAID',
+        createdByUserId: user.id,
+        approvedByUserId: user.id,
+        approvedAt: new Date(),
+      },
+    });
+
+    await tx.financialAccountEntry.create({
+      data: {
+        accountId,
+        direction: 'OUT',
+        amount,
+        description: `Masraf ödemesi${description ? `: ${description}` : ''}`,
+        relatedExpenseId: expense.id,
+        createdByUserId: user.id,
+      },
+    });
   });
 
   revalidatePath('/expenses');
+  revalidatePath(`/payments/accounts/${accountId}`);
   redirect('/expenses');
 }
 

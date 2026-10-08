@@ -11,33 +11,25 @@ export default async function EnrollStudentPage({ params }: { params: Promise<{ 
   const student = await prisma.student.findUnique({ where: { id: studentId } });
   if (!student) notFound();
 
-  const existingGroupIds = (
-    await prisma.groupEnrollment.findMany({ where: { studentId }, select: { courseGroupId: true } })
-  ).map((e) => e.courseGroupId);
-
-  const groups = await prisma.courseGroup.findMany({
-    where: { status: { in: ['PLANNED', 'ACTIVE'] }, id: { notIn: existingGroupIds } },
-    include: { course: true },
-    orderBy: { startDate: 'desc' },
+  const courses = await prisma.course.findMany({
+    where: { isActive: true },
+    orderBy: { name: 'asc' },
   });
 
-  const groupOptions = groups.map((g) => ({
-    id: g.id,
-    label: `${g.course.name} — ${g.code}`,
-    defaultPrice: g.course.defaultPrice.toString(),
+  const courseOptions = courses.map((c) => ({
+    id: c.id,
+    label: c.name,
+    defaultPrice: c.defaultPrice.toString(),
   }));
 
   return (
     <div>
       <PageHeader title="Eğitime Kaydet" description={`${student.fullName} için yeni bir eğitim kaydı oluşturun.`} />
       <Card className="max-w-2xl">
-        {groupOptions.length === 0 ? (
-          <EmptyState
-            title="Kaydedilebilecek uygun grup yok"
-            description="Eğitimler modülünden planlanan veya devam eden bir grup oluşturun."
-          />
+        {courseOptions.length === 0 ? (
+          <EmptyState title="Kaydedilebilecek aktif eğitim yok" description="Eğitimler modülünden bir eğitim oluşturun." />
         ) : (
-          <EnrollForm studentId={studentId} groups={groupOptions} />
+          <EnrollForm studentId={studentId} courses={courseOptions} />
         )}
       </Card>
     </div>

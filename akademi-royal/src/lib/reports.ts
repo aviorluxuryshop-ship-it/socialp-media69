@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { PAYMENT_METHOD_LABELS } from '@/lib/labels';
+import { PAYMENT_METHOD_LABELS, STUDENT_STATUS_LABELS } from '@/lib/labels';
 import type { PaymentMethod } from '@prisma/client';
 
 export function defaultMonthRange(): { from: string; to: string } {
@@ -59,6 +59,22 @@ export async function getExpenseReport(from: string, to: string) {
     total,
     count: expenses.length,
     byCategory: [...byCategory.entries()].map(([label, amount]) => ({ label, amount })).sort((a, b) => b.amount - a.amount),
+  };
+}
+
+export async function getStudentReport(from: string, to: string) {
+  const [newStudents, byStatusRaw] = await Promise.all([
+    prisma.student.count({ where: { createdAt: { gte: new Date(from), lte: endOfDay(to) } } }),
+    prisma.student.groupBy({
+      by: ['status'],
+      where: { createdAt: { gte: new Date(from), lte: endOfDay(to) } },
+      _count: { _all: true },
+    }),
+  ]);
+
+  return {
+    newStudents,
+    byStatus: byStatusRaw.map((r) => ({ label: STUDENT_STATUS_LABELS[r.status], amount: r._count._all })),
   };
 }
 

@@ -6,9 +6,9 @@ import { Button, FieldLabel, inputClass } from '@/components/ui';
 
 const initialState: FormState = {};
 
-type GroupOption = { id: string; label: string; defaultPrice: string };
+type CourseOption = { id: string; label: string; defaultPrice: string };
 
-export function EnrollForm({ studentId, groups }: { studentId: string; groups: GroupOption[] }) {
+export function EnrollForm({ studentId, courses }: { studentId: string; courses: CourseOption[] }) {
   const [state, formAction, pending] = useActionState(createEnrollmentAction, initialState);
   const [totalAmount, setTotalAmount] = useState('');
 
@@ -17,23 +17,24 @@ export function EnrollForm({ studentId, groups }: { studentId: string; groups: G
       <input type="hidden" name="studentId" value={studentId} />
 
       <div>
-        <FieldLabel htmlFor="courseGroupId">Eğitim Grubu *</FieldLabel>
+        <FieldLabel htmlFor="courseId">Eğitim *</FieldLabel>
         <select
-          id="courseGroupId"
-          name="courseGroupId"
+          id="courseId"
+          name="courseId"
           required
+          defaultValue=""
           className={inputClass}
           onChange={(e) => {
-            const selected = groups.find((g) => g.id === e.target.value);
+            const selected = courses.find((c) => c.id === e.target.value);
             if (selected) setTotalAmount(selected.defaultPrice);
           }}
         >
-          <option value="" disabled selected>
+          <option value="" disabled>
             Seçiniz…
           </option>
-          {groups.map((g) => (
-            <option key={g.id} value={g.id}>
-              {g.label}
+          {courses.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.label}
             </option>
           ))}
         </select>

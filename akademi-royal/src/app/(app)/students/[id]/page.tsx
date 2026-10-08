@@ -13,6 +13,7 @@ import {
   deleteStudentAction,
   updateEnrollmentStatusAction,
 } from '../actions';
+import { MebForm } from '../../meb/MebForm';
 
 export default async function StudentDetailPage({
   params,
@@ -34,6 +35,7 @@ export default async function StudentDetailPage({
         include: {
           courseGroup: { include: { course: true, trainer: { select: { fullName: true } } } },
           pricing: { include: { installments: { orderBy: { sequenceNo: 'asc' } } } },
+          mebProcess: true,
         },
       },
       payments: {
@@ -47,6 +49,8 @@ export default async function StudentDetailPage({
   const canEdit = hasPermission(user, 'students.edit');
   const canDelete = hasPermission(user, 'students.delete');
   const canCollect = hasPermission(user, 'payments.create');
+  const canCreateMeb = hasPermission(user, 'meb.create');
+  const canEditMeb = hasPermission(user, 'meb.edit');
 
   const totals = student.enrollments.reduce(
     (acc, e) => {
@@ -207,6 +211,30 @@ export default async function StudentDetailPage({
                       </ConfirmForm>
                     )}
                   </div>
+                </div>
+
+                <div className="mt-3 border-t border-[var(--color-mist)] pt-3">
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-royal-dim)]">
+                    MEB Sınav Süreci — {e.courseGroup.course.name}
+                  </h3>
+                  {e.mebProcess ? (
+                    <div className="flex flex-wrap items-center gap-3 text-sm">
+                      <span>Grup No: {e.mebProcess.groupNumber ?? '—'}</span>
+                      <span>Süreç Dolma Tarihi: {formatDateTR(e.mebProcess.expiresAt)}</span>
+                      {canEditMeb && (
+                        <Link href={`/meb/${e.mebProcess.id}/edit`} className="text-xs text-[var(--color-royal)] hover:underline">
+                          Düzenle
+                        </Link>
+                      )}
+                    </div>
+                  ) : canCreateMeb ? (
+                    <MebForm
+                      enrollments={[{ id: e.id, label: e.courseGroup.course.name }]}
+                      returnTo={`/students/${student.id}`}
+                    />
+                  ) : (
+                    <p className="text-sm text-[var(--color-royal-dim)]">Bu eğitim kaydı için henüz MEB süreci girilmemiş.</p>
+                  )}
                 </div>
               </Card>
             );
