@@ -1,5 +1,8 @@
 import type { CategoryId, Level, PositionId, Scene } from '@/lib/types';
 
+/** Ayak temas bölgeleri (temas yüzeyi haritası için) */
+export type FootZone = 'ic' | 'dis' | 'ustTam' | 'ustDis' | 'ustIc' | 'uc' | 'topuk' | 'taban';
+
 export interface Drill {
   lvl: Level;
   name: string;
@@ -33,6 +36,8 @@ export interface Technique {
   q: string;
   /** güvenlik notu (ör. çocuk yaş grupları) */
   safety?: string;
+  /** temas yüzeyi haritasında vurgulanacak bölgeler */
+  foot?: FootZone[];
 }
 
 export type DrillTuple = [lvl: Level, name: string, how: string, dose: string];
@@ -57,6 +62,7 @@ export interface TechInput {
   rel?: string[];
   q?: string;
   safe?: string;
+  foot?: FootZone[];
 }
 
 export function tech(i: TechInput): Technique {
@@ -80,5 +86,6 @@ export function tech(i: TechInput): Technique {
     related: i.rel ?? [],
     q: i.q ?? `${i.name} futbol nasıl yapılır`,
     safety: i.safe,
+    foot: i.foot,
   };
 }

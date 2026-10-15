@@ -27,6 +27,7 @@ const BASE: Record<Exclude<ViewId, 'grid'>, Omit<ViewDef, 'vertical'> & { v: boo
   box: { x0: 63, x1: 105, y0: 6, y1: 62, pad: 2.6, unit: 1.5, v: true },
   mid: { x0: 28, x1: 77, y0: 0, y1: 68, pad: 3.2, unit: 1.7, v: true },
   defend: { x0: 0, x1: 56, y0: 0, y1: 68, pad: 3.2, unit: 1.7, v: true },
+  gk: { x0: 0, x1: 34, y0: 6, y1: 62, pad: 2.4, unit: 1.45, v: true },
 };
 
 export function viewOf(scene: Pick<Scene, 'v' | 'w' | 'h' | 'hz'>, forceVertical?: boolean): ViewDef {
@@ -41,6 +42,92 @@ export function viewOf(scene: Pick<Scene, 'v' | 'w' | 'h' | 'hz'>, forceVertical
   if (scene.hz) vertical = false;
   if (forceVertical !== undefined) vertical = forceVertical;
   return { x0: b.x0, x1: b.x1, y0: b.y0, y1: b.y1, pad: b.pad, unit: b.unit, vertical };
+}
+
+/** İçeriğe göre otomatik kırpılmış görünüm: oyuncular büyük, gereksiz saha küçük kalır. */
+export function fitView(scene: Scene, tl: FrameState[], forceVertical?: boolean): ViewDef {
+  if (scene.v === 'grid') return viewOf(scene, forceVertical);
+  let x0 = Infinity;
+  let x1 = -Infinity;
+  let y0 = Infinity;
+  let y1 = -Infinity;
+  const add = (x: number, y?: number) => {
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y !== undefined) {
+      if (y < y0) y0 = y;
+      if (y > y1) y1 = y;
+    }
+  };
+  for (const f of tl) {
+    for (const a of scene.a) {
+      const p = f.pos[a.id];
+      if (p) add(p[0], p[1]);
+    }
+    if (f.ball) add(f.ball.pt[0], f.ball.pt[1]);
+    for (const a of f.arrows) {
+      add(a.from[0], a.from[1]);
+      add(a.to[0], a.to[1]);
+    }
+    for (const z of f.zones) {
+      add(z.x, z.y);
+      add(z.x + z.w, z.y + z.h);
+    }
+    for (const t of f.txt) add(t.x, t.y);
+    if (f.line !== null) add(f.line);
+  }
+  if (!isFinite(x0) || !isFinite(y0)) return viewOf(scene, forceVertical);
+
+  const vertical = forceVertical ?? (scene.v !== 'full' && !scene.hz);
+  const M = 8;
+  x0 -= M;
+  x1 += M;
+  y0 -= M;
+  y1 += M;
+  // kale çizgisine ulaşan sahnelerde kaleyi tam göster
+  if (x1 >= 104) x1 = Math.max(x1, 108);
+  if (x0 <= 1) x0 = Math.min(x0, -3);
+
+  // en az 30 m; en-boy oranını makul tut
+  const MIN = 30;
+  const grow = (a: number, b: number, need: number): [number, number] => {
+    const c = (a + b) / 2;
+    return [c - need / 2, c + need / 2];
+  };
+  if (x1 - x0 < MIN) [x0, x1] = grow(x0, x1, MIN);
+  if (y1 - y0 < MIN) [y0, y1] = grow(y0, y1, MIN);
+
+  // ekranda genişlik/yükseklik (dikeyde x yükseklik, y genişlik olur)
+  const sw = () => (vertical ? y1 - y0 : x1 - x0);
+  const sh = () => (vertical ? x1 - x0 : y1 - y0);
+  const growW = (need: number) => {
+    if (vertical) [y0, y1] = grow(y0, y1, need);
+    else [x0, x1] = grow(x0, x1, need);
+  };
+  const growH = (need: number) => {
+    if (vertical) [x0, x1] = grow(x0, x1, need);
+    else [y0, y1] = grow(y0, y1, need);
+  };
+  if (sw() / sh() < 0.82) growW(sh() * 0.82);
+  else if (sw() / sh() > 1.75) growH(sw() / 1.75);
+
+  // saha sınırları: kaydırarak sığdır, gerekirse kırp
+  const LIM_X: [number, number] = [-3.5, 108.5];
+  const LIM_Y: [number, number] = [-3.5, 71.5];
+  const shift = (a: number, b: number, lim: [number, number]): [number, number] => {
+    let lo = a;
+    let hi = b;
+    if (hi - lo > lim[1] - lim[0]) return [lim[0], lim[1]];
+    if (lo < lim[0]) [lo, hi] = [lim[0], lim[0] + (b - a)];
+    if (hi > lim[1]) [lo, hi] = [lim[1] - (b - a), lim[1]];
+    return [lo, hi];
+  };
+  [x0, x1] = shift(x0, x1, LIM_X);
+  [y0, y1] = shift(y0, y1, LIM_Y);
+
+  const span = Math.max(x1 - x0, y1 - y0);
+  const unit = Math.max(1.15, Math.min(2.25, span / 30));
+  return { x0, x1, y0, y1, pad: 0, unit, vertical };
 }
 
 export interface Projector {

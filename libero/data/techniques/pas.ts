@@ -4,6 +4,7 @@ import { tech } from '../types';
 export const PAS = [
   tech({
     id: 'yerden-ic-yuz-pas',
+    foot: ['ic'],
     name: 'Yerden iç yüz pas',
     en: 'Inside-foot ground pass',
     cat: 'pas',
@@ -49,6 +50,7 @@ export const PAS = [
 
   tech({
     id: 'yumusak-pas',
+    foot: ['ic'],
     name: 'Yumuşak pas (ağırlığı ayarlı)',
     en: 'Weighted soft pass',
     cat: 'pas',
@@ -92,6 +94,7 @@ export const PAS = [
 
   tech({
     id: 'sert-pas',
+    foot: ['ic','ustIc'],
     name: 'Sert pas',
     en: 'Driven pass',
     cat: 'pas',
@@ -134,6 +137,7 @@ export const PAS = [
 
   tech({
     id: 'tek-dokunus-pas',
+    foot: ['ic','dis'],
     name: 'Tek dokunuşla pas',
     en: 'One-touch pass',
     cat: 'pas',
@@ -178,6 +182,7 @@ export const PAS = [
 
   tech({
     id: 'ara-pas',
+    foot: ['ic','ustIc'],
     name: 'Ara pas (hat kıran pas)',
     en: 'Penetrating pass between defenders',
     cat: 'pas',
@@ -221,6 +226,7 @@ export const PAS = [
 
   tech({
     id: 'derinlik-pasi',
+    foot: ['ic','ustIc'],
     name: 'Savunma arkasına yerden pas',
     en: 'Through ball (ground)',
     cat: 'pas',
@@ -264,6 +270,7 @@ export const PAS = [
 
   tech({
     id: 'asirtma-pas',
+    foot: ['uc','ustTam'],
     name: 'Savunma arkasına aşırtma pas',
     en: 'Chipped through ball',
     cat: 'pas',
@@ -307,6 +314,7 @@ export const PAS = [
 
   tech({
     id: 'duvar-pasi',
+    foot: ['ic'],
     name: 'Duvar pası',
     en: 'Wall pass (one-two, return to feet)',
     cat: 'pas',
@@ -350,6 +358,7 @@ export const PAS = [
 
   tech({
     id: 'verkac',
+    foot: ['ic'],
     name: 'Verkaç',
     en: 'Give-and-go',
     cat: 'pas',
@@ -393,6 +402,7 @@ export const PAS = [
 
   tech({
     id: 'topukla-pas',
+    foot: ['topuk'],
     name: 'Topukla pas',
     en: 'Back-heel pass',
     cat: 'pas',
@@ -436,6 +446,7 @@ export const PAS = [
 
   tech({
     id: 'kaldirarak-pas',
+    foot: ['uc','ustTam'],
     name: 'Kaldırarak pas',
     en: 'Lofted/scoop pass',
     cat: 'pas',
@@ -479,6 +490,7 @@ export const PAS = [
 
   tech({
     id: 'kavisli-pas',
+    foot: ['ic','ustDis'],
     name: 'Kavisli pas',
     en: 'Curled pass',
     cat: 'pas',
@@ -521,6 +533,7 @@ export const PAS = [
 
   tech({
     id: 'uzun-pas',
+    foot: ['ustIc','ustTam'],
     name: 'Uzun pas',
     en: 'Long pass / switch of play',
     cat: 'pas',
@@ -564,6 +577,7 @@ export const PAS = [
 
   tech({
     id: 'dis-ayak-pasi',
+    foot: ['dis'],
     name: 'Dış ayak ile pas',
     en: 'Outside-of-the-foot pass',
     cat: 'pas',
@@ -606,6 +620,7 @@ export const PAS = [
 
   tech({
     id: 'birakma-pasi',
+    foot: ['ic'],
     name: 'Bırakma pası (sektirme)',
     en: 'Lay-off pass',
     cat: 'pas',

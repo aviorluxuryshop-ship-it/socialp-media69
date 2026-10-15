@@ -2,7 +2,7 @@
 
 import { forwardRef, useId } from 'react';
 import type { Actor, ArrowKind, Pt, Scene } from '@/lib/types';
-import { projector, viewOf, type Arrow, type FrameState, type ViewDef } from '@/lib/scene';
+import { fitView, projector, viewOf, type Arrow, type FrameState, type ViewDef } from '@/lib/scene';
 
 /* ── Saha çizgileri (metre cinsinden, 105 × 68) ───────────── */
 function PitchLines() {
@@ -95,7 +95,7 @@ const KIND_STYLE: Record<
   air: { color: 'var(--ivory)', dash: '0.1 1.5', w: 1.15, head: 'ivory', cap: 'round' },
   run: { color: 'var(--brass-hi)', dash: '2.1 1.5', w: 0.95, head: 'brass' },
   dribble: { color: 'var(--brass-hi)', w: 0.95, head: 'brass' },
-  shot: { color: 'var(--terra)', w: 1.5, head: 'terra' },
+  shot: { color: 'var(--terra)', w: 1.2, head: 'terra' },
   press: { color: 'var(--terra)', dash: '1.2 1.2', w: 0.95, head: 'terra' },
 };
 
@@ -107,6 +107,8 @@ export interface CanvasProps {
   /** önceki adımların oklarını soluk göster */
   history?: boolean;
   vertical?: boolean;
+  /** içeriğe göre otomatik kırp (varsayılan: açık) */
+  fit?: boolean;
   instant?: boolean;
   durMs?: number;
   label: string;
@@ -130,11 +132,11 @@ const COLOR_FOR: Record<Actor['t'], { fill: string; ink: string }> = {
 };
 
 export const SceneCanvas = forwardRef<SVGSVGElement, CanvasProps>(function SceneCanvas(
-  { scene, tl, frame, history = true, vertical, instant, durMs = 1250, label, selected, editable, className, onActorDown, onBallDown, onBgDown, onMove, onUp, drawing },
+  { scene, tl, frame, history = true, vertical, fit = true, instant, durMs = 1250, label, selected, editable, className, onActorDown, onBallDown, onBgDown, onMove, onUp, drawing },
   ref,
 ) {
   const uid = useId().replace(/:/g, '');
-  const view: ViewDef = viewOf(scene, vertical);
+  const view: ViewDef = fit ? fitView(scene, tl, vertical) : viewOf(scene, vertical);
   const pr = projector(view);
   const u = view.unit;
   const cur = tl[Math.min(frame, tl.length - 1)];
@@ -255,7 +257,7 @@ export const SceneCanvas = forwardRef<SVGSVGElement, CanvasProps>(function Scene
           const isDash = kind === 'run' || kind === 'press' || kind === 'air';
           return (
             <g key={key} className={`sc-arrow ${age === 0 ? 'sc-arrow--cur' : ''}`} style={{ opacity: op }}>
-              {arrow.k === 'shot' && <path d={d} fill="none" stroke="var(--terra)" strokeOpacity={0.25} strokeWidth={sw(kind) * 3} strokeLinecap="round" />}
+              {arrow.k === 'shot' && <path d={d} fill="none" stroke="var(--terra)" strokeOpacity={0.22} strokeWidth={sw(kind) * 2.4} strokeLinecap="round" />}
               <path
                 d={d}
                 fill="none"

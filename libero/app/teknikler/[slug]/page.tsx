@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { CAT_BY_ID } from '@/data/categories';
 import { TECHNIQUES, TECH_BY_ID, techsByCat } from '@/data';
 import { CatGlyph } from '@/components/CatGlyph';
+import { FootMap } from '@/components/FootMap';
 import { Icon } from '@/components/Icon';
 import { PageHead } from '@/components/PageHead';
 import { SceneView } from '@/components/pitch/SceneView';
@@ -70,6 +71,29 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               <span className="tsec__n mono">01</span> Oyundaki amacı
             </h2>
             <p className="prose lead" style={{ maxWidth: '60ch' }}>{t.purpose}.</p>
+            {t.foot && t.foot.length > 0 && (
+              <div className="card surface" style={{ marginTop: 24 }}>
+                <FootMap active={t.foot} />
+                <div>
+                  <p className="mono muted">Temas yüzeyi</p>
+                  <p className="surface__t">{t.contact}</p>
+                  <ul className="surface__list">
+                    {t.foot.includes('ustDis') && (
+                      <li>
+                        <b>Üst dış (trivela)</b> ile <b>dış kenar</b> aynı şey değildir: üst dış, ayak üstünün dış bölümüdür; dış kenar küçük parmağın yan yüzüdür.
+                      </li>
+                    )}
+                    {t.foot.includes('dis') && !t.foot.includes('ustDis') && (
+                      <li>
+                        <b>Dış kenar</b>, ayağın küçük parmak tarafındaki yan yüzüdür; ayak üstünün dış bölümü (<b>üst dış / trivela</b>) ayrı bir yüzeydir.
+                      </li>
+                    )}
+                    {t.foot.includes('ic') && <li>İç yüz, ayağın en geniş ve en kontrollü temas yüzeyidir.</li>}
+                    {t.foot.includes('ustTam') && <li>Ayak üstü (bağcık bölgesi), güçlü vuruşlar için kullanılır.</li>}
+                  </ul>
+                </div>
+              </div>
+            )}
             {t.safety && (
               <div className="note note--warn" style={{ marginTop: 20 }}>
                 <Icon name="warn" />

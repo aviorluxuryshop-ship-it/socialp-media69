@@ -338,3 +338,49 @@
 .pager__a--next {
   text-align: right;
 }
+
+/* ── Temas yüzeyi haritası ───────────────────────────────── */
+.footmap {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.footmap svg {
+  width: min(100%, 320px);
+  height: auto;
+}
+.footmap__sole {
+  color: var(--brass-hi);
+  padding: 4px 10px;
+  border: 1px solid rgba(201, 165, 91, 0.5);
+  border-radius: var(--r-1);
+}
+.surface {
+  display: grid;
+  grid-template-columns: minmax(0, 240px) 1fr;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: center;
+  padding: clamp(18px, 2.4vw, 28px);
+}
+@media (max-width: 560px) {
+  .surface {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.surface__t {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+.surface__list {
+  margin-top: 12px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--ivory-3);
+}
+.surface__list b {
+  color: var(--brass-hi);
+  font-weight: 600;
+}

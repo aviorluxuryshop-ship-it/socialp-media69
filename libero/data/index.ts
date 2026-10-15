@@ -2,8 +2,41 @@ import type { CategoryId, PositionId } from '@/lib/types';
 import { CAT_BY_ID } from './categories';
 import type { Technique } from './types';
 import { PAS } from './techniques/pas';
+import { SUT } from './techniques/sut';
+import { KONTROL } from './techniques/kontrol';
+import { SURME } from './techniques/surme';
+import { KAFA } from './techniques/kafa';
+import { BITIRICILIK } from './techniques/bitiricilik';
+import { HUCUM } from './techniques/hucum';
+import { SAVUNMA } from './techniques/savunma';
+import { KALECILIK } from './techniques/kalecilik';
+import { DURAN } from './techniques/duran';
+import { TOPSUZ } from './techniques/topsuz';
 
-export const TECHNIQUES: Technique[] = [...PAS];
+export const TECHNIQUES: Technique[] = [
+  ...PAS,
+  ...SUT,
+  ...KONTROL,
+  ...SURME,
+  ...KAFA,
+  ...BITIRICILIK,
+  ...HUCUM,
+  ...SAVUNMA,
+  ...KALECILIK,
+  ...DURAN,
+  ...TOPSUZ,
+];
+
+import { overlapWarnings, validateTechniques } from './validate';
+
+const problems = validateTechniques(TECHNIQUES);
+if (problems.length) {
+  throw new Error('Teknik verisi hatalı:\n' + problems.join('\n'));
+}
+
+if (process.env.LIBERO_OVERLAPS) {
+  for (const w of overlapWarnings(TECHNIQUES)) console.warn('[çakışma] ' + w);
+}
 
 export const TECH_BY_ID: Record<string, Technique> = Object.fromEntries(TECHNIQUES.map((t) => [t.id, t]));
 

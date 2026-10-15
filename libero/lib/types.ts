@@ -64,7 +64,7 @@ export type CategoryId =
 
 // ── Sahne (saha diyagramı) ─────────────────────────────────
 
-export type ViewId = 'full' | 'half' | 'box' | 'mid' | 'defend' | 'grid';
+export type ViewId = 'full' | 'half' | 'box' | 'mid' | 'defend' | 'gk' | 'grid';
 export type ActorType = 'a' | 'b' | 'k' | 'c' | 'm'; // a: takım, b: rakip, k: kaleci, c: koni, m: hedef işareti
 export type Pt = [number, number];
 
