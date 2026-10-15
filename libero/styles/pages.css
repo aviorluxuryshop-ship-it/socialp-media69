@@ -1,0 +1,340 @@
+/* ── Teknik kütüphanesi ──────────────────────────────────── */
+.lib__bar {
+  position: sticky;
+  top: 72px;
+  z-index: 20;
+  background: rgba(10, 16, 13, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  padding-block: 18px 16px;
+}
+.lib__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line-3);
+  background: var(--ink-850);
+  border-radius: var(--r-2);
+  padding: 4px 6px 4px 18px;
+  transition: border-color var(--dur) var(--ease);
+}
+.lib__search:focus-within {
+  border-color: var(--brass);
+}
+.lib__search > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--brass);
+  flex: none;
+}
+.lib__input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  background: none;
+  border: 0;
+  outline: none;
+  font-size: 1.05rem;
+}
+.lib__input::-webkit-search-cancel-button {
+  display: none;
+}
+.lib__input::placeholder {
+  color: var(--ivory-4);
+}
+.lib__row {
+  margin-top: 14px;
+}
+.lib__row--tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 28px;
+}
+.lib__level {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.lib__selects {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.lib__selects .select {
+  width: auto;
+  min-width: 190px;
+  min-height: 40px;
+  font-size: 0.9rem;
+}
+.lib__results {
+  padding-block: 28px 0;
+}
+.lib__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  color: var(--ivory-3);
+}
+@media (max-width: 760px) {
+  .lib__bar {
+    position: static;
+  }
+  .lib__row .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .lib__row .chips::-webkit-scrollbar {
+    display: none;
+  }
+  .lib__selects {
+    margin-left: 0;
+    width: 100%;
+  }
+  .lib__selects .select {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 1020px) {
+  .tech-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .tech-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.tech-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 22px 22px 18px;
+  gap: 10px;
+}
+.tech-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tech-card__glyph {
+  color: var(--brass);
+}
+.tech-card__name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin-top: 6px;
+}
+.tech-card__sum {
+  color: var(--ivory-3);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+.tech-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.tech-card__me {
+  color: var(--ivory-4);
+  font-size: 0.62rem;
+  text-align: right;
+  max-width: 55%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tech-card:hover .tech-card__name {
+  color: var(--brass-hi);
+}
+
+/* ── Teknik ayrıntı ──────────────────────────────────────── */
+.tech-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1.6rem;
+}
+.tech-meta .tag {
+  min-height: 28px;
+}
+.tech-meta .stars {
+  margin-left: 4px;
+}
+.tech-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(32px, 5vw, 80px);
+  padding-block: clamp(36px, 5vw, 64px) 0;
+  align-items: start;
+}
+.tech-aside {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 18px;
+}
+@media (max-width: 960px) {
+  .tech-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tech-aside {
+    position: static;
+  }
+}
+.tsec {
+  padding-block: 0 clamp(32px, 4vw, 52px);
+}
+.tsec + .tsec {
+  padding-top: clamp(32px, 4vw, 52px);
+  border-top: 1px solid var(--line);
+}
+.tsec__h {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.tsec__n {
+  color: var(--brass);
+}
+.levelcard__hint {
+  margin-top: 12px;
+  color: var(--ivory-2);
+}
+.levelcard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.btn--on {
+  border-color: var(--brass);
+  color: var(--brass-hi);
+  background: var(--brass-wash);
+}
+.drills__h {
+  color: var(--brass);
+  margin: 26px 0 12px;
+  font-weight: 500;
+}
+.drills__list {
+  display: grid;
+  gap: 10px;
+}
+.drill {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--ink-850);
+}
+.drill--now {
+  border-color: rgba(201, 165, 91, 0.5);
+  background: linear-gradient(180deg, var(--brass-wash), transparent);
+}
+.drill--dim {
+  opacity: 0.78;
+}
+.drill__name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.35rem;
+  margin: 6px 0 4px;
+}
+.drill__how {
+  color: var(--ivory-2);
+  font-size: 0.95rem;
+}
+.drill__dose {
+  margin-top: 10px;
+  color: var(--brass);
+}
+.drills__more {
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.drills__more summary {
+  cursor: pointer;
+  color: var(--ivory-3);
+  padding: 6px 0 14px;
+}
+.drills__more summary:hover {
+  color: var(--brass-hi);
+}
+.rel-list {
+  display: grid;
+  gap: 10px;
+}
+.rel {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+.rel__glyph {
+  color: var(--brass);
+}
+.rel__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+.rel__sub {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--ivory-3);
+  margin-top: 2px;
+}
+.rel > svg {
+  width: 18px;
+  height: 18px;
+  color: var(--brass);
+}
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: clamp(36px, 5vw, 64px);
+  border-top: 1px solid var(--line-2);
+}
+.pager__a {
+  display: grid;
+  gap: 6px;
+  padding: 28px 8px;
+  transition: color var(--dur) var(--ease);
+}
+.pager__a:hover .h3 {
+  color: var(--brass-hi);
+}
+.pager__a--next {
+  text-align: right;
+}

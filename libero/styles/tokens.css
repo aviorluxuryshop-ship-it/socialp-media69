@@ -1,0 +1,83 @@
+/* ───────────────────────────────────────────────────────────
+   LIBERO — tasarım belirteçleri
+   Tek kaynak: renk, tipografi, boşluk, hareket. Hiçbir bileşen
+   bu dosyanın dışında ham renk değeri kullanmaz.
+   ─────────────────────────────────────────────────────────── */
+:root {
+  /* Zemin: gece çimi — saf siyah değil, yeşile çalan koyu mürekkep */
+  --ink-950: #060a08;
+  --ink-900: #0a100d;
+  --ink-850: #0e1511;
+  --ink-800: #121b16;
+  --ink-750: #17221c;
+  --ink-700: #1d2a23;
+  --ink-600: #2a3a31;
+
+  /* Metin: fildişi ölçeği */
+  --ivory: #efeadc;
+  --ivory-2: #cfcbbd;
+  --ivory-3: #a6a99f;
+  --ivory-4: #858b82; /* 4.5:1 üstü (ink-900 üzerinde) */
+
+  /* Vurgu: pirinç/altın — tek sıcak renk */
+  --brass: #c9a55b;
+  --brass-hi: #e3c47e;
+  --brass-lo: #8c7239;
+  --brass-wash: rgba(201, 165, 91, 0.1);
+
+  /* Saha yeşili — yalnızca saha çizimlerinde ve ilerleme göstergelerinde */
+  --pitch-1: #0f2a1e;
+  --pitch-2: #123324;
+  --pitch-line: rgba(239, 234, 220, 0.5);
+  --grass: #3f9a68;
+  --grass-wash: rgba(63, 154, 104, 0.14);
+
+  /* Uyarı/rakip: toprak kırmızısı */
+  --terra: #d8664c;
+  --terra-wash: rgba(216, 102, 76, 0.14);
+
+  /* Kaleci: soluk nane */
+  --mint: #8fd0bd;
+
+  /* Çizgiler */
+  --line: rgba(239, 234, 220, 0.1);
+  --line-2: rgba(239, 234, 220, 0.18);
+  --line-3: rgba(239, 234, 220, 0.3);
+
+  /* Tipografi */
+  --font-display: 'Instrument Serif', 'Times New Roman', serif;
+  --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Ölçek */
+  --fs-display: clamp(3.1rem, 8.2vw, 7.4rem);
+  --fs-h1: clamp(2.5rem, 5.4vw, 4.6rem);
+  --fs-h2: clamp(2rem, 3.6vw, 3.1rem);
+  --fs-h3: clamp(1.4rem, 2vw, 1.75rem);
+  --fs-lead: clamp(1.08rem, 1.5vw, 1.28rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.72rem;
+
+  /* Boşluk */
+  --gutter: clamp(16px, 4vw, 44px);
+  --maxw: 1280px;
+  --section: clamp(64px, 9vw, 132px);
+
+  /* Yarıçap: kontrollü, neredeyse keskin */
+  --r-1: 2px;
+  --r-2: 4px;
+
+  /* Hareket */
+  --ease: cubic-bezier(0.22, 0.7, 0.18, 1);
+  --ease-in-out: cubic-bezier(0.45, 0.05, 0.2, 1);
+  --dur: 240ms;
+
+  /* Katman */
+  --z-header: 50;
+  --z-overlay: 80;
+  --z-modal: 90;
+  --z-toast: 100;
+
+  color-scheme: dark;
+}
