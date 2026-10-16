@@ -1,0 +1,1334 @@
+[
+ {
+  "id": "seiqevv2JuU",
+  "topic": "pas",
+  "lv": [
+   2,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Uzun pasın nasıl atıldığını (ayak yerleşimi, vuruş yüzeyi, takip) adım adım anlatan Türkçe bir eğitim videosu.",
+  "pos": [
+   "merkez-orta-saha",
+   "stoper",
+   "on-libero"
+  ],
+  "techs": [
+   "uzun-pas"
+  ]
+ },
+ {
+  "id": "-J7pXB7yfic",
+  "topic": "pas",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "tr",
+  "summary": "Başlangıç düzeyi için öğrenmesi kolay dokuz pas hareketini gösteren Türkçe video.",
+  "techs": [
+   "yerden-ic-yuz-pas"
+  ]
+ },
+ {
+  "id": "5LEf1rqAolc",
+  "topic": "pas",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "tr",
+  "summary": "Ayak içi pasın ne olduğunu ve nasıl yapıldığını anlatan Türkçe bir akademi videosu.",
+  "techs": [
+   "yerden-ic-yuz-pas"
+  ]
+ },
+ {
+  "id": "vNV685TrU9k",
+  "topic": "pas",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "tr",
+  "summary": "Ayak içiyle isabetli pas vermenin püf noktalarını anlatan kısa Türkçe video.",
+  "techs": [
+   "yerden-ic-yuz-pas"
+  ]
+ },
+ {
+  "id": "IL_wSPtZN0I",
+  "topic": "pas",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Ayak içi kontrol ve pas tekniğini yaş gruplarına göre (U9–U15) anlatan uzun Türkçe antrenman videosu.",
+  "techs": [
+   "yerden-ic-yuz-pas",
+   "ic-yuz-durdurma"
+  ]
+ },
+ {
+  "id": "oIpRuzvsU80",
+  "topic": "pas",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "en",
+  "summary": "Pasın temelleri: başlangıç seviyesi için ayak içi pas, duruş ve temas yüzeyi anlatımı (İngilizce).",
+  "techs": [
+   "yerden-ic-yuz-pas"
+  ]
+ },
+ {
+  "id": "Ws2m0cZLkq0",
+  "topic": "pas",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "en",
+  "summary": "Ayak içi pasın temel hareketini kısa ve net gösteren İngilizce antrenör videosu.",
+  "techs": [
+   "yerden-ic-yuz-pas"
+  ]
+ },
+ {
+  "id": "N_w6d6y4i58",
+  "topic": "pas",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Ajax üçgen pas alıştırması: üç kişiyle pas ve hareket kalıbı (İngilizce, görsel ağırlıklı).",
+  "pos": [
+   "merkez-orta-saha",
+   "on-libero"
+  ],
+  "techs": [
+   "ucgen-kombinasyon"
+  ]
+ },
+ {
+  "id": "8b0OdCZLOzI",
+  "topic": "hucum",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "“Ver-git” (duvar pası, 1-2) kombinasyonunun mantığını ve uygulanışını anlatan İngilizce video.",
+  "techs": [
+   "duvar-pasi",
+   "ucgen-kombinasyon"
+  ]
+ },
+ {
+  "id": "SiQUZU6FNcE",
+  "topic": "hucum",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "en",
+  "summary": "Duvar pası (ver-git) hareketinin kısa, sade bir gösterimi (İngilizce).",
+  "techs": [
+   "duvar-pasi"
+  ]
+ },
+ {
+  "id": "NDCEDQ5K2vQ",
+  "topic": "kontrol",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Top kontrolünü kısa sürede geliştirmek için çalışma önerileri veren Türkçe antrenman videosu.",
+  "techs": [
+   "ilk-temas",
+   "yonlu-kontrol"
+  ]
+ },
+ {
+  "id": "7IrJwxdJsFw",
+  "topic": "kontrol",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "tr",
+  "summary": "Ayak üstüyle top kontrolünün nasıl yapıldığını anlatan Türkçe video.",
+  "techs": [
+   "ayak-ustu-indirme"
+  ]
+ },
+ {
+  "id": "5GdObYQTDqQ",
+  "topic": "kontrol",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "İlk dokunuşu ve top kontrolünü geliştirmek için çalışma örnekleri gösteren Türkçe video.",
+  "techs": [
+   "ilk-temas"
+  ]
+ },
+ {
+  "id": "O4v-o1xeco0",
+  "topic": "kontrol",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Takım ya da bireysel çalışabileceğin yedi ilk dokunuş alıştırması (İngilizce, görsel ağırlıklı).",
+  "techs": [
+   "ilk-temas",
+   "yonlu-kontrol"
+  ]
+ },
+ {
+  "id": "8t0S-QZmHIg",
+  "topic": "kontrol",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Bir antrenörün ilk dokunuş alıştırmalarını nasıl çeşitlendirdiğini anlatan İngilizce video.",
+  "techs": [
+   "ilk-temas",
+   "yonlu-kontrol"
+  ]
+ },
+ {
+  "id": "UnbGJj3VwoM",
+  "topic": "kontrol",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "İlk dokunuş ve yön değiştirme birleşimi alıştırmalar (İngilizce, kısa ve görsel).",
+  "techs": [
+   "yonlu-kontrol",
+   "alip-donme"
+  ]
+ },
+ {
+  "id": "Rv1gD63QNKU",
+  "topic": "sut",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Kalçadan sert şutun nasıl çekildiğini (duruş, vücut açısı, vuruş yüzeyi) anlatan Türkçe video.",
+  "techs": [
+   "sert-sut"
+  ]
+ },
+ {
+  "id": "_JGVGshCqY0",
+  "topic": "sut",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "İki dakikada şut tekniğinin temel noktalarını özetleyen kısa Türkçe video.",
+  "techs": [
+   "sert-sut",
+   "ic-yuz-plase-sut"
+  ]
+ },
+ {
+  "id": "omJtsMlA_sU",
+  "topic": "sut",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Farklı şut tekniklerini karşılaştırıp hangisinin ne zaman daha iyi olduğunu tartışan Türkçe video.",
+  "techs": [
+   "sert-sut",
+   "ic-yuz-plase-sut",
+   "dis-kenar-sutu"
+  ]
+ },
+ {
+  "id": "E_18kmAdaXA",
+  "topic": "sut",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Üst dış vuruş (trivela) tekniğini bir hafta boyunca çalışarak öğrenme sürecini ve tekniği anlatan Türkçe video.",
+  "techs": [
+   "ust-dis-vurus"
+  ]
+ },
+ {
+  "id": "VBGJAtj1QtE",
+  "topic": "sut",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Trivela vuruşunun temas yüzeyini ve ayak yerleşimini anlatan Türkçe video.",
+  "techs": [
+   "ust-dis-vurus"
+  ]
+ },
+ {
+  "id": "uA8cLwI_CQI",
+  "topic": "sut",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Trivelanın ne olduğunu ve nasıl atılacağını, bu vuruşuyla tanınan Ricardo Quaresma’dan dinleten Türkçe haber videosu.",
+  "techs": [
+   "ust-dis-vurus"
+  ]
+ },
+ {
+  "id": "_3NNHks6_kI",
+  "topic": "sut",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Trivela nedir, nasıl atılır? Ricardo Quaresma’nın anlatımı; bir kulübün resmî kanalından Türkçe video.",
+  "techs": [
+   "ust-dis-vurus"
+  ]
+ },
+ {
+  "id": "6ti3k7wTFMA",
+  "topic": "sut",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Trivela (üst dış) şutunu adım adım öğreten İngilizce video.",
+  "techs": [
+   "ust-dis-vurus"
+  ]
+ },
+ {
+  "id": "HonA5_bMQKQ",
+  "topic": "sut",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Ayağın dış yüzüyle şut atmanın (trivela) ayrıntılı rehberi; İngilizce.",
+  "techs": [
+   "ust-dis-vurus"
+  ]
+ },
+ {
+  "id": "ILWrKgzqnLk",
+  "topic": "sut",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Falsolu vuruşun nasıl yapıldığını (temas noktası, ayak açısı) anlatan Türkçe video.",
+  "techs": [
+   "falsolu-sut"
+  ]
+ },
+ {
+  "id": "dl14Ywpu9q0",
+  "topic": "sut",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Topa falso vermenin ve falsolu şut çekmenin anlatımlı ve örnekli gösterimi (Türkçe).",
+  "techs": [
+   "falsolu-sut"
+  ]
+ },
+ {
+  "id": "F9JkvbsNls8",
+  "topic": "sut",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Falsolu vuruşu bir hafta içinde öğrenme denemesi; teknik ve çalışma düzeni (Türkçe).",
+  "techs": [
+   "falsolu-sut"
+  ]
+ },
+ {
+  "id": "qW75D9Nzg1g",
+  "topic": "duran",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Ölü yaprak (knuckleball) vuruşunun nasıl yapıldığını anlatan Türkçe video.",
+  "techs": [
+   "ust-dis-vurus",
+   "uzaktan-sut"
+  ]
+ },
+ {
+  "id": "JQYBM0p-j6I",
+  "topic": "duran",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Knuckleball (ölü yaprak) serbest vuruşunu öğreten, çok izlenen İngilizce eğitim videosu.",
+  "techs": [
+   "serbest-vurus-duvar-ustu"
+  ]
+ },
+ {
+  "id": "6mFfS1PE3Vo",
+  "topic": "duran",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Serbest vuruş eğitimi: knuckleball, falsolu ve topuzlu vuruş farkları (İngilizce).",
+  "techs": [
+   "serbest-vurus-duvar-ustu",
+   "serbest-vurus-duvar-yani",
+   "falsolu-sut"
+  ]
+ },
+ {
+  "id": "efdxdNxqBQI",
+  "topic": "duran",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Korner vuruşunun nasıl kullanıldığını, içe ve dışa dönen toplarla anlatan İngilizce video.",
+  "techs": [
+   "korner-ice",
+   "korner-disa"
+  ]
+ },
+ {
+  "id": "AEkvuvjV_J8",
+  "topic": "bitiricilik",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Kaleciyle karşı karşıya kalındığında golü bulmanın üç yolunu gösteren İngilizce video.",
+  "pos": [
+   "santrfor",
+   "kanat"
+  ],
+  "techs": [
+   "kaleciyle-karsi-karsiya"
+  ]
+ },
+ {
+  "id": "5OWWGerdpss",
+  "topic": "bitiricilik",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Kaleciyle birebirde sakin kalmak ve bitirmek için ipuçları (İngilizce).",
+  "pos": [
+   "santrfor",
+   "kanat"
+  ],
+  "techs": [
+   "kaleciyle-karsi-karsiya"
+  ]
+ },
+ {
+  "id": "Q4ttRfja70M",
+  "topic": "surme",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Basit ama etkili 15 çalım hareketinin gösterimi ve öğretimi (Türkçe).",
+  "techs": [
+   "govde-sahtesi",
+   "adim-ustu",
+   "top-cekme"
+  ]
+ },
+ {
+  "id": "qCnyXi0bHWI",
+  "topic": "surme",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Top sürmenin temelleri: dokunuş sıklığı, yüzey seçimi ve baş kaldırma (Türkçe).",
+  "techs": [
+   "temel-top-surme",
+   "yakin-kontrol-surme"
+  ]
+ },
+ {
+  "id": "gVY-saeJnkk",
+  "topic": "surme",
+  "lv": [
+   2,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Rakipten topu saklamak ve çalımla geçmek için kısa bir Türkçe anlatım.",
+  "techs": [
+   "top-koruma",
+   "govde-sahtesi"
+  ]
+ },
+ {
+  "id": "vyzdSmgB6Ls",
+  "topic": "surme",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Top sürme becerisini geliştirmek için basit çalışma önerileri (Türkçe, kısa).",
+  "techs": [
+   "temel-top-surme"
+  ]
+ },
+ {
+  "id": "naEccnjzLxM",
+  "topic": "surme",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "en",
+  "summary": "Dribblingin temelleri: başlangıç seviyesi için top sürme ilkeleri (İngilizce).",
+  "techs": [
+   "temel-top-surme",
+   "yakin-kontrol-surme"
+  ]
+ },
+ {
+  "id": "Xim8-lUZnsA",
+  "topic": "surme",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "en",
+  "summary": "Yeni başlayanlar için 15 kolay çalım hareketi (İngilizce).",
+  "techs": [
+   "govde-sahtesi",
+   "adim-ustu",
+   "top-cekme"
+  ]
+ },
+ {
+  "id": "_uuqsGCiM9I",
+  "topic": "surme",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Rakibi geçmek için 10 dribbling hareketini adım adım öğreten İngilizce video.",
+  "techs": [
+   "govde-sahtesi",
+   "cruyff-donusu",
+   "marseille-donusu"
+  ]
+ },
+ {
+  "id": "AqseLKkl8FA",
+  "topic": "kafa",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Kafa topuna çıkarken korkuyu yenmek için ipuçları (Türkçe).",
+  "techs": [
+   "alin-kafa"
+  ],
+  "note": "Kafa vuruşu 12 yaş altında antrenmanda yapılmaz (İngiltere FA yönergesi, 2020); 12–16 yaşta kademeli ve sınırlı uygulanır. Bu videoyu yalnızca yaşına uygunsa ve antrenörünün bilgisi dahilinde uygula."
+ },
+ {
+  "id": "x0Nh5H3V0lI",
+  "topic": "kafa",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Futbolda kafa vuruşunun nasıl yapılacağını kısaca anlatan Türkçe video.",
+  "techs": [
+   "alin-kafa"
+  ],
+  "note": "Kafa vuruşu 12 yaş altında antrenmanda yapılmaz (İngiltere FA yönergesi, 2020); 12–16 yaşta kademeli ve sınırlı uygulanır. Bu videoyu yalnızca yaşına uygunsa ve antrenörünün bilgisi dahilinde uygula."
+ },
+ {
+  "id": "Fyp4M70M6Hw",
+  "topic": "kafa",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Havada üstün olmak için kafa vuruşu tekniğini anlatan İngilizce eğitim videosu.",
+  "techs": [
+   "alin-kafa",
+   "ziplayarak-kafa"
+  ],
+  "note": "Kafa vuruşu 12 yaş altında antrenmanda yapılmaz (İngiltere FA yönergesi, 2020); 12–16 yaşta kademeli ve sınırlı uygulanır. Bu videoyu yalnızca yaşına uygunsa ve antrenörünün bilgisi dahilinde uygula."
+ },
+ {
+  "id": "Dqlar8R3j8M",
+  "topic": "kafa",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Kafa vuruşu ile gol atma ve savunma yapma: teknik ve zamanlama (İngilizce).",
+  "techs": [
+   "savunma-kafasi",
+   "kafa-ile-bitirme"
+  ],
+  "note": "Kafa vuruşu 12 yaş altında antrenmanda yapılmaz (İngiltere FA yönergesi, 2020); 12–16 yaşta kademeli ve sınırlı uygulanır. Bu videoyu yalnızca yaşına uygunsa ve antrenörünün bilgisi dahilinde uygula."
+ },
+ {
+  "id": "nvajn6BYJog",
+  "topic": "hucum",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Öğrenmen gereken üç orta türü: alçak, yüksek ve geri çekme (İngilizce).",
+  "pos": [
+   "kanat",
+   "bek"
+  ],
+  "techs": [
+   "orta-alcak",
+   "orta-yuksek",
+   "geri-cekme"
+  ]
+ },
+ {
+  "id": "PagCekTH7XI",
+  "topic": "hucum",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Beş en iyi orta tekniğinin anlatımı ve gösterimi (İngilizce).",
+  "pos": [
+   "kanat",
+   "bek"
+  ],
+  "techs": [
+   "orta-alcak",
+   "orta-yuksek"
+  ]
+ },
+ {
+  "id": "tLHYYrACx3s",
+  "topic": "savunma",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Baskı, kademe ve denge ilkeleriyle birebir ve takım savunmasını anlatan uzun Türkçe antrenman videosu.",
+  "pos": [
+   "stoper",
+   "bek",
+   "on-libero"
+  ],
+  "techs": [
+   "baski-kademe",
+   "birebir-savunma"
+  ]
+ },
+ {
+  "id": "cZWRifUZLmc",
+  "topic": "savunma",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Birebir savunma tekniğini kısa ve net anlatan Türkçe video.",
+  "pos": [
+   "stoper",
+   "bek"
+  ],
+  "techs": [
+   "birebir-savunma",
+   "savunma-durusu"
+  ]
+ },
+ {
+  "id": "LtyS7DZ14N4",
+  "topic": "savunma",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Futbolda savunma prensiplerini ayrıntılı anlatan Türkçe video.",
+  "pos": [
+   "stoper",
+   "bek",
+   "on-libero"
+  ],
+  "techs": [
+   "baski-kademe",
+   "savunma-hatti"
+  ]
+ },
+ {
+  "id": "K17wDaDcuyY",
+  "topic": "savunma",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Hızlı ve çalımlı hücumcuları durdurmanın yolları (İngilizce).",
+  "pos": [
+   "stoper",
+   "bek"
+  ],
+  "techs": [
+   "birebir-savunma"
+  ]
+ },
+ {
+  "id": "hgrStIbFls0",
+  "topic": "savunma",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "en",
+  "summary": "Savunmada ‘jockey’ (geri kayarak oyalama) tekniğine kısa bir giriş (İngilizce).",
+  "pos": [
+   "stoper",
+   "bek"
+  ],
+  "techs": [
+   "yan-yan-geri-kayma",
+   "birebir-savunma"
+  ]
+ },
+ {
+  "id": "aadebgx5nz4",
+  "topic": "savunma",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Birebirde yenilmemek için savunma temelleri (İngilizce).",
+  "pos": [
+   "stoper",
+   "bek"
+  ],
+  "techs": [
+   "birebir-savunma",
+   "savunma-durusu"
+  ]
+ },
+ {
+  "id": "mQbkDn20fOg",
+  "topic": "savunma",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Faul yapmadan kayarak müdahale (slide tackle) tekniği (İngilizce).",
+  "pos": [
+   "stoper",
+   "bek"
+  ],
+  "techs": [
+   "kayarak-mudahale"
+  ]
+ },
+ {
+  "id": "eqY-BdErllw",
+  "topic": "savunma",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Müdahale tekniğini bir profesyonel savunmacının anlatımıyla gösteren İngilizce video.",
+  "pos": [
+   "stoper",
+   "bek"
+  ],
+  "techs": [
+   "top-kapma-blok"
+  ]
+ },
+ {
+  "id": "KLExU4J8g-I",
+  "topic": "kalecilik",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Kaleci temel eğitimi: duruş, tutuş ve temel hareketleri anlatan uzun Türkçe video.",
+  "pos": [
+   "kaleci"
+  ],
+  "techs": [
+   "kaleci-durusu",
+   "yerden-sut-tutma"
+  ]
+ },
+ {
+  "id": "DwC2Q1zqEKk",
+  "topic": "kalecilik",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Kaleci tekniklerini (tutuş, plonjon, çıkış) gösteren Türkçe antrenman videosu.",
+  "pos": [
+   "kaleci"
+  ],
+  "techs": [
+   "plonjon-alcak",
+   "gogus-hizasi-tutma"
+  ]
+ },
+ {
+  "id": "_mgdr3QLOcA",
+  "topic": "kalecilik",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "İyi bir kaleci olmanın incelikleri; bir dünya kalecisi örneğiyle Türkçe analiz.",
+  "pos": [
+   "kaleci"
+  ],
+  "techs": [
+   "kaleci-durusu",
+   "birebirde-cikis"
+  ]
+ },
+ {
+  "id": "7MXwewtxxck",
+  "topic": "kalecilik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Bir profesyonel takımın kaleci antrenmanından kamera arkası görüntüler (Türkçe, kulüp kanalı).",
+  "pos": [
+   "kaleci"
+  ]
+ },
+ {
+  "id": "k1i6kWXi2Ls",
+  "topic": "kalecilik",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "en",
+  "summary": "Dokuz temel kalecilik becerisi (İngilizce).",
+  "pos": [
+   "kaleci"
+  ],
+  "techs": [
+   "kaleci-durusu",
+   "yerden-sut-tutma"
+  ]
+ },
+ {
+  "id": "PY1oJFuM5qU",
+  "topic": "kalecilik",
+  "lv": [
+   1,
+   2
+  ],
+  "lang": "en",
+  "summary": "Yeni başlayan kaleciler için tutuşun temelleri ve alıştırmalar (İngilizce).",
+  "pos": [
+   "kaleci"
+  ],
+  "techs": [
+   "yerden-sut-tutma",
+   "gogus-hizasi-tutma"
+  ]
+ },
+ {
+  "id": "Hy10XUls8xs",
+  "topic": "kalecilik",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Birebirlerde kaleci olarak üstün gelmenin yolları (İngilizce).",
+  "pos": [
+   "kaleci"
+  ],
+  "techs": [
+   "birebirde-cikis",
+   "aci-kapama"
+  ]
+ },
+ {
+  "id": "MRKgjlRiLok",
+  "topic": "kalecilik",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Profesyoneller gibi kurtarış yapmak için dört temel plonjon tekniği (İngilizce).",
+  "pos": [
+   "kaleci"
+  ],
+  "techs": [
+   "plonjon-alcak",
+   "ust-kose-kurtaris"
+  ]
+ },
+ {
+  "id": "urDipH2GQN0",
+  "topic": "topsuz",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "İleri ve boş alana koşunun mantığı ve uygulanışı (Türkçe).",
+  "pos": [
+   "santrfor",
+   "kanat",
+   "on-numara"
+  ],
+  "techs": [
+   "savunma-arkasina-kosu",
+   "bos-alan-yaratma"
+  ]
+ },
+ {
+  "id": "99PrXp5XojA",
+  "topic": "topsuz",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Topsuz penetrasyon (savunmaya sızma) kısa Türkçe hücum prensibi anlatımı.",
+  "pos": [
+   "santrfor",
+   "kanat",
+   "on-numara"
+  ],
+  "techs": [
+   "savunma-arkasina-kosu"
+  ]
+ },
+ {
+  "id": "biFVvYNs5NM",
+  "topic": "topsuz",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Aldatıcı koşu ile kendine alan boşaltma örneği (Türkçe, görsel).",
+  "pos": [
+   "santrfor",
+   "on-numara",
+   "kanat"
+  ],
+  "techs": [
+   "sahte-kosu",
+   "bos-alan-yaratma"
+  ]
+ },
+ {
+  "id": "vf0AkYAL6Ig",
+  "topic": "topsuz",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Oyun kurucu gibi etrafı taramanın (scanning) nasıl geliştirileceği (İngilizce).",
+  "pos": [
+   "merkez-orta-saha",
+   "on-libero",
+   "on-numara"
+  ],
+  "techs": [
+   "cevre-tarama"
+  ]
+ },
+ {
+  "id": "IH0Tub-jcN0",
+  "topic": "topsuz",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Taramanın (scanning) futboldaki önemini anlatan İngilizce video.",
+  "pos": [
+   "merkez-orta-saha",
+   "on-libero",
+   "on-numara"
+  ],
+  "techs": [
+   "cevre-tarama"
+  ]
+ },
+ {
+  "id": "rhSxSFtyw0A",
+  "topic": "topsuz",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "en",
+  "summary": "Bir profesyonel oyuncunun gözünden görüş alanı ve oyun farkındalığını geliştirme (İngilizce).",
+  "pos": [
+   "merkez-orta-saha",
+   "on-numara"
+  ],
+  "techs": [
+   "cevre-tarama"
+  ]
+ },
+ {
+  "id": "wgqqT5L-vZw",
+  "topic": "topsuz",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Üçüncü adam koşusunun ne olduğunu kısaca anlatan İngilizce video.",
+  "pos": [
+   "merkez-orta-saha",
+   "on-numara",
+   "santrfor",
+   "kanat"
+  ],
+  "techs": [
+   "ucuncu-adam-kosusu"
+  ]
+ },
+ {
+  "id": "aJp1KIRDg5Q",
+  "topic": "topsuz",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Üçüncü adam koşusunun antrenmanda nasıl çalıştırılacağı (İngilizce).",
+  "pos": [
+   "merkez-orta-saha",
+   "on-numara",
+   "santrfor",
+   "kanat"
+  ],
+  "techs": [
+   "ucuncu-adam-kosusu"
+  ]
+ },
+ {
+  "id": "VbMqw-9nIEQ",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Orta saha oyuncusunun pozisyon alma ve oyun okuma sorumluluklarını anlatan Türkçe analiz.",
+  "pos": [
+   "merkez-orta-saha",
+   "on-libero"
+  ]
+ },
+ {
+  "id": "SSw2jVVD8uc",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "İyi bir orta saha oyuncusu olmanın taktik yönü (Türkçe analiz).",
+  "pos": [
+   "merkez-orta-saha",
+   "on-libero"
+  ]
+ },
+ {
+  "id": "GlOUrEdGLrU",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Top kapan bir orta sahanın (Kanté örneği) oyununu inceleyen Türkçe analiz.",
+  "pos": [
+   "on-libero",
+   "merkez-orta-saha"
+  ],
+  "techs": [
+   "araya-girme"
+  ]
+ },
+ {
+  "id": "hjq0tlyx4-Y",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Modern orta saha oyuncularının özellikleri ve sorumlulukları (Türkçe).",
+  "pos": [
+   "merkez-orta-saha"
+  ]
+ },
+ {
+  "id": "Mf8CWaw4tPQ",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Gegenpress (karşı pres) nedir? Klopp’un tarzı üzerinden Türkçe anlatım."
+ },
+ {
+  "id": "XWcGOfouH0M",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Gegenpress (karşı pres) kavramına kısa bir Türkçe giriş."
+ },
+ {
+  "id": "euunX5I7Zak",
+  "topic": "taktik",
+  "lv": [
+   4,
+   5
+  ],
+  "lang": "tr",
+  "summary": "Modern futbolun taktik evrimini anlatan uzun Türkçe analiz."
+ },
+ {
+  "id": "bUpwuvGYqh8",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Yarı alan (half-space) nedir ve neden önemlidir? (İngilizce)",
+  "pos": [
+   "on-numara",
+   "kanat",
+   "merkez-orta-saha"
+  ],
+  "techs": [
+   "hat-arasi-alma"
+  ]
+ },
+ {
+  "id": "KMQWMccF83U",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Pres tuzakları ve pres tetikleyicileri nelerdir? (İngilizce)"
+ },
+ {
+  "id": "5QRWryN3okY",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Gegenpressing nedir? Kısa taktik açıklaması (İngilizce)."
+ },
+ {
+  "id": "FmVQniDnqCg",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Geriden oyun kurmanın (build-up) mantığı ve avantajları (İngilizce).",
+  "pos": [
+   "kaleci",
+   "stoper",
+   "on-libero"
+  ]
+ },
+ {
+  "id": "qLmV-m0SxhI",
+  "topic": "taktik",
+  "lv": [
+   3,
+   5
+  ],
+  "lang": "en",
+  "summary": "Bir dünya yıldızının hücum organizasyonunu anlattığı usta sınıfı (İngilizce).",
+  "pos": [
+   "merkez-orta-saha",
+   "on-numara"
+  ]
+ },
+ {
+  "id": "PP9EKhOYJfY",
+  "topic": "fiziksel",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Futbolda hız ve çabukluk için basit hareketler (Türkçe, kısa).",
+  "note": "Genel bilgi amaçlıdır. Çocuk ve ergenlerde antrenör gözetiminde, uygun ısınmadan sonra uygulayın."
+ },
+ {
+  "id": "kLv0O__Nk4o",
+  "topic": "fiziksel",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "tr",
+  "summary": "Çabukluk ve koordinasyon çalışmalarının en temel hareketleri (Türkçe).",
+  "note": "Genel bilgi amaçlıdır. Çocuk ve ergenlerde antrenör gözetiminde, uygun ısınmadan sonra uygulayın."
+ },
+ {
+  "id": "Si6GD7golbA",
+  "topic": "fiziksel",
+  "lv": [
+   2,
+   4
+  ],
+  "lang": "tr",
+  "summary": "Topla ve topsuz sürat, çeviklik çalışmaları (Türkçe).",
+  "note": "Genel bilgi amaçlıdır. Çocuk ve ergenlerde antrenör gözetiminde, uygun ısınmadan sonra uygulayın."
+ },
+ {
+  "id": "d01bxcf-VhQ",
+  "topic": "fiziksel",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "en",
+  "summary": "Ayak çabukluğu, çeviklik ve hız için beş egzersiz (İngilizce).",
+  "note": "Genel bilgi amaçlıdır. Çocuk ve ergenlerde antrenör gözetiminde, uygun ısınmadan sonra uygulayın."
+ },
+ {
+  "id": "us9XzHgA0f0",
+  "topic": "fiziksel",
+  "lv": [
+   1,
+   3
+  ],
+  "lang": "en",
+  "summary": "Hız ve çevikliği geliştirmenin üç yolu (İngilizce).",
+  "note": "Genel bilgi amaçlıdır. Çocuk ve ergenlerde antrenör gözetiminde, uygun ısınmadan sonra uygulayın."
+ },
+ {
+  "id": "QT1y6S44vVc",
+  "topic": "onleme",
+  "lv": [
+   1,
+   5
+  ],
+  "lang": "tr",
+  "summary": "FIFA 11+ yaralanma önleme ısınma programının egzersizlerini anlatan Türkçe fizyoterapi videosu.",
+  "note": "FIFA 11+ programı; sakatlık riskini azaltmaya yardımcı bir ısınma düzenidir, tedavi değildir. Mevcut bir sakatlığın varsa önce hekime danış."
+ },
+ {
+  "id": "pK5jcQalrSs",
+  "topic": "onleme",
+  "lv": [
+   1,
+   5
+  ],
+  "lang": "en",
+  "summary": "FIFA 11+ tam ısınma programı, 1. bölüm: koşu egzersizleri (İngilizce).",
+  "note": "FIFA 11+ programı; sakatlık riskini azaltmaya yardımcı bir ısınma düzenidir, tedavi değildir. Mevcut bir sakatlığın varsa önce hekime danış."
+ },
+ {
+  "id": "nl8_XgdcCuI",
+  "topic": "onleme",
+  "lv": [
+   1,
+   5
+  ],
+  "lang": "en",
+  "summary": "FIFA 11+ yaralanma önleme programının tamamının bir klinik tarafından anlatımı (İngilizce).",
+  "note": "FIFA 11+ programı; sakatlık riskini azaltmaya yardımcı bir ısınma düzenidir, tedavi değildir. Mevcut bir sakatlığın varsa önce hekime danış."
+ }
+]

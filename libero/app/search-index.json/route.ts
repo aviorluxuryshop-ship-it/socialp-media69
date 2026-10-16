@@ -3,6 +3,7 @@ import { EXERCISES, EXCAT_NAME, MUSCLE_NAME } from '@/data/exercises';
 import { TACTICS } from '@/data/tactics';
 import { POSITION_PROFILES } from '@/data/positions';
 import { CAT_BY_ID } from '@/data/categories';
+import { EXTRA_DOCS } from '@/data/search-extra';
 import type { SearchDoc } from '@/lib/search';
 
 export const dynamic = 'force-static';
@@ -47,7 +48,6 @@ export async function GET() {
     ...TACTICS.map((t): SearchDoc => ({ k: 'taktik', t: t.title, d: t.summary, u: `/taktik/${t.id}/`, a: t.aliases })),
     ...POSITION_PROFILES.map((p): SearchDoc => ({ k: 'pozisyon', t: p.name, d: p.tagline, u: `/pozisyonlar/${p.id}/`, x: p.think.join(' ') })),
   ];
-  const extra = await import('@/data/search-extra');
-  docs.push(...extra.EXTRA_DOCS);
+  docs.push(...EXTRA_DOCS);
   return Response.json(docs);
 }

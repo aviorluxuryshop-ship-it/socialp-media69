@@ -310,3 +310,34 @@ export function recordQuiz(id: string, correct: boolean) {
     };
   });
 }
+
+// ── Test kayıtları (performans analizi) ───────────────────
+
+export function addTest(entry: Omit<TestEntry, 'id'>) {
+  const id = Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+  update((s) => ({ ...s, tests: [...s.tests, { ...entry, id }].slice(-2000) }));
+  return id;
+}
+
+export function deleteTest(id: string) {
+  update((s) => ({ ...s, tests: s.tests.filter((t) => t.id !== id) }));
+}
+
+// ── Video analiz notları ───────────────────────────────────
+
+export function saveVideoNotes(key: string, name: string, markers: VideoMarker[]) {
+  update((s) => {
+    const next = { ...s.videoNotes };
+    if (markers.length === 0) delete next[key];
+    else next[key] = { name, markers, updated: nowIso() };
+    return { ...s, videoNotes: next };
+  });
+}
+
+export function deleteVideoNotes(key: string) {
+  update((s) => {
+    const next = { ...s.videoNotes };
+    delete next[key];
+    return { ...s, videoNotes: next };
+  });
+}

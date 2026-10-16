@@ -10,6 +10,8 @@ import { PageHead } from '@/components/PageHead';
 import { SceneView } from '@/components/pitch/SceneView';
 import { StarRating } from '@/components/StarRating';
 import { DrillList, TechLevelCard } from '@/components/TechPlan';
+import { VideoCard } from '@/components/VideoCard';
+import { VIDEOS_BY_TECH } from '@/data/videos';
 import { POSITION_NAME } from '@/lib/types';
 
 export const dynamicParams = false;
@@ -35,6 +37,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const prev = siblings[i - 1];
   const next = siblings[i + 1];
   const related = t.related.map((id) => TECH_BY_ID[id]).filter(Boolean);
+  const videos = VIDEOS_BY_TECH[t.id] ?? [];
 
   return (
     <>
@@ -162,11 +165,24 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <h2 className="h3 tsec__h">
               <span className="tsec__n mono">06</span> Video ve kaynaklar
             </h2>
-            <p className="prose muted">
-              Kütüphanedeki doğrulanmış videolar <Link href={`/videolar/?q=${encodeURIComponent(t.name)}`} className="btn--quiet">Videolar</Link> bölümünde listelenir.
-              Aşağıdaki bağlantı, tekniği YouTube’da <strong>arama</strong> sonuçlarında açar; belirli bir video önermez.
+            {videos.length > 0 ? (
+              <>
+                <p className="prose muted" style={{ marginBottom: 16 }}>
+                  Bu teknikle ilgili, varlığı ve gömülebilirliği doğrulanmış videolar. Karta tıkla; YouTube’un resmî oynatıcısı açılır, Türkçe özet ve kanal sahibi kartta yer alır.
+                </p>
+                <ul className="vlib__grid vlib__grid--two">
+                  {videos.map((v) => <li key={v.id}><VideoCard video={v} compact /></li>)}
+                </ul>
+              </>
+            ) : (
+              <p className="prose muted">
+                Bu teknik için henüz doğrulanmış bir video eklenmedi; uydurma bağlantı vermiyoruz. Diğer konular için <Link href="/videolar/" className="btn--quiet">Videolar</Link> bölümüne bakabilirsin.
+              </p>
+            )}
+            <p className="field__hint" style={{ marginTop: 16 }}>
+              Aşağıdaki bağlantı tekniği YouTube’da <strong>arama</strong> sonuçlarında açar; belirli bir video önermez ve sonuçlar üçüncü kişilere aittir.
             </p>
-            <p style={{ marginTop: 16 }}>
+            <p style={{ marginTop: 10 }}>
               <a className="btn btn--ghost btn--sm" target="_blank" rel="noopener noreferrer" href={`https://www.youtube.com/results?search_query=${encodeURIComponent(t.q)}`}>
                 YouTube’da ara <Icon name="external" />
               </a>

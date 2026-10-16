@@ -10,6 +10,8 @@ import { PageHead } from '@/components/PageHead';
 import { SceneView } from '@/components/pitch/SceneView';
 import { SetPositionButton } from '@/components/PositionPicker';
 import { MUSCLE_NAME } from '@/data/exercises';
+import { VideoCard } from '@/components/VideoCard';
+import { VIDEOS } from '@/data/videos';
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -27,6 +29,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!p) notFound();
   const techs = p.keyTechs.map((id) => TECH_BY_ID[id]).filter(Boolean);
   const tactics = p.keyTactics.map((id) => TACTIC_BY_ID[id]).filter(Boolean);
+  const videos = VIDEOS.filter((v) => v.pos.includes(p.id)).slice(0, 3);
   const quals = (Object.keys(p.qual) as Quality[]).sort((a, b) => p.qual[b] - p.qual[a]);
 
   return (
@@ -128,6 +131,20 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               </li>
             ))}
           </ul>
+          {videos.length > 0 && (
+            <>
+              <div className="section-title" style={{ marginTop: 56 }}>
+                <div>
+                  <p className="eyebrow">Videolar</p>
+                  <h2 className="h2">Bu pozisyon için <em>izlenecekler</em></h2>
+                </div>
+                <Link href={`/videolar/?pozisyon=${p.id}`} className="btn btn--ghost btn--sm">Tümünü gör <Icon name="arrow" /></Link>
+              </div>
+              <ul className="vlib__grid">
+                {videos.map((v) => <li key={v.id}><VideoCard video={v} compact /></li>)}
+              </ul>
+            </>
+          )}
           <p style={{ marginTop: 40 }}>
             <Link href="/program/" className="btn btn--primary">Bu pozisyona göre program oluştur <Icon name="arrow" /></Link>
           </p>
