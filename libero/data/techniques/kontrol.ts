@@ -11,7 +11,7 @@ export const KONTROL = [
     sub: 'Kontrolün temeli',
     contact: 'Ayağın iç yüzü, dış yüzü, ayak üstü ya da gövde',
     purpose: 'Gelen topu bir sonraki hamleye (pas, sürüş, şut) hazır bir konuma getirmek',
-    foot: ['ic', 'dis'],
+    foot: ['ic', 'dis', 'ustTam'],
     sum: 'İlk temas topu durdurmak değil, bir sonraki hareketi mümkün kılmaktır. İyi bir ilk temas topu baskıdan uzağa, hareket edeceğiniz yöne alır ve size zaman kazandırır.',
     steps: [
       'Top gelmeden önce omuz üstü bakın: baskı kimden, boş alan neresi?',

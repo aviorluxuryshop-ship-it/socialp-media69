@@ -56,7 +56,7 @@ export const HUCUM = [
     sub: 'Kanat ortaları',
     contact: 'Ayak üstü iç ya da dış üst; topun alt yarısı',
     purpose: 'Savunmanın üzerinden uzak direğe havadan, kavisli top göndermek',
-    foot: ['ustIc', 'ustTam'],
+    foot: ['ustIc', 'ustDis'],
     sum: 'Topu kavisle havadan kale önündeki hedef alana gönderirsiniz. Yüksek orta, topa hakim olan forvetin kafa ya da voleyle bitirmesi için kullanılır.',
     steps: [
       'Hedef oyuncuyu ve ceza sahasındaki boşlukları görün.',

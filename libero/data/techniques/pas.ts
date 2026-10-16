@@ -226,7 +226,7 @@ export const PAS = [
 
   tech({
     id: 'derinlik-pasi',
-    foot: ['ic','ustIc'],
+    foot: ['ic','ustIc','ustDis'],
     name: 'Savunma arkasına yerden pas',
     en: 'Through ball (ground)',
     cat: 'pas',
@@ -601,7 +601,7 @@ export const PAS = [
 
   tech({
     id: 'uzun-pas',
-    foot: ['ustIc','ustTam'],
+    foot: ['ic','ustIc'],
     name: 'Uzun pas',
     en: 'Long pass / switch of play',
     cat: 'pas',

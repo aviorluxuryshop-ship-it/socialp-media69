@@ -11,7 +11,7 @@ export const BITIRICILIK = [
     sub: 'Kaleciyle birebir',
     contact: 'İç yüz (plase), ayak ucu (lob) ya da ayak üstü',
     purpose: 'Kaleciyi okuyup köşeyi, lobu ya da kaleci yanından geçişi seçmek',
-    foot: ['ic'],
+    foot: ['ic', 'uc', 'ustTam'],
     sum: 'Kaleciyle karşı karşıya kalınca en önemli şey sakin kalmaktır. Önce kalecinin duruşunu ve çıkışını okuyup bitirme yöntemini (plase, lob ya da dribbling) seçersiniz.',
     steps: [
       'Koşarken başınızı kaldırın: kaleci çizgide mi, öne mi çıkıyor?',
@@ -101,7 +101,7 @@ export const BITIRICILIK = [
     sub: 'Hızlı bitiriş',
     contact: 'Ayak üstü ya da iç yüz',
     purpose: 'Sırtı kaleye dönükken topu alıp aynı hareketle dönerek şut çekmek',
-    foot: ['ustTam'],
+    foot: ['ustTam', 'ic'],
     sum: 'Sırtınız kaleye dönükken topu alır ve ilk temasla dönüşü başlatıp şut çekersiniz. Savunmacıyı dönüşle geride bırakmak ve kaleciye zaman vermemek için kısa bir pencere vardır.',
     steps: [
       'Topu almadan önce omuz üstünden kale ve savunmacı konumunu görün.',
@@ -189,7 +189,7 @@ export const BITIRICILIK = [
     sub: 'Kale önü',
     contact: 'İç yüz, dış yüz ya da ayak ucu',
     purpose: 'Kale çizgisine yakın dar açıdan, kalecinin ulaşamayacağı yere gol atmak',
-    foot: ['ic', 'uc'],
+    foot: ['ic', 'dis', 'uc'],
     sum: 'Dar açıda kaleye açı yoktur; bu yüzden çoğu zaman en iyi çözüm kısa direğe sert vurmak ya da topu geri çekmektir. Kalecinin kısa direği tam kapatamadığı pozisyonları değerlendirirsiniz.',
     steps: [
       'Kalecinin duruşuna bakın: kısa direk açık mı, uzak direk mi?',
