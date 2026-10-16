@@ -39,23 +39,30 @@ export function StarRating({ value, onChange, size = 'md', label = 'Yetenek sevi
         onKeyDown={onKey}
         onMouseLeave={() => setHover(0)}
       >
-        {([1, 2, 3, 4, 5] as Level[]).map((n) => (
-          <button
-            key={n}
-            type="button"
-            role={readOnly ? undefined : 'radio'}
-            aria-checked={readOnly ? undefined : value === n}
-            aria-label={`${n} yıldız — ${LEVEL_NAMES[n]}`}
-            tabIndex={readOnly ? -1 : value === n || (!value && n === 1) ? 0 : -1}
-            className="stars__btn"
-            data-on={n <= shown}
-            onMouseEnter={() => !readOnly && setHover(n)}
-            onFocus={() => !readOnly && setHover(0)}
-            onClick={() => !readOnly && onChange?.(n)}
-          >
-            <StarGlyph filled={n <= shown} />
-          </button>
-        ))}
+        {([1, 2, 3, 4, 5] as Level[]).map((n) =>
+          readOnly ? (
+            // yalnızca gösterim: sahte düğme yerine süs öğesi (ekran okuyucu üst öğenin etiketini okur)
+            <span key={n} className="stars__btn" data-on={n <= shown} aria-hidden="true">
+              <StarGlyph filled={n <= shown} />
+            </span>
+          ) : (
+            <button
+              key={n}
+              type="button"
+              role="radio"
+              aria-checked={value === n}
+              aria-label={`${n} yıldız — ${LEVEL_NAMES[n]}`}
+              tabIndex={value === n || (!value && n === 1) ? 0 : -1}
+              className="stars__btn"
+              data-on={n <= shown}
+              onMouseEnter={() => setHover(n)}
+              onFocus={() => setHover(0)}
+              onClick={() => onChange?.(n)}
+            >
+              <StarGlyph filled={n <= shown} />
+            </button>
+          ),
+        )}
       </div>
       {showName && shown > 0 && <span className="stars-label">{LEVEL_NAMES[shown as Level]}</span>}
     </div>

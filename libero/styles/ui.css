@@ -429,6 +429,13 @@ a.card:hover,
 .stars--static .stars__btn {
   pointer-events: none;
 }
+/* dokunmatik ekranlarda etkileşimli yıldızlar için yeterli hedef boyutu (WCAG 2.2: en az 24 px, burada 36 px) */
+@media (pointer: coarse) {
+  .stars:not(.stars--static) .stars__btn {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
 .stars-label {
   font-family: var(--font-mono);
   font-size: 0.68rem;
