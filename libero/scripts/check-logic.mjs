@@ -18,13 +18,21 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'libero-logic-'));
 const out = path.join(tmp, 'out');
 
+// ── Alan bazlı ek mantık testleri: scripts/logic-tests/*.mjs ──────────────────────────
+// Her dosya: `export const include = ['lib/x.ts', …]` (derlenecek ek kaynaklar) ve
+// `export default async (h) => {…}`; h = { ok, test, load, root, out }.
+const extraDir = path.join(root, 'scripts/logic-tests');
+const extras = fs.existsSync(extraDir)
+  ? await Promise.all(fs.readdirSync(extraDir).filter((f) => f.endsWith('.mjs')).sort().map((f) => import(pathToFileURL(path.join(extraDir, f)).href)))
+  : [];
+
 // ── 1) Derleme ───────────────────────────────────────────────
 fs.writeFileSync(
   path.join(tmp, 'tsconfig.json'),
   JSON.stringify({
     extends: path.join(root, 'tsconfig.json'),
     compilerOptions: { noEmit: false, outDir: out, rootDir: root, incremental: false, plugins: [], jsx: 'preserve', declaration: false, sourceMap: false, baseUrl: root, typeRoots: [path.join(root, 'node_modules/@types')], types: ['node'] },
-    include: [path.join(root, 'lib/program.ts'), path.join(root, 'lib/store.ts'), path.join(root, 'lib/environments.ts'), path.join(root, 'lib/training.ts'), path.join(root, 'data/index.ts')],
+    include: [path.join(root, 'lib/program.ts'), path.join(root, 'lib/store.ts'), path.join(root, 'lib/environments.ts'), path.join(root, 'lib/training.ts'), path.join(root, 'data/index.ts'), ...extras.flatMap((m) => (m.include ?? []).map((p) => path.join(root, p)))],
     exclude: [],
   }),
 );
@@ -448,6 +456,9 @@ await test('Yedekten geri yükleme (dışa aktarılan v1 yedeği) yeni sürümde
   const s = store.sanitize(backup.data);
   ok(s.profile.equipByEnv && s.logs.length === 1 && s.program.id === 'p1', 'yedek okunamadı');
 });
+
+// ── Alan bazlı ek testler ─────────────────────────────────────
+for (const m of extras) await m.default({ ok, test, load, root, out });
 
 // ── Sonuç ─────────────────────────────────────────────────────
 fs.rmSync(tmp, { recursive: true, force: true });

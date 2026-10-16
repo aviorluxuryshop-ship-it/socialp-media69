@@ -616,6 +616,18 @@ await test('Mobil (390px): yatay taşma yok, menü açılır', async () => {
   await ctx.close();
 });
 
+// ── Alan bazlı ek testler: scripts/e2e-tests/*.mjs (her dosya `export default async (h) => {…}`) ─────────────
+// h = { BASE, newPage, go, ok, test, txt, txts, tmp, testVideo, consoleErrors }
+{
+  const dir = new URL('./e2e-tests/', import.meta.url);
+  if (fs.existsSync(dir)) {
+    for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.mjs')).sort()) {
+      const mod = await import(new URL(f, dir).href);
+      await mod.default({ BASE, newPage, go, ok, test, txt, txts, tmp, testVideo, consoleErrors });
+    }
+  }
+}
+
 await test('Konsol hatası yok', async () => {
   ok(consoleErrors.length === 0, `${consoleErrors.length} konsol hatası: ${consoleErrors.slice(0, 3).join(' | ')}`);
 });
