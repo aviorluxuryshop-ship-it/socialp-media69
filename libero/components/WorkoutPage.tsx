@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { EX_BY_ID, EXCAT_NAME, MUSCLE_NAME, type Exercise } from '@/data/exercises';
 import { ENV_NAME, EQUIP_NAME } from '@/lib/environments';
-import { FOCUS_NAME } from '@/lib/program';
+import { FOCUS_NAME, alternativesFor } from '@/lib/program';
 import { logForSession, logProgress, startSession } from '@/lib/program-actions';
 import type { PlannedItem, PlannedSession, Program, SessionLog } from '@/lib/program-types';
 import { useMeta, useStore, type AppState } from '@/lib/store';
@@ -133,7 +133,7 @@ function Detail({
 
       <ol className="wk-list">
         {session.items.map((it, i) => (
-          <ItemCard key={it.key} it={it} n={i + 1} />
+          <ItemCard key={it.key} it={it} n={i + 1} alts={it.kind === 'ex' ? alternativesFor(it.ref, session, program) : []} />
         ))}
       </ol>
 
@@ -142,9 +142,8 @@ function Detail({
   );
 }
 
-function ItemCard({ it, n }: { it: PlannedItem; n: number }) {
+function ItemCard({ it, n, alts }: { it: PlannedItem; n: number; alts: Exercise[] }) {
   const ex: Exercise | undefined = it.kind === 'ex' ? EX_BY_ID[it.ref] : undefined;
-  const alts = ex ? ex.alt.map((id) => EX_BY_ID[id]).filter((a): a is Exercise => !!a) : [];
   return (
     <li className="wk-item" id={`hareket-${n}`}>
       <details open>
@@ -156,7 +155,7 @@ function ItemCard({ it, n }: { it: PlannedItem; n: number }) {
 
         <dl className="kv wk-item__kv">
           <dt>Set / tekrar / süre</dt>
-          <dd>{it.sets > 1 ? `${it.sets} set · ` : ''}{it.dose}</dd>
+          <dd>{it.dose}</dd>
           <dt>Dinlenme</dt>
           <dd>{it.rest === '—' ? 'Setler arası dinlenme yok (tek parça)' : `Setler arası ${it.rest}`}</dd>
           {ex && (
@@ -179,15 +178,15 @@ function ItemCard({ it, n }: { it: PlannedItem; n: number }) {
         {ex ? (
           <div className="wk-item__body">
             <div>
-              <h4 className="h4">Nasıl yapılır?</h4>
+              <h3 className="h4">Nasıl yapılır?</h3>
               <ol className="steps">{ex.steps.map((s) => <li key={s}>{s}</li>)}</ol>
             </div>
             <div>
-              <h4 className="h4">Doğru yürütme için</h4>
+              <h3 className="h4">Doğru yürütme için</h3>
               <ul className="ticks">{ex.cues.map((s) => <li key={s}>{s}</li>)}</ul>
               {ex.mistakes.length > 0 && (
                 <>
-                  <h4 className="h4" style={{ marginTop: 18 }}>Sık yapılan hatalar</h4>
+                  <h3 className="h4" style={{ marginTop: 18 }}>Sık yapılan hatalar</h3>
                   <ul className="ticks ticks--warn">{ex.mistakes.map((s) => <li key={s}>{s}</li>)}</ul>
                 </>
               )}
@@ -205,7 +204,7 @@ function ItemCard({ it, n }: { it: PlannedItem; n: number }) {
               <Link href={`/fiziksel/${ex.id}/`} className="btn btn--quiet">Egzersiz sayfası</Link>
               {alts.length > 0 && (
                 <span className="muted">
-                  {' '}Alternatif:{' '}
+                  {' '}Bu oturumda yapılabilecek alternatif:{' '}
                   {alts.map((a, i) => (
                     <span key={a.id}>
                       {i > 0 && ', '}

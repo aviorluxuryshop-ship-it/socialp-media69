@@ -292,6 +292,10 @@ await test('Salon programı: gerçek salon hareketleri, yalnızca salon oturumla
   await page.locator('#w-age').fill('17');
   await envChip(page, 'Spor salonu').click();
   await envChip(page, 'Saha').click();
+  // 17 yaş: gözetim seçilmeden yüklü hareketler programa alınmaz → uyarı görünür
+  ok((await page.locator('.field[data-env="salon"] .note--warn').count()) === 1, 'gözetim uyarısı yok');
+  await page.locator('.field[data-env="salon"] .chip', { hasText: 'Antrenman arkadaşı ya da antrenör' }).click();
+  ok((await page.locator('.field[data-env="salon"] .note--warn').count()) === 0, 'gözetim seçilince uyarı kalkmalı');
   await page.getByRole('button', { name: /Programımı oluştur/ }).click();
   await page.waitForSelector('.prog__weekbar', { timeout: 8000 });
   const metas = await txts(page.locator('.scard__meta'));

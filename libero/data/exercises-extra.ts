@@ -159,7 +159,7 @@ export const EXTRA_EXERCISES: Exercise[] = [
     why: 'Kalça yan kasları: yön değiştirme ve tek ayak dengesinde diz-kalça hizasını korumaya yardımcı olur.',
     alt: ['yan-hamle', 'tek-ayak-denge'], d: [3, 10, 'tekrar', '45 sn'], side: true }),
 
-  E({ id: 'ip-atlama', name: 'Atlama ipi', cat: 'dayaniklilik', m: ['calf'], m2: ['quad', 'core', 'shoulder'], env: ['ev', 'saha'], eq: ['ip'], age: 8, lv: 1,
+  E({ id: 'ip-atlama', name: 'Atlama ipi', cat: 'dayaniklilik', m: ['calf'], m2: ['quad', 'core', 'shoulder'], env: ['ev', 'saha'], eq: ['ip'], age: 6, lv: 1,
     steps: [
       'İpi bel hizasında tutun; dirsekler gövdeye yakın, ipi bileklerle çevirin.',
       'Ayak uçlarında, küçük ve ritmik sıçramalarla ipi atlayın.',
@@ -171,7 +171,7 @@ export const EXTRA_EXERCISES: Exercise[] = [
     alt: ['cok-yonlu-ziplama', 'yerinde-yuksek-diz'], d: [3, 45, 'sn', '45 sn'],
     caution: 'Düz, kaymayan zeminde; ipin tavana ya da eşyaya çarpmayacağı bir alanda yapın.' }),
 
-  E({ id: 'yerinde-yuksek-diz', name: 'Yerinde yüksek diz koşusu', cat: 'dayaniklilik', m: ['hipflex', 'quad'], m2: ['calf', 'core'], env: ['ev'], age: 8, lv: 1,
+  E({ id: 'yerinde-yuksek-diz', name: 'Yerinde yüksek diz koşusu', cat: 'dayaniklilik', m: ['hipflex', 'quad'], m2: ['calf', 'core'], env: ['ev'], age: 6, lv: 1,
     steps: [
       'Dik durun; yerinde koşar gibi dizleri kalça hizasına doğru kaldırın.',
       'Kollar koşu hareketi gibi çalışsın; ayak uçlarında hafif basın.',
@@ -194,6 +194,18 @@ export const EXTRA_EXERCISES: Exercise[] = [
     why: 'Ekipmansız dayanıklılık ve bacak kuvveti; evde ya da apartmanda yapılabilir.',
     alt: ['yerinde-yuksek-diz', 'step-up'], d: [3, 45, 'sn', '60 sn'],
     caution: 'Ortak kullanım merdivenlerinde başkalarını engellemeyin; düşme riskine karşı koşmayın ve inişte yürüyün.' }),
+
+  E({ id: 'hizli-ayak', name: 'Yerinde hızlı ayak çalışması', cat: 'ceviklik', m: ['calf', 'quad'], m2: ['core', 'hipflex'], env: ['ev', 'saha'], age: 6, lv: 1,
+    steps: [
+      'Dizler hafif bükülü, ağırlık ayak başlarında, hazır duruşta durun.',
+      'Ayaklarınızı yerden az kaldırarak olabildiğince hızlı ve küçük adımlarla yerinde çalıştırın.',
+      'Her 10 saniyede bir yön değiştirin: öne, yana, çaprazlara kısa adımlar atıp merkeze dönün.',
+    ],
+    cues: ['Ayaklar yerden az kalksın, adımlar küçük ve hızlı olsun.', 'Bakış ileride, gövde hafif öne eğik.'],
+    err: ['Topuklarla basmak.', 'Gövdeyi dik ve sert tutmak.', 'Hızı artırırken ritmi bozmak.'],
+    why: 'Ayak hızı ve hazır duruştan yön değiştirme: çeviklik için ekipmansız bir başlangıç.',
+    alt: ['yerinde-yuksek-diz', 'duvar-ivme'], d: [3, 20, 'sn', '40 sn'],
+    caution: 'Kaymayan zeminde ve çevrede eşya olmadan yapın.' }),
 
   // ── Saha: tek başına top çalışması ────────────────────────────
   E({ id: 'top-slalom', name: 'Koni arası top sürme', cat: 'top', m: ['quad', 'calf'], m2: ['core', 'hipflex'], env: ['saha'], eq: ['top', 'koni'], age: 6, lv: 1,

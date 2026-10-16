@@ -150,9 +150,13 @@ const GOALS_OK: Goal[] = ['dengeli', 'hiz-cio', 'dayaniklilik', 'kuvvet-guc'];
  *  - hedef 'teknik' vardı (program artık fiziksel gelişime odaklı) → 'dengeli'.
  * Kullanıcının yaş, seviye, pozisyon, süre ve sıklık seçimleri aynen korunur.
  */
+const clampInt = (v: unknown, lo: number, hi: number, d: number): number => {
+  const n = typeof v === 'string' ? Number(v) : (v as number);
+  return typeof n === 'number' && Number.isFinite(n) ? Math.min(hi, Math.max(lo, Math.round(n))) : d;
+};
+
 export function sanitizeProfile(raw: unknown, base: Profile): Profile {
   const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
-  const merged = { ...base, ...(r as Partial<Profile>) } as Profile;
   const envs = sanitizeEnvs(r.envs, base.envs);
   const legacy = r.equipment;
   const by = r.equipByEnv
@@ -160,10 +164,33 @@ export function sanitizeProfile(raw: unknown, base: Profile): Profile {
     : legacy !== undefined
       ? migrateEquipment(legacy, envs)
       : base.equipByEnv;
-  const goal = GOALS_OK.includes(merged.goal as Goal) ? merged.goal : 'dengeli';
-  const out: Profile & { equipment?: unknown } = { ...merged, envs, equipByEnv: by, goal };
-  delete out.equipment;
-  return out;
+  const goal = GOALS_OK.includes(r.goal as Goal) ? (r.goal as Goal) : 'dengeli';
+  const age = r.age === null || r.age === undefined ? null : Number.isFinite(Number(r.age)) ? clampInt(r.age, 4, 99, 0) || null : null;
+  return {
+    name: typeof r.name === 'string' ? r.name.slice(0, 60) : base.name,
+    age,
+    level: clampInt(r.level, 1, 5, base.level) as Level,
+    positions: Array.isArray(r.positions) ? (r.positions.filter((x) => typeof x === 'string') as PositionId[]) : base.positions,
+    goal,
+    equipByEnv: by,
+    envs,
+    perWeek: clampInt(r.perWeek, 2, 6, base.perWeek),
+    minutes: clampInt(r.minutes, 20, 120, base.minutes),
+  };
+}
+
+/** Program (ve eski v1 programı) yalnızca yapısı sağlamsa korunur; bozuksa null olur. */
+function sanitizeProgram(p: unknown): Program | null {
+  if (!p || typeof p !== 'object') return null;
+  const o = p as Partial<Program>;
+  if (!Array.isArray(o.sessions) || !o.input || typeof o.input !== 'object') return null;
+  for (const s of o.sessions) if (!s || typeof s !== 'object' || !Array.isArray((s as { items?: unknown }).items)) return null;
+  return p as Program;
+}
+
+function sanitizeLogs(v: unknown): SessionLog[] {
+  if (!Array.isArray(v)) return [];
+  return v.filter((l) => l && typeof l === 'object' && Array.isArray((l as SessionLog).items) && (l as SessionLog).progress && typeof (l as SessionLog).progress === 'object') as SessionLog[];
 }
 
 export function sanitize(raw: unknown): AppState {
@@ -179,12 +206,12 @@ export function sanitize(raw: unknown): AppState {
     levelLog: Array.isArray(r.levelLog) ? r.levelLog : [],
     practiced: r.practiced && typeof r.practiced === 'object' ? r.practiced : {},
     fav: Array.isArray(r.fav) ? r.fav : [],
-    logs: Array.isArray(r.logs) ? r.logs : [],
+    logs: sanitizeLogs(r.logs),
     quiz: r.quiz && typeof r.quiz === 'object' ? r.quiz : {},
     tests: Array.isArray(r.tests) ? r.tests : [],
     board: Array.isArray(r.board) ? r.board : [],
     videoNotes: r.videoNotes && typeof r.videoNotes === 'object' ? r.videoNotes : {},
-    program: r.program ?? null,
+    program: sanitizeProgram(r.program),
     lastVisit: r.lastVisit ?? null,
   };
 }
@@ -259,11 +286,13 @@ export function useStore<T>(selector: (s: AppState) => T): T {
   return useSyncExternalStore(subscribe, get, getServer);
 }
 
+const SERVER_META: Meta = { ready: false, storageOk: true };
+
 export function useMeta(): Meta {
   return useSyncExternalStore(
     subscribe,
     () => meta,
-    () => ({ ready: false, storageOk: true }),
+    () => SERVER_META,
   );
 }
 

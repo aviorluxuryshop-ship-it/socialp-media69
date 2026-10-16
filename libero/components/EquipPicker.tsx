@@ -1,11 +1,13 @@
 'use client';
 
+import { Icon } from './Icon';
 import {
   ENV_META,
   ENV_NAME,
   ENV_ORDER,
   EQUIP_NAME,
   equipBlockedReason,
+  supervisionMissing,
   type Env,
   type EquipByEnv,
   type EquipId,
@@ -64,6 +66,14 @@ export function EquipPicker({
                 );
               })}
             </div>
+            {supervisionMissing(env, value[env] ?? [], age) && (
+              <p className="note note--warn" role="status" style={{ marginTop: 6 }}>
+                <Icon name="warn" />
+                <span>
+                  18 yaş altında yüklü çalışma (dambıl, halter, makine, kablo, bench) yalnızca gözetim altında yapılır. “Antrenman arkadaşı ya da antrenör” seçilmedikçe bu hareketler programa alınmaz; yalnızca vücut ağırlığı ve bantlı hareketler önerilir.
+                </span>
+              </p>
+            )}
             <span className="field__hint">
               {meta.blurb}
               {meta.always.includes('sandalye') ? ' Sağlam sandalye ve ekipmansız hareketler her zaman kullanılabilir.' : ' Ekipmansız hareketler her zaman kullanılabilir.'}
@@ -73,6 +83,17 @@ export function EquipPicker({
                 .map((id) => `${EQUIP_NAME[id]}: ${equipBlockedReason(env, id, age)}.`)
                 .join(' ')}
             </span>
+            {Object.keys(meta.hints).length > 0 && (
+              <ul className="field__hint" style={{ margin: 0, paddingLeft: 16, listStyle: 'disc' }}>
+                {meta.options
+                  .filter((id) => meta.hints[id])
+                  .map((id) => (
+                    <li key={id}>
+                      <b>{EQUIP_NAME[id]}:</b> {meta.hints[id]}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </div>
         );
       })}

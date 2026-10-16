@@ -1,6 +1,7 @@
 import { EX_BY_ID } from '@/data/exercises';
 import { doseFor } from './training';
-import { update } from './store';
+import { getState, update } from './store';
+import { alternativesFor } from './program';
 import type { PlannedItem, PlannedSession, Program, SessionFocus, SessionLog } from './program-types';
 import { addDays, todayKey, uid, weekStart } from './utils';
 
@@ -29,6 +30,11 @@ export function removeItem(sessionId: string, key: string) {
 export function swapItem(sessionId: string, key: string, newId: string, age: number, level: 1 | 2 | 3 | 4 | 5) {
   const ex = EX_BY_ID[newId];
   if (!ex) return;
+  // savunma: oturumun ortamında, seçilen ekipmanla ve yaşa uygun değilse değiştirme
+  const st = getState();
+  const sess = st.program?.sessions.find((x) => x.id === sessionId);
+  const cur = sess?.items.find((i) => i.key === key);
+  if (!st.program || !sess || !cur || !alternativesFor(cur.ref, sess, st.program).some((a) => a.id === newId)) return;
   const d = doseFor(ex, age < 12 ? 'u12' : age < 15 ? '12-14' : age < 18 ? '15-17' : '18+', level);
   patchSession(sessionId, (x) => ({
     ...x,

@@ -118,8 +118,9 @@ export function doseFor(ex: Exercise, band: AgeBand, level: Level): Dose {
   if (ex.unit === 'tekrar') text = sets > 1 ? `${sets} × ${reps} tekrar${per}` : `${reps} tekrar${per}`;
   else if (ex.unit === 'sn') text = `${sets} × ${reps} sn${per}`;
   else if (ex.unit === 'm') text = `${sets} × ${reps} m`;
-  else text = `${reps} dk`;
+  else text = sets > 1 ? `${sets} × ${reps} dk` : `${reps} dk`;
   if (ex.cat === 'hiz' && ex.unit === 'tekrar' && ex.reps === 1) text = `${sets} × ${ex.id.includes('10m') ? '10 m' : ex.id.includes('direncli') ? '10–15 m' : '20–30 m'} sprint`;
+  else if (ex.cat === 'ceviklik' && ex.unit === 'tekrar' && ex.reps === 1) text = `${sets} tur`;
   return { sets, reps, unit: ex.unit, rest, text, note };
 }
 

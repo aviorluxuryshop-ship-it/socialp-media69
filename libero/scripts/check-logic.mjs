@@ -160,7 +160,9 @@ await test('Ekipman kuralları: ev dambılı yetişkin, salon aletleri 15+, ev e
   ok(!has('ev', ['dambil'], 14, 'dambil'), 'evde 14 yaş dambıl');
   ok(has('ev', ['dambil'], 18, 'dambil'), 'evde 18 yaş dambıl yok');
   ok(!has('salon', ['halter', 'makine'], 14, 'halter') && !has('salon', ['halter', 'makine'], 14, 'makine'), '14 yaş salon aletleri');
-  ok(has('salon', ['halter'], 16, 'halter'), '16 yaş halter');
+  ok(!has('salon', ['halter'], 16, 'halter'), '16 yaş gözetimsiz halter olmamalı');
+  ok(has('salon', ['halter', 'es'], 16, 'halter'), '16 yaş gözetimli halter');
+  ok(has('salon', ['halter'], 19, 'halter'), '19 yaş halter');
   ok(!has('ev', ['halter', 'makine', 'kablo', 'barfiks'], 30, 'halter'), 'evde halter bulunmamalı');
   ok(!has('saha', ['dambil', 'halter'], 30, 'dambil'), 'sahada dambıl bulunmamalı');
   ok(has('saha', ['top', 'koni'], 10, 'top'), 'sahada top');
@@ -192,6 +194,7 @@ function gen(age, goal, envs, by, perWeek = 4, level = 3, positions = [], minute
 await test('Üretilen programda her egzersiz seçilen ortam ve ekipmana, yaşa uygun (geniş tarama)', async () => {
   let programs = 0;
   let items = 0;
+  const emptyish = [];
   for (const age of ages) {
     for (const goal of goals) {
       for (const envs of ENV_SETS) {
@@ -220,12 +223,17 @@ await test('Üretilen programda her egzersiz seçilen ortam ve ekipmana, yaşa u
               keys.add(s.id);
             }
             ok(keys.size === p.sessions.length, 'yinelenen oturum kimliği');
+            for (const s of p.sessions) {
+              const main = s.focus === 'toparlanma' ? s.items : s.items.filter((it) => !['dinamik-isinma', 'soguma-yuruyus', 'statik-esneme'].includes(it.ref));
+              if (main.length < 2) emptyish.push(`yaş ${age} ${goal} ${envs} ekipman=${by.salon.length || by.ev.length || by.saha.length ? 'tam' : 'yok'} ${s.title}: ${main.length}`);
+            }
             ok(p.sessions.length === perWeek, `oturum sayısı ${p.sessions.length} ≠ ${perWeek}`);
           }
         }
       }
     }
   }
+  ok(emptyish.length === 0, `ısınma/soğuma dışında 2'den az hareketi olan oturum ${emptyish.length}: ${emptyish.slice(0, 5).join(' | ')}`);
   ok(programs > 1500 && items > 10000, `tarama küçük: ${programs} program, ${items} öğe`);
   console.log(`      (${programs} program, ${items} egzersiz öğesi denetlendi)`);
 });
@@ -260,10 +268,71 @@ await test('Salon oturumları gerçek salon hareketleri içerir (15+ yaş, tam d
 });
 
 await test('Salon ekipmanı seçili değilse o alet kullanılmaz; seçili olan kullanılır', async () => {
-  const noMachines = { ev: [], saha: [], salon: ['dambil', 'bench'] };
+  const noMachines = { ev: [], saha: [], salon: ['dambil', 'bench', 'es'] };
   const p = gen(17, 'kuvvet-guc', ['salon'], noMachines, 5, 4);
   for (const s of p.sessions) for (const it of s.items) ok(!EX_BY_ID[it.ref].equip.some((q) => ['halter', 'makine', 'kablo', 'barfiks', 'kardiyo', 'kutu'].includes(q)), `${it.ref} seçilmemiş alet`);
   ok(p.sessions.some((s) => s.items.some((it) => EX_BY_ID[it.ref].equip.includes('dambil'))), 'seçilen dambıl kullanılmadı');
+});
+
+await test('18 yaş altı: gözetim ("antrenman arkadaşı ya da antrenör") seçilmedikçe yüklü ekipman yok; seçilince var; 18+ gözetimsiz serbest', async () => {
+  const loaded = ['dambil', 'halter', 'makine', 'kablo', 'bench'];
+  const gymNoEs = env.ENV_META.salon.options.filter((o) => o !== 'es');
+  for (const age of [13, 14, 15, 16, 17]) {
+    const noEs = gen(age, 'kuvvet-guc', ['salon'], { ev: [], saha: [], salon: gymNoEs }, 5, 4);
+    for (const s of noEs.sessions) for (const it of s.items) ok(!EX_BY_ID[it.ref].equip.some((q) => loaded.includes(q)), `${age} yaş gözetimsiz ${it.ref}`);
+    ok(noEs.notes.some((n) => /gözetim altında yapılır/.test(n)), `${age} yaş: gözetim notu yok`);
+  }
+  for (const age of [15, 16, 17]) {
+    const withEs = gen(age, 'kuvvet-guc', ['salon'], { ev: [], saha: [], salon: [...gymNoEs, 'es'] }, 5, 4);
+    ok(withEs.sessions.some((s) => s.items.some((it) => EX_BY_ID[it.ref].equip.some((q) => loaded.includes(q)))), `${age} yaş gözetimle yüklü hareket yok`);
+  }
+  const adult = gen(19, 'kuvvet-guc', ['salon'], { ev: [], saha: [], salon: gymNoEs }, 5, 4);
+  ok(adult.sessions.some((s) => s.items.some((it) => EX_BY_ID[it.ref].equip.some((q) => loaded.includes(q)))), 'yetişkin gözetimsiz yüklü hareket yok');
+});
+
+await test('Alternatifler: yalnızca oturum ortamında, seçilmiş ekipmanla ve yaşa uygun olanlar önerilir', async () => {
+  let checked = 0;
+  for (const age of [8, 12, 15, 17, 22]) {
+    for (const envs of [['ev'], ['salon'], ['saha'], ['ev', 'salon', 'saha']]) {
+      for (const by of [allEquip(envs), noEquip()]) {
+        const p = gen(age, 'dengeli', envs, by, 5, 3);
+        for (const s of p.sessions) {
+          for (const it of s.items) {
+            for (const a of prog.alternativesFor(it.ref, s, p)) {
+              checked++;
+              ok(prog.usable(a, p.input, prog.equipByEnvOf(p.input), prog.levelCap(age, 3), s.env), `${it.ref} → ${a.id} (${s.env}, yaş ${age}) uygun değil`);
+              ok(!s.items.some((x) => x.ref === a.id), 'alternatif zaten oturumda');
+            }
+          }
+        }
+      }
+    }
+  }
+  ok(checked > 200, `az alternatif denetlendi: ${checked}`);
+  // somut örnek: 8 yaşında çömelmenin dambıllı alternatifi (goblet squat) önerilmemeli
+  const kid = gen(8, 'dengeli', ['ev'], noEquip(), 4, 2);
+  const sess = kid.sessions.find((s) => s.items.some((i) => i.ref === 'comelme')) ?? kid.sessions[0];
+  ok(!prog.alternativesFor('comelme', sess, kid).some((a) => a.id === 'goblet-squat'), '8 yaşa dambıllı alternatif');
+});
+
+await test('Doz metni: dakika birimli hareketlerde set sayısı görünür; çeviklikte "tur"', async () => {
+  ok(training.doseFor(EX_BY_ID['mekik-kosusu'], '18+', 3).text.includes('×'), 'mekik koşusu: ' + training.doseFor(EX_BY_ID['mekik-kosusu'], '18+', 3).text);
+  ok(/tur/.test(training.doseFor(EX_BY_ID['tt-testi'], '15-17', 3).text), 'çeviklik turu');
+});
+
+await test('Bozuk/yarım kayıt: profil değerleri sınırlandırılır, program yapısı bozuksa atılır, üretici çökmez', async () => {
+  const s = store.sanitize({ profile: { positions: 'kaleci', perWeek: 'abc', minutes: 9999, age: 'x', level: 99, envs: ['ev', 'uzay'] }, program: { sessions: 'x' }, logs: [{ id: 1 }, { items: [], progress: {} }] });
+  const p = s.profile;
+  ok(Array.isArray(p.positions), 'positions dizi değil');
+  ok(p.perWeek >= 2 && p.perWeek <= 6 && Number.isInteger(p.perWeek), 'perWeek');
+  ok(p.minutes <= 120 && p.minutes >= 20, 'minutes');
+  ok(p.age === null, 'age');
+  ok(p.level >= 1 && p.level <= 5, 'level');
+  ok(p.envs.join() === 'ev', 'ortamlar: ' + p.envs);
+  ok(s.program === null, 'bozuk program atılmalı');
+  ok(s.logs.length === 1, 'yalnızca sağlam kayıt kalmalı: ' + s.logs.length);
+  const gp = gen(14, p.goal, p.envs, p.equipByEnv, p.perWeek, p.level, p.positions, p.minutes);
+  ok(gp.sessions.length === p.perWeek, 'üretim');
 });
 
 await test('Saha oturumları sahada yapılır: sürat, çeviklik, dayanıklılık, bireysel top', async () => {

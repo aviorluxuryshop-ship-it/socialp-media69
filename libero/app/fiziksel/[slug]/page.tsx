@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { EXCAT_NAME, EXERCISES, EX_BY_ID, MUSCLE_NAME } from '@/data/exercises';
 import { BAND_NAME, allowedInBand, doseFor } from '@/lib/training';
-import { ENV_NAME, EQUIP_NAME } from '@/lib/environments';
+import { ENV_NAME, EQUIP_NAME, LOADED_EQUIP } from '@/lib/environments';
 import type { AgeBand } from '@/lib/program-types';
 import { Icon } from '@/components/Icon';
 import { MuscleMap } from '@/components/MuscleMap';
@@ -35,6 +35,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <span className="tag">Ortam: {e.env.map((x) => ENV_NAME[x]).join(', ')}</span>
           <span className="tag">{e.equip.map((x) => EQUIP_NAME[x]).join(', ')}</span>
           <span className="tag">Önerilen en erken yaş: {e.minAge}</span>
+          {e.equip.some((q) => LOADED_EQUIP.includes(q)) && <span className="tag tag--terra">18 yaş altında yalnızca gözetimle</span>}
+          {e.equip.includes('dambil') && e.env.includes('ev') && <span className="tag">Evde dambıl: 18 yaş ve üstü</span>}
           <span className="tag">Zorluk <StarRating value={e.lv} readOnly size="sm" showName={false} label="Zorluk" /></span>
         </div>
       </PageHead>

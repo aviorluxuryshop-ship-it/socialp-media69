@@ -75,6 +75,9 @@ export const EQUIP_MIN_AGE: Record<Equip, number> = {
   es: 0,
 };
 
+/** Yüklü (dış ağırlıklı / makineli) ekipman: 18 yaş altında yalnızca gözetimle (antrenör ya da yetişkin) kullanılır. */
+export const LOADED_EQUIP: Equip[] = ['dambil', 'halter', 'makine', 'kablo', 'bench'];
+
 /** Evde dış ağırlık (dambıl) yalnızca yetişkinler için: gözetimsiz ev ekipmanı yaralanma nedenidir (NSCA 2009). */
 export const HOME_LOAD_MIN_AGE = 18;
 
@@ -117,7 +120,7 @@ export const ENV_META: Record<Env, EnvMeta> = {
     always: ['yok', 'sandalye'],
     defaults: ['dambil', 'halter', 'makine', 'kablo', 'bench', 'barfiks', 'kutu', 'bant', 'kardiyo', 'silindir'],
     hints: {
-      es: 'Antrenör / gözetmen: yüklü çalışmalarda önerilir',
+      es: '18 yaş altında yüklü çalışma (dambıl, halter, makine, kablo, bench) için gereklidir',
       halter: '15 yaş altı için kullanılmaz',
       makine: '15 yaş altı için kullanılmaz',
       kablo: '15 yaş altı için kullanılmaz',
@@ -153,16 +156,25 @@ export function availableEquip(env: Env, selected: readonly string[], age: numbe
   const meta = ENV_META[env];
   const out = new Set<Equip>(meta.always);
   const a = age ?? 18;
+  // 18 yaş altında yüklü ekipman yalnızca "antrenman arkadaşı ya da antrenör" seçiliyse (gözetim) kullanılabilir
+  const supervised = a >= 18 || selected.includes('es');
   for (const id of selected) {
     if (!meta.options.includes(id as EquipId)) continue;
     if (a < EQUIP_MIN_AGE[id as EquipId]) continue;
     if (env === 'ev' && id === 'dambil' && a < HOME_LOAD_MIN_AGE) continue;
+    if (!supervised && LOADED_EQUIP.includes(id as EquipId)) continue;
     out.add(id as EquipId);
   }
   return out;
 }
 
 /** Bir ekipman, bu ortamda ve bu yaşta seçilebilir mi? (arayüzde devre dışı bırakma için) */
+/** 18 yaş altında, gözetim seçilmediği için yüklü ekipmanın devre dışı kalıp kalmadığı */
+export function supervisionMissing(env: Env, selected: readonly string[], age: number | null): boolean {
+  const a = age ?? 18;
+  return a < 18 && !selected.includes('es') && selected.some((id) => LOADED_EQUIP.includes(id as Equip) && !(env === 'ev' && id === 'dambil'));
+}
+
 export function equipBlockedReason(env: Env, id: EquipId, age: number | null): string | null {
   const a = age ?? 18;
   if (env === 'ev' && id === 'dambil' && a < HOME_LOAD_MIN_AGE) return `Evde dambıl ${HOME_LOAD_MIN_AGE} yaş ve üstü için`;
@@ -186,7 +198,6 @@ export function migrateEquipment(legacy: unknown, envs: readonly string[]): Equi
   const by = defaultEquipByEnv();
   by.ev = ENV_META.ev.options.filter((o) => list.includes(o));
   by.saha = ENV_META.saha.options.filter((o) => list.includes(o));
-  if (!by.saha.length && envs.includes('saha')) by.saha = [...ENV_META.saha.defaults];
   return by;
 }
 

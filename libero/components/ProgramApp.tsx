@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { EX_BY_ID } from '@/data/exercises';
-import { FOCUS_NAME, GOALS, generateProgram } from '@/lib/program';
+import { FOCUS_NAME, GOALS, alternativesFor, generateProgram } from '@/lib/program';
 import { ENV_NAME, ENV_ORDER, EQUIP_NAME, type EquipByEnv } from '@/lib/environments';
 import { EquipPicker } from './EquipPicker';
 import type { PlannedSession, Program, SessionFocus, SessionLog } from '@/lib/program-types';
@@ -441,8 +441,7 @@ function SessionList({ program, profile }: { program: Program; profile: import('
           </summary>
           <ul className="sess__items">
             {s.items.map((it) => {
-              const ex = EX_BY_ID[it.ref];
-              const alt = ex?.alt.find((id) => EX_BY_ID[id] && EX_BY_ID[id].id !== it.ref);
+              const alt = it.kind === 'ex' ? alternativesFor(it.ref, s, program)[0]?.id : undefined;
               return (
                 <li key={it.key}>
                   <div>

@@ -4,6 +4,7 @@ import {
   EQUIP_NAME,
   availableEquip,
   equipUnion,
+  supervisionMissing,
   migrateEquipment,
   type Env,
   type EquipByEnv,
@@ -75,9 +76,10 @@ export const PATTERNS: Record<string, string[][]> = {
   'hiz-ceviklik': [
     ['sprint-abc', 'duvar-ivme', 'yerinde-yuksek-diz'],
     ['ivmelenme-10m', 'sprint-20-30', 'direncli-sprint'],
-    ['ip-merdiven', 'zigzag-koni', 'tt-testi', 'mekik-5-10-5'],
+    ['ip-merdiven', 'zigzag-koni', 'tt-testi', 'mekik-5-10-5', 'hizli-ayak'],
     ['reaktif-ceviklik', 'zigzag-koni', 'top-yon-degistirme'],
-    ['inis-calismasi', 'squat-jump', 'yan-sicrama', 'tek-ayak-hop', 'kutu-sicrama'],
+    ['inis-calismasi', 'squat-jump'],
+    ['yan-sicrama', 'tek-ayak-hop', 'kutu-sicrama'],
   ],
   dayaniklilik: [
     ['surekli-kosu', 'kardiyo-surekli', 'ip-atlama', 'yerinde-yuksek-diz'],
@@ -251,13 +253,38 @@ function withSoloBall(items: PlannedItem[], ctx: Ctx): PlannedItem[] {
   return [...items, exItem(ex, ctx, 90, 'Bireysel top çalışması: tek başınıza, kısa ve kaliteli tekrarlarla.')];
 }
 
+/** Yaş ve seviyeye göre egzersiz zorluk sınırı */
+export function levelCap(age: number, level: Level): Level {
+  return (age < 12 ? 2 : age < 15 ? 3 : Math.min(5, level + 1)) as Level;
+}
+
+/** Programın ekipman seçimi (eski programlarda yalnızca düz liste olabilir) */
+export function equipByEnvOf(input: ProgramInput): EquipByEnv {
+  const envs = (input.envs.length ? input.envs : ['ev']) as Env[];
+  return input.equipByEnv ? ({ ev: [], salon: [], saha: [], ...input.equipByEnv } as EquipByEnv) : migrateEquipment(input.equipment, envs);
+}
+
+/**
+ * Bir oturumdaki egzersiz için GEÇERLİ alternatifler: aynı oturum ortamında, seçilmiş ekipmanla,
+ * yaşa ve seviyeye uygun, oturumda zaten bulunmayan hareketler. Hiçbir geçerli alternatif yoksa boş döner.
+ */
+export function alternativesFor(exId: string, session: PlannedSession, program: Program): Exercise[] {
+  const ex = EX_BY_ID[exId];
+  if (!ex) return [];
+  const input = program.input;
+  const by = equipByEnvOf(input);
+  const cap = levelCap(input.age, input.level);
+  const inSession = new Set(session.items.map((i) => i.ref));
+  return ex.alt
+    .map((id) => EX_BY_ID[id])
+    .filter((a): a is Exercise => !!a && a.id !== ex.id && !inSession.has(a.id) && usable(a, input, by, cap, session.env));
+}
+
 export function generateProgram(input: ProgramInput): Program {
   const band = ageBand(input.age);
-  const cap: Level = (input.age < 12 ? 2 : input.age < 15 ? 3 : Math.min(5, input.level + 1)) as Level;
+  const cap: Level = levelCap(input.age, input.level);
   const envs = (input.envs.length ? input.envs : ['ev']) as Env[];
-  const by: EquipByEnv = input.equipByEnv
-    ? ({ ev: [], salon: [], saha: [], ...input.equipByEnv } as EquipByEnv)
-    : migrateEquipment(input.equipment, envs);
+  const by: EquipByEnv = equipByEnvOf(input);
   const ctx: Ctx = { input: { ...input, band }, by, used: new Map(), cap };
   const plan = focusPlan(input.goal, input.perWeek, band, input.positions);
   const counts: Record<string, number> = {};
@@ -265,12 +292,12 @@ export function generateProgram(input: ProgramInput): Program {
   const mainSlots = Math.max(2, Math.floor((input.minutes - 15) / 8));
   let shortSessions = 0;
 
-  const sessions: PlannedSession[] = plan.map((focus, i) => {
-    counts[focus] = (counts[focus] ?? 0) + 1;
-    // Tercih sırasındaki ortamları dene; yeterli (≥3) egzersiz bulunan ilkini al, yoksa en çok bulunanı.
+  const needFor = (f: Phys) => (f === 'toparlanma' || f === 'dayaniklilik' ? 2 : 3);
+
+  /** Odak için tercih sırasındaki ortamları dene; yeterli (≥3) egzersiz bulunan ilkini, yoksa en çok bulunanı al. */
+  const build = (focus: Phys): { env: Env; items: PlannedItem[] } => {
     const candidates = envOrder(focus, envs, input.age);
     const order = candidates.length ? candidates : envs;
-    const need = focus === 'toparlanma' ? 2 : 3;
     const attempts: { env: Env; items: PlannedItem[]; used: Map<string, number> }[] = [];
     for (const env of order) {
       const before = new Map(ctx.used);
@@ -278,21 +305,41 @@ export function generateProgram(input: ProgramInput): Program {
       const items = itemsFor(focus, ctx, env, mainSlots);
       attempts.push({ env, items, used: ctx.used });
       ctx.used = before;
-      if (items.length >= need) break;
+      if (items.length >= needFor(focus)) break;
     }
     const best = attempts.reduce<(typeof attempts)[number] | null>((m, a) => (!m || a.items.length > m.items.length ? a : m), null);
     if (best) ctx.used = best.used;
-    const env = best?.env ?? order[0] ?? 'ev';
-    const items = best?.items ?? [];
-    if (items.length < need) shortSessions++;
+    return { env: best?.env ?? order[0] ?? 'ev', items: best?.items ?? [] };
+  };
+
+  let swapped = 0;
+  const sessions: PlannedSession[] = plan.map((planned, i) => {
+    let focus: Phys = planned;
+    const usedBefore = new Map(ctx.used);
+    let res = build(focus);
+    // Seçilen ortam/ekipman/yaşla bu odak için yeterli hareket yoksa gövde ve denge çalışmasına çevir
+    if (res.items.length < needFor(focus) && focus !== 'merkez' && focus !== 'toparlanma') {
+      const usedAfterFirst = ctx.used;
+      ctx.used = new Map(usedBefore); // vazgeçilen denemenin sayaçları kalmasın
+      const alt = build('merkez');
+      if (alt.items.length >= needFor('merkez')) {
+        focus = 'merkez';
+        res = alt;
+        swapped++;
+      } else {
+        ctx.used = usedAfterFirst; // alternatif de yetersiz: ilk denemeyi koru
+      }
+    }
+    counts[focus] = (counts[focus] ?? 0) + 1;
+    if (res.items.length < needFor(focus)) shortSessions++;
     const core = focus === 'toparlanma' ? [] : warmup(ctx);
     const close = focus === 'toparlanma' ? [] : cooldown(ctx, 20);
-    const all = [...core, ...items, ...close].map((it, k) => ({ ...it, key: `${it.ref}-${k}` }));
+    const all = [...core, ...res.items, ...close].map((it, k) => ({ ...it, key: `${it.ref}-${k}` }));
     return {
       id: uid(),
       title: sessionTitle(focus, counts[focus]),
       focus,
-      env,
+      env: res.env,
       minutes: input.minutes,
       items: all,
       day: days[i] ?? null,
@@ -312,8 +359,10 @@ export function generateProgram(input: ProgramInput): Program {
         (dropped.length ? ` Yaşınıza uygun olmadığı için kullanılmayan: ${dropped.map((id) => EQUIP_NAME[id]).join(', ')}.` : ''),
     );
   }
+  if (input.age < 18 && envs.some((e) => supervisionMissing(e, by[e] ?? [], input.age))) notes.push('18 yaş altında yüklü çalışma (dambıl, halter, makine, kablo, bench) yalnızca gözetim altında yapılır. "Antrenman arkadaşı ya da antrenör" seçilmediği için bu hareketler programa alınmadı; seçip programı yeniden oluşturabilirsiniz.');
   notes.push('Haftalık plan esnektir: oturumları istediğiniz güne taşıyabilirsiniz. Arka arkaya iki yoğun alt vücut ya da sprint gününden kaçının.');
   if (input.positions.some((p) => p === 'kanat' || p === 'bek')) notes.push('Pozisyon vurgusu: kanat/bek için sürat ve çeviklik oturumu programda yer alır.');
+  if (swapped > 0) notes.push('Seçtiğiniz ortam, ekipman ve yaşla yapılabilen uygun hareket bulunmayan oturumlar gövde ve denge çalışmasına çevrildi.');
   if (shortSessions > 0) notes.push('Seçtiğiniz ortam ve ekipmana uygun daha az egzersiz bulunduğu için bazı oturumlar kısa kalmış olabilir. Profilinizden ortam ya da ekipman ekleyip programı yeniden oluşturabilirsiniz; hiçbir oturumda seçmediğiniz ekipman gerektiren hareket yer almaz.');
 
   const equipment = equipUnion(by, envs) as EquipId[];
