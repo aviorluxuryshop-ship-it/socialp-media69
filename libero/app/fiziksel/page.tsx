@@ -31,8 +31,8 @@ export default function Page() {
             <div>
               <p>
                 <strong>Çocuk ve ergenler için: </strong>
-                {BAND_RULES.u12.rules[0]} 12–17 yaşta güçlendirme çalışmaları nitelikli gözetim altında, hafif yükle ve doğru teknikle yapılır; maksimum yük denemeleri
-                ertelenir. Ayrıntılar için <Link href="/program/" className="btn--quiet" style={{ border: 0 }}>kişisel program</Link> sayfasına ve{' '}
+                {BAND_RULES.u12.rules[0]} 12–17 yaşta güçlendirme çalışmaları nitelikli gözetim altında, hafif yükle ve doğru teknikle yapılır; maksimum yük denemeleri yapılmaz ve
+                yüklü egzersizler ev ekipmanıyla gözetimsiz yapılmaz. Ayrıntılar için <Link href="/program/" className="btn--quiet" style={{ border: 0 }}>kişisel program</Link> sayfasına ve{' '}
                 <Link href="/profil/#kaynaklar" className="btn--quiet" style={{ border: 0 }}>kaynaklara</Link> bakın.
               </p>
             </div>

@@ -72,7 +72,7 @@ Hesap ve sunucu yoktur. Profil, yıldız seviyeleri, program, antrenman geçmiş
 
 - **Makas** (bisiklet vuruşu) teknik listesinde yoktur. **Üst dış vuruş (trivela)**, temas yüzeyi haritasıyla (ayağın dış yüzü, 4.–5. parmak hattı) ayrıca gösterilir.
 - Her tekniğin Türkçe tanımı, adım adım uygulama, sık hatalar, maçta kullanım ve 1–5 yıldız seviyesine göre alıştırmalar vardır; tekrar eden kavram bırakılmamıştır (otomatik doğrulama).
-- Çocuk/ergen güvenliği: yaş bandına göre egzersiz seçimi ve doz; 12 yaş altında kafa vuruşu ve maksimum yük yok (FA 2020, AAP 2008). Kaynaklar **Panelim → Kaynaklar** bölümünde.
+- Çocuk/ergen güvenliği: yaş bandına göre egzersiz seçimi ve doz; 12 yaş altında kafa vuruşu tanıtılmaz, hiçbir yaşta maksimum yük denemesi yapılmaz (FA 2020, AAP 2020, NSCA 2009). Kaynaklar **Panelim → Kaynaklar** bölümünde.
 - Beslenme sayfası genel bilgidir; diyetisyen hizmeti verilmediği açıkça yazılıdır. Süt/yumurta/gluten/fıstık vb. için alternatifler sunulur, aşırı kısıtlama önerilmez.
 - Oyuncu analizleri **eğitim amaçlı yorumdur**; istatistik, kulüp ya da transfer bilgisi içermez.
 - Performans analizi yaş “norm” tabloları göstermez; kullanıcıyı yalnızca kendi geçmişiyle karşılaştırır.

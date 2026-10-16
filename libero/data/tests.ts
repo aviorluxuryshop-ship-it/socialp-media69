@@ -122,7 +122,7 @@ export const FIELD_TESTS: FieldTest[] = [
     max: 5000,
     how: ['Topu yere düşürmeden ayak, uyluk ve göğüsle sektir; kaç dokunuş yaptığını say.', 'Üç deneme yap, en yüksek sayıyı yaz.', 'Zayıf ayak için ayrı bir test kaydı aç.'],
     gear: 'Top',
-    note: 'Kafa vuruşu sayma: 12 yaş altında yapılmaz (FA 2020 yönergesi).',
+    note: 'Kafa vuruşu sayma: 11 yaş ve altında antrenmanda kafa vuruşu tanıtılmaz (FA yönergesi).',
   },
   {
     id: 'juggle-weak',

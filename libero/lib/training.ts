@@ -22,25 +22,28 @@ export const BAND_RULES: Record<AgeBand, { title: string; rules: string[] }> = {
     rules: [
       'Amaç: hareket becerisi, oyun ve eğlence. Ağırlık kullanılmaz; vücut ağırlığı, top ve oyun temelli çalışmalar.',
       'Günlük hedef: gün içinde toplam yaklaşık 60 dakika orta-yüksek şiddette hareket (WHO). Antrenman bunun yalnızca bir parçasıdır.',
-      'Set ve tekrar düşük tutulur; yorulmadan bırakılır. Maksimum efor ve yarışma tarzı yüklenme yoktur.',
-      'Antrenmanda kafa vuruşu çalışılmaz (FA 2020 yönergesi).',
+      'Set ve tekrar düşük tutulur; yorulmadan bırakılır. Maksimum efor, zamana karşı en çok tekrar ve yarışma tarzı yüklenme yoktur.',
+      'Antrenmanda kafa vuruşu çalışılmaz (FA yönergesi: U7–U11 antrenmanda kafa vuruşu tanıtılmaz).',
     ],
   },
   '12-14': {
     title: 'Ergen (12–14 yaş)',
     rules: [
-      'Teknik öğrenme önceliklidir: vücut ağırlığı ve hafif bantla 1–2 set, 8–12 tekrar.',
-      'Yoğun sıçrama (plyometri) ve ağır yük yoktur; iniş tekniği çalışılır.',
-      'Antrenör ya da uzman gözetimi önerilir; kafa çalışması sınırlı ve kademelidir (FA 2020).',
-      'Haftada en az 3 gün kas-kemik güçlendirici aktivite (WHO).',
+      'Teknik öğrenme önceliklidir: vücut ağırlığı ve hafif bantla 1–2 set, 8–12 tekrar; yorulup teknik bozulduğunda set biter.',
+      'Ağır yük, maksimum deneme ve yoğun sıçrama (plyometri) yoktur; iniş tekniği çalışılır.',
+      'Antrenör ya da uzman gözetimi önerilir (AAP 2020, NSCA 2009). Gözetim, uygun ekipman ve güvenli ortam yoksa yüklü egzersiz yapılmaz.',
+      'Kafa vuruşu çalışması çok düşük önceliklidir: FA yönergesine göre 12–13 yaşta gerekirse haftada en fazla 1 oturum, hafif top, en fazla 5 kafa vuruşu ve rakipsiz.',
+      'Haftada en az 3 gün kas-kemik güçlendirici aktivite (WHO); direnç çalışması haftada 2–3 ardışık olmayan günde yapılır.',
     ],
   },
   '15-17': {
     title: 'Genç (15–17 yaş)',
     rules: [
-      'Gözetim altında hafif–orta yük ve 2–3 set, 8–12 tekrar. Teknik bozulursa set biter.',
-      'Maksimum (1 tekrar) denemeleri, yarışma tarzı halter ve güç kaldırma yoktur (AAP 2008).',
+      'Gözetim altında hafif–orta yük ve 2–3 set, 8–12 tekrar. Son 2 tekrar zorlayıcı ama teknik bozulmadan bitecek bir ağırlık seçilir; teknik bozulursa set biter.',
+      'Maksimum (1 tekrar) denemeleri ve test edilmesi yoktur. Ağır yüklere yalnızca kanıtlanmış teknik yeterlilikle ve uzman gözetiminde geçilir (BJSM 2014 uzlaşı metni).',
+      'Zamana karşı en çok tekrar, tükenene dek devre ve yüksek şiddetli “metabolik” antrenmanlar önerilmez; AAP 2020, bunların çocuk ve ergenlerde güvenliğinin belirsiz olduğunu belirtir.',
       'Isınma, iniş tekniği ve sakatlık önleme (FIFA 11+) her çalışmanın parçası olur.',
+      'Kafa vuruşu çalışması: FA yönergesine göre 14–16 yaşta haftada en fazla 1 oturum ve oturum başına en fazla 10 vuruş.',
       'Büyüme dönemindeki ağrılarda çalışmayı durdurun ve hekime danışın.',
     ],
   },
@@ -55,9 +58,10 @@ export const BAND_RULES: Record<AgeBand, { title: string; rules: string[] }> = {
 };
 
 export const GENERAL_SAFETY = [
-  'Bu program genel eğitim amaçlıdır; tıbbi tavsiye değildir. Sağlık sorununuz varsa başlamadan önce hekime danışın.',
+  'Bu program genel eğitim amaçlıdır; tıbbi tavsiye değildir. Sağlık sorununuz varsa başlamadan önce hekime danışın; kontrolsüz yüksek tansiyon ya da kalp-damar rahatsızlığı gibi durumlarda yüklü çalışmaya hekim onayıyla başlayın (AAP 2020).',
   'Ağrı, baş dönmesi, nefes darlığı, hastalık ya da yaralanma durumunda çalışmayı bırakın.',
-  'Isınmadan yoğun çalışmaya başlamayın; çalışma sonrası soğuma ve su tüketimini ihmal etmeyin.',
+  'Isınmadan (5–10 dk dinamik ısınma) yoğun çalışmaya başlamayın; çalışma sonrası soğuma ve su tüketimini ihmal etmeyin.',
+  'Çocuk ve gençler yük, sıçrama ve ev ekipmanıyla gözetimsiz çalışmamalıdır: uygun olmayan ekipman ve gözetimsizlik yaralanmanın başlıca nedenidir (NSCA 2009).',
 ];
 
 export interface Dose {
