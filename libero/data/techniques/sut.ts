@@ -107,7 +107,7 @@ export const SUT = [
     steps: [
       'Topa hafif yandan yaklaşın; basma ayağını topun yanına, biraz geriye basın.',
       'Ayak iç yüzünüzü topun dış-alt yarısına sarar gibi yerleştirin; bileği kilitleyin.',
-      'Topa içten dışa doğru "sürterek" vurun; takip hareketi vücudunuzun çaprazından, hedefin diğer tarafına doğru olsun.',
+      'Topa dıştan içe doğru "sürterek" vurun; takip hareketi vücudunuzun çaprazından, hedefin diğer tarafına doğru olsun.',
       'Topun hedefinden daha dışa başlayacağını düşünerek ayarlayın: kavis topu içeri getirir.',
     ],
     err: [
@@ -151,9 +151,9 @@ export const SUT = [
     steps: [
       'Topa hafif geriden ve yandan yaklaşın; basma ayağını topun yanına, bir adım geride basın.',
       'Vuran ayağın ucunu aşağı ve içe çevirin; ayak üstünün dış kısmı topa bakmalı. Bileği tamamen kilitleyin.',
-      'Topun dış-alt yarısına, ayak üstünün dış bölümüyle sürterek vurun; ayak dışarıdan içeriye (vücudunuzun çaprazına) hareket etsin.',
-      'Takip hareketi çapraz ve kısa olsun; vuruştan sonra dengenizi basma ayağında koruyun.',
-      'Topun başlangıç yönünü hedefin dışına alın; kavis topu hedefe döndürecektir.',
+      'Topun yan-alt kısmına, ayak üstünün dış bölümüyle sürterek vurun; hareket kısa ve kontrollü olsun.',
+      'Vuruştan sonra dengenizi basma ayağında koruyun; takip hareketini kısa tutun.',
+      'Topun başlangıç yönünü kavisin ters tarafına alın (sağ ayakta hedefin solundan); kavis topu hedefe döndürecektir.',
     ],
     err: [
       'Ayağın dış kenarıyla (küçük parmağın yan yüzü) vurmak: bu "dış kenar" vuruşudur, kavis ve güç azalır.',
@@ -177,10 +177,24 @@ export const SUT = [
       ['D, A ile kale arasında. A topu yavaş taşıyor.', null, 'A'],
       ['A, ayak üstünün dış bölümüyle topa dönüş verir; top D\'nin dışından başlar.', null, [105, 33], { shot: true, curve: -4 }],
     ]),
-    alias: ['trivela', 'dış üst', 'üst dış', 'ayak üstü dış', 'dışla vuruş', 'dış üst vuruş', 'outside instep', 'outside of the foot'],
+    alias: ['trivela', 'dış üst', 'üst dış', 'ayak üstü dış', 'dışla vuruş', 'dış üst vuruş', 'trivela şut', 'outside instep', 'outside of the foot'],
     pos: ['kanat', 'on-numara', 'bek', 'merkez-orta-saha'],
-    rel: ['dis-kenar-sutu', 'falsolu-sut', 'kavisli-pas'],
+    rel: ['trivela-pasi', 'dis-kenar-sutu', 'falsolu-sut'],
     q: 'trivela vuruşu nasıl yapılır dış üst vuruş',
+    diff: [
+      {
+        id: 'dis-kenar-sutu',
+        note: 'Dış kenar şutunda ayağın küçük parmak tarafındaki yan kenarı kullanılır, kısa ve sert bir vuruştur; üst dış vuruşta ayak üstünün dış bölümüyle topa dönüş verilir.',
+      },
+      {
+        id: 'falsolu-sut',
+        note: 'Falsolu şut ayağın iç yüzüyle yapılır ve top içe döner; üst dış vuruşta temas ayak üstünün dış bölümündedir ve top vuran ayağın tarafına döner.',
+      },
+      {
+        id: 'trivela-pasi',
+        note: 'Aynı temas yüzeyi pas için kullanılır; trivela pasında hedef arkadaştır ve güç kontrollüdür.',
+      },
+    ],
   }),
 
   tech({
@@ -224,6 +238,12 @@ export const SUT = [
     alias: ['dış ayak şutu', 'dışla şut', 'dış yüz', 'outside foot shot'],
     pos: ['kanat', 'santrfor', 'on-numara'],
     rel: ['ust-dis-vurus', 'dis-ayak-pasi'],
+    diff: [
+      {
+        id: 'ust-dis-vurus',
+        note: 'Üst dış vuruşta (trivela) temas ayak üstünün dış bölümündedir ve top dönüş kazanır; dış kenar şutunda ayağın küçük parmak tarafındaki yan kenarı kullanılır, vuruş kısa ve sert olur.',
+      },
+    ],
   }),
 
   tech({

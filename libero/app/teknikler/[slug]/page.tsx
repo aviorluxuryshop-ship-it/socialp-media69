@@ -97,6 +97,24 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 </div>
               </div>
             )}
+            {t.distinct && t.distinct.length > 0 && (
+              <div className="note" style={{ marginTop: 20 }}>
+                <Icon name="info" />
+                <div>
+                  <strong>Karıştırılmasın</strong>
+                  <ul className="distinct">
+                    {t.distinct.map((d) => (
+                      <li key={d.id}>
+                        <Link href={`/teknikler/${d.id}/`} className="btn--quiet" style={{ border: 0 }}>
+                          {TECH_BY_ID[d.id]?.name}
+                        </Link>
+                        : {d.note}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
             {t.safety && (
               <div className="note note--warn" style={{ marginTop: 20 }}>
                 <Icon name="warn" />

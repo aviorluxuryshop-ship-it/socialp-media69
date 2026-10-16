@@ -110,6 +110,7 @@ await test('Genel arama (Ctrl K): trivela bulunur, makas teknik olarak yok', asy
   await page.waitForTimeout(700);
   const txt = await page.locator('[role="dialog"]').innerText();
   ok(/Üst dış vuruş/i.test(txt), 'trivela → "Üst dış vuruş" bulunamadı');
+  ok(/Trivela pası/i.test(txt), 'trivela → "Trivela pası" bulunamadı');
   await input.fill('makas');
   await page.waitForTimeout(700);
   const t2 = (await page.locator('[role="dialog"]').innerText()).toLowerCase();
@@ -132,7 +133,9 @@ await test('Kütüphane: 100+ teknik, arama, kategori filtresi, makas yok', asyn
   await page.locator('.lib__input').fill('trivela');
   await page.waitForTimeout(500);
   const tv = await page.locator('.tech-card__name').allInnerTexts();
-  ok(tv[0] && /Üst dış vuruş/i.test(tv[0]), `trivela ilk sonuç: ${tv[0]}`);
+  ok(tv.some((n) => /Üst dış vuruş/i.test(n)) && tv.some((n) => /Trivela pası/i.test(n)), `trivela sonuçları: ${tv.slice(0, 4)}`);
+  const top2 = tv.slice(0, 2).join(' | ');
+  ok(/Üst dış vuruş/i.test(top2) && /Trivela pası/i.test(top2), `trivela aramasında ilk iki sonuç trivela teknikleri olmalı: ${top2}`);
   await page.locator('.lib__input').fill('');
   await page.getByRole('button', { name: /^Kalecilik/ }).first().click();
   await page.waitForTimeout(300);
@@ -149,6 +152,25 @@ await test('Üst dış vuruş sayfası: temas yüzeyi açık, adım adım, hatal
   ok(/dış yüz|ayağın dış|parmak/i.test(body), 'temas yüzeyi açıklanmıyor');
   ok(/Sık yapılan hatalar|Hatalar/i.test(body), 'hatalar bölümü yok');
   ok(/Alıştırmalar/i.test(body), 'alıştırmalar bölümü yok');
+  await ctx.close();
+});
+
+await test('İç yüzle kavisli pas ile trivela ayrı teknik: temas bölgesi, bağlantı, karıştırma notu', async () => {
+  const { ctx, page } = await newPage();
+  await go(page, '/teknikler/kavisli-pas/');
+  const h1 = await page.locator('h1').first().innerText();
+  ok(/İç yüzle kavisli pas/i.test(h1), `kavisli-pas başlığı: ${h1}`);
+  const lbl = (await page.locator('svg[aria-label^="Temas yüzeyi"]').first().getAttribute('aria-label')) ?? '';
+  ok(/İç yüz/.test(lbl) && !/Üst dış/.test(lbl), `kavisli-pas temas bölgesi yanlış: ${lbl}`);
+  const body1 = await page.locator('body').innerText();
+  ok(/Karıştırılmasın/.test(body1) && /Trivela pası/.test(body1), 'kavisli-pas sayfasında trivela ayrımı yok');
+  await page.locator('a[href="/teknikler/trivela-pasi/"]').first().click();
+  await page.waitForURL('**/teknikler/trivela-pasi/');
+  const lbl2 = (await page.locator('svg[aria-label^="Temas yüzeyi"]').first().getAttribute('aria-label')) ?? '';
+  ok(/Üst dış/.test(lbl2) && !/İç yüz/.test(lbl2), `trivela pası temas bölgesi yanlış: ${lbl2}`);
+  const body2 = await page.locator('body').innerText();
+  ok(/Ayak üstünün dış bölümü/.test(body2), 'trivela pasında temas yüzeyi açıklanmıyor');
+  ok(/Karıştırılmasın/.test(body2) && /İç yüzle kavisli pas/.test(body2) && /Dış ayak ile pas/.test(body2), 'trivela pasında karıştırma notu eksik');
   await ctx.close();
 });
 

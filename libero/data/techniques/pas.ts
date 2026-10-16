@@ -490,25 +490,27 @@ export const PAS = [
 
   tech({
     id: 'kavisli-pas',
-    foot: ['ic','ustDis'],
-    name: 'Kavisli pas',
-    en: 'Curled pass',
+    foot: ['ic', 'ustIc'],
+    name: 'İç yüzle kavisli pas',
+    en: 'Inside-foot curled pass',
     cat: 'pas',
     lv: 4,
     sub: 'Havadan paslar',
-    contact: 'İç yüz (içe kavis) veya dış üst',
-    purpose: 'Rakibin çevresinden dönen pasla arkadaşa ulaşmak',
-    sum: 'Topa yan dönüş (falso) vererek pas yolunu bir rakibin etrafından kavisle geçirirsiniz. Temas noktası ve ayağın hareket yönü kavisin yönünü belirler.',
+    contact: 'Ayağın iç yüzü ve ayak üstünün iç bölümü',
+    purpose: 'Rakibin çevresinden içe doğru dönen pasla arkadaşa ulaşmak',
+    sum: 'Topun dış yarısına ayağın iç yüzüyle sürterek dönüş (falso) verirsiniz; top rakibin dışından başlayıp içe doğru kavis çizer. Sağ ayakla top sola, sol ayakla sağa döner. Ayak üstünün dış bölümüyle yapılan dönüşlü pas (trivela) ayrı bir tekniktir ve topu ters yöne döndürür.',
     steps: [
-      'Topun yan tarafına, ayak ucunu topa hafif açıyla yaklaştırarak temas planlayın.',
-      'İç yüz kavisi için topun dış yarısına, ayağınızı soldan sağa süpürerek vurun (sağ ayak için).',
-      'Ayak bileğini kilitleyin; takip hareketi hedefi çaprazdan göstersin ve vücudun dönüşüyle uyumlu olsun.',
-      'Kavisin yönünü rakip ve arkadaş pozisyonuna göre belirleyin.',
+      'Topa hafif yandan ve açıyla yaklaşın; basma ayağını topun yanına, biraz geriye basın.',
+      'Ayağın iç yüzünü ve ayak üstünün iç bölümünü topun dış-alt yarısına yerleştirin (sağ ayakta topun sağ tarafına); bileği kilitleyin.',
+      'Ayağınızı topa sürterek dıştan içe, vücudunuzun çaprazına doğru süpürün; takip hareketi hedefin diğer tarafına uzansın.',
+      'Topun başlangıç yönünü rakibin dışına alın; kavis topu arkadaşa getirecektir.',
     ],
     err: [
-      'Topa tam ortadan vurmak: kavis oluşmaz.',
-      'Vücut yönü ile ayak yönü uyumsuz: top yanlış yöne gider.',
-      'Çok kavis vermek: pas arkadaşın ulaşamayacağı yere gider.',
+      'Topa tam ortadan vurmak: dönüş oluşmaz, pas düz gider.',
+      'Ayağı topun yanından geçirmeden doğrudan ileri sallamak: kavis yerine düz ve sert bir pas çıkar.',
+      'Gövde ve ayağı aynı çizgide tutmak: ayak topun yanından süpürülemez, kavis yönü kaybolur.',
+      'Gereğinden fazla kavis vermek: pas arkadaşın ulaşamayacağı yere gider.',
+      'Trivela ile karıştırmak: iç yüz kavisinde temas ayak üstünün iç bölümündedir; dış bölümle yapılan vuruş ayrı bir tekniktir.',
     ],
     use: [
       'Rakibin arkasındaki oyuncuya pas.',
@@ -524,11 +526,77 @@ export const PAS = [
     ],
     scene: S('half', 'A:a:58:12 B:a:90:34 D:b:72:22', [
       ['D, A ile B arasındaki düz pas yolunu kapatıyor.', null, 'A'],
-      ['A topu kavisli olarak D\'nin çevresinden B\'ye gönderir.', null, 'B', { curve: -5 }],
+      ['A topu iç yüzüyle D\'nin dışından başlatır; top içe kavis çizerek B\'ye ulaşır.', null, 'B', { curve: 5 }],
     ]),
-    alias: ['falsolu pas', 'bükmeli pas', 'curl', 'dönen pas', 'curved pass'],
+    alias: ['falsolu pas', 'bükmeli pas', 'iç ayakla kavisli pas', 'iç yüz falsolu pas', 'kavisli pas', 'dönen pas', 'curl', 'curved pass'],
     pos: ['on-numara', 'merkez-orta-saha', 'kanat', 'bek'],
-    rel: ['uzun-pas', 'ust-dis-vurus'],
+    rel: ['trivela-pasi', 'uzun-pas', 'falsolu-sut'],
+    diff: [
+      {
+        id: 'trivela-pasi',
+        note: 'Trivela pasında temas ayak üstünün dış bölümündedir ve top, vuran ayağın tarafına doğru döner (sağ ayakta sağa). İç yüz kavisinde top ters yöne, içe döner.',
+      },
+    ],
+  }),
+
+  tech({
+    id: 'trivela-pasi',
+    foot: ['ustDis'],
+    name: 'Trivela pası (dış ayak üstüyle pas)',
+    en: 'Outside-of-the-foot curled pass (trivela pass)',
+    cat: 'pas',
+    lv: 5,
+    sub: 'Havadan paslar',
+    contact: 'Ayak üstünün dış bölümü (küçük parmağa yakın üst yüzey)',
+    purpose: 'Rakibin çevresinden dışa doğru dönen, beklenmedik açılı bir pasla arkadaşa ulaşmak',
+    sum: 'Pası ayağın yan kenarıyla değil, ayak üstünün dış bölümüyle vererek topa dönüş kazandırırsınız. Top, vuran ayağın bulunduğu tarafa doğru kavis çizer: sağ ayakta sağa, sol ayakta sola. İç yüzle yapılan kavisli pasın tersine top içe değil dışa döner.',
+    steps: [
+      'Topa hafif yandan ve açıyla yaklaşın; basma ayağını topun yanına basın, gövdeniz dengede kalsın.',
+      'Vuran ayağın ucunu aşağı ve içe çevirin, bileği kilitleyin; ayak üstünün dış bölümü topa bakmalı.',
+      'Ayak üstünün dış bölümüyle topun yan-alt kısmına sürterek vurun; hareket kısa ve kontrollü olsun, pası güçle değil temasla yönlendirin.',
+      'Topun başlangıç yönünü kavisin ters tarafına alın (sağ ayakta hedefin solundan); kavis topu arkadaşa getirecektir.',
+      'Önce kısa mesafede ve düşük güçle deneyin; yön hissi oturunca mesafeyi artırın.',
+    ],
+    err: [
+      'Ayağın yan kenarıyla (küçük parmağın yan yüzü) vurmak: bu, dış ayak pasıdır; kavis oluşmaz.',
+      'Bileği gevşek bırakmak: top yönsüz savrulur.',
+      'Kavisin yönünü karıştırmak: top vuran ayağın tarafına döner, iç yüz kavisindeki gibi içe dönmez.',
+      'Çok sert vurmak: kavis yerine uzağa giden kontrolsüz bir top çıkar.',
+    ],
+    use: [
+      'Vücudunuz yana dönükken baskın ayağınızla pas verebilmek.',
+      'Rakibin çevresinden dışa kavis çizerek kanattaki ya da arkadaki oyuncuya pas.',
+      'Kanattan ceza sahasına dönen orta ve kavisli paslar.',
+    ],
+    drills: [
+      [1, 'Dış üstle yana itme', 'Eşinizle 5 m aralıklı; durağan topu ayak üstünün dış bölümüyle yavaşça yana iterek temas hissini öğrenin.', '3 × 10 tekrar'],
+      [2, 'Kavis yönünü gözleme', '10–12 m mesafede hafif vuruşla topun hangi yöne döndüğünü gözleyin; sağ ve sol ayağın yönünü karşılaştırın.', '4 × 8 pas'],
+      [3, 'Koninin dışından hedefe', 'Araya bir koni koyun; topu koninin dışından başlatıp arkadaşa kavisle ulaştırın.', '5 × 6 pas'],
+      [4, 'Hareketli arkadaşa', 'Arkadaşınız yürüyerek ya da tempolu koşarken önüne kavisli pas; tempoyu kademeli artırın.', '5 × 5 pas'],
+      [5, 'Pasif savunmacı ve zayıf ayak', 'Pasif savunmacı varken trivela pası; ardından aynı çalışmayı zayıf ayakla tekrarlayın.', '4 × 6 pas'],
+    ],
+    scene: S('half', 'A:a:56:34 B:a:90:52 D:b:73:43', [
+      ['D, A ile B arasındaki düz pas yolunu kapatıyor.', null, 'A'],
+      ['A topu ayak üstünün dış bölümüyle D\'nin dışından başlatır; top dışa kavis çizerek B\'ye ulaşır.', null, 'B', { curve: -5 }],
+    ]),
+    alias: ['dış üstle pas', 'ayak üstü dış pas', 'trivela pas', 'dış ayakla kavisli pas', 'outside curl pass'],
+    pos: ['kanat', 'on-numara', 'bek', 'merkez-orta-saha'],
+    rel: ['ust-dis-vurus', 'kavisli-pas', 'dis-ayak-pasi'],
+    q: 'trivela pas nasıl yapılır dış ayak üstüyle pas',
+    diff: [
+      {
+        id: 'kavisli-pas',
+        note: 'İç yüzle kavisli pas ayağın iç yüzüyle yapılır ve top içe döner; trivela pasında temas ayak üstünün dış bölümündedir ve kavis ters yöne gider.',
+      },
+      {
+        id: 'dis-ayak-pasi',
+        note: 'Dış ayak pasında ayağın yan kenarıyla topu kısa ve düz iletirsiniz; trivela pasında ayak üstünün dış bölümüyle topa dönüş kazandırırsınız.',
+      },
+      {
+        id: 'ust-dis-vurus',
+        note: 'Temas yüzeyi aynıdır; üst dış vuruş şut ve orta içindir, trivela pası ise hedefi arkadaş olan, kontrollü güçteki paslar için kullanılır.',
+      },
+    ],
   }),
 
   tech({
@@ -615,7 +683,13 @@ export const PAS = [
     ]),
     alias: ['dış kenar pas', 'dış ayakla vuruş', 'dış yüz pas', 'outside foot'],
     pos: ['on-numara', 'kanat', 'merkez-orta-saha'],
-    rel: ['topukla-pas', 'ust-dis-vurus'],
+    rel: ['topukla-pas', 'trivela-pasi', 'dis-kenar-sutu'],
+    diff: [
+      {
+        id: 'trivela-pasi',
+        note: 'Dış ayak pasında ayağın küçük parmak tarafındaki yan kenarı kullanılır; trivelada temas ayak üstünün dış bölümündedir ve top dönüş kazanır.',
+      },
+    ],
   }),
 
   tech({

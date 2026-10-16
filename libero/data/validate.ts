@@ -36,6 +36,11 @@ export function validateTechniques(list: Technique[]): string[] {
   }
   for (const t of list) {
     for (const r of t.related) if (!ids.has(r)) errs.push(`${t.id}: bilinmeyen ilgili teknik "${r}"`);
+    for (const d of t.distinct ?? []) {
+      if (!ids.has(d.id)) errs.push(`${t.id}: karıştırılan teknik "${d.id}" yok`);
+      if (d.id === t.id) errs.push(`${t.id}: kendisiyle karşılaştırılamaz`);
+      if (d.note.trim().length < 20) errs.push(`${t.id}: "${d.id}" farkı notu çok kısa`);
+    }
     for (const p of t.positions) if (!posIds.has(p)) errs.push(`${t.id}: bilinmeyen pozisyon "${p}"`);
     const levels = new Set(t.drills.map((d) => d.lvl));
     for (const l of [1, 2, 3, 4, 5]) if (!levels.has(l as 1)) errs.push(`${t.id}: ${l}. seviye alıştırması yok`);

@@ -38,6 +38,14 @@ export interface Technique {
   safety?: string;
   /** temas yüzeyi haritasında vurgulanacak bölgeler */
   foot?: FootZone[];
+  /** karıştırılan benzer teknikler: bu teknik onlardan nasıl ayrılır */
+  distinct?: DistinctNote[];
+}
+
+/** "Karıştırılmasın" notu: benzer teknikle farkı kısaca anlatır */
+export interface DistinctNote {
+  id: string;
+  note: string;
 }
 
 export type DrillTuple = [lvl: Level, name: string, how: string, dose: string];
@@ -63,6 +71,7 @@ export interface TechInput {
   q?: string;
   safe?: string;
   foot?: FootZone[];
+  diff?: DistinctNote[];
 }
 
 export function tech(i: TechInput): Technique {
@@ -87,5 +96,6 @@ export function tech(i: TechInput): Technique {
     q: i.q ?? `${i.name} futbol nasıl yapılır`,
     safety: i.safe,
     foot: i.foot,
+    distinct: i.diff,
   };
 }

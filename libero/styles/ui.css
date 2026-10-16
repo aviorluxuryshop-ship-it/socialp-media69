@@ -643,6 +643,12 @@ a.card:hover,
   color: var(--ivory);
   font-weight: 600;
 }
+.distinct {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
 
 /* ── Boş durum ───────────────────────────────────────────── */
 .empty {
