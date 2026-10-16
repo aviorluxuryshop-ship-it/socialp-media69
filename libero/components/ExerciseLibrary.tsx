@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { EXCAT_NAME, MUSCLE_NAME, type Env, type Equip, type ExCat, type MuscleId } from '@/data/exercises';
+import { EXCAT_NAME, MUSCLE_NAME, type Env, type ExCat, type MuscleId } from '@/data/exercises';
 import { buildIndex, search } from '@/lib/search';
-import { useStore } from '@/lib/store';
+import { useStore, type AppState } from '@/lib/store';
+import { ENV_NAME, ENV_ORDER, EQUIP_NAME, availableEquip, equipUnion } from '@/lib/environments';
 import { allowedFor } from '@/lib/training';
 import type { Exercise } from '@/data/exercises';
 import { Icon } from './Icon';
@@ -13,23 +14,13 @@ import { StarRating } from './StarRating';
 
 export type ExLite = Pick<Exercise, 'id' | 'name' | 'cat' | 'muscles' | 'secondary' | 'env' | 'equip' | 'lv' | 'minAge' | 'why'>;
 
-const selProfile = (s: { profile: { age: number | null; equipment: string[] } }) => s.profile;
-const ENVS: { id: Env; name: string }[] = [
-  { id: 'ev', name: 'Ev' },
-  { id: 'salon', name: 'Spor salonu' },
-  { id: 'saha', name: 'Saha' },
-];
-const EQUIP_NAME: Record<Equip, string> = {
-  yok: 'Ekipmansız',
-  top: 'Top',
-  koni: 'Koni',
-  bant: 'Direnç bandı',
-  dambil: 'Dambıl',
-  barfiks: 'Barfiks',
-  salon: 'Salon aleti',
-  merdiven: 'İp merdiven',
-  kutu: 'Kutu/basamak',
-};
+const selProfile = (s: AppState) => s.profile;
+const ENVS: { id: Env; name: string }[] = ENV_ORDER.map((id) => ({ id, name: ENV_NAME[id] }));
+
+/** Egzersiz, kullanıcının seçtiği ortamlardan en az birinde, o ortamda seçtiği ekipmanla yapılabiliyor mu? */
+function fitsMine(e: Exercise, p: AppState['profile']): boolean {
+  return p.envs.some((env) => e.env.includes(env) && e.equip.every((q) => q === 'yok' || availableEquip(env, p.equipByEnv[env] ?? [], p.age).has(q)));
+}
 
 export function ExerciseLibrary({ items }: { items: ExLite[] }) {
   const profile = useStore(selProfile);
@@ -77,7 +68,7 @@ export function ExerciseLibrary({ items }: { items: ExLite[] }) {
         (!cat || e.cat === cat) &&
         (!muscle || e.muscles.includes(muscle) || e.secondary.includes(muscle)) &&
         (!env || e.env.includes(env)) &&
-        (!mine || e.equip.every((x) => x === 'yok' || profile.equipment.includes(x))) &&
+        (!mine || fitsMine(e as Exercise, profile)) &&
         (!safe || profile.age === null || allowedFor(e as Exercise, profile.age)),
     );
   }, [items, index, q, cat, muscle, env, mine, safe, profile]);
@@ -134,7 +125,7 @@ export function ExerciseLibrary({ items }: { items: ExLite[] }) {
           </div>
           <label className="check">
             <input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} />
-            <span>Ekipmanıma uygun ({profile.equipment.map((x) => EQUIP_NAME[x as Equip]).filter(Boolean).join(', ') || 'ekipmansız'})</span>
+            <span>Seçtiğim ortam ve ekipmana uygun ({equipUnion(profile.equipByEnv, profile.envs).map((x) => EQUIP_NAME[x]).join(', ') || 'ekipmansız'})</span>
           </label>
           <label className="check">
             <input type="checkbox" checked={safe} onChange={(e) => setSafe(e.target.checked)} />

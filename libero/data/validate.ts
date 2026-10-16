@@ -1,6 +1,7 @@
 import { POSITIONS } from '@/lib/types';
 import { fitView, timeline } from '@/lib/scene';
 import type { Technique } from './types';
+import { BODY_KEYS, type BodyPosition } from './body-position';
 
 /** Çakışan (üst üste binen) oyuncular: okunabilirlik uyarısı */
 export function overlapWarnings(list: Technique[]): string[] {
@@ -94,4 +95,51 @@ export function validateRest(args: { techIds: Set<string>; tactics: Tactic[]; po
     if (q.scene.f.length < 2) out.push(`quiz:${q.id}: en az 2 kare gerekli`);
   }
   return out;
+}
+
+
+function shingles(text: string, n = 3): Set<string> {
+  const w = text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+  const out = new Set<string>();
+  for (let i = 0; i + n <= w.length; i++) out.add(w.slice(i, i + n).join(' '));
+  return out;
+}
+
+/**
+ * Vücut pozisyonu verisi: bilinmeyen teknik, eksik/çok kısa alan, aynı tekniğin alanlarının
+ * birbirinin kopyası ya da farklı tekniklerde (neredeyse) aynı metin olmasını reddeder.
+ */
+export function validateBodyPositions(map: Record<string, BodyPosition>, techIds: Set<string>): string[] {
+  const errs: string[] = [];
+  const ids = Object.keys(map);
+  for (const id of ids) {
+    if (!techIds.has(id)) errs.push(`vücut pozisyonu: bilinmeyen teknik "${id}"`);
+    const bp = map[id];
+    for (const k of BODY_KEYS) {
+      const v = bp[k];
+      if (typeof v !== 'string' || v.trim().length < 40) errs.push(`vücut pozisyonu ${id}.${k}: eksik ya da çok kısa`);
+      else if (v.length > 400) errs.push(`vücut pozisyonu ${id}.${k}: çok uzun`);
+    }
+    const own = new Set<string>();
+    for (const k of BODY_KEYS) {
+      const v = (bp[k] ?? '').trim().toLowerCase();
+      if (own.has(v)) errs.push(`vücut pozisyonu ${id}: iki alan aynı metni içeriyor`);
+      own.add(v);
+    }
+  }
+  for (const k of BODY_KEYS) {
+    const sh = ids.map((id) => shingles(map[id][k] ?? ''));
+    for (let i = 0; i < ids.length; i++) {
+      for (let j = i + 1; j < ids.length; j++) {
+        const a = sh[i];
+        const b = sh[j];
+        if (!a.size || !b.size) continue;
+        let inter = 0;
+        for (const x of a) if (b.has(x)) inter++;
+        const jac = inter / (a.size + b.size - inter);
+        if (jac >= 0.6) errs.push(`vücut pozisyonu ${k}: "${ids[i]}" ile "${ids[j]}" çok benzer (${jac.toFixed(2)})`);
+      }
+    }
+  }
+  return errs;
 }

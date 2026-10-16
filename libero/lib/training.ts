@@ -1,4 +1,5 @@
 import type { Exercise } from '@/data/exercises';
+import { EQUIP_MIN_AGE } from './environments';
 import type { Level } from './types';
 import type { AgeBand } from './program-types';
 
@@ -122,14 +123,16 @@ export function doseFor(ex: Exercise, band: AgeBand, level: Level): Dose {
   return { sets, reps, unit: ex.unit, rest, text, note };
 }
 
-/** Çocuk/ergen için uygun mu? */
+/** Çocuk/ergen için uygun mu? Yaş, egzersizin ve gerektirdiği ekipmanın en erken yaşına bağlıdır. */
 export function allowedFor(ex: Exercise, age: number): boolean {
   if (age < ex.minAge) return false;
-  if (age < 12) {
-    const loaded = ex.equip.includes('dambil') || ex.equip.includes('salon') || ex.equip.includes('barfiks') || ex.equip.includes('kutu');
-    if (loaded) return false;
-    if (ex.cat === 'guc' && ex.id !== 'inis-calismasi') return false;
-  }
-  if (age < 15 && ex.equip.includes('salon')) return false;
+  for (const q of ex.equip) if (age < EQUIP_MIN_AGE[q]) return false;
+  if (age < 12 && ex.cat === 'guc' && ex.id !== 'inis-calismasi') return false;
   return true;
+}
+
+/** Bir yaş bandında (bandın en büyük yaşıyla) egzersiz önerilebilir mi? */
+export function allowedInBand(ex: Exercise, band: AgeBand): boolean {
+  const top: Record<AgeBand, number> = { u12: 11, '12-14': 14, '15-17': 17, '18+': 18 };
+  return allowedFor(ex, top[band]);
 }

@@ -2017,3 +2017,97 @@ kbd,
 .vlab__crit-row .seg button {
   min-width: 0;
 }
+
+/* ── Antrenman ayrıntı sayfası ───────────────────────────── */
+.scard__link {
+  color: inherit;
+  text-decoration: none;
+}
+.scard__link:hover {
+  color: var(--brass-hi);
+  text-decoration: underline;
+}
+.workout__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.workout__cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.wk-list {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.wk-item {
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+  background: var(--ink-850);
+}
+.wk-item summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: baseline;
+  padding: 16px 18px;
+  cursor: pointer;
+  list-style: none;
+}
+.wk-item summary::-webkit-details-marker {
+  display: none;
+}
+.wk-item__n {
+  color: var(--brass);
+}
+.wk-item__name {
+  font-family: var(--font-display, inherit);
+  font-size: 1.15rem;
+  color: var(--ivory);
+}
+.wk-item__dose {
+  color: var(--ivory-2);
+  font-size: var(--fs-small);
+}
+.wk-item details > :not(summary) {
+  margin-left: 18px;
+  margin-right: 18px;
+}
+.wk-item details > :last-child {
+  margin-bottom: 18px;
+}
+.wk-item__kv {
+  margin-top: 4px;
+}
+.wk-item__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 14px;
+}
+.wk-item__caution,
+.wk-item__why,
+.wk-item__links {
+  grid-column: 1 / -1;
+}
+.wk-item__links {
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .wk-item summary {
+    grid-template-columns: auto 1fr;
+  }
+  .wk-item__dose {
+    grid-column: 1 / -1;
+  }
+  .wk-item__body {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

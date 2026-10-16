@@ -27,7 +27,8 @@ export const TECHNIQUES: Technique[] = [
   ...TOPSUZ,
 ];
 
-import { overlapWarnings, validateRest, validateTechniques } from './validate';
+import { overlapWarnings, validateBodyPositions, validateRest, validateTechniques } from './validate';
+import { BODY_POSITION } from './body-position';
 import { POSITION_PROFILES } from './positions';
 import { QUIZ } from './quiz';
 import { TACTICS } from './tactics';
@@ -41,6 +42,7 @@ const problems = [
   ...validateExercises(),
   ...patternErrs,
   ...validateTechniques(TECHNIQUES),
+  ...validateBodyPositions(BODY_POSITION, new Set(TECHNIQUES.map((t) => t.id))),
   ...validateRest({ techIds: new Set(TECHNIQUES.map((t) => t.id)), tactics: TACTICS, positions: POSITION_PROFILES, quiz: QUIZ }),
 ];
 if (problems.length) {

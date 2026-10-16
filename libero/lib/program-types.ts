@@ -42,7 +42,10 @@ export interface ProgramInput {
   level: Level;
   goal: string;
   positions: PositionId[];
+  /** tüm ortamlardaki ekipmanın birleşimi (eski v1 programlarında tek liste olarak kayıtlıdır) */
   equipment: string[];
+  /** ortam başına seçilen ekipman (v2); eski programlarda yoktur */
+  equipByEnv?: Record<string, string[]>;
   envs: string[];
   perWeek: number;
   minutes: number;

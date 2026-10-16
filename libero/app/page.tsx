@@ -172,7 +172,7 @@ export default function Home() {
           </div>
           <ul className="dev-grid">
             {[
-              ['/program/', 'calendar', 'Kişisel program', 'Yaşa, seviyeye, hedefe ve ekipmana göre esnek haftalık plan. Tamamla, yarım bıraktığın yerden devam et.'],
+              ['/program/', 'calendar', 'Kişisel program', 'Yaşa, seviyeye, ortama (ev, salon, saha) ve ekipmana göre fiziksel gelişim planı. Güne tıkla, hareketleri ayrıntısıyla gör; yarım bıraktığın yerden devam et.'],
               ['/fiziksel/', 'dumbbell', 'Fiziksel gelişim', 'Sürat, çeviklik, kuvvet, denge. Kas haritasından egzersiz bul; yaşa uygun doz gör.'],
               ['/beslenme/', 'leaf', 'Beslenme ve toparlanma', 'Antrenman öncesi-sonrası, sıvı ve pratik öğünler. Sevmediğin yiyeceğe alternatif bul.'],
               ['/analiz/performans/', 'chart', 'Performans analizi', 'Antrenman geçmişin, test sonuçların ve teknik seviye gelişimin tek ekranda.'],

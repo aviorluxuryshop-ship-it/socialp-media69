@@ -11,6 +11,7 @@ import { SceneView } from '@/components/pitch/SceneView';
 import { StarRating } from '@/components/StarRating';
 import { DrillList, TechLevelCard } from '@/components/TechPlan';
 import { VideoCard } from '@/components/VideoCard';
+import { BODY_KEYS, BODY_LABEL, BODY_LABEL_HEAD, BODY_POSITION } from '@/data/body-position';
 import { VIDEOS_BY_TECH } from '@/data/videos';
 import { POSITION_NAME } from '@/lib/types';
 
@@ -38,6 +39,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const next = siblings[i + 1];
   const related = t.related.map((id) => TECH_BY_ID[id]).filter(Boolean);
   const videos = VIDEOS_BY_TECH[t.id] ?? [];
+  const body = BODY_POSITION[t.id];
+  const bodyLabel = t.cat === 'kafa' ? BODY_LABEL_HEAD : BODY_LABEL;
+  let secNo = 0;
+  const sec = () => String(++secNo).padStart(2, '0');
 
   return (
     <>
@@ -71,7 +76,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div className="tech-main">
           <section className="tsec">
             <h2 className="h3 tsec__h">
-              <span className="tsec__n mono">01</span> Oyundaki amacı
+              <span className="tsec__n mono">{sec()}</span> Oyundaki amacı
             </h2>
             <p className="prose lead" style={{ maxWidth: '60ch' }}>{t.purpose}.</p>
             {t.foot && t.foot.length > 0 && (
@@ -128,7 +133,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
           <section className="tsec">
             <h2 className="h3 tsec__h">
-              <span className="tsec__n mono">02</span> Adım adım uygulama
+              <span className="tsec__n mono">{sec()}</span> Adım adım uygulama
             </h2>
             <ol className="steps">
               {t.steps.map((s, k) => (
@@ -137,9 +142,28 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             </ol>
           </section>
 
+          {body && (
+            <section className="tsec" id="vucut-pozisyonu">
+              <h2 className="h3 tsec__h">
+                <span className="tsec__n mono">{sec()}</span> Vuruş öncesi vücut pozisyonu
+              </h2>
+              <dl className="bodypos">
+                {BODY_KEYS.map((k) => (
+                  <div key={k} className="bodypos__row">
+                    <dt className="mono">{bodyLabel[k]}</dt>
+                    <dd>{body[k]}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="field__hint" style={{ marginTop: 12 }}>
+                Anlatım sağ ayaklı oyuncu içindir; sol ayaklıda yönler ayna görüntüsüdür. Genel antrenörlük uygulamasıdır; kişiye göre küçük farklar olabilir, ilk denemelerde antrenör gözetiminde ve yavaş çalışın.
+              </p>
+            </section>
+          )}
+
           <section className="tsec">
             <h2 className="h3 tsec__h">
-              <span className="tsec__n mono">03</span> Yaygın hatalar
+              <span className="tsec__n mono">{sec()}</span> Yaygın hatalar
             </h2>
             <ul className="ticks ticks--warn">
               {t.mistakes.map((s, k) => (
@@ -150,7 +174,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
           <section className="tsec">
             <h2 className="h3 tsec__h">
-              <span className="tsec__n mono">04</span> Maçta nerede kullanılır?
+              <span className="tsec__n mono">{sec()}</span> Maçta nerede kullanılır?
             </h2>
             <ul className="ticks">
               {t.usage.map((s, k) => (
@@ -174,14 +198,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
           <section className="tsec" id="alistirmalar">
             <h2 className="h3 tsec__h">
-              <span className="tsec__n mono">05</span> Alıştırmalar — seviyenize göre
+              <span className="tsec__n mono">{sec()}</span> Alıştırmalar — seviyenize göre
             </h2>
             <DrillList id={t.id} cat={t.cat} drills={t.drills} />
           </section>
 
           <section className="tsec" id="video">
             <h2 className="h3 tsec__h">
-              <span className="tsec__n mono">06</span> Video ve kaynaklar
+              <span className="tsec__n mono">{sec()}</span> Video ve kaynaklar
             </h2>
             {videos.length > 0 ? (
               <>
@@ -210,7 +234,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           {related.length > 0 && (
             <section className="tsec">
               <h2 className="h3 tsec__h">
-                <span className="tsec__n mono">07</span> İlgili teknikler
+                <span className="tsec__n mono">{sec()}</span> İlgili teknikler
               </h2>
               <ul className="rel-list">
                 {related.map((r) => (

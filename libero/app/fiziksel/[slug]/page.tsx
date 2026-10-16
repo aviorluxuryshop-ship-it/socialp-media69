@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { EXCAT_NAME, EXERCISES, EX_BY_ID, MUSCLE_NAME } from '@/data/exercises';
-import { BAND_NAME, doseFor } from '@/lib/training';
+import { BAND_NAME, allowedInBand, doseFor } from '@/lib/training';
+import { ENV_NAME, EQUIP_NAME } from '@/lib/environments';
 import type { AgeBand } from '@/lib/program-types';
 import { Icon } from '@/components/Icon';
 import { MuscleMap } from '@/components/MuscleMap';
@@ -21,8 +22,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const BANDS: AgeBand[] = ['u12', '12-14', '15-17', '18+'];
-const EQUIP_NAME: Record<string, string> = { yok: 'Ekipman gerekmez', top: 'Top', koni: 'Koni', bant: 'Direnç bandı', dambil: 'Dambıl', barfiks: 'Barfiks', salon: 'Salon aleti', merdiven: 'İp merdiven', kutu: 'Kutu / basamak' };
-const ENV_NAME: Record<string, string> = { ev: 'Ev', salon: 'Spor salonu', saha: 'Saha' };
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -59,6 +58,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <section className="tsec">
             <h2 className="h3 tsec__h"><span className="tsec__n mono">02</span> Doğru teknik için</h2>
             <ul className="ticks">{e.cues.map((s) => <li key={s}>{s}</li>)}</ul>
+            {e.mistakes.length > 0 && (
+              <>
+                <h3 className="h4" style={{ marginTop: 22 }}>Sık yapılan hatalar</h3>
+                <ul className="ticks ticks--warn" style={{ marginTop: 8 }}>{e.mistakes.map((s) => <li key={s}>{s}</li>)}</ul>
+              </>
+            )}
             {e.caution && (
               <div className="note note--warn" style={{ marginTop: 20 }}>
                 <Icon name="warn" />
@@ -75,7 +80,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 </thead>
                 <tbody>
                   {BANDS.map((b) => {
-                    const ok = (b === 'u12' ? e.minAge < 12 && !e.equip.some((x) => ['dambil', 'salon', 'barfiks', 'kutu'].includes(x)) && (e.cat !== 'guc' || e.id === 'inis-calismasi') : b === '12-14' ? e.minAge < 15 && !e.equip.includes('salon') : b === '15-17' ? e.minAge < 18 : true);
+                    const ok = allowedInBand(e, b);
                     if (!ok) return <tr key={b}><td>{BAND_NAME[b]}</td><td colSpan={4} className="muted">Bu yaş grubu için önerilmez</td></tr>;
                     return (
                       <tr key={b}>

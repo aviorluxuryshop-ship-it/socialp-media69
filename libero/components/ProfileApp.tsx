@@ -2,7 +2,9 @@
 
 import { useMemo, useRef, useState } from 'react';
 import { GOALS } from '@/lib/program';
-import { exportData, importData, resetAll, setProfile, useMeta, useStore, type AppState, type EnvId, type EquipId, type Goal, type Profile } from '@/lib/store';
+import { ENV_NAME, ENV_ORDER } from '@/lib/environments';
+import { EquipPicker } from './EquipPicker';
+import { exportData, importData, resetAll, setProfile, useMeta, useStore, type AppState, type EnvId, type Goal, type Profile } from '@/lib/store';
 import { toast } from '@/lib/toast';
 import { BAND_NAME, ageBand } from '@/lib/training';
 import { LEVEL_HINTS, LEVEL_NAMES, POSITIONS, type Level, type PositionId } from '@/lib/types';
@@ -22,20 +24,7 @@ const selVideoNotes = (s: AppState) => s.videoNotes;
 const selProgram = (s: AppState) => s.program;
 const selCreated = (s: AppState) => s.createdAt;
 
-const EQUIP: { id: EquipId; name: string }[] = [
-  { id: 'top', name: 'Top' },
-  { id: 'koni', name: 'Koni' },
-  { id: 'bant', name: 'Direnç bandı' },
-  { id: 'dambil', name: 'Dambıl' },
-  { id: 'barfiks', name: 'Barfiks' },
-  { id: 'merdiven', name: 'İp merdiven' },
-  { id: 'kutu', name: 'Kutu / basamak' },
-];
-const ENVS: { id: EnvId; name: string }[] = [
-  { id: 'ev', name: 'Ev' },
-  { id: 'salon', name: 'Spor salonu' },
-  { id: 'saha', name: 'Saha' },
-];
+const ENVS: { id: EnvId; name: string }[] = ENV_ORDER.map((id) => ({ id, name: ENV_NAME[id] }));
 
 function toggle<T>(arr: T[], v: T): T[] {
   return arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
@@ -177,14 +166,7 @@ export function ProfileForm() {
               ))}
             </div>
           </div>
-          <div className="field">
-            <span className="field__label">Elimdeki ekipman</span>
-            <div className="chips">
-              {EQUIP.map((e) => (
-                <button key={e.id} type="button" className="chip" aria-pressed={profile.equipment.includes(e.id)} onClick={() => patch({ equipment: toggle<EquipId>(profile.equipment, e.id) })}>{e.name}</button>
-              ))}
-            </div>
-          </div>
+          <EquipPicker envs={profile.envs} value={profile.equipByEnv} age={profile.age} onChange={(equipByEnv) => patch({ equipByEnv })} />
           <div className="field">
             <span className="field__label">Haftada kaç antrenman?</span>
             <div className="seg" role="group" aria-label="Haftalık antrenman sayısı">

@@ -114,6 +114,10 @@
   transition: all var(--dur) var(--ease);
   white-space: nowrap;
 }
+.chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 .chip:hover {
   border-color: var(--line-3);
   color: var(--ivory);
@@ -642,6 +646,39 @@ a.card:hover,
 .note strong {
   color: var(--ivory);
   font-weight: 600;
+}
+.bodypos {
+  margin: 0;
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+  background: var(--line-2);
+  overflow: hidden;
+}
+.bodypos__row {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--ink-850);
+}
+.bodypos__row dt {
+  color: var(--brass);
+  font-size: var(--fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-top: 2px;
+}
+.bodypos__row dd {
+  margin: 0;
+  color: var(--ivory-2);
+}
+@media (max-width: 640px) {
+  .bodypos__row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 .distinct {
   margin: 8px 0 0;

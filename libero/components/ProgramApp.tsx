@@ -1,16 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { EX_BY_ID } from '@/data/exercises';
-import { FOCUS_NAME, GOALS, generateProgram, type DrillTech } from '@/lib/program';
+import { FOCUS_NAME, GOALS, generateProgram } from '@/lib/program';
+import { ENV_NAME, ENV_ORDER, EQUIP_NAME, type EquipByEnv } from '@/lib/environments';
+import { EquipPicker } from './EquipPicker';
 import type { PlannedSession, Program, SessionFocus, SessionLog } from '@/lib/program-types';
 import {
   addManualLog,
   assignDay,
   clearProgram,
   deleteLog,
-  finishLog,
   logForSession,
   logMinutes,
   logProgress,
@@ -18,36 +19,22 @@ import {
   saveProgram,
   startSession,
   swapItem,
-  toggleSet,
   weekRange,
 } from '@/lib/program-actions';
-import { setProfile, useStore, type EquipId, type EnvId, type Goal } from '@/lib/store';
+import { setProfile, useStore, type EnvId, type Goal } from '@/lib/store';
 import { toast } from '@/lib/toast';
 import { BAND_NAME, BAND_RULES, GENERAL_SAFETY, ageBand } from '@/lib/training';
 import { POSITIONS, type Level, type PositionId } from '@/lib/types';
 import { DAY_NAMES, DAY_SHORT, addDays, fmtDate, fmtShort, todayKey } from '@/lib/utils';
 import { Icon } from './Icon';
+import { Runner } from './Runner';
 import { StarRating } from './StarRating';
 
 const selProfile = (s: { profile: import('@/lib/store').Profile }) => s.profile;
 const selProgram = (s: { program: Program | null }) => s.program;
 const selLogs = (s: { logs: SessionLog[] }) => s.logs;
-const selLevels = (s: { levels: Record<string, { level: Level }> }) => s.levels;
 
-const EQUIP: { id: EquipId; name: string }[] = [
-  { id: 'top', name: 'Top' },
-  { id: 'koni', name: 'Koni' },
-  { id: 'bant', name: 'Direnç bandı' },
-  { id: 'dambil', name: 'Dambıl' },
-  { id: 'barfiks', name: 'Barfiks' },
-  { id: 'merdiven', name: 'İp merdiven' },
-  { id: 'kutu', name: 'Kutu / basamak' },
-];
-const ENVS: { id: EnvId; name: string }[] = [
-  { id: 'ev', name: 'Ev' },
-  { id: 'salon', name: 'Spor salonu' },
-  { id: 'saha', name: 'Saha' },
-];
+const ENVS: { id: EnvId; name: string }[] = ENV_ORDER.map((id) => ({ id, name: ENV_NAME[id] }));
 
 type Tab = 'hafta' | 'oturumlar' | 'gecmis' | 'ayar';
 
@@ -55,7 +42,6 @@ export function ProgramApp() {
   const profile = useStore(selProfile);
   const program = useStore(selProgram);
   const logs = useStore(selLogs);
-  const levels = useStore(selLevels);
   const [tab, setTab] = useState<Tab>('hafta');
   const [runner, setRunner] = useState<string | null>(null);
   const [showWizard, setShowWizard] = useState(false);
@@ -77,7 +63,6 @@ export function ProgramApp() {
           setShowWizard(false);
           setTab('hafta');
         }}
-        techLevel={(id) => levels[id]?.level ?? profile.level}
       />
     );
   }
@@ -145,19 +130,17 @@ function Wizard({
   hasProgram,
   onCancel,
   onDone,
-  techLevel,
 }: {
   initial: import('@/lib/store').Profile;
   hasProgram: boolean;
   onCancel: () => void;
   onDone: () => void;
-  techLevel: (id: string) => Level;
 }) {
   const [age, setAge] = useState<string>(initial.age ? String(initial.age) : '');
   const [level, setLevel] = useState<Level>(initial.level);
   const [goal, setGoal] = useState<Goal>(initial.goal);
   const [positions, setPositions] = useState<PositionId[]>(initial.positions);
-  const [equipment, setEquipment] = useState<EquipId[]>(initial.equipment);
+  const [equipByEnv, setEquipByEnv] = useState<EquipByEnv>(initial.equipByEnv);
   const [envs, setEnvs] = useState<EnvId[]>(initial.envs);
   const [perWeek, setPerWeek] = useState(initial.perWeek);
   const [minutes, setMinutes] = useState(initial.minutes);
@@ -181,14 +164,8 @@ function Wizard({
     setError('');
     setBusy(true);
     try {
-      const r = await fetch('/drills.json');
-      const techs: DrillTech[] = await r.json();
-      setProfile({ age: ageNum, level, goal, positions, equipment, envs, perWeek, minutes });
-      const prog = generateProgram(
-        { age: ageNum, band: ageBand(ageNum), level, goal, positions, equipment, envs, perWeek, minutes },
-        techs,
-        techLevel,
-      );
+      setProfile({ age: ageNum, level, goal, positions, equipByEnv, envs, perWeek, minutes });
+      const prog = generateProgram({ age: ageNum, band: ageBand(ageNum), level, goal, positions, equipment: [], equipByEnv, envs, perWeek, minutes });
       saveProgram(prog);
       toast('Programınız hazır. İstediğiniz günlere taşıyabilirsiniz.');
       onDone();
@@ -223,7 +200,7 @@ function Wizard({
                   </button>
                 ))}
               </div>
-              <span className="field__hint">İsteğe bağlı. Seçerseniz teknik çalışmalar pozisyonunuza göre seçilir.</span>
+              <span className="field__hint">İsteğe bağlı. Kanat ve bek seçerseniz programda sürat ve çeviklik oturumu öne alınır.</span>
             </div>
           </div>
         </div>
@@ -249,17 +226,7 @@ function Wizard({
                 ))}
               </div>
             </div>
-            <div className="field">
-              <span className="field__label">Elimdeki ekipman</span>
-              <div className="chips">
-                {EQUIP.map((e) => (
-                  <button key={e.id} type="button" className="chip" aria-pressed={equipment.includes(e.id)} onClick={() => toggle(equipment, e.id, setEquipment)}>
-                    {e.name}
-                  </button>
-                ))}
-              </div>
-              <span className="field__hint">Ekipmansız egzersizler her zaman kullanılabilir.</span>
-            </div>
+            <EquipPicker envs={envs} value={equipByEnv} age={validAge ? ageNum : null} onChange={setEquipByEnv} />
             <div className="field">
               <span className="field__label">Haftada kaç antrenman?</span>
               <div className="seg" role="group" aria-label="Haftalık antrenman sayısı">
@@ -378,7 +345,9 @@ function SessionCard({ s, logs, offset, onStart, onResume }: { s: PlannedSession
   const sheet = offset === 0;
   return (
     <div className={`scard scard--${status ?? 'none'}`}>
-      <p className="scard__title">{s.title}</p>
+      <p className="scard__title">
+        <Link href={`/program/antrenman/?oturum=${s.id}`} className="scard__link" aria-label={`${s.title} antrenman ayrıntısını aç`}>{s.title}</Link>
+      </p>
       <p className="scard__meta mono">{s.minutes} dk · {s.env === 'ev' ? 'Ev' : s.env === 'salon' ? 'Salon' : 'Saha'}</p>
       {status === 'done' && <span className="tag tag--grass">Tamamlandı ✓</span>}
       {status === 'partial' && <span className="tag tag--terra">Yarım bırakıldı</span>}
@@ -391,6 +360,7 @@ function SessionCard({ s, logs, offset, onStart, onResume }: { s: PlannedSession
             {status === 'done' ? 'Tekrar yap' : 'Başla'}
           </button>
         )}
+        <Link href={`/program/antrenman/?oturum=${s.id}`} className="btn btn--quiet btn--sm">Ayrıntı</Link>
         <select className="select scard__day" aria-label={`${s.title} gününü değiştir`} value={s.day ?? ''} onChange={(e) => assignDay(s.id, e.target.value === '' ? null : Number(e.target.value))}>
           <option value="">Gün seç</option>
           {DAY_NAMES.map((n, i) => <option key={n} value={i}>{n}</option>)}
@@ -499,109 +469,11 @@ function SessionList({ program, profile }: { program: Program; profile: import('
               );
             })}
           </ul>
+          <p style={{ marginTop: 12 }}>
+            <Link href={`/program/antrenman/?oturum=${s.id}`} className="btn btn--quiet">Antrenman ayrıntısı: hedef kaslar, doğru yürütme, hatalar →</Link>
+          </p>
         </details>
       ))}
-    </div>
-  );
-}
-
-/* ── Antrenman yürütücüsü ─────────────────────────────────── */
-function Runner({ logId, onClose }: { logId: string; onClose: () => void }) {
-  const log = useStore(useCallback((s: { logs: SessionLog[] }) => s.logs.find((l) => l.id === logId), [logId]));
-  const [finishing, setFinishing] = useState(false);
-  const [rpe, setRpe] = useState(6);
-  const [note, setNote] = useState('');
-  const [secs, setSecs] = useState(0);
-
-  useEffect(() => {
-    document.documentElement.style.overflow = 'hidden';
-    const t = setInterval(() => setSecs((x) => x + 1), 1000);
-    return () => {
-      clearInterval(t);
-      document.documentElement.style.overflow = '';
-    };
-  }, []);
-
-  if (!log) return null;
-  const p = logProgress(log);
-  const pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
-  const readOnly = log.status !== 'active';
-  const mm = String(Math.floor(secs / 60)).padStart(2, '0');
-  const ss = String(secs % 60).padStart(2, '0');
-
-  return (
-    <div className="runner" role="dialog" aria-modal="true" aria-label={`${log.title} antrenmanı`}>
-      <div className="runner__scrim" onClick={onClose} />
-      <div className="runner__panel">
-        <div className="runner__head">
-          <div>
-            <p className="eyebrow">{fmtDate(log.date)}</p>
-            <h2 className="h2" style={{ marginTop: 8 }}>{log.title}</h2>
-          </div>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Kapat"><Icon name="close" /></button>
-        </div>
-        <div className="runner__bar">
-          <div className="bar"><span style={{ width: `${pct}%` }} /></div>
-          <span className="mono">{p.done}/{p.total} set · %{pct}{!readOnly && ` · ${mm}:${ss}`}</span>
-        </div>
-        <ul className="runner__items">
-          {log.items.map((it) => {
-            const done = log.progress[it.key] ?? 0;
-            return (
-              <li key={it.key} className={done >= it.sets ? 'is-done' : ''}>
-                <div className="runner__itemtop">
-                  <p className="sess__name">
-                    {it.kind === 'ex' ? <Link href={`/fiziksel/${it.ref}/`} target="_blank">{it.name}</Link> : it.kind === 'tech' ? <Link href={`/teknikler/${it.ref}/`} target="_blank">{it.name}</Link> : it.name}
-                  </p>
-                  <b className="mono">{it.dose}</b>
-                </div>
-                {it.note && <p className="sess__note">{it.note}</p>}
-                <div className="runner__sets" role="group" aria-label={`${it.name} setleri`}>
-                  {Array.from({ length: it.sets }, (_, i) => i + 1).map((n) => (
-                    <button key={n} type="button" className="setbtn" aria-pressed={done >= n} disabled={readOnly} onClick={() => toggleSet(log.id, it.key, n)} aria-label={`${n}. set ${done >= n ? 'tamamlandı' : 'tamamla'}`}>
-                      {done >= n ? <Icon name="check" /> : n}
-                    </button>
-                  ))}
-                  {it.rest !== '—' && <span className="mono muted runner__rest">dinlenme {it.rest}</span>}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-        {readOnly ? (
-          <div className="note" style={{ marginTop: 20 }}>
-            <Icon name="info" />
-            <p>{log.status === 'done' ? 'Bu antrenman tamamlandı.' : 'Bu antrenman yarım bırakılmıştı.'}{log.rpe ? ` Zorluk: ${log.rpe}/10.` : ''}{log.note ? ` Not: ${log.note}` : ''}</p>
-          </div>
-        ) : !finishing ? (
-          <div className="levelcard__actions" style={{ marginTop: 24 }}>
-            <button type="button" className="btn btn--primary" onClick={() => setFinishing(true)}>Antrenmanı bitir</button>
-            <button type="button" className="btn btn--ghost" onClick={() => { toast('Kaydedildi: kaldığınız yerden devam edebilirsiniz.'); onClose(); }}>Sonra devam et</button>
-          </div>
-        ) : (
-          <div className="panel" style={{ marginTop: 24 }}>
-            <p className="panel__title">Nasıl geçti?</p>
-            <div className="grid cols-2" style={{ '--gap': '16px' } as React.CSSProperties}>
-              <div className="field">
-                <label htmlFor="rn-r">Zorluk (1 çok kolay – 10 çok zor)</label>
-                <select id="rn-r" className="select" value={rpe} onChange={(e) => setRpe(Number(e.target.value))}>
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n}</option>)}
-                </select>
-              </div>
-              <div className="field">
-                <label htmlFor="rn-n">Not</label>
-                <input id="rn-n" className="input" value={note} onChange={(e) => setNote(e.target.value)} placeholder="İsteğe bağlı" />
-              </div>
-            </div>
-            <div className="levelcard__actions" style={{ marginTop: 18 }}>
-              <button type="button" className="btn btn--primary" onClick={() => { finishLog(log.id, p.done >= p.total ? 'done' : 'partial', rpe, note); toast(p.done >= p.total ? 'Antrenman tamamlandı. Tebrikler!' : 'Yarım bırakılan antrenman kaydedildi.'); onClose(); }}>
-                {p.done >= p.total ? 'Tamamlandı olarak kaydet' : `Yarım olarak kaydet (${p.done}/${p.total})`}
-              </button>
-              <button type="button" className="btn btn--ghost" onClick={() => setFinishing(false)}>Geri</button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
@@ -674,7 +546,19 @@ function Settings({ program, onRegenerate, onClear }: { program: Program; onRege
           <dt>Hedef</dt><dd>{GOALS.find((g) => g.id === i.goal)?.name}</dd>
           <dt>Haftalık</dt><dd>{i.perWeek} antrenman · {i.minutes} dk</dd>
           <dt>Ortam</dt><dd>{i.envs.map((e) => ENVS.find((x) => x.id === e)?.name).join(', ')}</dd>
-          <dt>Ekipman</dt><dd>{i.equipment.length ? i.equipment.map((e) => EQUIP.find((x) => x.id === e)?.name).join(', ') : 'Ekipmansız'}</dd>
+          {i.equipByEnv
+            ? i.envs.map((e) => (
+                <Fragment key={e}>
+                  <dt>{ENV_NAME[e as EnvId]} ekipmanı</dt>
+                  <dd>{(i.equipByEnv?.[e] ?? []).map((x) => EQUIP_NAME[x as keyof typeof EQUIP_NAME]).filter(Boolean).join(', ') || 'Ekipmansız'}</dd>
+                </Fragment>
+              ))
+            : (
+                <>
+                  <dt>Ekipman</dt>
+                  <dd>{i.equipment.length ? i.equipment.map((x) => EQUIP_NAME[x as keyof typeof EQUIP_NAME] ?? x).join(', ') : 'Ekipmansız'}</dd>
+                </>
+              )}
           {i.positions.length > 0 && (<><dt>Pozisyon</dt><dd>{i.positions.map((p) => POSITIONS.find((x) => x.id === p)?.name).join(', ')}</dd></>)}
         </dl>
         <div className="levelcard__actions" style={{ marginTop: 22 }}>

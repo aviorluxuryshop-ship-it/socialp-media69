@@ -3,6 +3,15 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import type { Level, PositionId } from './types';
 import type { Program, SessionLog } from './program-types';
+import {
+  defaultEquipByEnv,
+  migrateEquipment,
+  sanitizeEnvs,
+  sanitizeEquipByEnv,
+  type Env,
+  type EquipByEnv,
+  type EquipId as EquipIdT,
+} from './environments';
 
 /* ───────────────────────────────────────────────────────────
    Kalıcı depolama
@@ -12,11 +21,12 @@ import type { Program, SessionLog } from './program-types';
    ─────────────────────────────────────────────────────────── */
 
 export const STORAGE_KEY = 'libero:v1';
-export const SCHEMA_VERSION = 1;
+/** 2: ortam başına ekipman (equipByEnv); hedef 'teknik' kaldırıldı. Anahtar (libero:v1) değişmez; v1 verisi okunurken dönüştürülür. */
+export const SCHEMA_VERSION = 2;
 
-export type Goal = 'dengeli' | 'teknik' | 'hiz-cio' | 'dayaniklilik' | 'kuvvet-guc';
-export type EquipId = 'top' | 'koni' | 'bant' | 'dambil' | 'barfiks' | 'salon' | 'merdiven' | 'kutu';
-export type EnvId = 'ev' | 'salon' | 'saha';
+export type Goal = 'dengeli' | 'hiz-cio' | 'dayaniklilik' | 'kuvvet-guc';
+export type EquipId = EquipIdT;
+export type EnvId = Env;
 
 export interface Profile {
   name: string;
@@ -24,7 +34,8 @@ export interface Profile {
   level: Level; // genel/varsayılan yetenek seviyesi
   positions: PositionId[];
   goal: Goal;
-  equipment: EquipId[];
+  /** her ortamda kullanıcının seçtiği ekipman */
+  equipByEnv: EquipByEnv;
   envs: EnvId[];
   perWeek: number;
   minutes: number;
@@ -84,7 +95,7 @@ export const DEFAULT_PROFILE: Profile = {
   level: 2,
   positions: [],
   goal: 'dengeli',
-  equipment: ['top'],
+  equipByEnv: defaultEquipByEnv(),
   envs: ['saha'],
   perWeek: 4,
   minutes: 60,
@@ -93,7 +104,7 @@ export const DEFAULT_PROFILE: Profile = {
 export function makeDefault(): AppState {
   return {
     v: SCHEMA_VERSION,
-    profile: { ...DEFAULT_PROFILE },
+    profile: { ...DEFAULT_PROFILE, equipByEnv: defaultEquipByEnv() },
     levels: {},
     levelLog: [],
     practiced: {},
@@ -130,7 +141,32 @@ function subscribe(cb: () => void) {
   return () => listeners.delete(cb);
 }
 
-function sanitize(raw: unknown): AppState {
+
+const GOALS_OK: Goal[] = ['dengeli', 'hiz-cio', 'dayaniklilik', 'kuvvet-guc'];
+
+/**
+ * Profil okuma + sürüm dönüşümü (v1 → v2). Eski kayıtlarda:
+ *  - tek düz `equipment` listesi vardı → ortam başına `equipByEnv`'e bölünür,
+ *  - hedef 'teknik' vardı (program artık fiziksel gelişime odaklı) → 'dengeli'.
+ * Kullanıcının yaş, seviye, pozisyon, süre ve sıklık seçimleri aynen korunur.
+ */
+export function sanitizeProfile(raw: unknown, base: Profile): Profile {
+  const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+  const merged = { ...base, ...(r as Partial<Profile>) } as Profile;
+  const envs = sanitizeEnvs(r.envs, base.envs);
+  const legacy = r.equipment;
+  const by = r.equipByEnv
+    ? sanitizeEquipByEnv(r.equipByEnv, base.equipByEnv)
+    : legacy !== undefined
+      ? migrateEquipment(legacy, envs)
+      : base.equipByEnv;
+  const goal = GOALS_OK.includes(merged.goal as Goal) ? merged.goal : 'dengeli';
+  const out: Profile & { equipment?: unknown } = { ...merged, envs, equipByEnv: by, goal };
+  delete out.equipment;
+  return out;
+}
+
+export function sanitize(raw: unknown): AppState {
   const base = makeDefault();
   if (!raw || typeof raw !== 'object') return base;
   const r = raw as Partial<AppState>;
@@ -138,7 +174,7 @@ function sanitize(raw: unknown): AppState {
     ...base,
     ...r,
     v: SCHEMA_VERSION,
-    profile: { ...base.profile, ...(r.profile ?? {}) },
+    profile: sanitizeProfile(r.profile, base.profile),
     levels: r.levels && typeof r.levels === 'object' ? r.levels : {},
     levelLog: Array.isArray(r.levelLog) ? r.levelLog : [],
     practiced: r.practiced && typeof r.practiced === 'object' ? r.practiced : {},

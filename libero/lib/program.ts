@@ -1,5 +1,14 @@
 import { EX_BY_ID, type Exercise } from '@/data/exercises';
-import { POSITION_BY_ID } from '@/data/positions';
+import {
+  ENV_NAME,
+  EQUIP_NAME,
+  availableEquip,
+  equipUnion,
+  migrateEquipment,
+  type Env,
+  type EquipByEnv,
+  type EquipId,
+} from './environments';
 import { allowedFor, ageBand, BAND_RULES, doseFor } from './training';
 import type { PlannedItem, PlannedSession, Program, ProgramInput, SessionFocus } from './program-types';
 import type { Level, PositionId } from './types';
@@ -16,6 +25,10 @@ export interface DrillTech {
   drills: { lvl: number; name: string; how: string; dose: string }[];
 }
 
+/**
+ * Oturum odakları. `teknik` ve `saha` eski (v1) programlarda kayıtlıdır ve görüntülenmeye
+ * devam eder; yeni program üreticisi yalnızca fiziksel odakları üretir.
+ */
 export const FOCUS_NAME: Record<SessionFocus | 'serbest', string> = {
   teknik: 'Teknik çalışma',
   'alt-vucut': 'Alt vücut kuvveti',
@@ -28,9 +41,9 @@ export const FOCUS_NAME: Record<SessionFocus | 'serbest', string> = {
   serbest: 'Serbest antrenman',
 };
 
+/** Program hedefleri: hepsi fiziksel gelişim odaklıdır (taktik ve teknik ayrı bölümlerdedir). */
 export const GOALS: { id: string; name: string; hint: string }[] = [
-  { id: 'dengeli', name: 'Dengeli gelişim', hint: 'Teknik, kuvvet, sürat ve dayanıklılık birlikte' },
-  { id: 'teknik', name: 'Teknik', hint: 'Topla çalışmaya ağırlık' },
+  { id: 'dengeli', name: 'Dengeli fiziksel gelişim', hint: 'Kuvvet, sürat, çeviklik ve dayanıklılık birlikte' },
   { id: 'hiz-cio', name: 'Hız ve çeviklik', hint: 'Sürat, ivmelenme, yön değiştirme' },
   { id: 'dayaniklilik', name: 'Dayanıklılık', hint: 'Maç temposuna dayanıklılık' },
   { id: 'kuvvet-guc', name: 'Kuvvet ve güç', hint: 'Bacak/gövde kuvveti, sıçrama gücü' },
@@ -39,64 +52,78 @@ export const GOALS: { id: string; name: string; hint: string }[] = [
 export const PATTERNS: Record<string, string[][]> = {
   'alt-vucut': [
     ['sandalyeye-oturma', 'comelme', 'goblet-squat', 'bacak-pres', 'halter-squat'],
-    ['kalca-kopru', 'tek-bacak-kalca-kopru', 'romen-deadlift', 'nordic'],
-    ['geri-hamle', 'yuruyus-hamlesi', 'step-up', 'bulgar-split', 'tek-bacak-cokme'],
+    ['kalca-kopru', 'tek-bacak-kalca-kopru', 'hip-thrust', 'bacak-curl-makine', 'romen-deadlift', 'nordic'],
+    ['geri-hamle', 'yuruyus-hamlesi', 'dambil-yuruyus-hamle', 'step-up', 'bulgar-split', 'tek-bacak-cokme'],
     ['baldir', 'tek-ayak-baldir'],
-    ['yan-hamle', 'kopenhag'],
+    ['yan-hamle', 'bant-yan-yuruyus', 'kopenhag'],
   ],
   'ust-vucut': [
-    ['diz-ustu-sinav', 'sinav', 'omuz-press'],
-    ['bant-acma', 'masa-alti-kurek', 'dambil-kurek', 'barfiks'],
+    ['diz-ustu-sinav', 'sinav', 'gogus-press-makine', 'dambil-bench-press', 'omuz-press'],
+    ['bant-kurek', 'masa-alti-kurek', 'dambil-kurek', 'lat-cekis', 'oturarak-kurek', 'barfiks'],
     ['olu-bocek', 'kus-kopek', 'plank', 'yan-plank', 'pallof'],
-    ['plank', 'yan-plank', 'dag-tirmanisi', 'bacak-kaldirma'],
+    ['plank', 'yan-plank', 'dag-tirmanisi', 'bacak-kaldirma', 'kablo-odun-kesme'],
+    ['bant-acma', 'kablo-yuz-cekis'],
   ],
   merkez: [
     ['olu-bocek', 'kus-kopek', 'plank'],
-    ['yan-plank', 'pallof'],
+    ['yan-plank', 'pallof', 'kablo-odun-kesme'],
     ['dag-tirmanisi', 'bacak-kaldirma'],
-    ['kopenhag', 'yan-hamle'],
+    ['kopenhag', 'yan-hamle', 'bant-yan-yuruyus'],
     ['nordic', 'kalca-kopru'],
     ['tek-ayak-denge', 'denge-top'],
   ],
   'hiz-ceviklik': [
-    ['sprint-abc', 'duvar-ivme'],
+    ['sprint-abc', 'duvar-ivme', 'yerinde-yuksek-diz'],
     ['ivmelenme-10m', 'sprint-20-30', 'direncli-sprint'],
     ['ip-merdiven', 'zigzag-koni', 'tt-testi', 'mekik-5-10-5'],
-    ['reaktif-ceviklik', 'zigzag-koni'],
+    ['reaktif-ceviklik', 'zigzag-koni', 'top-yon-degistirme'],
     ['inis-calismasi', 'squat-jump', 'yan-sicrama', 'tek-ayak-hop', 'kutu-sicrama'],
   ],
-  dayaniklilik: [['surekli-kosu', 'aralikli-kosu'], ['aralikli-kosu', 'mekik-kosusu'], ['tekrarli-sprint', 'mekik-kosusu']],
+  dayaniklilik: [
+    ['surekli-kosu', 'kardiyo-surekli', 'ip-atlama', 'yerinde-yuksek-diz'],
+    ['aralikli-kosu', 'kardiyo-aralikli', 'mekik-kosusu', 'merdiven-cikma'],
+    ['tekrarli-sprint', 'mekik-kosusu', 'ip-atlama'],
+  ],
   toparlanma: [['soguma-yuruyus'], ['dunyanin-en-iyi', 'derin-comelme-durus'], ['statik-esneme'], ['kopuk-silindir', 'nefes-gevseme']],
+  /** sahada tek başına yapılan top çalışmaları (en fazla bir tanesi sürat/dayanıklılık oturumlarına eklenir) */
+  top: [['top-slalom', 'top-yon-degistirme', 'topla-sprint', 'top-sektirme']],
 };
 
 interface Ctx {
   input: ProgramInput;
+  by: EquipByEnv;
   used: Map<string, number>;
   cap: Level;
 }
 
-const ENV_OF: Record<string, 'ev' | 'salon' | 'saha'> = { ev: 'ev', salon: 'salon', saha: 'saha' };
+/** Salon ortamında "gerçek salon" hareketlerini öne almak için: salona özgü ya da yüklü ekipman */
+const GYM_TOKENS = new Set(['halter', 'makine', 'kablo', 'bench', 'dambil', 'barfiks', 'kutu', 'kardiyo']);
 
-function usable(ex: Exercise, ctx: Ctx, env: 'ev' | 'salon' | 'saha'): boolean {
-  if (!allowedFor(ex, ctx.input.age)) return false;
-  if (ex.lv > ctx.cap) return false;
-  if (!ex.env.includes(env) && !(env !== 'saha' && ex.env.includes('ev'))) return false;
-  const eq = new Set<string>(['yok', ...ctx.input.equipment]);
-  if (env === 'salon') eq.add('salon');
-  return ex.equip.every((e) => eq.has(e));
+/**
+ * Egzersiz bu ortamda, bu kullanıcı için yapılabilir mi?
+ * (1) yaşa uygun, (2) seviye sınırı içinde, (3) ortam için işaretli,
+ * (4) gerektirdiği TÜM ekipman o ortamda kullanıcı tarafından seçilmiş ya da her zaman var.
+ */
+export function usable(ex: Exercise, input: { age: number; band?: string }, by: EquipByEnv, cap: Level, env: Env): boolean {
+  if (!allowedFor(ex, input.age)) return false;
+  if (ex.lv > cap) return false;
+  if (!ex.env.includes(env)) return false;
+  const avail = availableEquip(env, by[env] ?? [], input.age);
+  return ex.equip.every((e) => e === 'yok' || avail.has(e));
 }
 
-function pickFrom(list: string[], ctx: Ctx, env: 'ev' | 'salon' | 'saha', target: Level): Exercise | null {
+function pickFrom(list: string[], ctx: Ctx, env: Env, target: Level): Exercise | null {
   const cands = list
     .map((id) => EX_BY_ID[id])
-    .filter((e): e is Exercise => !!e && usable(e, ctx, env));
+    .filter((e): e is Exercise => !!e && usable(e, ctx.input, ctx.by, ctx.cap, env));
   if (!cands.length) return null;
+  const gym = (e: Exercise) => (env === 'salon' && e.equip.some((q) => GYM_TOKENS.has(q)) ? 0 : 1);
   cands.sort((a, b) => {
     const da = Math.abs(a.lv - target) + (a.lv > target ? 0.4 : 0);
     const db = Math.abs(b.lv - target) + (b.lv > target ? 0.4 : 0);
     const ua = ctx.used.get(a.id) ?? 0;
     const ub = ctx.used.get(b.id) ?? 0;
-    return ua - ub || da - db;
+    return gym(a) - gym(b) || ua - ub || da - db;
   });
   return cands[0];
 }
@@ -121,44 +148,7 @@ function cooldown(ctx: Ctx, base: number): PlannedItem[] {
   return out;
 }
 
-function techniqueItems(ctx: Ctx, techs: DrillTech[], count: number, techLevel: (id: string) => Level): PlannedItem[] {
-  const { input } = ctx;
-  const age = input.age;
-  let pool = techs.filter((t) => {
-    if (age < 12 && (t.cat === 'kafa' || t.safe)) return false;
-    if (age < 15 && (t.id === 'ucarak-kafa' || t.id === 'kayarak-mudahale')) return false;
-    return true;
-  });
-  const fav = new Set<string>();
-  for (const p of input.positions) for (const id of POSITION_BY_ID[p]?.keyTechs ?? []) fav.add(id);
-  const gk = input.positions.includes('kaleci');
-  if (fav.size) pool = pool.filter((t) => fav.has(t.id));
-  else if (!gk) pool = pool.filter((t) => ['pas', 'kontrol', 'surme', 'sut', 'topsuz', 'bitiricilik'].includes(t.cat));
-  if (!pool.length) pool = techs;
-  const scored = pool
-    .map((t) => ({ t, lv: techLevel(t.id), s: (ctx.used.get(t.id) ?? 0) * 2 + Math.abs(t.lv - techLevel(t.id)) }))
-    .sort((a, b) => a.s - b.s || a.t.name.localeCompare(b.t.name, 'tr'));
-  const out: PlannedItem[] = [];
-  for (const { t, lv } of scored) {
-    if (out.length >= count) break;
-    const drill = [...t.drills].sort((a, b) => Math.abs(a.lvl - lv) - Math.abs(b.lvl - lv))[0];
-    if (!drill) continue;
-    ctx.used.set(t.id, (ctx.used.get(t.id) ?? 0) + 1);
-    out.push({
-      key: `${t.id}-${out.length}`,
-      ref: t.id,
-      kind: 'tech',
-      name: `${t.name}: ${drill.name}`,
-      sets: 1,
-      dose: drill.dose,
-      rest: '—',
-      note: drill.how,
-    });
-  }
-  return out;
-}
-
-function strengthItems(focus: string, ctx: Ctx, env: 'ev' | 'salon' | 'saha', count: number): PlannedItem[] {
+function patternItems(focus: string, ctx: Ctx, env: Env, count: number): PlannedItem[] {
   const target = Math.min(ctx.input.level, ctx.cap) as Level;
   const out: PlannedItem[] = [];
   for (const pat of PATTERNS[focus]) {
@@ -171,50 +161,46 @@ function strengthItems(focus: string, ctx: Ctx, env: 'ev' | 'salon' | 'saha', co
 
 const DAY_PATTERN: Record<number, number[]> = { 2: [1, 4], 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 3, 4, 5], 6: [0, 1, 2, 3, 4, 5] };
 
-function focusPlan(goal: string, perWeek: number, band: string, positions: PositionId[]): SessionFocus[] {
+type Phys = Exclude<SessionFocus, 'teknik' | 'saha'>;
+
+function focusPlan(goal: string, perWeek: number, band: string, positions: PositionId[]): Phys[] {
   const kids = band === 'u12';
-  const base: Record<string, SessionFocus[][]> = {
+  const base: Record<string, Phys[][]> = {
     dengeli: [
-      ['teknik', 'hiz-ceviklik'],
-      ['teknik', 'alt-vucut', 'hiz-ceviklik'],
-      ['teknik', 'alt-vucut', 'hiz-ceviklik', 'merkez'],
-      ['teknik', 'alt-vucut', 'hiz-ceviklik', 'saha', 'merkez'],
-      ['teknik', 'alt-vucut', 'hiz-ceviklik', 'saha', 'ust-vucut', 'toparlanma'],
-    ],
-    teknik: [
-      ['teknik', 'teknik'],
-      ['teknik', 'teknik', 'merkez'],
-      ['teknik', 'saha', 'teknik', 'hiz-ceviklik'],
-      ['teknik', 'saha', 'teknik', 'hiz-ceviklik', 'merkez'],
-      ['teknik', 'saha', 'teknik', 'hiz-ceviklik', 'merkez', 'toparlanma'],
+      ['alt-vucut', 'hiz-ceviklik'],
+      ['alt-vucut', 'hiz-ceviklik', 'merkez'],
+      ['alt-vucut', 'hiz-ceviklik', 'ust-vucut', 'dayaniklilik'],
+      ['alt-vucut', 'hiz-ceviklik', 'ust-vucut', 'dayaniklilik', 'merkez'],
+      ['alt-vucut', 'hiz-ceviklik', 'ust-vucut', 'dayaniklilik', 'merkez', 'toparlanma'],
     ],
     'hiz-cio': [
       ['hiz-ceviklik', 'alt-vucut'],
-      ['hiz-ceviklik', 'alt-vucut', 'teknik'],
-      ['hiz-ceviklik', 'alt-vucut', 'teknik', 'hiz-ceviklik'],
-      ['hiz-ceviklik', 'alt-vucut', 'teknik', 'hiz-ceviklik', 'merkez'],
-      ['hiz-ceviklik', 'alt-vucut', 'teknik', 'hiz-ceviklik', 'merkez', 'toparlanma'],
+      ['hiz-ceviklik', 'alt-vucut', 'merkez'],
+      ['hiz-ceviklik', 'alt-vucut', 'hiz-ceviklik', 'merkez'],
+      ['hiz-ceviklik', 'alt-vucut', 'hiz-ceviklik', 'merkez', 'ust-vucut'],
+      ['hiz-ceviklik', 'alt-vucut', 'hiz-ceviklik', 'merkez', 'ust-vucut', 'toparlanma'],
     ],
     dayaniklilik: [
-      ['dayaniklilik', 'teknik'],
-      ['dayaniklilik', 'teknik', 'merkez'],
-      ['dayaniklilik', 'teknik', 'merkez', 'dayaniklilik'],
-      ['dayaniklilik', 'teknik', 'merkez', 'dayaniklilik', 'hiz-ceviklik'],
-      ['dayaniklilik', 'teknik', 'merkez', 'dayaniklilik', 'hiz-ceviklik', 'toparlanma'],
+      ['dayaniklilik', 'merkez'],
+      ['dayaniklilik', 'merkez', 'alt-vucut'],
+      ['dayaniklilik', 'merkez', 'dayaniklilik', 'hiz-ceviklik'],
+      ['dayaniklilik', 'alt-vucut', 'dayaniklilik', 'hiz-ceviklik', 'merkez'],
+      ['dayaniklilik', 'alt-vucut', 'dayaniklilik', 'hiz-ceviklik', 'merkez', 'toparlanma'],
     ],
     'kuvvet-guc': [
-      ['alt-vucut', 'teknik'],
-      ['alt-vucut', 'ust-vucut', 'teknik'],
-      ['alt-vucut', 'ust-vucut', 'hiz-ceviklik', 'teknik'],
-      ['alt-vucut', 'ust-vucut', 'hiz-ceviklik', 'teknik', 'merkez'],
-      ['alt-vucut', 'ust-vucut', 'hiz-ceviklik', 'teknik', 'merkez', 'toparlanma'],
+      ['alt-vucut', 'ust-vucut'],
+      ['alt-vucut', 'ust-vucut', 'hiz-ceviklik'],
+      ['alt-vucut', 'ust-vucut', 'hiz-ceviklik', 'merkez'],
+      ['alt-vucut', 'ust-vucut', 'hiz-ceviklik', 'merkez', 'dayaniklilik'],
+      ['alt-vucut', 'ust-vucut', 'hiz-ceviklik', 'merkez', 'dayaniklilik', 'toparlanma'],
     ],
   };
   const row = (base[goal] ?? base.dengeli)[Math.min(4, Math.max(0, perWeek - 2))];
   let plan = [...row];
-  // pozisyona özel vurgu: kanat/bek → hız; kaleci → çeviklik ve güç
+  // pozisyona özel vurgu: kanat/bek → sürat oturumu mutlaka bulunur
   if (positions.some((p) => p === 'kanat' || p === 'bek') && !plan.includes('hiz-ceviklik')) plan[plan.length - 1] = 'hiz-ceviklik';
-  if (kids) plan = plan.map((f) => (f === 'alt-vucut' || f === 'ust-vucut' ? 'hiz-ceviklik' : f)) as SessionFocus[];
+  // çocuklarda yüklü kuvvet yok: oyunsal sürat/çeviklik ve gövde çalışmaları
+  if (kids) plan = plan.map((f) => (f === 'alt-vucut' ? 'hiz-ceviklik' : f === 'ust-vucut' ? 'merkez' : f));
   return plan;
 }
 
@@ -223,61 +209,85 @@ function sessionTitle(focus: SessionFocus, n: number): string {
   return FOCUS_NAME[focus] + same;
 }
 
-export function generateProgram(input: ProgramInput, techs: DrillTech[], techLevel: (id: string) => Level): Program {
+/** Odak için ortam tercih sırası (kullanıcının seçtikleri arasından) */
+function envOrder(focus: Phys, envs: Env[], age: number): Env[] {
+  const pref: Record<Phys, Env[]> = {
+    // yüklü kuvvet: salon (12 yaş ve üstü), sonra ev, sonra saha
+    'alt-vucut': age >= 12 ? ['salon', 'ev', 'saha'] : ['ev', 'saha', 'salon'],
+    'ust-vucut': age >= 12 ? ['salon', 'ev', 'saha'] : ['ev', 'saha', 'salon'],
+    // gövde: evde de rahat yapılır
+    merkez: ['ev', 'salon', 'saha'],
+    'hiz-ceviklik': ['saha', 'ev', 'salon'],
+    dayaniklilik: ['saha', 'salon', 'ev'],
+    toparlanma: ['ev', 'saha', 'salon'],
+  };
+  return pref[focus].filter((e) => envs.includes(e));
+}
+
+function itemsFor(focus: Phys, ctx: Ctx, env: Env, mainSlots: number): PlannedItem[] {
+  switch (focus) {
+    case 'alt-vucut':
+    case 'ust-vucut':
+      return patternItems(focus, ctx, env, Math.max(3, Math.min(5, mainSlots)));
+    case 'merkez':
+      return patternItems('merkez', ctx, env, Math.max(4, Math.min(6, mainSlots + 1)));
+    case 'hiz-ceviklik': {
+      const items = patternItems('hiz-ceviklik', ctx, env, Math.max(3, Math.min(5, mainSlots)));
+      return env === 'saha' ? withSoloBall(items, ctx) : items;
+    }
+    case 'dayaniklilik': {
+      const items = patternItems('dayaniklilik', ctx, env, 2);
+      return env === 'saha' ? withSoloBall(items, ctx) : items;
+    }
+    case 'toparlanma':
+      return patternItems('toparlanma', ctx, env, 4);
+  }
+}
+
+/** Sahada, seçilmiş top/koni ile tek başına yapılabilen bir top çalışması ekler (varsa). */
+function withSoloBall(items: PlannedItem[], ctx: Ctx): PlannedItem[] {
+  const ex = pickFrom(PATTERNS.top[0], ctx, 'saha', Math.min(ctx.input.level, ctx.cap) as Level);
+  if (!ex) return items;
+  return [...items, exItem(ex, ctx, 90, 'Bireysel top çalışması: tek başınıza, kısa ve kaliteli tekrarlarla.')];
+}
+
+export function generateProgram(input: ProgramInput): Program {
   const band = ageBand(input.age);
   const cap: Level = (input.age < 12 ? 2 : input.age < 15 ? 3 : Math.min(5, input.level + 1)) as Level;
-  const ctx: Ctx = { input: { ...input, band }, used: new Map(), cap };
-  const envs = input.envs.length ? input.envs : ['ev'];
-  const hasEnv = (e: string) => envs.includes(e);
+  const envs = (input.envs.length ? input.envs : ['ev']) as Env[];
+  const by: EquipByEnv = input.equipByEnv
+    ? ({ ev: [], salon: [], saha: [], ...input.equipByEnv } as EquipByEnv)
+    : migrateEquipment(input.equipment, envs);
+  const ctx: Ctx = { input: { ...input, band }, by, used: new Map(), cap };
   const plan = focusPlan(input.goal, input.perWeek, band, input.positions);
   const counts: Record<string, number> = {};
   const days = DAY_PATTERN[Math.min(6, Math.max(2, input.perWeek))];
-
   const mainSlots = Math.max(2, Math.floor((input.minutes - 15) / 8));
+  let shortSessions = 0;
 
   const sessions: PlannedSession[] = plan.map((focus, i) => {
     counts[focus] = (counts[focus] ?? 0) + 1;
-    const env: 'ev' | 'salon' | 'saha' =
-      focus === 'teknik' || focus === 'saha' || focus === 'hiz-ceviklik' || focus === 'dayaniklilik'
-        ? hasEnv('saha') ? 'saha' : 'ev'
-        : focus === 'alt-vucut' || focus === 'ust-vucut'
-          ? hasEnv('salon') && input.age >= 15 ? 'salon' : hasEnv('ev') ? 'ev' : hasEnv('salon') && input.age >= 15 ? 'salon' : 'ev'
-          : hasEnv('ev') ? 'ev' : (envs[0] as 'ev');
-    let items: PlannedItem[] = [];
-    const core = warmup(ctx);
-    switch (focus) {
-      case 'teknik':
-        items = techniqueItems(ctx, techs, Math.max(2, Math.min(5, mainSlots - 1)), techLevel);
-        break;
-      case 'saha': {
-        items = techniqueItems(ctx, techs, 2, techLevel);
-        items.push({ key: `oyun-${i}`, ref: 'oyun', kind: 'drill', name: 'Küçük alan oyunu (4v4 ya da 5v5)', sets: 3, dose: '3 × 4 dk', rest: '90 sn', note: 'Eş ya da takım arkadaşlarıyla; her topta tara–al–karar döngüsünü uygulayın.' });
-        const run = pickFrom(['aralikli-kosu', 'mekik-kosusu', 'surekli-kosu'], ctx, 'saha', Math.min(input.level, cap) as Level);
-        if (run) items.push(exItem(run, ctx, 9));
-        break;
-      }
-      case 'alt-vucut':
-        items = strengthItems('alt-vucut', ctx, env, Math.max(3, Math.min(5, mainSlots)));
-        break;
-      case 'ust-vucut':
-        items = strengthItems('ust-vucut', ctx, env, Math.max(3, Math.min(5, mainSlots)));
-        break;
-      case 'merkez':
-        items = strengthItems('merkez', ctx, env, Math.max(4, Math.min(6, mainSlots + 1)));
-        break;
-      case 'hiz-ceviklik':
-        items = strengthItems('hiz-ceviklik', ctx, env === 'saha' ? 'saha' : env, Math.max(3, Math.min(5, mainSlots)));
-        break;
-      case 'dayaniklilik':
-        items = strengthItems('dayaniklilik', ctx, 'saha', 2);
-        if (!items.length) items = strengthItems('dayaniklilik', ctx, 'ev', 2);
-        break;
-      case 'toparlanma':
-        items = strengthItems('toparlanma', ctx, 'ev', 4);
-        break;
+    // Tercih sırasındaki ortamları dene; yeterli (≥3) egzersiz bulunan ilkini al, yoksa en çok bulunanı.
+    const candidates = envOrder(focus, envs, input.age);
+    const order = candidates.length ? candidates : envs;
+    const need = focus === 'toparlanma' ? 2 : 3;
+    const attempts: { env: Env; items: PlannedItem[]; used: Map<string, number> }[] = [];
+    for (const env of order) {
+      const before = new Map(ctx.used);
+      ctx.used = new Map(before);
+      const items = itemsFor(focus, ctx, env, mainSlots);
+      attempts.push({ env, items, used: ctx.used });
+      ctx.used = before;
+      if (items.length >= need) break;
     }
+    const best = attempts.reduce<(typeof attempts)[number] | null>((m, a) => (!m || a.items.length > m.items.length ? a : m), null);
+    if (best) ctx.used = best.used;
+    const env = best?.env ?? order[0] ?? 'ev';
+    const items = best?.items ?? [];
+    if (items.length < need) shortSessions++;
+    const core = focus === 'toparlanma' ? [] : warmup(ctx);
     const close = focus === 'toparlanma' ? [] : cooldown(ctx, 20);
-    const all = [...(focus === 'toparlanma' ? [] : core), ...items, ...close].map((it, k) => ({ ...it, key: `${it.ref}-${k}` }));
+    const all = [...core, ...items, ...close].map((it, k) => ({ ...it, key: `${it.ref}-${k}` }));
     return {
       id: uid(),
       title: sessionTitle(focus, counts[focus]),
@@ -291,9 +301,22 @@ export function generateProgram(input: ProgramInput, techs: DrillTech[], techLev
 
   const notes: string[] = [];
   notes.push(`${BAND_RULES[band].title}: ${BAND_RULES[band].rules[0]}`);
+  notes.push('Bu program fiziksel gelişim içindir: kuvvet, denge, çeviklik, sürat ve dayanıklılık. Taktik ve topsuz oyun çalışmaları Taktik bölümündedir; teknik alıştırmalar Teknikler bölümünde, her tekniğin sayfasındadır.');
+  for (const e of envs) {
+    const sel = by[e] ?? [];
+    const names = sel.map((id) => EQUIP_NAME[id]).filter(Boolean);
+    const avail = availableEquip(e, sel, input.age);
+    const dropped = sel.filter((id) => !avail.has(id));
+    notes.push(
+      `${ENV_NAME[e]}: ${names.length ? names.join(', ') : 'ekipmansız'}.` +
+        (dropped.length ? ` Yaşınıza uygun olmadığı için kullanılmayan: ${dropped.map((id) => EQUIP_NAME[id]).join(', ')}.` : ''),
+    );
+  }
   notes.push('Haftalık plan esnektir: oturumları istediğiniz güne taşıyabilirsiniz. Arka arkaya iki yoğun alt vücut ya da sprint gününden kaçının.');
-  if (input.positions.length) notes.push(`Pozisyon vurgusu: ${input.positions.map((p) => POSITION_BY_ID[p]?.name).filter(Boolean).join(', ')} için teknik seçimi buna göre yapıldı.`);
-  if (sessions.some((s) => s.items.length <= 3)) notes.push('Seçtiğiniz ortam/ekipmana uygun daha az egzersiz bulunduğu için bazı oturumlar kısa kalmış olabilir. Profilinizden ekipman ya da ortam eklerseniz yeniden oluşturabilirsiniz.');
+  if (input.positions.some((p) => p === 'kanat' || p === 'bek')) notes.push('Pozisyon vurgusu: kanat/bek için sürat ve çeviklik oturumu programda yer alır.');
+  if (shortSessions > 0) notes.push('Seçtiğiniz ortam ve ekipmana uygun daha az egzersiz bulunduğu için bazı oturumlar kısa kalmış olabilir. Profilinizden ortam ya da ekipman ekleyip programı yeniden oluşturabilirsiniz; hiçbir oturumda seçmediğiniz ekipman gerektiren hareket yer almaz.');
 
-  return { id: uid(), createdAt: new Date().toISOString(), input: { ...input, band }, sessions, notes };
+  const equipment = equipUnion(by, envs) as EquipId[];
+  return { id: uid(), createdAt: new Date().toISOString(), input: { ...input, band, equipment, equipByEnv: by }, sessions, notes };
 }
+

@@ -50,6 +50,9 @@ async function test(name, fn) {
   }
 }
 
+// CSS büyük harfe çevirdiği için innerText yerine ham metin (textContent) okunur
+const txt = (loc) => loc.evaluate((e) => e.textContent ?? '');
+const txts = (loc) => loc.evaluateAll((els) => els.map((e) => e.textContent ?? ''));
 const go = async (page, p) => {
   const r = await page.goto(BASE + p, { waitUntil: 'networkidle' });
   ok(r && r.status() === 200, `${p} → HTTP ${r?.status()}`);
@@ -67,7 +70,7 @@ try {
 const STATIC_ROUTES = [
   '/', '/teknikler/', '/top-kontrolu/', '/taktik/', '/taktik/test/', '/taktik-tahtasi/', '/pozisyonlar/', '/fiziksel/', '/program/',
   '/beslenme/', '/analiz/performans/', '/analiz/video/', '/analiz/oyuncular/', '/videolar/', '/profil/',
-  '/teknikler/ust-dis-vurus/', '/teknikler/ilk-temas/', '/taktik/pres/', '/pozisyonlar/kaleci/', '/fiziksel/goblet-squat/', '/analiz/oyuncular/lionel-messi/',
+  '/program/antrenman/', '/teknikler/ust-dis-vurus/', '/teknikler/trivela-pasi/', '/teknikler/kavisli-pas/', '/teknikler/ilk-temas/', '/taktik/pres/', '/pozisyonlar/kaleci/', '/fiziksel/goblet-squat/', '/analiz/oyuncular/lionel-messi/',
 ];
 
 browser = await chromium.launch({ executablePath: CHROME, args: ['--no-sandbox'] });
@@ -174,6 +177,26 @@ await test('İç yüzle kavisli pas ile trivela ayrı teknik: temas bölgesi, ba
   await ctx.close();
 });
 
+await test('Vücut pozisyonu: vuruş tekniklerinde 5 başlık ve teknikçe farklı içerik; kapsam dışı tekniklerde bölüm yok', async () => {
+  const { ctx, page } = await newPage();
+  const texts = {};
+  for (const id of ['sert-sut', 'yerden-ic-yuz-pas', 'alin-kafa', 'penalti-atisi']) {
+    await go(page, `/teknikler/${id}/`);
+    const rows = await txts(page.locator('#vucut-pozisyonu .bodypos__row'));
+    ok(rows.length === 5, `${id}: ${rows.length} satır`);
+    for (const k of ['Topa yaklaşma', 'Gövde', 'Kalça', 'Denge']) ok(rows.some((r) => r.includes(k)), `${id}: ${k} yok`);
+    ok(rows.some((r) => r.includes(id === 'alin-kafa' ? 'Basma / sıçrama ayağı' : 'Destek ayağı')), `${id}: ayak başlığı`);
+    texts[id] = rows.join('|');
+  }
+  ok(new Set(Object.values(texts)).size === 4, 'teknikler arasında aynı içerik');
+  // kapsam dışı: top sürme ve kaleci teknikleri
+  for (const id of ['temel-top-surme', 'kaleci-durusu', 'savunma-durusu']) {
+    await go(page, `/teknikler/${id}/`);
+    ok((await page.locator('#vucut-pozisyonu').count()) === 0, `${id}: bölüm olmamalı`);
+  }
+  await ctx.close();
+});
+
 await test('Yıldız seviyesi değişir, yenilemeden sonra korunur ve panelde görünür', async () => {
   const { ctx, page } = await newPage();
   await go(page, '/teknikler/ilk-temas/');
@@ -227,6 +250,169 @@ await test('Program: 12 yaş altı için güvenlik uyarısı ve kafa/ağır yük
   await page.getByRole('tab', { name: 'Oturumlar' }).click();
   const t = (await page.locator('.prog').innerText()).toLowerCase();
   ok(!/kafa vuruşu|1rm|maksimum tekrar/.test(t), '12 yaş altı programda yasak içerik var');
+  await ctx.close();
+});
+
+// ── Ortam / ekipman / ayrıntılı antrenman ─────────────────────
+const envChip = (page, name) => page.getByRole('button', { name, exact: true });
+const hasPanel = async (page, label) => (await page.locator('.field', { has: page.locator(`.field__label:text-is("${label}")`) }).count()) > 0;
+const LABEL = { ev: 'Evde elimdeki ekipman', salon: 'Spor salonunda bulunan ekipman', saha: 'Sahada kullanabildiklerim' };
+
+await test('Ortam seçimi: her ortam yalnızca kendi ekipman listesini gösterir (ev ekipmanı salon ekranında yok)', async () => {
+  const { ctx, page } = await newPage();
+  await go(page, '/program/');
+  await page.locator('#w-age').fill('16');
+  // varsayılan: yalnızca saha
+  ok(await hasPanel(page, LABEL.saha), 'saha ekipmanı yok');
+  ok(!(await hasPanel(page, LABEL.ev)) && !(await hasPanel(page, LABEL.salon)), 'seçilmeyen ortamların ekipmanı görünüyor');
+  // salon aç, saha kapat
+  await envChip(page, 'Spor salonu').click();
+  await envChip(page, 'Saha').click();
+  ok(await hasPanel(page, LABEL.salon), 'salon ekipmanı yok');
+  ok(!(await hasPanel(page, LABEL.ev)) && !(await hasPanel(page, LABEL.saha)), 'salon ekranında ev/saha ekipmanı görünüyor');
+  const salonPanel = page.locator('.field[data-env="salon"]');
+  const salonText = await txt(salonPanel);
+  ok(/Halter ve squat rafı/.test(salonText) && /Direnç makineleri/.test(salonText) && /Kablo/.test(salonText), 'salon aletleri listede yok');
+  ok(!/Atlama ipi|Çeviklik \(ip\) merdiveni|Futbol topu|Koni/.test(salonText), 'salon listesinde ev/saha ekipmanı var: ' + salonText);
+  // ev aç
+  await envChip(page, 'Ev').click();
+  ok(await hasPanel(page, LABEL.ev), 'ev ekipmanı yok');
+  const evText = await txt(page.locator('.field[data-env="ev"]'));
+  ok(/Direnç bandı/.test(evText) && /Atlama ipi/.test(evText), 'ev ekipmanı eksik');
+  ok(!/Halter ve squat rafı|Direnç makineleri|Kablo|Bench|Koşu bandı/.test(evText), 'ev listesinde salon aleti var: ' + evText);
+  // 16 yaşında evde dambıl devre dışı
+  const dambil = page.locator('.field[data-env="ev"] .chip', { hasText: 'Dambıl' });
+  ok(await dambil.isDisabled(), 'evde dambıl 16 yaşta devre dışı olmalı');
+  await ctx.close();
+});
+
+await test('Salon programı: gerçek salon hareketleri, yalnızca salon oturumları; ev/saha ekipmanı gerektirmez', async () => {
+  const { ctx, page } = await newPage();
+  await go(page, '/program/');
+  await page.locator('#w-age').fill('17');
+  await envChip(page, 'Spor salonu').click();
+  await envChip(page, 'Saha').click();
+  await page.getByRole('button', { name: /Programımı oluştur/ }).click();
+  await page.waitForSelector('.prog__weekbar', { timeout: 8000 });
+  const metas = await txts(page.locator('.scard__meta'));
+  ok(metas.length >= 3 && metas.every((m) => /Salon/.test(m)), 'salon dışı oturum: ' + metas.join(' | '));
+  await page.getByRole('tab', { name: 'Oturumlar' }).click();
+  const t = await txt(page.locator('.prog'));
+  ok(/Bacak presi|Halter ile çömelme|Göğüs presi|Lat çekiş|Oturarak kablo|Dambıl|Kablo/.test(t), 'salon hareketi yok');
+  ok(!/Zigzag|Koni|Sprint|Atlama ipi|Merdiven çıkma|Yerinde yüksek diz|Sandalyeye oturup/.test(t), 'salona uymayan hareket var');
+  await ctx.close();
+});
+
+await test('Ev programı (ekipmansız): yalnızca evde yapılabilen hareketler, seçilmemiş ekipman yok', async () => {
+  const { ctx, page } = await newPage();
+  await go(page, '/program/');
+  await page.locator('#w-age').fill('15');
+  await envChip(page, 'Ev').click();
+  await envChip(page, 'Saha').click();
+  await page.getByRole('button', { name: /Programımı oluştur/ }).click();
+  await page.waitForSelector('.prog__weekbar', { timeout: 8000 });
+  const metas = await txts(page.locator('.scard__meta'));
+  ok(metas.length >= 3 && metas.every((m) => /Ev/.test(m)), 'ev dışı oturum: ' + metas.join(' | '));
+  await page.getByRole('tab', { name: 'Oturumlar' }).click();
+  const t = await txt(page.locator('.prog'));
+  ok(!/Dambıl|Halter|Barfiks|Bacak presi|Kablo|Makine|Koşu bandı|Koni|Zigzag|Sprint|Kutuya|Top sürme|Bench|Banta|Bant/i.test(t), 'seçilmemiş ekipman gerektiren hareket var: ' + (t.match(/Dambıl|Halter|Barfiks|Bacak presi|Kablo|Koni|Zigzag|Sprint|Kutuya|Bant/i) ?? [])[0]);
+  ok(!/küçük alan oyunu|savunma arkasına koşu|üçüncü adam/i.test(t), 'taktik içerik fiziksel programda');
+  await ctx.close();
+});
+
+await test('Takvimde oturuma tıklamak ayrıntılı antrenman sayfasını açar (hedef kaslar, set/tekrar, dinlenme, hatalar)', async () => {
+  const { ctx, page } = await newPage();
+  await go(page, '/program/');
+  await page.locator('#w-age').fill('16');
+  await page.getByRole('button', { name: /Programımı oluştur/ }).click();
+  await page.waitForSelector('.prog__weekbar', { timeout: 8000 });
+  const title = (await txt(page.locator('.scard__link').first())).trim();
+  await page.locator('.scard__link').first().click();
+  await page.waitForURL(/\/program\/antrenman\/\?oturum=/);
+  await page.waitForSelector('.wk-item');
+  const body = await txt(page.locator('.workout'));
+  ok(body.includes(title), `başlık yok: ${title}`);
+  ok((await page.locator('.wk-item').count()) >= 3, 'hareket sayısı az');
+  for (const k of ['Hedef kaslar', 'Set / tekrar / süre', 'Dinlenme', 'Nasıl yapılır?', 'Doğru yürütme için', 'Sık yapılan hatalar']) ok(body.includes(k), `bölüm yok: ${k}`);
+  ok((await page.locator('.wk-item .steps li').count()) >= 3, 'adımlar yok');
+  ok((await page.locator('.wk-item .ticks--warn li').count()) >= 3, 'hatalar yok');
+  // statik dışa aktarımda doğrudan adres/yenileme çalışır
+  const url = page.url();
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForSelector('.wk-item');
+  ok(page.url() === url && (await page.locator('.wk-item').count()) >= 3, 'yenilemeden sonra sayfa bozuldu');
+  // antrenmanı başlat → set işaretle
+  await page.getByRole('button', { name: /Antrenmana başla/ }).click();
+  await page.waitForSelector('.setbtn');
+  await page.locator('.setbtn').first().click();
+  ok((await page.locator('.setbtn[aria-pressed="true"]').count()) >= 1, 'set işaretlenemedi');
+  await page.getByRole('button', { name: 'Kapat' }).click();
+  await page.waitForSelector('text=/Devam ediyor/');
+  // geçersiz bağlantı
+  await go(page, '/program/antrenman/?oturum=yok-boyle-bir-sey');
+  await page.waitForSelector('text=Antrenman bulunamadı');
+  await ctx.close();
+});
+
+await test('Eski (v1) kayıt yeni sürümde açılır: program, seviye ve geçmiş korunur; ortam ekipmanı bölünür', async () => {
+  const { ctx, page } = await newPage();
+  const legacy = {
+    app: 'libero',
+    data: {
+      v: 1,
+      profile: { name: 'Eski', age: 14, level: 3, positions: [], goal: 'teknik', equipment: ['top', 'koni', 'dambil', 'salon'], envs: ['ev', 'saha'], perWeek: 3, minutes: 60 },
+      levels: { 'ilk-temas': { level: 4, at: '2026-01-01T00:00:00.000Z' } }, levelLog: [], practiced: {}, fav: [],
+      program: {
+        id: 'p1', createdAt: '2026-01-03T00:00:00.000Z',
+        input: { age: 14, band: '12-14', level: 3, goal: 'teknik', positions: [], equipment: ['top', 'koni'], envs: ['saha'], perWeek: 3, minutes: 60 },
+        sessions: [{ id: 's1', title: 'Teknik çalışma', focus: 'teknik', env: 'saha', minutes: 60, day: 0, items: [{ key: 'ara-pas-0', ref: 'ara-pas', kind: 'tech', name: 'Ara pas: Koni', sets: 1, dose: '4 × 8 pas', rest: '—' }] }],
+        notes: ['eski not'],
+      },
+      logs: [{ id: 'l1', programId: 'p1', sessionId: 's1', title: 'Teknik çalışma', focus: 'teknik', date: '2026-01-04', startedAt: '2026-01-04T10:00:00.000Z', finishedAt: '2026-01-04T11:00:00.000Z', status: 'done', progress: { 'ara-pas-0': 1 }, items: [{ key: 'ara-pas-0', ref: 'ara-pas', kind: 'tech', name: 'Ara pas: Koni', sets: 1, dose: '4 × 8 pas', rest: '—' }] }],
+      quiz: {}, tests: [], board: [], videoNotes: {}, lastVisit: null, createdAt: '2026-01-01T00:00:00.000Z',
+    },
+  };
+  await page.addInitScript((payload) => {
+    if (!localStorage.getItem('libero:seeded')) {
+      localStorage.setItem('libero:v1', JSON.stringify(payload.data));
+      localStorage.setItem('libero:seeded', '1');
+    }
+  }, legacy);
+  await go(page, '/program/');
+  await page.waitForSelector('.prog__weekbar', { timeout: 8000 });
+  ok((await page.locator('.scard__title', { hasText: 'Teknik çalışma' }).count()) > 0, 'eski program oturumu görünmüyor');
+  // eski oturumun ayrıntı sayfası (teknik kalemi) açılır
+  await page.locator('.scard__link', { hasText: 'Teknik çalışma' }).first().click();
+  await page.waitForSelector('.wk-item');
+  ok((await page.locator('.wk-item', { hasText: 'Ara pas' }).count()) > 0, 'eski teknik kalemi görünmüyor');
+  // geçmiş korunur
+  await go(page, '/program/');
+  await page.getByRole('tab', { name: 'Geçmiş' }).click();
+  ok((await page.locator('.hist__row', { hasText: 'Teknik çalışma' }).count()) > 0, 'eski antrenman kaydı kayboldu');
+  // profil: yıldız seviyesi + ortam başına ekipman
+  await go(page, '/profil/');
+  ok((await page.locator('.summary__item').first().locator('.summary__n').innerText()).trim() === '1', 'seviye verilen teknik sayısı');
+  ok(await hasPanel(page, LABEL.ev) && await hasPanel(page, LABEL.saha) && !(await hasPanel(page, LABEL.salon)), 'profilde ortam başına ekipman bölümleri');
+  const evText = await txt(page.locator('.field[data-env="ev"]'));
+  ok(!/Halter|Direnç makineleri/.test(evText), 'v1 ekipmanı evde salon aleti oluşturdu');
+  const pressed = await txts(page.locator('.field[data-env="ev"] .chip[aria-pressed="true"]'));
+  ok(pressed.some((x) => /Futbol topu/.test(x)) && pressed.some((x) => /Koni/.test(x)), 'ev ekipmanı eski seçimlerden taşınmadı: ' + pressed);
+  // yeniden oluşturunca fiziksel program çıkar, eski hedef "teknik" yok
+  await go(page, '/program/');
+  await page.getByRole('tab', { name: 'Program ayarları' }).click();
+  await page.getByRole('button', { name: /Yeniden oluştur/ }).click();
+  await page.waitForSelector('#w-goal');
+  ok(!/Teknik —|Topla çalışmaya/.test(await page.locator('#w-goal').innerText()), 'hedef listesinde teknik var');
+  ok((await page.locator('#w-goal').inputValue()) === 'dengeli', 'eski hedef dengeliye taşınmadı');
+  await page.getByRole('button', { name: /Programı yeniden oluştur/ }).click();
+  await page.waitForSelector('.prog__weekbar', { timeout: 8000 });
+  ok((await page.locator('.scard__title', { hasText: /Teknik çalışma|Saha çalışması/ }).count()) === 0, 'yeni programda teknik/saha oturumu var');
+  // kayıt anahtarı değişmedi
+  const keys = await page.evaluate(() => Object.keys(localStorage).filter((k) => k.startsWith('libero')));
+  ok(keys.includes('libero:v1'), 'libero:v1 anahtarı yok: ' + keys);
+  await page.waitForTimeout(600); // yazma 120 ms ertelenir
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('libero:v1')));
+  ok(saved.v === 2 && saved.logs.length === 1 && saved.levels['ilk-temas'].level === 4, `kayıt geçişi sonrası veri kaybı: v=${saved.v} logs=${saved.logs?.length} lvl=${saved.levels?.['ilk-temas']?.level}`);
   await ctx.close();
 });
 
@@ -404,6 +590,21 @@ await test('Mobil (390px): yatay taşma yok, menü açılır', async () => {
     const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     ok(over <= 1, `${r}: yatay taşma ${over}px`);
   }
+  // yeni ekranlar: üç ortamlı sihirbaz, hafta görünümü, antrenman ayrıntısı, vücut pozisyonu bölümü
+  await go(page, '/program/');
+  await page.locator('#w-age').fill('17');
+  await page.getByRole('button', { name: 'Spor salonu', exact: true }).click();
+  await page.getByRole('button', { name: 'Ev', exact: true }).click();
+  ok((await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)) <= 1, 'sihirbaz mobilde taşıyor');
+  await page.getByRole('button', { name: /Programımı oluştur/ }).click();
+  await page.waitForSelector('.prog__weekbar', { timeout: 8000 });
+  ok((await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)) <= 1, 'hafta görünümü mobilde taşıyor');
+  await page.locator('.scard__link').first().click();
+  await page.waitForSelector('.wk-item');
+  ok((await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)) <= 1, 'antrenman ayrıntısı mobilde taşıyor');
+  await go(page, '/teknikler/sert-sut/');
+  ok((await page.locator('#vucut-pozisyonu .bodypos__row').count()) === 5, 'vücut pozisyonu 5 satır olmalı');
+  ok((await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)) <= 1, 'vücut pozisyonu mobilde taşıyor');
   await go(page, '/');
   await page.getByRole('button', { name: 'Menüyü aç' }).click();
   await page.waitForTimeout(300);
