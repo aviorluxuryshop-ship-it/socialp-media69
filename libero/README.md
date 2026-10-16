@@ -21,11 +21,23 @@ Geliştirme sırasında: `npm run dev` (http://localhost:3000).
 | --- | --- |
 | `npm run build` | Tüm sayfaları (≈250) statik olarak üretir (`out/`) |
 | `npm start` | `out/` klasörünü 3100 portunda sunar |
+| `npm run baslat` | Kur + derle (gerekirse) + sun + tarayıcıyı aç (`baslat-windows.cmd` bunu çağırır) |
 | `npm run typecheck` | TypeScript denetimi |
 | `npm run test:e2e` | Tarayıcı testleri (site `npm start` ile açık olmalı; Chromium gerekir) |
 | `npm run videos:verify` | Video kütüphanesindeki her YouTube kimliğini yeniden doğrular |
 
 Test için Chromium yolu `CHROME_PATH` ile verilebilir; site adresi `BASE` ile (`BASE=http://localhost:3100`). Video analizi testi için `ffmpeg` gerekir (yoksa o test başarısız sayılır).
+
+## Windows'ta yerel çalıştırma (Vercel gerekmez)
+
+Gereksinim: Node.js 20+ (`node -v`; yoksa https://nodejs.org LTS ya da `winget install OpenJS.NodeJS.LTS`).
+
+1. Kaynağı indirin: `git clone --branch claude/model-opusplan-flh77p --single-branch https://github.com/aviorluxuryshop-ship-it/socialp-media69.git` (ya da GitHub’da dalı seçip *Code → Download ZIP*), sonra `libero` klasörünü kısa bir yola alın (örn. `C:\libero`).
+2. `libero` içindeki **`baslat-windows.cmd`** dosyasına çift tıklayın. Bağımlılıkları kurar, siteyi derler, sunucuyu başlatır ve tarayıcıyı açar → **http://localhost:3100**
+   (Komut satırından aynısı: `node scripts\baslat.mjs`; güncelleme çektikten sonra `node scripts\baslat.mjs --yeniden`.)
+3. Kapatmak için pencerede `Ctrl + C`.
+
+Port doluysa 3101, 3102… otomatik denenir. Sunucu yalnızca bu bilgisayardan (127.0.0.1) erişilebilir.
 
 ## Dağıtım
 
