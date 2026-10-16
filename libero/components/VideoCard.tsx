@@ -10,8 +10,8 @@ import { Icon } from './Icon';
 
 const SUB_LABEL: Record<Video['sub'], string> = {
   'tr-anlatim': 'Türkçe anlatım',
-  'tr-ceviri': 'İngilizce · Türkçe altyazı (otomatik çeviri) açılabilir',
-  'tr-yok': 'İngilizce · Türkçe altyazı doğrulanamadı',
+  'tr-ceviri': 'İngilizce anlatım · Türkçe altyazı (otomatik çeviri) açılabilir',
+  'tr-yok': 'İngilizce anlatım · Türkçe altyazı bu sürümde doğrulanamadı; oynatıcıda CC (altyazı) → Ayarlar → Otomatik çeviri → Türkçe seçeneğini dene (video sahibi izin veriyorsa çalışır)',
 };
 
 export function fmtDuration(s: number | null) {
@@ -97,7 +97,7 @@ export function VideoModal({ video, onClose }: { video: Video; onClose: () => vo
           <div className="vmodal__sum">
             <p className="eyebrow">Türkçe özet</p>
             <p>{video.summary}</p>
-            <p className="field__hint">Bu özet video başlığı ve konusuna dayanarak bu site için yazılmıştır; videonun tam çevirisi değildir. Altyazı: {SUB_LABEL[video.sub]}. Altyazı yoksa oynatıcıdaki “Ayarlar” menüsünden kontrol edebilirsin.</p>
+            <p className="field__hint">Bu özet video başlığı ve konusuna dayanarak bu site için yazılmıştır; videonun tam çevirisi değildir. Dil/altyazı: {SUB_LABEL[video.sub]}.</p>
           </div>
           {video.note && <p className="note note--warn" style={{ marginTop: 12 }}><Icon name="warn" /><span>{video.note}</span></p>}
         </div>

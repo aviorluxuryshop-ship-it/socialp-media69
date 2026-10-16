@@ -341,8 +341,12 @@ await test('Profil: kaydet, yedek indir, sıfırla, yedekten geri yükle', async
 await test('Videolar: filtre, kart, oynatıcı penceresi (youtube-nocookie), Esc ile kapanır', async () => {
   const { ctx, page } = await newPage();
   await go(page, '/videolar/');
-  const total = await page.locator('.vcard').count();
-  ok(total >= 20, `video sayısı az: ${total}`);
+  const countText = await page.locator('[role="status"]').first().innerText();
+  const total = Number((countText.match(/(\d+)/) ?? [])[1]);
+  ok(total >= 50, `video sayısı az: ${countText}`);
+  ok((await page.locator('.vcard').count()) === 18, 'ilk sayfada 18 kart bekleniyordu');
+  await page.getByRole('button', { name: /Daha fazla göster/ }).click();
+  ok((await page.locator('.vcard').count()) === 36, '"Daha fazla göster" çalışmıyor');
   await page.getByRole('button', { name: 'Türkçe', exact: true }).click();
   await page.waitForTimeout(300);
   const meta = await page.locator('.vcard__meta span:first-child').allInnerTexts();

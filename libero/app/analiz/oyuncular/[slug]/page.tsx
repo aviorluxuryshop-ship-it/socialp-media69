@@ -61,7 +61,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <div className="tech-main">
             <section className="tsec">
               <h2 className="h3 tsec__h"><span className="tsec__n mono">01</span> Oyunun üç evresinde</h2>
-              <div className="grid cols-3" style={{ '--gap': '14px' } as React.CSSProperties}>
+              <div className="stack" style={{ '--stack': '14px' } as React.CSSProperties}>
                 <div className="panel panel--flat"><p className="panel__title">Topla</p><ul className="ticks">{p.onBall.map((s) => <li key={s}>{s}</li>)}</ul></div>
                 <div className="panel panel--flat"><p className="panel__title">Topsuz</p><ul className="ticks">{p.offBall.map((s) => <li key={s}>{s}</li>)}</ul></div>
                 <div className="panel panel--flat"><p className="panel__title">Savunmada</p><ul className="ticks">{p.defending.map((s) => <li key={s}>{s}</li>)}</ul></div>

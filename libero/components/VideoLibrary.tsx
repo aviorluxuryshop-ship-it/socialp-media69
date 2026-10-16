@@ -23,6 +23,7 @@ export function VideoLibrary({ videos }: { videos: Video[] }) {
   const [lv, setLv] = useState<number | 'all'>('all');
   const [lang, setLang] = useState<Lang>('all');
   const [mine, setMine] = useState(false);
+  const [limit, setLimit] = useState(18);
 
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
@@ -62,6 +63,8 @@ export function VideoLibrary({ videos }: { videos: Video[] }) {
   }, [index, q, topic, pos, lv, lang, mine, myLevel, myPos]);
 
   const reset = () => { setQ(''); setTopic('all'); setPos('all'); setLv('all'); setLang('all'); setMine(false); };
+  // filtre değişince sayfalamayı başa al
+  useEffect(() => { setLimit(18); }, [q, topic, pos, lv, lang, mine]);
   const filtered = q || topic !== 'all' || pos !== 'all' || lv !== 'all' || lang !== 'all' || mine;
 
   return (
@@ -129,8 +132,13 @@ export function VideoLibrary({ videos }: { videos: Video[] }) {
         </div>
       ) : (
         <ul className="vlib__grid">
-          {shown.map((v) => <li key={v.id}><VideoCard video={v} /></li>)}
+          {shown.slice(0, limit).map((v) => <li key={v.id}><VideoCard video={v} /></li>)}
         </ul>
+      )}
+      {shown.length > limit && (
+        <p style={{ marginTop: 28, textAlign: 'center' }}>
+          <button type="button" className="btn btn--ghost" onClick={() => setLimit(limit + 18)}>Daha fazla göster ({shown.length - limit} video daha)</button>
+        </p>
       )}
       </div>
     </div>
