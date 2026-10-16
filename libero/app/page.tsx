@@ -5,6 +5,8 @@ import { EXERCISES } from '@/data/exercises';
 import { QUIZ } from '@/data/quiz';
 import { TACTICS } from '@/data/tactics';
 import { POSITION_PROFILES } from '@/data/positions';
+import { PLAYERS } from '@/data/players';
+import { VIDEOS } from '@/data/videos';
 import { CatGlyph } from '@/components/CatGlyph';
 import { ContinueCard, DailyQuiz, HomeLevel } from '@/components/HomeWidgets';
 import { Icon } from '@/components/Icon';
@@ -188,12 +190,41 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Analiz ve videolar ──────────────────────── */}
+      <section className="section section--ruled">
+        <div className="container">
+          <div className="section-title">
+            <div>
+              <p className="eyebrow">06 · Analiz ve videolar</p>
+              <h2 className="h2">Kendini ve ustaları <em>izleyerek</em> öğren.</h2>
+            </div>
+          </div>
+          <ul className="dev-grid">
+            {[
+              ['/analiz/video/', 'video', 'Video analizi', 'Kendi videonu yükle; kare kare ilerle, çizgi ve açı çiz, zaman damgalı not al. Video cihazından çıkmaz.'],
+              ['/analiz/oyuncular/', 'user', 'Oyuncu analizi', `${PLAYERS.length} oyuncunun oyun tarzı, topsuz hareketi ve senin oyununa taşıyacağın dersler.`],
+              ['/videolar/', 'play', 'Video kütüphanesi', `Konu, pozisyon ve seviyeye göre ${VIDEOS.length} doğrulanmış eğitim videosu; Türkçe özetlerle.`],
+              ['/profil/', 'lock', 'Panelim ve verilerim', 'Profilini düzenle, yedek al, kaynakları gör. Verilerin nerede durduğunu açıkça anlat.'],
+            ].map(([href, icon, t, d]) => (
+              <li key={href}>
+                <Link href={href} className="card dev-card">
+                  <span className="dev-card__icon"><Icon name={icon} /></span>
+                  <h3 className="dev-card__t">{t}</h3>
+                  <p>{d}</p>
+                  <span className="dev-card__go mono">Aç <Icon name="arrow" /></span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ── Pozisyonlar ──────────────────────────────── */}
       <section className="section section--ruled">
         <div className="container">
           <div className="section-title">
             <div>
-              <p className="eyebrow">06 · Pozisyonlar</p>
+              <p className="eyebrow">07 · Pozisyonlar</p>
               <h2 className="h2">Her pozisyon <em>farklı</em> düşünür.</h2>
             </div>
             <Link href="/pozisyonlar/" className="btn btn--ghost btn--sm">Pozisyonunu seç <Icon name="arrow" /></Link>
@@ -221,7 +252,7 @@ export default function Home() {
           <ul className="honest__list">
             <li><strong>Veriler bu tarayıcıda.</strong> Hesap sistemi yok; programınız ve ilerlemeniz yalnızca bu cihazda saklanır. Panelim sayfasından yedek alabilirsiniz.</li>
             <li><strong>Eğitim amaçlı.</strong> İçerik tıbbi tavsiye ya da bireysel diyet programı değildir. Çocuk ve ergenler için doz ve egzersiz seçimi yaşa göre sınırlandırılır.</li>
-            <li><strong>Videolar doğrulanmıştır.</strong> Gösterilen her video gerçek ve resmî gömme oynatıcısıyla sunulur; bulunamayan içerik uydurulmaz.</li>
+            <li><strong>Videoların varlığı doğrulanır, içeriği değerlendirilmez.</strong> Her video YouTube’un resmî bağlantısıyla gerçekten var ve gömülebilir olduğu için eklenir; tek tek izlenip puanlanmamıştır. Türkçe özetler başlığa dayanır, çeviri değildir; İngilizce videolarda Türkçe altyazı garanti edilmez.</li>
           </ul>
         </div>
       </section>
