@@ -109,6 +109,8 @@ export interface CanvasProps {
   vertical?: boolean;
   /** içeriğe göre otomatik kırp (varsayılan: açık) */
   fit?: boolean;
+  /** doğrudan görünüm tanımı (tahta); verilirse fit yok sayılır */
+  view?: ViewDef;
   instant?: boolean;
   durMs?: number;
   label: string;
@@ -121,6 +123,7 @@ export interface CanvasProps {
   onMove?: (e: React.PointerEvent) => void;
   onUp?: (e: React.PointerEvent) => void;
   drawing?: { kind: ArrowKind; from: Pt; to: Pt } | null;
+  drawZone?: { x: number; y: number; w: number; h: number; k: 'free' | 'danger' | 'target' } | null;
 }
 
 const COLOR_FOR: Record<Actor['t'], { fill: string; ink: string }> = {
@@ -132,11 +135,11 @@ const COLOR_FOR: Record<Actor['t'], { fill: string; ink: string }> = {
 };
 
 export const SceneCanvas = forwardRef<SVGSVGElement, CanvasProps>(function SceneCanvas(
-  { scene, tl, frame, history = true, vertical, fit = true, instant, durMs = 1250, label, selected, editable, className, onActorDown, onBallDown, onBgDown, onMove, onUp, drawing },
+  { scene, tl, frame, history = true, vertical, fit = true, view: viewProp, instant, durMs = 1250, label, selected, editable, className, onActorDown, onBallDown, onBgDown, onMove, onUp, drawing, drawZone },
   ref,
 ) {
   const uid = useId().replace(/:/g, '');
-  const view: ViewDef = fit ? fitView(scene, tl, vertical) : viewOf(scene, vertical);
+  const view: ViewDef = viewProp ?? (fit ? fitView(scene, tl, vertical) : viewOf(scene, vertical));
   const pr = projector(view);
   const u = view.unit;
   const cur = tl[Math.min(frame, tl.length - 1)];
@@ -227,6 +230,13 @@ export const SceneCanvas = forwardRef<SVGSVGElement, CanvasProps>(function Scene
             </g>
           );
         })}
+
+        {drawZone && (() => {
+          const a = P([drawZone.x, drawZone.y]);
+          const b = P([drawZone.x + drawZone.w, drawZone.y + drawZone.h]);
+          const col = drawZone.k === 'free' ? 'var(--grass)' : drawZone.k === 'danger' ? 'var(--terra)' : 'var(--brass)';
+          return <rect x={Math.min(a[0], b[0])} y={Math.min(a[1], b[1])} width={Math.abs(a[0] - b[0])} height={Math.abs(a[1] - b[1])} fill={col} fillOpacity={0.2} stroke={col} strokeWidth={0.25} strokeDasharray="1 0.7" />;
+        })()}
 
         {/* savunma / ofsayt çizgisi */}
         {cur.line !== null && (() => {
@@ -359,9 +369,8 @@ export const SceneCanvas = forwardRef<SVGSVGElement, CanvasProps>(function Scene
 });
 
 /** Ekran koordinatını saha koordinatına çevir */
-export function clientToPitch(svg: SVGSVGElement, e: { clientX: number; clientY: number }, scene: Scene, vertical?: boolean): Pt {
-  const v = viewOf(scene, vertical);
-  const pr = projector(v);
+export function clientToPitch(svg: SVGSVGElement, e: { clientX: number; clientY: number }, view: ViewDef): Pt {
+  const pr = projector(view);
   const r = svg.getBoundingClientRect();
   const sx = ((e.clientX - r.left) / r.width) * pr.w;
   const sy = ((e.clientY - r.top) / r.height) * pr.h;

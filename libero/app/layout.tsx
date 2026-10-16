@@ -9,6 +9,7 @@ import '@/styles/ui.css';
 import '@/styles/shell.css';
 import '@/styles/pitch.css';
 import '@/styles/pages.css';
+import '@/styles/home.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Providers } from '@/components/Providers';

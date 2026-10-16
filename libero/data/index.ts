@@ -27,9 +27,22 @@ export const TECHNIQUES: Technique[] = [
   ...TOPSUZ,
 ];
 
-import { overlapWarnings, validateTechniques } from './validate';
+import { overlapWarnings, validateRest, validateTechniques } from './validate';
+import { POSITION_PROFILES } from './positions';
+import { QUIZ } from './quiz';
+import { TACTICS } from './tactics';
+import { EX_BY_ID, validateExercises } from './exercises';
+import { PATTERNS } from '@/lib/program';
 
-const problems = validateTechniques(TECHNIQUES);
+const patternErrs: string[] = [];
+for (const [k, rows] of Object.entries(PATTERNS)) for (const r of rows) for (const id of r) if (!EX_BY_ID[id]) patternErrs.push(`program deseni ${k}: bilinmeyen egzersiz ${id}`);
+
+const problems = [
+  ...validateExercises(),
+  ...patternErrs,
+  ...validateTechniques(TECHNIQUES),
+  ...validateRest({ techIds: new Set(TECHNIQUES.map((t) => t.id)), tactics: TACTICS, positions: POSITION_PROFILES, quiz: QUIZ }),
+];
 if (problems.length) {
   throw new Error('Teknik verisi hatalı:\n' + problems.join('\n'));
 }

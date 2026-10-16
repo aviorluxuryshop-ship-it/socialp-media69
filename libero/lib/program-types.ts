@@ -72,4 +72,6 @@ export interface SessionLog {
   items: PlannedItem[];
   rpe?: number;
   note?: string;
+  /** planlanan ya da girilen süre (dk) */
+  minutes?: number;
 }

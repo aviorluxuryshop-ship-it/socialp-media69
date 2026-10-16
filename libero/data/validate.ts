@@ -50,3 +50,43 @@ export function validateTechniques(list: Technique[]): string[] {
   }
   return errs;
 }
+
+import type { Scene } from '@/lib/types';
+import type { PositionProfile } from './positions';
+import type { QuizQuestion } from './quiz';
+import type { Tactic } from './tactics';
+
+function sceneErrors(id: string, scene: Scene): string[] {
+  const out: string[] = [];
+  const actors = new Set(scene.a.map((a) => a.id));
+  scene.f.forEach((f, i) => {
+    if (f.m) for (const k of Object.keys(f.m)) if (!actors.has(k)) out.push(`${id}: kare ${i + 1} bilinmeyen oyuncu "${k}"`);
+    if (typeof f.b === 'string' && !actors.has(f.b)) out.push(`${id}: kare ${i + 1} top sahibi "${f.b}" yok`);
+  });
+  return out;
+}
+
+export function validateRest(args: { techIds: Set<string>; tactics: Tactic[]; positions: PositionProfile[]; quiz: QuizQuestion[] }): string[] {
+  const { techIds, tactics, positions, quiz } = args;
+  const out: string[] = [];
+  const tacticIds = new Set(tactics.map((t) => t.id));
+  for (const t of tactics) {
+    out.push(...sceneErrors(`taktik:${t.id}`, t.scene));
+    for (const r of t.related) if (!techIds.has(r) && !tacticIds.has(r)) out.push(`taktik:${t.id}: bilinmeyen ilgili "${r}"`);
+  }
+  for (const p of positions) {
+    out.push(...sceneErrors(`pozisyon:${p.id}`, p.scene));
+    for (const k of p.keyTechs) if (!techIds.has(k)) out.push(`pozisyon:${p.id}: bilinmeyen teknik "${k}"`);
+    for (const k of p.keyTactics) if (!tacticIds.has(k)) out.push(`pozisyon:${p.id}: bilinmeyen taktik "${k}"`);
+  }
+  const qids = new Set<string>();
+  for (const q of quiz) {
+    if (qids.has(q.id)) out.push(`quiz: yinelenen ${q.id}`);
+    qids.add(q.id);
+    out.push(...sceneErrors(`quiz:${q.id}`, q.scene));
+    if (q.opts.filter((o) => o.ok).length !== 1) out.push(`quiz:${q.id}: tam bir doğru seçenek olmalı`);
+    if (q.opts.length < 3) out.push(`quiz:${q.id}: seçenek sayısı az`);
+    if (q.scene.f.length < 2) out.push(`quiz:${q.id}: en az 2 kare gerekli`);
+  }
+  return out;
+}
