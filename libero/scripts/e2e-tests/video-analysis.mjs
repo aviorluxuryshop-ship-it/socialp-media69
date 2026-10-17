@@ -321,6 +321,23 @@ export default async function videoAnalysis(h) {
     ok(bentLeft !== bentRight, `seçim izlenen kişiyi değiştirmedi: ${JSON.stringify(results)}`);
   });
 
+  await test('Video analizi (otomatik): oyuncu seçimi sırasında iptal çalışır (aday kutuları kapanır, yeniden başlatılabilir)', async () => {
+    const { ctx, page } = await open(vid('iki-kisi.webm'));
+    await configure(page, { start: 0, end: 2, fps: 5 });
+    await page.click('[data-testid=vauto-start]');
+    await waitPhase(page, ['pick', 'done', 'error'], 90000);
+    ok((await phaseOf(page)) === 'pick', `aşama ${await phaseOf(page)}`);
+    // seçim ekranında sayfada ekstra <canvas> yok (mevcut manuel çizim katmanıyla çakışmaz)
+    ok((await page.locator('canvas').count()) === 1, '<canvas> sayısı');
+    await page.click('[data-testid=vauto-cancel]');
+    await waitPhase(page, ['cancelled', 'error', 'done'], 10000);
+    ok((await phaseOf(page)) === 'cancelled', `iptal sonrası aşama ${await phaseOf(page)}`);
+    ok((await page.locator('[data-testid=vauto-cand]').count()) === 0, 'iptalden sonra aday kutuları kalmamalı');
+    ok((await page.locator('video').count()) === 1, 'iptalden sonra analiz videosu DOM’da kaldı');
+    ok(await page.locator('[data-testid=vauto-start]').isEnabled(), 'yeniden başlatılabilmeli');
+    await ctx.close();
+  });
+
   await test('Video analizi (otomatik): "Daha doğru" model ve ekran kartı seçeneği çalışır (GPU yoksa işlemciye düşer)', async () => {
     const { ctx, page, errors } = await open(vid('yatay.webm'));
     await configure(page, { start: 0, end: 2, fps: 5, quality: 'full' });
