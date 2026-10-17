@@ -223,7 +223,14 @@ export default async (h) => {
           await page.waitForTimeout(60);
         }
         await page.waitForTimeout(2200);
-        const end = await page.evaluate(() => ({ over: document.documentElement.scrollWidth - window.innerWidth, hidden: [...document.querySelectorAll('[data-reveal]')].filter((e) => Number(getComputedStyle(e).opacity) < 0.99).length }));
+        // Ekranda görünen öğeler eksiksiz görünmeli (ekran dışındaki animasyonlar tarayıcıda görüntüye gelince başlar)
+        const end = await page.evaluate(() => ({
+          over: document.documentElement.scrollWidth - window.innerWidth,
+          hidden: [...document.querySelectorAll('[data-reveal]')].filter((e) => {
+            const r = e.getBoundingClientRect();
+            return r.bottom > 0 && r.top < window.innerHeight && Number(getComputedStyle(e).opacity) < 0.99;
+          }).length,
+        }));
         ok(end.over <= 1, `${w}px: gezinti sonrası ${end.over}px taşma`);
         ok(end.hidden === 0, `${w}px: ${end.hidden} öğe görünmez`);
         await ctx.close();
