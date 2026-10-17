@@ -20,7 +20,9 @@ export function HeroBall({ className = '' }: { className?: string }) {
     const stage = stageRef.current;
     if (!root || !stage) return;
 
-    const plan = chooseBallMode(readDevice(hasWebGL()));
+    // Önce bağlam açmadan (ucuz) karar ver: düşük güç / hareket azaltma zaten SVG ise WebGL denenmez.
+    // WebGL bağlamı açma denemesi (ilk açılış pahalı olabilir) boşta ve top görünürken, start() içinde yapılır.
+    const plan = chooseBallMode(readDevice(true));
     root.dataset.motion = plan.animate ? 'on' : 'off';
     root.dataset.reason = plan.reason;
     if (plan.mode === 'svg') {
@@ -41,6 +43,12 @@ export function HeroBall({ className = '' }: { className?: string }) {
     const start = () => {
       if (started || cancelled || !visible || !idle) return;
       started = true;
+      if (!hasWebGL()) {
+        root.dataset.mode = 'svg';
+        root.dataset.reason = 'no-webgl';
+        root.dataset.state = 'ready';
+        return;
+      }
       root.dataset.state = 'loading';
       import('@/lib/motion-ball-scene')
         .then((m) =>

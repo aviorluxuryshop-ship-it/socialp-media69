@@ -495,6 +495,7 @@ export default async ({ ok, test, load, root }) => {
       const now = JSON.parse(JSON.stringify(store.sanitize(raw)));
       ok(JSON.stringify(now.videoAnalyses) === '{}', `${name}: videoAnalyses varsayılanı {} olmalı`);
       delete now.videoAnalyses;
+      delete now.videoMoments; // video kütüphanesi (sonradan eklenen isteğe bağlı alan)
       ok(JSON.stringify(now) === JSON.stringify(golden.golden[name]), `${name}: yükleme sonucu eskisinden farklı`);
     }
     ok(store.STORAGE_KEY === 'libero:v1' && store.SCHEMA_VERSION === 2, 'anahtar ve şema sürümü değişmedi');

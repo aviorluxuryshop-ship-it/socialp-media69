@@ -121,15 +121,37 @@ export function readDevice(webgl: boolean): DeviceInfo {
   };
 }
 
-/** WebGL gerçekten kullanılabilir mi? (bağlam açmayı dener ve hemen bırakır) */
+/** Tarayıcı WebGL'i yazılımla (GPU olmadan) çiziyorsa true: SwiftShader, llvmpipe, "Software" vb. */
+export function isSoftwareRenderer(name: string): boolean {
+  return /swiftshader|llvmpipe|softpipe|software|basic render|mesa offscreen/i.test(name);
+}
+
+/** Kullanıcı/test zorlaması: localStorage "libero:ball" = "webgl" ise yazılım WebGL'de bile 3B top açılır. */
+function forcedWebGL(): boolean {
+  try {
+    return localStorage.getItem('libero:ball') === 'webgl';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * WebGL gerçekten kullanılabilir mi? (bağlam açmayı dener ve hemen bırakır)
+ * GPU'suz (yazılımla çizilen) WebGL'de top sahnesi ana iş parçacığını saniyelerce kilitlediğinden orada hafif SVG top kullanılır.
+ */
 export function hasWebGL(): boolean {
   if (!isBrowser) return false;
   try {
     const c = document.createElement('canvas');
-    const gl = (c.getContext('webgl2') || c.getContext('webgl')) as WebGLRenderingContext | null;
+    // failIfMajorPerformanceCaveat: yazılım çizicide (GPU yok) bağlam hiç açılmaz — ucuz ve standart yol.
+    const opts: WebGLContextAttributes = forcedWebGL() ? {} : { failIfMajorPerformanceCaveat: true };
+    const gl = (c.getContext('webgl2', opts) || c.getContext('webgl', opts)) as WebGLRenderingContext | null;
     if (!gl) return false;
+    let software = false;
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    if (info) software = isSoftwareRenderer(String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? ''));
     gl.getExtension('WEBGL_lose_context')?.loseContext();
-    return true;
+    return !software || forcedWebGL();
   } catch {
     return false;
   }

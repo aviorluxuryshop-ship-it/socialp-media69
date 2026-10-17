@@ -159,4 +159,8 @@ export default async ({ ok, test, load }) => {
     ok(t.safeLevel('x') === 2 && t.safeLevel(99) === 5 && t.safeLevel(-3) === 1 && t.safeLevel(3.4) === 3, 'seviye sınırlama');
     ok(t.mondayIndex(0) === 6 && t.mondayIndex(1) === 0 && t.mondayIndex(6) === 5, 'pazartesi indeksi');
   });
+  await test('Hareket: yazılımla çizilen WebGL (GPU yok) tanınır, gerçek GPU adları tanınmaz', async () => {
+    for (const sw of ['ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero)), SwiftShader driver)', 'llvmpipe (LLVM 15.0.7, 256 bits)', 'Microsoft Basic Render Driver', 'Mesa Offscreen']) ok(m.isSoftwareRenderer(sw), 'yazılım: ' + sw);
+    for (const hw of ['ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Direct3D11 vs_5_0 ps_5_0, D3D11)', 'Apple M2', 'Mali-G78', 'ANGLE (Intel, Intel(R) UHD Graphics 620 Direct3D11)', '']) ok(!m.isSoftwareRenderer(hw), 'donanım: ' + hw);
+  });
 };

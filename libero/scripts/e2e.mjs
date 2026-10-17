@@ -38,7 +38,10 @@ function ok(cond, msg) {
   if (!cond) throw new Error(msg);
 }
 
+// E2E_ONLY=metin → yalnızca adında bu metin geçen testleri çalıştırır (hızlı yineleme için)
+const ONLY = process.env.E2E_ONLY ?? '';
 async function test(name, fn) {
+  if (ONLY && !name.includes(ONLY)) return;
   const t0 = Date.now();
   try {
     await fn();
@@ -161,7 +164,7 @@ await test('Üst dış vuruş sayfası: temas yüzeyi açık, adım adım, hatal
 await test('İç yüzle kavisli pas ile trivela ayrı teknik: temas bölgesi, bağlantı, karıştırma notu', async () => {
   const { ctx, page } = await newPage();
   await go(page, '/teknikler/kavisli-pas/');
-  const h1 = await page.locator('h1').first().innerText();
+  const h1 = await page.locator('h1').first().textContent() ?? '';
   ok(/İç yüzle kavisli pas/i.test(h1), `kavisli-pas başlığı: ${h1}`);
   const lbl = (await page.locator('svg[aria-label^="Temas yüzeyi"]').first().getAttribute('aria-label')) ?? '';
   ok(/İç yüz/.test(lbl) && !/Üst dış/.test(lbl), `kavisli-pas temas bölgesi yanlış: ${lbl}`);
@@ -436,6 +439,7 @@ await test('Taktik tahtası: adım ekle, oyuncu ve top sürüklenir, ok çizilir
   await go(page, '/taktik-tahtasi/');
   await page.getByRole('button', { name: /Adım ekle/ }).click();
   const a1 = page.locator('.sc-actor[data-id="A1"]');
+  await a1.scrollIntoViewIfNeeded();
   ok((await a1.count()) === 1, 'tahtada A1 oyuncusu yok');
   const b = await a1.boundingBox();
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
