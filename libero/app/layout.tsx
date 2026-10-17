@@ -10,6 +10,7 @@ import '@/styles/pitch.css';
 import '@/styles/pages.css';
 import '@/styles/home.css';
 import '@/styles/video-analysis.css';
+import '@/styles/video.css';
 import '@/styles/motion.css';
 import '@/styles/boot.css';
 import { Header } from '@/components/Header';

@@ -3,7 +3,7 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import type { Level, PositionId } from './types';
 import type { Program, SessionLog } from './program-types';
-import { sanitizeMoments, type VideoMoments } from './video-moments';
+import { sanitizeMoments, withMoment, withoutMoment, type VideoMoment, type VideoMoments } from './video-moments';
 import {
   defaultEquipByEnv,
   migrateEquipment,
@@ -415,6 +415,17 @@ export function deleteVideoNotes(key: string) {
     delete next[key];
     return { ...s, videoNotes: next };
   });
+}
+
+// ── Video kütüphanesi: kişisel zaman damgalı notlar ────────
+// Eski yedeklerde alan yoktur; `?? {}` ile okunur. Yedeğe (exportData) kendiliğinden girer.
+
+export function addVideoMoment(videoId: string, t: number, text: string) {
+  update((s) => ({ ...s, videoMoments: withMoment(s.videoMoments ?? {}, videoId, t, text, nowIso()) }));
+}
+
+export function removeVideoMoment(videoId: string, m: VideoMoment) {
+  update((s) => ({ ...s, videoMoments: withoutMoment(s.videoMoments ?? {}, videoId, m) }));
 }
 
 // ── Otomatik video analizi özetleri ────────────────────────
