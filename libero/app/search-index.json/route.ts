@@ -17,7 +17,7 @@ const PAGES: SearchDoc[] = [
   { k: 'sayfa', t: 'Pozisyonlar', d: 'Kaleci, stoper, bek, ön libero, orta saha, on numara, kanat, santrfor.', u: '/pozisyonlar/', a: ['pozisyon', 'mevki'] },
   { k: 'sayfa', t: 'Fiziksel gelişim', d: 'Sürat, çeviklik, kuvvet, denge ve dayanıklılık egzersizleri.', u: '/fiziksel/', a: ['kondisyon', 'antrenman', 'kas'] },
   { k: 'sayfa', t: 'Kişisel antrenman programı', d: 'Yaşa, seviyeye ve hedefe göre esnek haftalık program.', u: '/program/', a: ['program', 'plan', 'takvim', 'antrenman planı'] },
-  { k: 'sayfa', t: 'Beslenme ve toparlanma', d: 'Antrenman öncesi-sonrası beslenme, sıvı, pratik öğünler ve alternatifler.', u: '/beslenme/', a: ['yemek', 'diyet', 'su', 'protein'] },
+  { k: 'sayfa', t: 'Beslenme ve toparlanma', d: 'Yaşa göre futbolcu beslenmesi: maç günü çizelgesi, su takibi, uyku, takviyeler, öğün planı ve alternatifler.', u: '/beslenme/', a: ['yemek', 'diyet', 'su', 'protein'] },
   { k: 'sayfa', t: 'Performans analizi', d: 'Antrenman geçmişi, test sonuçları ve teknik seviye gelişimi.', u: '/analiz/performans/', a: ['istatistik', 'gelişim', 'ilerleme', 'test sonuçları'] },
   { k: 'sayfa', t: 'Video analizi', d: 'Kendi videonuzu yükleyin; kare kare ilerleyin, çizin, not alın.', u: '/analiz/video/', a: ['video analiz', 'çizim', 'işaretleme'] },
   { k: 'sayfa', t: 'Oyuncu analizi', d: 'Profesyonel oyuncuların oyun tarzı, pas tercihleri ve topsuz hareketleri.', u: '/analiz/oyuncular/', a: ['profesyonel oyuncu', 'futbolcu analizi'] },
