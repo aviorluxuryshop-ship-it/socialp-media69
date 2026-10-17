@@ -115,17 +115,17 @@ export default async ({ ok, test, load }) => {
     ok(bad.length === 0, bad.join(' | '));
   });
 
-  await test('Krampon: erişilebilir açıklama Türkçe, ayakları ve bölgeleri adlandırır', async () => {
+  await test('Krampon: erişilebilir açıklama Türkçe, bölgeleri ve ayağı adlandırır', async () => {
     const a = bootAriaLabel('ust', ['ustDis'], false);
-    ok(/^Sağ krampon, üstten görünüm\./.test(a), `sağ ayak başlığı: ${a}`);
-    ok(/üst dış — trivela yüzeyi/.test(a), `üst dış adı eksik: ${a}`);
+    ok(a.startsWith('Temas yüzeyi: Üst dış — trivela yüzeyi.'), `trivela açıklaması: ${a}`);
+    ok(a.endsWith('Sağ krampon, üstten görünüm.'), `sağ ayak başlığı: ${a}`);
     const b = bootAriaLabel('ic', ['ic', 'ustIc'], true);
-    ok(/^Sol krampon, iç yüz görünümü\./.test(b), `sol ayak başlığı: ${b}`);
-    ok(/iç yüz — ayak içi ve üst iç — iç ayak üstü/.test(b), `iki bölge listesi: ${b}`);
+    ok(b.startsWith('Temas yüzeyi: İç yüz — ayak içi; Üst iç — iç ayak üstü.'), `iki bölge listesi: ${b}`);
+    ok(b.endsWith('Sol krampon, iç yüz görünümü.'), `sol ayak başlığı: ${b}`);
     const c = bootAriaLabel('dis', ['ic'], false);
     ok(/vurgulanan bölge yok/.test(c), `bu görünümde bölge yoksa belirtilmeli: ${c}`);
     for (const v of VIEW_ORDER) {
-      for (const z of VIEW_ZONES[v]) ok(bootAriaLabel(v, [z], false).includes(ZONES[z].label.toLocaleLowerCase('tr')), `${v}/${z}: aria etiketi bölge adını içermiyor`);
+      for (const z of VIEW_ZONES[v]) ok(bootAriaLabel(v, [z], false).includes(ZONES[z].label), `${v}/${z}: aria etiketi bölge adını içermiyor`);
     }
   });
 

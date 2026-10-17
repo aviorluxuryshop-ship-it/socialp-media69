@@ -157,13 +157,14 @@ export function listTr(items: string[]): string {
   return items.slice(0, -1).join(', ') + ' ve ' + items[items.length - 1];
 }
 
-const lower = (s: string) => s.replace(/İ/g, 'i').replace(/I/g, 'ı').toLocaleLowerCase('tr');
-
-/** SVG için erişilebilir açıklama (Türkçe). */
+/**
+ * SVG için erişilebilir açıklama (Türkçe). Önce vurgulanan temas yüzeyleri, sonra hangi krampon ve görünüm.
+ * Renge bağlı değildir: bölge adları metin olarak okunur.
+ */
 export function bootAriaLabel(view: BootView, foot: readonly FootZone[], left: boolean): string {
   const here = zonesVisibleIn(view, foot);
   const side = left ? 'Sol' : 'Sağ';
   const head = `${side} krampon, ${VIEWS[view].aria}.`;
-  if (here.length === 0) return `${head} Bu görünümde vurgulanan bölge yok.`;
-  return `${head} Vurgulanan temas yüzeyi: ${listTr(here.map((z) => lower(ZONES[z].label)))}.`;
+  if (here.length === 0) return `Temas yüzeyi: bu görünümde vurgulanan bölge yok. ${head}`;
+  return `Temas yüzeyi: ${here.map((z) => ZONES[z].label).join('; ')}. ${head}`;
 }
