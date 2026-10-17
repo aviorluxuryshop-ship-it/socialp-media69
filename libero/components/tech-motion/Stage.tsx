@@ -17,11 +17,6 @@ export function Stage({ m, frame, label, planLabel, trail = true }: { m: TechMot
           <span className="tm__plan-t mono" aria-hidden="true">
             Üstten bakış
           </span>
-          {m.plan?.press && (
-            <span className="tm__plan-p mono" aria-hidden="true">
-              × Baskı
-            </span>
-          )}
         </div>
       )}
       <span className="tm__view mono">Sağ ayaklı oyuncu · sağdan görünüm</span>

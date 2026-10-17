@@ -35,6 +35,8 @@ export interface TechMotion {
   legs: readonly [LegMode, LegMode]
   /** kamera: görünümün sol kenarının dünya x'i (m) */
   cam: number;
+  /** sahnenin üst sınırı, zeminden m (varsayılan 2,2); sıçrama ve kafa vuruşlarında yükseltin */
+  top?: number;
   keys: readonly PoseKey[];
   ball: readonly BallKey[];
   /** top temas yüzeyine yapışık kalır (ör. ilk temas amortisi): [başla, bitir] sn */

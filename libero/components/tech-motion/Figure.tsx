@@ -3,7 +3,7 @@ import { ballGeometry } from '@/lib/boot-ball';
 import { DEG, SEG, bootShape, footPoint, zonePatch, type Arm, type Foot, type Leg, type Skeleton, type Vec2 } from '@/lib/motion/rig';
 import { contactAt, type Frame, type TechMotion } from '@/lib/motion/timeline';
 import type { BallState } from '@/lib/motion/rig';
-import { GY, SC, VH, VW, capsule, f1, f2, poly, smoothClosed, toPx } from './draw';
+import { GY, SC, VH, VW, capsule, f1, f2, poly, smoothClosed, toPx, viewBoxFor } from './draw';
 
 // Hareket sahnesi: bir kareyi (Frame) yandan görünümde çizen saf SVG bileşeni. Durum yok; oynatıcı ve statik şerit aynı bileşeni kullanır.
 // Işık sol üstten gelir. Yazı yok (SVG ölçeklenince okunmaz); etiketler HTML tarafında.
@@ -14,9 +14,10 @@ const K = {
   limbLo: '#9eaca5',
   farHi: '#8b9993',
   farLo: '#56635e',
-  shirtHi: '#f4f2e6',
-  shirtLo: '#bdbbab',
-  shirtFar: '#8d8c80',
+  shirtHi: '#93d8ff',
+  shirtLo: '#2f8bd0',
+  shirtFar: '#1f6aa0',
+  trim: '#f4f2e6',
   shortsHi: '#33433f',
   shortsLo: '#141c1a',
   shortsFar: '#0e1513',
@@ -28,10 +29,10 @@ const K = {
   accentHi: '#dcff7d',
   line: '#050807',
   // krampon (BootMap ile aynı)
-  up1: '#48504b',
-  up2: '#2c3330',
-  up3: '#151a18',
-  farUp: '#1b211f',
+  up1: '#6a756f',
+  up2: '#3b4440',
+  up3: '#1c2220',
+  farUp: '#232a27',
   iv1: '#f3eedf',
   iv2: '#cdc8b6',
   iv3: '#98948a',
@@ -41,6 +42,16 @@ const K = {
 const px = (cam: number, p: Vec2) => toPx(cam, p);
 const rp = (m: number) => m * SC;
 const lerp2 = (a: Vec2, b: Vec2, t: number): Vec2 => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+/** Uzvun eksenine dik ince şerit (forma/çorap bandı): a→b ekseninin t noktasında, yarıçap r, kalınlık w (px). */
+function bandPath(a: Vec2, b: Vec2, t: number, r: number): string {
+  const p = lerp2(a, b, t);
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  const l = Math.hypot(dx, dy) || 1;
+  const nx = -dy / l;
+  const ny = dx / l;
+  return `M${f1(p[0] + nx * r)} ${f1(p[1] + ny * r)}L${f1(p[0] - nx * r)} ${f1(p[1] - ny * r)}`;
+}
 
 /** Gövdenin (formanın) dış çizgisi: pelvisten omuza, dünya metresi. */
 function torsoPts(sk: Skeleton): Vec2[] {
@@ -84,7 +95,7 @@ function legGfx(cam: number, leg: Leg): LegGfx {
     shorts: capsule(hip, rp(0.1), lerp2(hip, knee, 0.42), rp(0.088)),
     shank: capsule(knee, rp(0.057), ank, rp(0.04)),
     sock: capsule(lerp2(knee, ank, 0.4), rp(0.05), ank, rp(0.04)),
-    band: capsule(lerp2(knee, ank, 0.4), rp(0.054), lerp2(knee, ank, 0.5), rp(0.051)),
+    band: bandPath(knee, ank, 0.46, rp(0.049)),
   };
 }
 
@@ -111,7 +122,8 @@ function Boot({ cam, foot, far, uid }: { cam: number; foot: Foot; far: boolean; 
       ))}
       <path d={smoothClosed(minus, 0.5)} fill={far ? K.farUp : K.up3} stroke={K.line} strokeWidth="1" strokeLinejoin="round" />
       <path d={poly(soleM)} fill={far ? '#6d6a60' : K.iv3} stroke={K.line} strokeWidth="0.6" strokeLinejoin="round" />
-      <path d={smoothClosed(plus, 0.5)} fill={far ? K.farUp : g('up')} stroke={K.line} strokeWidth="1.1" strokeLinejoin="round" />
+      <path d={smoothClosed(plus, 0.5)} fill={far ? K.farUp : g('up')} stroke={far ? K.line : '#0a0d0c'} strokeWidth="1.1" strokeLinejoin="round" />
+      <path d={smoothClosed(plus, 0.5)} fill="none" stroke="#e9e4d2" strokeOpacity={far ? 0.16 : 0.34} strokeWidth="0.8" strokeLinejoin="round" />
       <path d={poly(sole)} fill={far ? '#8a877b' : g('sole')} stroke={K.line} strokeWidth="0.7" strokeLinejoin="round" />
       {!far && <path d={laces.join('')} stroke={K.iv2} strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.85" />}
       {!far && <path d={smoothClosed(plus, 0.5)} fill="none" stroke="#fff" strokeOpacity=".16" strokeWidth="1" transform="translate(-0.6 -0.9)" />}
@@ -127,10 +139,11 @@ function ArmGfx({ cam, arm, far, uid }: { cam: number; arm: Arm; far: boolean; u
   const skin = `url(#${uid}-${far ? 'skinf' : 'skin'})`;
   return (
     <g>
-      <path d={capsule(sh, rp(0.044), el, rp(0.036))} fill={skin} />
-      <path d={capsule(el, rp(0.036), wr, rp(0.027))} fill={skin} />
-      <circle cx={f1(hd[0])} cy={f1(hd[1])} r={rp(0.03)} fill={skin} />
-      <path d={capsule(sh, rp(0.056), lerp2(sh, el, 0.55), rp(0.05))} fill={far ? K.shirtFar : `url(#${uid}-shirt)`} />
+      <path d={capsule(sh, rp(0.05), el, rp(0.04))} fill={skin} />
+      <path d={capsule(el, rp(0.04), wr, rp(0.03))} fill={skin} />
+      <circle cx={f1(hd[0])} cy={f1(hd[1])} r={rp(0.036)} fill={skin} />
+      <path d={capsule(sh, rp(0.062), lerp2(sh, el, 0.55), rp(0.055))} fill={far ? K.shirtFar : `url(#${uid}-shirt)`} />
+      <path d={bandPath(sh, el, 0.53, rp(0.056))} stroke={K.trim} strokeWidth="2.4" fill="none" opacity={far ? 0.5 : 0.95} />
     </g>
   );
 }
@@ -169,6 +182,12 @@ function BallGfx({ cam, b, uid }: { cam: number; b: BallState; uid: string }) {
   );
 }
 const BALL = ballGeometry();
+const LENS_R = 62;
+const LENS_K = 2.7;
+const sstep = (a: number, b: number, x: number) => {
+  const u = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return u * u * (3 - 2 * u);
+};
 
 export function Figure({ m, frame, trail, label, className }: FigureProps) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
@@ -185,8 +204,11 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
   const yShadow = GY + 3;
 
   // top, yakın ayağın önünde mi arkasında mı çizilsin: derinlik (z) karşılaştırması
-  const footMidZ = footPoint(sk.near.foot, 0.07, 0, 0)[2];
-  const ballBehind = ball.z < footMidZ - 0.01;
+  // (kalçaların yanal 0,09 m ofseti rig'de yok; sıralama için eklenir)
+  const nearZ = footPoint(sk.near.foot, 0.07, 0, 0)[2] + 0.09;
+  const farZ = footPoint(sk.far.foot, 0.07, 0, 0)[2] - 0.09;
+  const ballBehind = ball.z < nearZ - 0.01; // yakın bacağın arkasında
+  const ballFarBehind = ball.z < farZ - 0.02; // uzak bacağın da arkasında
 
   // temas bölgeleri
   const zones = m.zones === 'alin' ? [] : m.zones;
@@ -195,12 +217,20 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
   const kc = P(k.p);
   const patches = zones.map((z) => ({ z, ...zonePatch(sk.near.foot, z) }));
 
+  // yakın çekim: temas anında, sahnenin temas noktasından uzak yanında
+  const vb = viewBoxFor(m.top);
+  const lensLeft = kc[0] > VW * 0.45;
+  const lx = lensLeft ? LENS_R + 22 : VW - 232;
+  const ly = vb.y0 + LENS_R + 14;
+  const lensOp = sstep(0.03, 0.4, glow);
+  const lensOn = lensOp > 0.001;
+
   const trailPts = (trail ?? []).map((b) => P([b.x, b.y]));
   const shadowK = Math.max(0, 1 - (ball.y - SEG.ball) * 2.2);
   const g = (n: string) => `url(#${uid}-${n})`;
 
   return (
-    <svg className={className ?? 'tm-svg'} viewBox={`0 0 ${VW} ${VH}`} role="img" aria-label={label} data-phase={frame.phase} focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <svg className={className ?? 'tm-svg'} viewBox={vb.box} role="img" aria-label={label} data-phase={frame.phase} focusable="false" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id={`${uid}-skin`} gradientUnits="userSpaceOnUse" x1="0" y1="80" x2="0" y2="345">
           <stop offset="0" stopColor={K.limbHi} />
@@ -251,6 +281,10 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
         <clipPath id={`${uid}-ballc`}>
           <circle r="1" />
         </clipPath>
+        <radialGradient id={`${uid}-lensbg`} cx="0.5" cy="0.5" r="0.7">
+          <stop offset="0" stopColor="#1d3631" />
+          <stop offset="1" stopColor="#0c1715" />
+        </radialGradient>
         <radialGradient id={`${uid}-glow`} cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor={K.accentHi} stopOpacity="0.95" />
           <stop offset="0.5" stopColor={K.accent} stopOpacity="0.5" />
@@ -263,6 +297,7 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
           <feGaussianBlur stdDeviation="5" />
         </filter>
       </defs>
+      <g id={`${uid}-fig`}>
       {/* zemin */}
       <rect x="0" y={GY} width={VW} height={VH - GY} fill={g('ground')} />
       <path d={`M0 ${GY}H${VW}`} stroke="#f3f0e5" strokeOpacity=".28" strokeWidth="1.2" />
@@ -283,6 +318,8 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
         <circle key={i} cx={f1(q[0])} cy={f1(q[1])} r={rp(SEG.ball) * (0.35 + 0.4 * (i / Math.max(1, trailPts.length)))} fill="#f3f0e5" opacity={f2(0.04 + 0.16 * (i / Math.max(1, trailPts.length)))} />
       ))}
 
+      {ballFarBehind && <BallGfx cam={cam} b={ball} uid={uid} />}
+
       {/* uzak taraf: kol, bacak */}
       <ArmGfx cam={cam} arm={sk.armF} far uid={uid} />
       <g>
@@ -293,7 +330,7 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
         <Boot cam={cam} foot={sk.far.foot} far uid={uid} />
       </g>
 
-      {ballBehind && <BallGfx cam={cam} b={ball} uid={uid} />}
+      {ballBehind && !ballFarBehind && <BallGfx cam={cam} b={ball} uid={uid} />}
 
       {/* gövde ve baş */}
       <g>
@@ -301,6 +338,7 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
         <path d={torso} fill={g('shirt')} stroke={K.line} strokeOpacity=".5" strokeWidth="0.8" strokeLinejoin="round" />
         <path d={capsule(neckTop, rp(0.047), sho, rp(0.05))} fill={g('skin')} />
         <circle cx={f1(head[0])} cy={f1(head[1])} r={rp(SEG.headR)} fill={g('skin')} />
+        <path d={`M${P(headPt(sk, 14, 0.98)).map(f1).join(' ')}L${P(headPt(sk, -2, 1.3)).map(f1).join(' ')}L${P(headPt(sk, -16, 0.98)).map(f1).join(' ')}Z`} fill={g('skin')} />
         <path d={hairPath(cam, sk)} fill={K.hair} />
         <circle cx={f1(P(headPt(sk, 12, 0.5))[0])} cy={f1(P(headPt(sk, 12, 0.5))[1])} r="1.7" fill={K.line} />
       </g>
@@ -310,7 +348,7 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
         <path d={near.thigh} fill={g('skin')} />
         <path d={near.shank} fill={g('skin')} />
         <path d={near.sock} fill={g('sock')} />
-        <path d={near.band} fill={K.accent} />
+        <path d={near.band} stroke={K.shirtLo} strokeWidth="3.4" fill="none" />
         <path d={near.shorts} fill={g('shorts')} />
         <Boot cam={cam} foot={sk.near.foot} far={false} uid={uid} />
       </g>
@@ -324,8 +362,8 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
       <g className="tm-zones">
         {patches.map(({ z, poly: pp, facing }) => {
           const active = z === contactZone;
-          const a = active ? 0.2 + 0.7 * glow : 0.16;
           const back = facing < -0.15;
+          const a = active ? 0.2 + 0.7 * glow : back ? 0.08 : 0.16;
           const d = poly(pp.map(P));
           return (
             <g key={z} data-zone={z} data-active={active && glow > 0.05 ? 'true' : 'false'}>
@@ -341,6 +379,23 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
           </g>
         ) : null}
       </g>
+      </g>
+
+      {/* yakın çekim: temas anında, değen yüzey ve top 2,7 kat büyütülerek gösterilir */}
+      {lensOn && (
+        <g opacity={f2(lensOp)} aria-hidden="true" data-lens>
+          <path d={`M${f1(lx)} ${f1(ly)}L${f1(kc[0])} ${f1(kc[1])}`} stroke={K.accent} strokeOpacity=".45" strokeWidth="1.2" strokeDasharray="3 4" />
+          <clipPath id={`${uid}-lens`}>
+            <circle cx={f1(lx)} cy={f1(ly)} r={LENS_R} />
+          </clipPath>
+          <circle cx={f1(lx)} cy={f1(ly)} r={LENS_R + 4} fill="#050b0a" fillOpacity=".55" filter={g('blur')} />
+          <g clipPath={`url(#${uid}-lens)`}>
+            <rect x={lx - LENS_R} y={ly - LENS_R} width={2 * LENS_R} height={2 * LENS_R} fill={g('lensbg')} />
+            <use href={`#${uid}-fig`} transform={`translate(${f1(lx - LENS_K * kc[0])} ${f1(ly - LENS_K * kc[1])}) scale(${LENS_K})`} />
+          </g>
+          <circle cx={f1(lx)} cy={f1(ly)} r={LENS_R} fill="none" stroke={K.accent} strokeWidth="2" strokeOpacity=".9" />
+        </g>
+      )}
     </svg>
   );
 }
