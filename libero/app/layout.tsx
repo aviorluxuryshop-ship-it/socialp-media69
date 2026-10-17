@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from 'next';
-import '@fontsource/instrument-serif/400.css';
-import '@fontsource/instrument-serif/400-italic.css';
 import '@fontsource-variable/hanken-grotesk/index.css';
 import '@fontsource-variable/jetbrains-mono/index.css';
+import '@/styles/fonts.css';
 import '@/styles/tokens.css';
 import '@/styles/base.css';
 import '@/styles/ui.css';
@@ -10,6 +9,7 @@ import '@/styles/shell.css';
 import '@/styles/pitch.css';
 import '@/styles/pages.css';
 import '@/styles/home.css';
+import '@/styles/motion.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Providers } from '@/components/Providers';
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0a100d',
+  themeColor: '#08100e',
   width: 'device-width',
   initialScale: 1,
 };

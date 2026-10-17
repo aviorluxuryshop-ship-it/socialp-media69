@@ -73,6 +73,9 @@ export function Footer() {
           <p className="muted">Harici videolar sahiplerine aittir; Libero bunları yalnızca resmî gömme oynatıcısıyla gösterir.</p>
         </div>
       </div>
+      <span className="site-footer__giant" aria-hidden="true" lang="en">
+        Libero
+      </span>
     </footer>
   );
 }

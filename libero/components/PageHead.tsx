@@ -20,6 +20,7 @@ export function PageHead({
   crumbs,
   children,
   wide,
+  index,
 }: {
   eyebrow?: string;
   title: React.ReactNode;
@@ -27,10 +28,17 @@ export function PageHead({
   crumbs?: { href?: string; label: string }[];
   children?: React.ReactNode;
   wide?: boolean;
+  /** büyük dekoratif dizin numarası, ör. "03" (isteğe bağlı, yalnızca süs) */
+  index?: string;
 }) {
   return (
     <section className={`page-head ${wide ? 'page-head--wide' : ''}`}>
       <Ornament />
+      {index && (
+        <span className="page-head__index" aria-hidden="true">
+          {index}
+        </span>
+      )}
       <div className="container">
         {crumbs && (
           <nav className="breadcrumb" aria-label="Sayfa yolu">
@@ -42,9 +50,9 @@ export function PageHead({
             ))}
           </nav>
         )}
-        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h1 className="h1">{title}</h1>
-        {lead && <p className="lead">{lead}</p>}
+        {eyebrow && <p className="eyebrow enter" style={{ '--e': 0 } as React.CSSProperties}>{eyebrow}</p>}
+        <h1 className="h1 enter" style={{ '--e': 1 } as React.CSSProperties}>{title}</h1>
+        {lead && <p className="lead enter" style={{ '--e': 2 } as React.CSSProperties}>{lead}</p>}
         {children}
       </div>
     </section>
