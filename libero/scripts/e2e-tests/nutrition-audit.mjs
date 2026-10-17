@@ -172,4 +172,53 @@ export default async ({ newPage, go, ok, test, txt }) => {
     ok((await page.locator('[data-wp-undo]').count()) === 0, 'elle düzenlemeden sonra geri alma açık kaldı');
     await ctx.close();
   });
+
+  await test('Beslenme denetimi: plan doldurulduktan sonra alerji seçilirse uyumsuz öğün sayısı bildirilir; gün tipi değişikliği geri alınabilir', async () => {
+    const { ctx, page } = await newPage();
+    await go(page, '/beslenme/');
+    const fill = page.locator('[data-wp-fill]');
+    await fill.scrollIntoViewIfNeeded();
+    await fill.click();
+    ok((await page.locator('[data-wp-bad]').count()) === 0, 'uyumlu plan için uyumsuzluk uyarısı çıktı');
+    const planner = page.locator('[data-planner]');
+    await planner.locator('[data-avoid="yumurta"]').click();
+    const msg = await txt(page.locator('[data-wp-bad]'));
+    ok(/^\d+ öğün seçtiğin alerjen/.test(msg.trim()), `uyumsuz öğün uyarısı yok: ${msg}`);
+    ok((await page.locator('.wp__bad').count()) >= 1, 'öğün satırında uyumsuzluk işareti yok');
+    await fill.click();
+    ok((await page.locator('[data-wp-bad]').count()) === 0, 'yeniden doldurma uyumsuzluğu gidermedi');
+    ok((await page.locator('[data-wp-undo]').count()) === 1, 'doldurma sonrası geri alma yok');
+    await page.locator('[data-wp-undo-btn]').click();
+    ok((await page.locator('[data-wp-bad]').count()) === 1, 'geri alınca uyarı geri gelmedi');
+    // gün tipi: antrenman → dinlenme, antrenman/maç dilimleri düşer ve geri alınır
+    const type = planner.locator('select[aria-label="Pazartesi gün tipi"]');
+    ok((await type.inputValue()) === 'antrenman', 'pazartesi antrenman günü değil');
+    const before = await planner.locator('[data-wp-slot="pzt-sonra"]').inputValue();
+    ok(before !== '', 'pazartesi antrenman sonrası öğünü boş');
+    await type.selectOption('dinlenme');
+    ok((await planner.locator('[data-wp-slot="pzt-sonra"]').count()) === 0, 'dinlenme gününde antrenman sonrası dilimi duruyor');
+    ok(/Pazartesi gün tipi değişti/.test(await txt(page.locator('[data-wp-undo]'))), 'gün tipi değişince geri alma yok');
+    await page.locator('[data-wp-undo-btn]').click();
+    ok((await type.inputValue()) === 'antrenman' && (await planner.locator('[data-wp-slot="pzt-sonra"]').inputValue()) === before, 'gün tipi geri alınmadı');
+    await ctx.close();
+  });
+
+  await test('Beslenme denetimi: 390 px takviye ve uyku tabloları kaydırma gerektirmez; çocuk sütunu ekranda görünür', async () => {
+    const { ctx, page } = await newPage({ viewport: { width: 390, height: 844 } });
+    await go(page, '/beslenme/');
+    for (const sel of ['.suptable', '.sleeptable']) {
+      const wrap = page.locator(`${sel}`).locator('xpath=..');
+      await wrap.scrollIntoViewIfNeeded();
+      const m = await wrap.evaluate((e) => ({ sw: e.scrollWidth, cw: e.clientWidth }));
+      ok(m.sw <= m.cw + 1, `${sel}: yatay kaydırma gerekiyor (${m.sw} > ${m.cw})`);
+    }
+    const cell = page.locator('.suptable tbody tr').nth(1).locator('td').first();
+    await cell.scrollIntoViewIfNeeded();
+    const box = await cell.boundingBox();
+    ok(box && box.x >= 0 && box.x + box.width <= 391, `çocuk sütunu ekran dışında: ${JSON.stringify(box)}`);
+    ok(/Çocuk ve ergen/.test(await cell.evaluate((e) => getComputedStyle(e, '::before').content)), 'hücre etiketi (çocuk ve ergen) görünmüyor');
+    // anlamsal tablo korunur
+    ok((await page.locator('.suptable[role=table] th[role=rowheader]').count()) >= 6, 'tablo anlamı (rowheader) kaybolmuş');
+    await ctx.close();
+  });
 };

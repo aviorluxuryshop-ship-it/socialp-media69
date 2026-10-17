@@ -99,8 +99,8 @@ export const AGE_NOTES: Record<string, AgeNotes> = {
   },
   sonrasi: {
     u11: { text: 'Antrenmandan sonra su iç, sonra eve gidince normal öğününü ye. Özel ürün gerekmez; yoğurt-meyve ya da ayran-simit gibi sofra yiyecekleri yeter.' },
-    u14: { text: 'Antrenman sonrası ilk saatte küçük bir karbonhidrat + protein atıştırmalığı (süt-muz, ayran-simit) ve sıvı; ardından akşam yemeği. Tozlar ve içecekler gerekmez.' },
-    u17: { text: 'Ardışık antrenman ya da maç yoksa özel bir acele yok; düzenli öğünler ve uyku yeterlidir. Ardışık yük varsa toparlanma atıştırmalığı fark yaratır.' },
+    u14: { text: 'Antrenman sonrası ilk saatte küçük bir karbonhidrat + protein atıştırmalığı (süt-muz, ayran-simit) ve sıvı; ardından akşam yemeği. Tozlar ve içecekler gerekmez.', review: 'zamanlama' },
+    u17: { text: 'Ardışık antrenman ya da maç yoksa özel bir acele yok; düzenli öğünler ve uyku yeterlidir. Ardışık yük varsa toparlanma atıştırmalığı yardımcı olabilir.', review: 'zamanlama' },
     a18: { text: 'Toparlanma atıştırmalığı yük ve süreye göre ayarlanır; protein tozu ve takviye kararları bir diyetisyenle verilir (IOC).' },
   },
   sivi: {
@@ -195,7 +195,7 @@ export const DAY_PLANS: Record<AgeBand, Record<DayType, DayPlan>> = {
     },
     mac: {
       slots: { kahvalti: 'yulaf-muz', ara: 'meyve-peynir', once3: 'makarna-tavuk', once1: 'yogurt-meyve', sonra: 'ayran-simit', aksam: 'tavuk-patates' },
-      tips: ['Maç günü tanıdık yiyecekler: yeni bir şey denemek için bugün uygun değil.', 'Maç öncesi karbonhidratlı, yağsız ve hafif; sonrası için ayran-simit gibi bir atıştırmalık çantada olsun.', 'Maç sonrası önce su, sonra yemek.'],
+      tips: ['Maç günü tanıdık yiyecekler: yeni bir şey denemek için bugün uygun değil.', 'Maç öncesi karbonhidratlı, yağı az ve hafif; sonrası için ayran-simit gibi bir atıştırmalık çantada olsun.', 'Maç sonrası önce su, sonra yemek.'],
     },
     dinlenme: {
       slots: { kahvalti: 'serpme-kahvalti', ara: 'meyve-peynir', ogle: 'mercimek-pilav', aksam: 'izgara-et-bulgur' },

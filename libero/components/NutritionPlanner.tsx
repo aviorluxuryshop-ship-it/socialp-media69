@@ -236,7 +236,7 @@ export function DayPlans() {
 
 export function WeeklyPlanner() {
   const [plan, setPlan] = usePlan();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   /** Planı silen ya da üzerine yazan işlemden önceki kayıt: kısa süre geri alınabilir (veri kaybı koruması) */
   const [undo, setUndo] = useState<{ plan: PlanState; what: string } | null>(null);
   useEffect(() => {
@@ -247,6 +247,10 @@ export function WeeklyPlanner() {
   const hasContent = (p: PlanState) => p.ticked.length > 0 || DAY_KEYS.some((k) => Object.keys(p.days[k].slots).length > 0);
   const remember = (what: string) => setUndo(hasContent(plan) ? { plan, what } : null);
   const list = shoppingList(plan);
+  const badCount = DAY_KEYS.reduce(
+    (n, k) => n + DAY_SLOTS[plan.days[k].type].filter((s) => { const id = plan.days[k].slots[s]; return id && MEAL_BY_ID[id] && !mealAllowed(MEAL_BY_ID[id], plan.avoid, plan.diet); }).length,
+    0,
+  );
   const total = list.reduce((n, g) => n + g.items.length, 0);
 
   const autofill = () => {
@@ -279,7 +283,8 @@ export function WeeklyPlanner() {
     setUndo(null);
   };
   const setType = (k: DayKey, type: DayType) => {
-    setUndo(null);
+    const dropped = Object.keys(plan.days[k].slots).filter((s) => !DAY_SLOTS[type].includes(s as SlotKey)).length;
+    setUndo(dropped > 0 ? { plan, what: `${DAY_NAME[k]} gün tipi değişti; ${dropped} öğün çıkarıldı` } : null);
     setPlan((p) => ({ ...p, days: { ...p.days, [k]: { type, slots: Object.fromEntries(Object.entries(p.days[k].slots).filter(([s]) => DAY_SLOTS[type].includes(s as SlotKey))) } } }));
   };
   const setSlot = (k: DayKey, s: SlotKey, id: string) => {
@@ -296,11 +301,11 @@ export function WeeklyPlanner() {
     const text = list.map((g) => `${g.title}\n${g.items.map((i) => `- ${i.name}${i.count > 1 ? ` (${i.count} öğün)` : ''}`).join('\n')}`).join('\n\n');
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      setCopied('ok');
     } catch {
-      setCopied(false);
+      setCopied('fail');
     }
+    window.setTimeout(() => setCopied(null), 2500);
   };
 
   return (
@@ -316,6 +321,13 @@ export function WeeklyPlanner() {
         <PrintButton target="plan" label="Planı ve listeyi yazdır" />
         <span className="mono muted wp__band">Yaş grubu: {AGE_BANDS.find((b) => b.id === plan.band)?.label}</span>
       </div>
+
+      {badCount > 0 && (
+        <p className="note note--warn np" role="status" data-wp-bad>
+          <Icon name="warn" />
+          <span>{badCount} öğün seçtiğin alerjen ya da beslenme tercihine uymuyor. Alışveriş listesi bu öğünlerin içeriğini de kapsar; “Önerilen planla doldur” uygun öğünlerle yeniler (önceki plan geri alınabilir).</span>
+        </p>
+      )}
 
       {undo && (
         <p className="note np" role="status" data-wp-undo>
@@ -386,7 +398,7 @@ export function WeeklyPlanner() {
             </div>
             {total > 0 && (
               <button type="button" className="btn btn--ghost btn--sm np" onClick={copy}>
-                <Icon name="copy" /> {copied ? 'Kopyalandı' : 'Listeyi kopyala'}
+                <Icon name="copy" /> {copied === 'ok' ? 'Kopyalandı' : copied === 'fail' ? 'Kopyalanamadı: yazdırmayı dene' : 'Listeyi kopyala'}
               </button>
             )}
           </div>
