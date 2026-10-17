@@ -43,9 +43,9 @@ const PILLARS: { t: string; icon: 'bolt' | 'leaf' | 'dumbbell' | 'heart' | 'targ
 
 const SLEEP_CARDS: { t: string; d: string; rv?: string }[] = [
   { t: 'Ekran ve uyku', d: 'AAP, okul çağı çocuk ve ergenlerde medya kullanımının riskleri arasında uyku ve kilo üzerindeki olumsuz etkileri sayar ve aile–hekim işbirliğiyle bir “Aile Medya Kullanım Planı” önerir. Pratikte yatmadan önce ekranı bırakmak ve telefonu yatak odasından uzak tutmak yardımcı olur.', rv: 'uyku-genel' },
-  { t: 'Kafein', d: 'Kafein çocuk ve ergen beslenmesinde yer almaz (AAP). Çay, kola ve enerji içeceği de kafein içerebilir. Yetişkin sporcular için de geç saatlerde kafeinden kaçınmak uykuyu korumanın bir yoludur.', rv: 'uyku-genel' },
-  { t: 'Kısa uyku', d: 'Düzenli olarak önerilenden az uyumak dikkat, davranış ve öğrenme sorunlarıyla ilişkilidir (AASM). Elit sporcularda 7 saatten kısa uyku sık görülür ve enfeksiyona yatkınlığı artırır (Walsh ve ark.). Uyku sorunu sürüyorsa bir yetişkine ve hekime söyle.' },
-  { t: 'Gündüz şekerlemesi', d: 'Gün içi kısa uyku (şekerleme) gece uykusunun yerini tutmaz; geç saatte uzun uyumak gece uykusunu bozabilir. Gece uykusu önceliklidir.', rv: 'uyku-genel' },
+  { t: 'Kafein', d: 'Enerji içeceklerindeki kafein ve uyarıcıların çocuk ve ergen beslenmesinde yeri yoktur (AAP). Çay ve kola da kafein içerebilir; bu içecekleri gece geç saatte içmemek uykuyu korumaya yardımcı olabilir. Yetişkin sporcular için de geç saatlerde kafeinden kaçınmak uykuyu korumanın bir yoludur.', rv: 'uyku-genel' },
+  { t: 'Kısa uyku', d: 'Düzenli olarak önerilenden az uyumak dikkat, davranış ve öğrenme sorunlarıyla ilişkilidir (AASM). Elit sporcularda 7 saatten kısa uyku sık görülür; genel nüfus çalışmaları 7 saatten kısa uykuyu solunum yolu enfeksiyonuna yatkınlıkla ilişkilendirir (Walsh ve ark.). Uyku sorunu sürüyorsa bir yetişkine ve hekime söyle.' },
+  { t: 'Gündüz şekerlemesi', d: 'Gün içi kısa uyku (şekerleme) genellikle gece uykusunun yerini tutmaz; geç saatte uzun uyumak gece uykusunu bozabilir. Gece uykusu önceliklidir. Şekerlemenin yararı konusunda araştırma gerektiği belirtilir (Walsh ve ark.).', rv: 'uyku-genel' },
 ];
 
 export default function Page() {
@@ -75,7 +75,7 @@ export default function Page() {
                 <strong>Platformda diyetisyen hizmeti yoktur.</strong> Bu sayfa bir hekim ya da diyetisyenle görüşmenin yerini tutmaz. Sağlık sorunu, alerji, kilo ya da vücut görünümüyle ilgili kaygı ya da çocuk/ergen sporcu için özel bir plan gerekiyorsa bir hekime ve diyetisyene danışın.
               </p>
               <p className="gbanner__s">
-                İçeriğin bazı bölümleri henüz bir uzman tarafından incelenmedi; bunlar <Rv id="porsiyon" /> rozetiyle işaretlidir ve <a href="#uzman">listede</a> açıklanmıştır. Her bölümün sonunda dayandığı kaynaklar bulunur.
+                Bu sayfanın içeriği henüz bir spor diyetisyeni, çocuk sağlığı uzmanı ya da spor hekimi tarafından incelenmedi. En çok dikkat isteyen maddeler <Rv id="porsiyon" /> rozetiyle işaretlidir ve <a href="#uzman">listede</a> açıklanmıştır. Her bölümün sonunda dayandığı kaynaklar bulunur.
               </p>
             </div>
           </div>
@@ -131,7 +131,7 @@ export default function Page() {
             </div>
             <div className="eg card card--pad card--flat" data-reveal>
               <div>
-                <p className="eyebrow">Örnekler · 2–3 saat önce</p>
+                <p className="eyebrow">Örnekler · 3–4 saat önce</p>
                 <ul className="chips">{once3.map((m) => <li key={m.id} className="tag">{m.name}</li>)}</ul>
               </div>
               <div>
@@ -152,11 +152,11 @@ export default function Page() {
               </div>
               <div className="card card--pad card--hover" data-reveal>
                 <h3 className="h3">Sıcakta</h3>
-                <p>Yeterli sıvı alındığında gençler sıcakta yetişkinlerden daha kötü ısı düzenlemesi yapmaz. Riski artıranlar: yetersiz sıvı, aşırı efor, ardışık antrenman ya da maçlar arasında yetersiz toparlanma ve ısı tutan kıyafet (AAP). Bunlar değiştirilebilir: mola, gölge, hafif kıyafet, sıvı.</p>
+                <p>Yeterli sıvı alındığında gençler sıcakta yetişkinlerden daha kötü ısı düzenlemesi yapmaz. Riski artıranlar: yetersiz sıvı, aşırı efor, ardışık antrenman ya da maçlar arasında yetersiz toparlanma ve ısı tutan kıyafet (AAP). Bunlar değiştirilebilir: mola, gölge, hafif kıyafet, sıvı. <strong>Sıcakta baş dönmesi, bulantı, aşırı halsizlik ya da kafa karışıklığı hissedersen oyunu bırak, gölgeye geç ve hemen bir yetişkine söyle.</strong> <Rv id="isi-uyari" /></p>
               </div>
               <div className="card card--pad card--hover" data-reveal>
                 <h3 className="h3">İçecekler</h3>
-                <p>Spor içeceği ile enerji içeceği aynı şey değildir. Enerji içeceklerindeki kafein ve uyarıcıların çocuk ve ergen beslenmesinde yeri yoktur (AAP). Yetişkinlerde spor içeceği, TÜBER’e göre, 1 saatten uzun etkinliklerde gerekebilir.</p>
+                <p>Spor içeceği ile enerji içeceği aynı şey değildir. Enerji içeceklerindeki kafein ve uyarıcıların çocuk ve ergen beslenmesinde yeri yoktur (AAP). Yetişkin sporcularda spor içeceği, TÜBER’e göre, 1 saatten uzun etkinliklerde gerekebilir; çocuk ve ergenlerde bunun ne zaman uygun olduğu AAP raporunun kapsamı dışındadır, karar antrenör, hekim ya da diyetisyene aittir.</p>
               </div>
             </div>
             <div className="card card--pad card--flat" data-reveal>
@@ -203,20 +203,21 @@ export default function Page() {
               </div>
               <div className="card card--pad card--hover" data-reveal>
                 <h3 className="h3">Elektrolit</h3>
-                <p>Belirli durumlarda, özellikle 1 saatten uzun etkinliklerde, karbonhidrat ve elektrolit içeren içecek sudan daha faydalı olabilir (ACSM, TÜBER). Çocuk ve ergenlerde bu günlük bir içecek değildir; sık şekerli spor içeceği fazla kilo riskini artırabilir (AAP).</p>
+                <p>Belirli durumlarda, özellikle 1 saatten uzun etkinliklerde, karbonhidrat ve elektrolit içeren içecek sudan daha faydalı olabilir (ACSM, TÜBER). Çocuk ve ergenlerde sık ya da fazla şekerli spor içeceği fazla kilo riskini artırabilir (AAP); bu günlük bir içecek değildir, ihtiyaç olup olmadığına antrenör, hekim ya da diyetisyen karar verir.</p>
               </div>
             </div>
             <div className="grid cols-2 gcols gtools">
               <UrineCard />
               <div className="card card--pad card--flat adultbox" data-reveal>
                 <p className="eyebrow">18 yaş ve üstü için örnek değerler</p>
-                <h3 className="h3">TÜBER’deki yetişkin sporcu değerleri</h3>
+                <h3 className="h3">TÜBER’in sporcu bölümündeki değerler</h3>
                 <ul className="ticks">
                   <li>Egzersizden yaklaşık 4 saat önce yaklaşık 500 mL sıvı.</li>
                   <li>Egzersiz sırasında 15–20 dakikada bir 150–350 mL su ve/veya spor içeceği.</li>
                   <li>Egzersiz sonrası kaybedilen her yarım kg için 450–675 mL (yaklaşık 2–3 su bardağı) sıvı.</li>
                   <li>Ter oranı, egzersizden önce ve sonra tartılarak tahmin edilir; kişiden kişiye çok değişir.</li>
                 </ul>
+                <p className="field__hint">TÜBER bu değerleri yaş ayrımı yapmadan sporcular için verir; çocuk ve ergenler için ayrıca doğrulanmadığından yalnızca 18 yaş ve üstüne gösterilir.</p>
                 <p className="field__hint"><strong>Çocuk ve ergenler için sayısal hedef verilmez.</strong> İdrar rengi, susama ve antrenör/hekim önerisi birlikte izlenir. <Rv id="sivi-sayilari" /></p>
               </div>
             </div>
@@ -339,6 +340,9 @@ export default function Page() {
                 </tbody>
               </table>
             </div>
+            <p className="field__hint" data-reveal>
+              Çocuk ve ergen sütunu kanıta dayalı bir çocuk önerisi değil, temkinli bir çizgidir: AAP yalnızca enerji içeceklerindeki kafein ve uyarıcıların yerinin olmadığını söyler, SDA ihtiyaçların takviye yerine temel besinlerle karşılanmasını önerir. IOC metni yetişkin yüksek performanslı sporcular içindir ve çocuklar için ayrı bir öneri vermez; kreatin ve protein tozu için çocuklara özgü bir kaynak okunmadı. Bu tablo ürün tavsiyesi değildir.
+            </p>
             <div className="grid cols-2 gcols">
               <div className="card card--pad card--hover" data-reveal>
                 <h3 className="h3">Neden temkinli?</h3>
@@ -383,7 +387,7 @@ export default function Page() {
               <h3 className="h3 gsub">Sevmiyorum, bulamıyorum, yiyemiyorum: ne yerim?</h3>
               <AlternativeFinder />
             </div>
-            <p className="field__hint">Süt ürünlerini kendi başına bırakma: kalsiyum kaynağını nasıl koruyacağını hekim ya da diyetisyenle konuş. Ciddi alerjide hekimin planı geçerlidir. <Rv id="alerjen" /></p>
+            <p className="field__hint">Süt ürünlerini kendi başına bırakma: kalsiyum kaynağını nasıl koruyacağını hekim ya da diyetisyenle konuş. Etiketler sade tarife göredir: pilavda şehriye, hazır ürünlerde katkı, ortak üretim ya da çapraz bulaşma olabilir; ambalaj etiketini her seferinde oku. Ciddi alerjide ve çölyakta hekimin planı geçerlidir. <Rv id="alerjen" /></p>
           </GuideSection>
 
           {/* 14 */}

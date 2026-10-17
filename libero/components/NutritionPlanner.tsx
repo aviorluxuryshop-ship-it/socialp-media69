@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { AGE_NOTES, DAY_PLANS, PORTION_GUIDE } from '@/data/nutrition-guide';
 import { ALLERGEN_NAME, MEAL_BY_ID, mealAllergens, mealVegan, mealVegetarian, type Allergen, type Meal } from '@/data/nutrition';
 import {
@@ -22,12 +22,14 @@ import {
   type DayKey,
   type DayType,
   type Diet,
+  type PlanState,
   type SlotKey,
 } from '@/lib/nutrition';
 import { usePlan } from '@/lib/nutri-store';
 import { Icon } from './Icon';
 import { PrintButton } from './NutritionTrackers';
 import { Rv } from './NutritionBits';
+import { radioNav } from './radioNav';
 
 const alName = (a: Allergen) => ALLERGEN_NAME[a].split(' (')[0].toLowerCase();
 
@@ -43,8 +45,17 @@ export function AgeSelector() {
         <p className="muted">Uyku süreleri, öğün örnekleri ve notlar yaş grubuna göre değişir. Seçimin yalnızca bu tarayıcıda saklanır.</p>
       </div>
       <div className="seg agesel__seg" role="radiogroup" aria-label="Yaş grubu">
-        {AGE_BANDS.map((b) => (
-          <button key={b.id} type="button" role="radio" aria-checked={plan.band === b.id} onClick={() => setPlan((p) => ({ ...p, band: b.id }))} data-band={b.id}>
+        {AGE_BANDS.map((b, i) => (
+          <button
+            key={b.id}
+            type="button"
+            role="radio"
+            aria-checked={plan.band === b.id}
+            tabIndex={plan.band === b.id ? 0 : -1}
+            onClick={() => setPlan((p) => ({ ...p, band: b.id }))}
+            onKeyDown={(e) => radioNav(e, AGE_BANDS.length, i, (k) => setPlan((p) => ({ ...p, band: AGE_BANDS[k].id })))}
+            data-band={b.id}
+          >
             {b.label}
           </button>
         ))}
@@ -226,10 +237,20 @@ export function DayPlans() {
 export function WeeklyPlanner() {
   const [plan, setPlan] = usePlan();
   const [copied, setCopied] = useState(false);
+  /** Planı silen ya da üzerine yazan işlemden önceki kayıt: kısa süre geri alınabilir (veri kaybı koruması) */
+  const [undo, setUndo] = useState<{ plan: PlanState; what: string } | null>(null);
+  useEffect(() => {
+    if (!undo) return;
+    const t = window.setTimeout(() => setUndo(null), 20_000);
+    return () => window.clearTimeout(t);
+  }, [undo]);
+  const hasContent = (p: PlanState) => p.ticked.length > 0 || DAY_KEYS.some((k) => Object.keys(p.days[k].slots).length > 0);
+  const remember = (what: string) => setUndo(hasContent(plan) ? { plan, what } : null);
   const list = shoppingList(plan);
   const total = list.reduce((n, g) => n + g.items.length, 0);
 
-  const autofill = () =>
+  const autofill = () => {
+    remember('Plan önerilen düzenle dolduruldu');
     setPlan((p) => {
       const next = emptyPlan(p.band);
       next.diet = p.diet;
@@ -241,22 +262,35 @@ export function WeeklyPlanner() {
       }
       return next;
     });
-  const clear = () =>
+  };
+  const clear = () => {
+    remember('Plan ve alışveriş işaretleri temizlendi');
     setPlan((p) => {
       const next = emptyPlan(p.band);
       next.diet = p.diet;
       next.avoid = p.avoid;
       return next;
     });
-  const setType = (k: DayKey, type: DayType) =>
+  };
+  const restore = () => {
+    if (!undo) return;
+    const prev = undo.plan;
+    setPlan(() => prev);
+    setUndo(null);
+  };
+  const setType = (k: DayKey, type: DayType) => {
+    setUndo(null);
     setPlan((p) => ({ ...p, days: { ...p.days, [k]: { type, slots: Object.fromEntries(Object.entries(p.days[k].slots).filter(([s]) => DAY_SLOTS[type].includes(s as SlotKey))) } } }));
-  const setSlot = (k: DayKey, s: SlotKey, id: string) =>
+  };
+  const setSlot = (k: DayKey, s: SlotKey, id: string) => {
+    setUndo(null);
     setPlan((p) => {
       const slots = { ...p.days[k].slots };
       if (id) slots[s] = id;
       else delete slots[s];
       return { ...p, days: { ...p.days, [k]: { ...p.days[k], slots } } };
     });
+  };
   const tick = (id: string) => setPlan((p) => ({ ...p, ticked: p.ticked.includes(id) ? p.ticked.filter((x) => x !== id) : [...p.ticked, id] }));
   const copy = async () => {
     const text = list.map((g) => `${g.title}\n${g.items.map((i) => `- ${i.name}${i.count > 1 ? ` (${i.count} öğün)` : ''}`).join('\n')}`).join('\n\n');
@@ -282,6 +316,16 @@ export function WeeklyPlanner() {
         <PrintButton target="plan" label="Planı ve listeyi yazdır" />
         <span className="mono muted wp__band">Yaş grubu: {AGE_BANDS.find((b) => b.id === plan.band)?.label}</span>
       </div>
+
+      {undo && (
+        <p className="note np" role="status" data-wp-undo>
+          <Icon name="info" />
+          <span>{undo.what}.</span>
+          <button type="button" className="btn btn--quiet" onClick={restore} data-wp-undo-btn>
+            Geri al
+          </button>
+        </p>
+      )}
 
       <div data-print-area="plan">
         <div className="print-only">
