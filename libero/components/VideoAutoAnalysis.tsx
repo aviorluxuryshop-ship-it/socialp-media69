@@ -386,7 +386,7 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
       <div className="vauto__grid">
         <div className="panel vauto__form">
           <p className="panel__title">Ayarlar</p>
-          <div className="vauto__fields">
+          <div className="vauto__fields vauto__fields--one">
             <div className="field">
               <label htmlFor="va-start">Başlangıç (sn)</label>
               <div className="vauto__inline">

@@ -66,6 +66,9 @@
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 16px;
 }
+.vauto__fields--one {
+  grid-template-columns: minmax(0, 1fr);
+}
 .vauto__wide {
   grid-column: 1 / -1;
 }
@@ -91,12 +94,13 @@
   cursor: not-allowed;
 }
 .vauto__inline {
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
   align-items: center;
 }
-.vauto__inline .input {
-  min-width: 0;
+.vauto__inline .btn {
+  white-space: nowrap;
 }
 .vauto__actions {
   display: flex;
