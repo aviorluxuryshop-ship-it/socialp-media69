@@ -59,10 +59,10 @@ export function BootDefs({ u, flip }: { u: string; flip: boolean }) {
         <stop offset="1" stopColor="#7d7a6d" />
       </linearGradient>
       <linearGradient id={id(u, 'sheen')} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#fff" stopOpacity="0.1" />
-        <stop offset="0.38" stopColor="#fff" stopOpacity="0.02" />
-        <stop offset="0.7" stopColor="#000" stopOpacity="0.12" />
-        <stop offset="1" stopColor="#000" stopOpacity="0.36" />
+        <stop offset="0" stopColor="#fff" stopOpacity="0.07" />
+        <stop offset="0.4" stopColor="#fff" stopOpacity="0" />
+        <stop offset="0.75" stopColor="#000" stopOpacity="0.1" />
+        <stop offset="1" stopColor="#000" stopOpacity="0.3" />
       </linearGradient>
       <linearGradient id={id(u, 'tongue')} x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stopColor="#1a1f1c" />

@@ -14,9 +14,9 @@ const EYE_Y = [176, 207, 238, 269, 300, 331, 362];
 
 // Kollar (ayak giriş ağzı)
 const MOUTH_RIM =
-  'M262 404C262 394 342 394 342 404C358 432 366 470 358 502C352 524 330 534 302 534C274 534 252 524 246 502C238 470 246 432 262 404Z';
+  'M268 406C268 398 336 398 336 406C350 432 357 468 351 498C347 518 328 528 302 528C276 528 257 518 253 498C247 468 254 432 268 406Z';
 const MOUTH_IN =
-  'M271 413C271 407 333 407 333 413C345 437 351 468 346 495C341 511 324 521 302 521C280 521 263 511 258 495C253 468 259 437 271 413Z';
+  'M277 416C277 411 327 411 327 416C339 438 344 466 340 490C337 505 322 514 302 514C282 514 267 505 264 490C260 466 265 438 277 416Z';
 
 export function TopBoot({ u, active, flip, showBall, ballZone }: { u: string; active: ReadonlySet<FootZone>; flip: boolean; showBall: boolean; ballZone: FootZone | null }) {
   const g = GEO.ust;
@@ -37,9 +37,9 @@ export function TopBoot({ u, active, flip, showBall, ballZone }: { u: string; ac
       {showBall && ball && <Ball u={u} x={ball.x} y={ball.y} r={ball.r} shadowDx={flip ? -8 : 8} />}
 
       {/* taban kenarı: üst yapının çevresinden taşan taban plakası */}
-      <path d={OUT} fill="none" stroke="#0b0d0c" strokeWidth="19" strokeLinejoin="round" />
-      <path d={OUT} fill="none" stroke={ref(u, 'plate')} strokeWidth="15" strokeLinejoin="round" />
-      <path d={OUT} fill="none" stroke="#000" strokeOpacity=".28" strokeWidth="15" strokeLinejoin="round" strokeDasharray="1 0" />
+      <path d={OUT} fill="none" stroke="#0b0d0c" strokeWidth="15" strokeLinejoin="round" />
+      <path d={OUT} fill="none" stroke={ref(u, 'plate')} strokeWidth="11.5" strokeLinejoin="round" />
+      <path d={OUT} fill="none" stroke="#000" strokeOpacity=".26" strokeWidth="11.5" strokeLinejoin="round" strokeDasharray="1 0" />
 
       {/* gövde */}
       <path d={OUT} fill={ref(u, 'upper')} />
@@ -62,11 +62,11 @@ export function TopBoot({ u, active, flip, showBall, ballZone }: { u: string; ac
         {/* gözlük şeritleri (eyestay) */}
         {[ROW_L, ROW_R].map((d, k) => (
           <g key={k}>
-            <path d={d} stroke="#000" strokeOpacity=".45" strokeWidth="40" strokeLinecap="round" fill="none" />
-            <path d={d} stroke={k === 0 ? '#343a37' : '#2d332f'} strokeWidth="37" strokeLinecap="round" fill="none" />
-            <path d={d} stroke="#fff" strokeOpacity=".05" strokeWidth="20" strokeLinecap="round" fill="none" />
-            <path d={d} transform="translate(-16 0)" stroke="#efeadc" strokeOpacity=".3" strokeWidth="1.2" strokeDasharray="5 4" fill="none" strokeLinecap="round" />
-            <path d={d} transform="translate(16 0)" stroke="#efeadc" strokeOpacity=".3" strokeWidth="1.2" strokeDasharray="5 4" fill="none" strokeLinecap="round" />
+            <path d={d} stroke="#000" strokeOpacity=".45" strokeWidth="33" strokeLinecap="round" fill="none" />
+            <path d={d} stroke={k === 0 ? '#3b423e' : '#343a36'} strokeWidth="30" strokeLinecap="round" fill="none" />
+            <path d={d} stroke="#fff" strokeOpacity=".07" strokeWidth="16" strokeLinecap="round" fill="none" />
+            <path d={d} transform="translate(-13 0)" stroke="#efeadc" strokeOpacity=".3" strokeWidth="1.2" strokeDasharray="5 4" fill="none" strokeLinecap="round" />
+            <path d={d} transform="translate(13 0)" stroke="#efeadc" strokeOpacity=".3" strokeWidth="1.2" strokeDasharray="5 4" fill="none" strokeLinecap="round" />
           </g>
         ))}
 
@@ -114,7 +114,11 @@ export function TopBoot({ u, active, flip, showBall, ballZone }: { u: string; ac
         <path d={MOUTH_IN} fill={ref(u, 'liner')} />
         <path d={MOUTH_IN} fill="none" stroke="#000" strokeOpacity=".7" strokeWidth="3" />
         <path d="M271 424C280 418 324 418 333 424" stroke="#fff" strokeOpacity=".07" strokeWidth="3" fill="none" />
-        <Stitch d="M256 408C240 436 240 474 250 500C258 520 280 529 302 529C324 529 346 520 354 500C364 474 364 436 348 408" op={0.3} />
+        <Stitch d="M262 402C246 432 244 472 250 500C256 523 278 534 302 534C326 534 348 523 354 500C360 472 358 432 342 402" op={0.3} />
+
+        {/* topuk tutma şeridi (fildişi) */}
+        <path d="M284 530C284 526 320 526 320 530L322 548L282 548Z" fill={ref(u, 'trim')} stroke="#000" strokeOpacity=".4" strokeWidth="1" />
+        <path d="M288 533H316" stroke="#fff" strokeOpacity=".7" strokeWidth="1.3" strokeLinecap="round" />
 
         {/* topuk bölümü: dikiş ve gölge */}
         <path d="M240 470C238 520 268 546 304 546C340 546 370 520 372 470" fill="none" stroke="#000" strokeOpacity=".25" strokeWidth="2.5" />
@@ -124,10 +128,11 @@ export function TopBoot({ u, active, flip, showBall, ballZone }: { u: string; ac
         <path d={OUT} fill="none" stroke="#efeadc" strokeOpacity=".24" strokeWidth="1.2" strokeDasharray="5 4" transform="translate(18.2 17.1) scale(.94)" />
 
         {/* hacim: kenarlara doğru koyulaşma, sol üstten ışık */}
-        <rect x="150" y="0" width="320" height="600" fill={ref(u, 'sheen')} />
+        <rect x="190" y="14" width="230" height="540" fill={ref(u, 'sheen')} />
         <path d={OUT} fill="none" stroke="#000" strokeOpacity=".5" strokeWidth="34" filter={ref(u, 'blur6')} />
         <path d={OUT} fill="none" stroke="#efeadc" strokeOpacity=".22" strokeWidth="2.4" transform={`translate(${flip ? -3 : 3} 3.5)`} />
         <ellipse cx="238" cy="150" rx="30" ry="62" fill="#fff" fillOpacity=".06" filter={ref(u, 'blur12')} transform={`rotate(${flip ? 14 : -14} 238 150)`} />
+        <path d="M252 58C270 40 300 34 322 44" stroke="#fff" strokeOpacity=".28" strokeWidth="3.4" strokeLinecap="round" fill="none" filter={ref(u, 'blur3')} />
 
         {/* temas bölgeleri */}
         <ZoneLayer u={u} zones={g.zones} active={active} />

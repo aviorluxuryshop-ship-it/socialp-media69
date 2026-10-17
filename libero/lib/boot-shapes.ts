@@ -144,22 +144,22 @@ const TOP: ViewGeo = {
   zones: {
     uc: {
       d: `M150 128 ${TOP_SEAM_1} ${TOP_SEAM_2} ${TOP_SEAM_3} L480 128 L480 -40 L120 -40 Z`,
-      px: 292, py: 84, lx: 462, ly: 70, anchor: 'start',
+      px: 292, py: 84, lx: 428, ly: 70, anchor: 'start',
       ball: { x: 292, y: -16, r: 38 },
     },
     ustIc: {
       d: roundPoly([...withR(S1, 0, 13), ...withR(BOTTOM_IC, 13, 0).slice(0)]),
-      px: 233, py: 256, lx: 142, ly: 168, anchor: 'end',
+      px: 233, py: 256, lx: 176, ly: 168, anchor: 'end',
       ball: { x: 176, y: 262, r: 38 },
     },
     ustTam: {
       d: roundPoly([...withR(S2, 13, 13), ...withR(BOTTOM_TAM, 13, 13)]),
-      px: 300, py: 318, lx: 142, ly: 330, anchor: 'end',
+      px: 300, py: 318, lx: 176, ly: 330, anchor: 'end',
       ball: { x: 296, y: -6, r: 38 },
     },
     ustDis: {
       d: roundPoly([...withR(S3, 13, 0), ...withR(BOTTOM_DIS, 0, 13)]),
-      px: 372, py: 252, lx: 462, ly: 168, anchor: 'start',
+      px: 372, py: 252, lx: 428, ly: 168, anchor: 'start',
       ball: { x: 432, y: 264, r: 38 },
     },
   },
@@ -223,16 +223,16 @@ const SIDE_DIS: Partial<Record<FootZone, ZoneShape>> = {
 // ── Alttan görünüm (taban + çiviler) ──────────────────────────────
 // Çizim, sol kramponun tabanıdır (iç yan solda); sağ ayak için BootMap yatayda çevirir.
 export const SOLE_STUDS: { x: number; y: number; r: number }[] = [
-  { x: 300, y: 76, r: 15 },
-  { x: 252, y: 134, r: 15 },
-  { x: 350, y: 130, r: 15 },
-  { x: 236, y: 206, r: 16 },
-  { x: 306, y: 200, r: 16 },
-  { x: 376, y: 204, r: 16 },
-  { x: 268, y: 454, r: 16 },
-  { x: 346, y: 452, r: 16 },
-  { x: 284, y: 512, r: 15 },
-  { x: 332, y: 510, r: 15 },
+  { x: 300, y: 80, r: 17 },
+  { x: 252, y: 140, r: 17 },
+  { x: 350, y: 136, r: 17 },
+  { x: 238, y: 212, r: 18 },
+  { x: 306, y: 206, r: 18 },
+  { x: 374, y: 210, r: 18 },
+  { x: 268, y: 456, r: 18 },
+  { x: 346, y: 454, r: 18 },
+  { x: 284, y: 512, r: 17 },
+  { x: 332, y: 510, r: 17 },
 ];
 
 const SOLE: ViewGeo = {

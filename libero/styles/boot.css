@@ -69,12 +69,14 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
+  width: min(100%, 392px);
 }
 .bootview {
   display: grid;
   gap: 4px;
   justify-items: center;
-  width: 108px;
+  flex: 1 1 88px;
+  max-width: 120px;
   padding: 6px 6px 7px;
   border: 1px solid var(--line-2);
   border-radius: var(--r-2);
@@ -103,7 +105,7 @@
   max-height: none;
 }
 .bootview__t {
-  font-size: 0.62rem;
+  font-size: 0.66rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
@@ -206,7 +208,11 @@
     display: none;
   }
   .bootlab__t {
-    font-size: 22px;
+    font-size: 26px;
+    letter-spacing: 0.05em;
+  }
+  .bootlab__dot {
+    stroke-width: 2;
   }
 }
 
