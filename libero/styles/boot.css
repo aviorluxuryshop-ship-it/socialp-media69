@@ -1,17 +1,24 @@
 /* ── Krampon temas yüzeyi haritası (BootMap) ─────────────────
    Elle çizilmiş SVG krampon; vurgu pirinç parlaması. Bileşenler: components/BootMap.tsx, components/boot/*.
    ─────────────────────────────────────────────────────────── */
+.bootwrap {
+  container: bootwrap / inline-size;
+}
+/* Dar sütunda (teknik sayfası ana sütunu, telefon) çizim üstte büyük, bilgi altta;
+   geniş alanda yan yana. */
 .bootcard {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  gap: clamp(20px, 3.2vw, 44px);
-  align-items: center;
-  padding: clamp(14px, 2.4vw, 28px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 28px);
+  align-items: start;
+  padding: clamp(12px, 2.4vw, 24px);
   overflow: hidden;
 }
-@media (max-width: 820px) {
+@container bootwrap (min-width: 780px) {
   .bootcard {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(24px, 3.2vw, 44px);
+    align-items: center;
   }
 }
 
@@ -51,22 +58,23 @@
 }
 
 .bootmap__tools {
-  display: grid;
-  gap: 12px;
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 28px;
 }
 .bootmap__views {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  width: 100%;
 }
 .bootview {
   display: grid;
   gap: 4px;
   justify-items: center;
-  width: clamp(92px, 24%, 128px);
+  width: 108px;
   padding: 6px 6px 7px;
   border: 1px solid var(--line-2);
   border-radius: var(--r-2);
@@ -153,10 +161,10 @@
   stroke-dasharray: 3 5;
 }
 .bootlab__dot {
-  fill: var(--ink-900);
+  fill: none;
   stroke: var(--ivory-4);
-  stroke-opacity: 0.7;
-  stroke-width: 1.5;
+  stroke-opacity: 0.5;
+  stroke-width: 1.4;
 }
 .bootlab__t {
   font-size: 19px;
@@ -237,7 +245,8 @@
 .bootzones {
   margin-top: 16px;
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 12px 24px;
 }
 .bootzones li {
   display: grid;

@@ -22,8 +22,8 @@ export interface StageProps {
 /** Her görünümün çizimi, etiketsiz kırpma penceresi (küçük önizleme için). */
 const MINI_BOX: Record<BootView, string> = {
   ust: '170 40 260 590',
-  ic: '14 50 626 320',
-  dis: '14 50 626 320',
+  ic: '36 52 626 320',
+  dis: '58 52 626 320',
   taban: '170 40 260 620',
 };
 
@@ -59,7 +59,7 @@ function Labels({ view, active, flipped }: { view: BootView; active: ReadonlySet
         return (
           <g key={zid} data-label={zid} className={on ? 'bootlab bootlab--on' : 'bootlab'}>
             <path d={line} className="bootlab__line" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-            <circle cx={px} cy={py} r={on ? 6.5 : 4.2} className="bootlab__dot" />
+            <circle cx={px} cy={py} r={on ? 6.5 : 3.4} className="bootlab__dot" />
             <text x={lx} y={ly} textAnchor={anchor} className="bootlab__t">
               {info.short.toLocaleUpperCase('tr')}
             </text>

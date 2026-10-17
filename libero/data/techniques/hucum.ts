@@ -358,7 +358,7 @@ export const HUCUM = [
     cat: 'hucum',
     lv: 3,
     sub: 'Kanat oyunları',
-    contact: 'İç yüz kesme + şut',
+    contact: 'İç yüzle kesme + ayak üstüyle şut',
     purpose: 'Kanattan iç tarafa kesip güçlü ayakla şut çekmek',
     foot: ['ic', 'ustTam'],
     sum: 'Kanat oyuncusu (ör. sağ kanatta solak) topu içe keserek şut açısı yaratır. Kesmenin ardından hemen şut ya da pas seçeneği vardır.',

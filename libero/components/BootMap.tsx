@@ -23,6 +23,7 @@ export function BootMap({ foot, contact, children }: { foot: FootZone[]; contact
   const caption = `${left ? 'Sol' : 'Sağ'} ayak · ${VIEWS[cur].caption}`;
 
   return (
+    <div className="bootwrap">
     <div className="card bootcard" data-bootmap data-foot={zones.join(',')} data-view={cur} data-left={left ? 'true' : 'false'}>
       <figure className="bootmap" role="group" aria-label="Temas yüzeyi haritası: krampon çizimi">
         <div className="bootmap__stage" data-bootmap-main>
@@ -81,6 +82,7 @@ export function BootMap({ foot, contact, children }: { foot: FootZone[]; contact
         </ul>
         {children}
       </div>
+    </div>
     </div>
   );
 }

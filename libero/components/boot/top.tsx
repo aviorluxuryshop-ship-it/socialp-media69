@@ -38,7 +38,7 @@ export function TopBoot({ u, active, flip, showBall, ballZone }: { u: string; ac
 
       {/* taban kenarı: üst yapının çevresinden taşan taban plakası */}
       <path d={OUT} fill="none" stroke="#0b0d0c" strokeWidth="19" strokeLinejoin="round" />
-      <path d={OUT} fill="none" stroke={ref(u, 'sole')} strokeWidth="15" strokeLinejoin="round" />
+      <path d={OUT} fill="none" stroke={ref(u, 'plate')} strokeWidth="15" strokeLinejoin="round" />
       <path d={OUT} fill="none" stroke="#000" strokeOpacity=".28" strokeWidth="15" strokeLinejoin="round" strokeDasharray="1 0" />
 
       {/* gövde */}
@@ -120,7 +120,11 @@ export function TopBoot({ u, active, flip, showBall, ballZone }: { u: string; ac
         <path d="M240 470C238 520 268 546 304 546C340 546 370 520 372 470" fill="none" stroke="#000" strokeOpacity=".25" strokeWidth="2.5" />
         <Stitch d="M236 478C238 516 266 538 304 538C342 538 370 516 372 478" op={0.28} w={1.1} />
 
+        {/* taban kenarına paralel dikiş */}
+        <path d={OUT} fill="none" stroke="#efeadc" strokeOpacity=".24" strokeWidth="1.2" strokeDasharray="5 4" transform="translate(18.2 17.1) scale(.94)" />
+
         {/* hacim: kenarlara doğru koyulaşma, sol üstten ışık */}
+        <rect x="150" y="0" width="320" height="600" fill={ref(u, 'sheen')} />
         <path d={OUT} fill="none" stroke="#000" strokeOpacity=".5" strokeWidth="34" filter={ref(u, 'blur6')} />
         <path d={OUT} fill="none" stroke="#efeadc" strokeOpacity=".22" strokeWidth="2.4" transform={`translate(${flip ? -3 : 3} 3.5)`} />
         <ellipse cx="238" cy="150" rx="30" ry="62" fill="#fff" fillOpacity=".06" filter={ref(u, 'blur12')} transform={`rotate(${flip ? 14 : -14} 238 150)`} />

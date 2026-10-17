@@ -76,6 +76,45 @@ export function ribbon(center: Pt[], widths: number[]): string {
   return smoothClosed([capA, ...left, capB, ...right.reverse()]);
 }
 
+/** Kübik Bézier üzerinde n+1 nokta. */
+export function cubicPts(p0: Pt, c1: Pt, c2: Pt, p3: Pt, n = 6): Pt[] {
+  const out: Pt[] = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    const m = 1 - t;
+    out.push([
+      m * m * m * p0[0] + 3 * m * m * t * c1[0] + 3 * m * t * t * c2[0] + t * t * t * p3[0],
+      m * m * m * p0[1] + 3 * m * m * t * c1[1] + 3 * m * t * t * c2[1] + t * t * t * p3[1],
+    ]);
+  }
+  return out;
+}
+
+/** Çokgen; her köşeye isteğe bağlı yuvarlama yarıçapı [x, y, r]. */
+export function roundPoly(pts: [number, number, number?][]): string {
+  const n = pts.length;
+  let d = '';
+  for (let i = 0; i < n; i++) {
+    const [x, y, r = 0] = pts[i];
+    const [px, py] = pts[(i - 1 + n) % n];
+    const [qx, qy] = pts[(i + 1) % n];
+    if (r <= 0) {
+      d += `${i === 0 ? 'M' : 'L'}${r1(x)} ${r1(y)}`;
+      continue;
+    }
+    const l1 = Math.hypot(px - x, py - y) || 1;
+    const l2 = Math.hypot(qx - x, qy - y) || 1;
+    const t1 = Math.min(r, l1 / 2);
+    const t2 = Math.min(r, l2 / 2);
+    const ax = x + ((px - x) / l1) * t1;
+    const ay = y + ((py - y) / l1) * t1;
+    const bx = x + ((qx - x) / l2) * t2;
+    const by = y + ((qy - y) / l2) * t2;
+    d += `${i === 0 ? 'M' : 'L'}${r1(ax)} ${r1(ay)}Q${r1(x)} ${r1(y)} ${r1(bx)} ${r1(by)}`;
+  }
+  return d + 'Z';
+}
+
 // ── Üstten görünüm ───────────────────────────────────────────────
 // Sağ krampon taban hattı (burun yukarıda, iç yan solda). Alttan görünümde aynı hat sol kramponun tabanıdır.
 export const BOOT_OUT =
@@ -86,6 +125,15 @@ export const TOP_SEAM_1 = 'C195 134 235 150 263 160.5';
 export const TOP_SEAM_2 = 'C278 166 288 167 302 167 C316 167 323 165.2 337 160.5';
 export const TOP_SEAM_3 = 'C359 151.5 410 134 454 128';
 export const TOP_SEAM = `M150 128 ${TOP_SEAM_1} ${TOP_SEAM_2} ${TOP_SEAM_3}`;
+
+const S1 = cubicPts([150, 128], [195, 134], [235, 150], [263, 160.5], 6);
+const S2 = [...cubicPts([263, 160.5], [278, 166], [288, 167], [302, 167], 3), ...cubicPts([302, 167], [316, 167], [323, 165.2], [337, 160.5], 3).slice(1)];
+const S3 = cubicPts([337, 160.5], [359, 151.5], [410, 134], [454, 128], 8);
+const withR = (pts: Pt[], first?: number, last?: number): [number, number, number?][] =>
+  pts.map((p, i) => [p[0], p[1], i === 0 ? first : i === pts.length - 1 ? last : 0] as [number, number, number?]);
+const BOTTOM_IC = cubicPts([263, 372], [230, 380], [190, 388], [150, 396], 4);
+const BOTTOM_DIS = cubicPts([454, 396], [410, 388], [370, 380], [337, 372], 4);
+const BOTTOM_TAM = cubicPts([337, 372], [318, 367], [282, 367], [263, 372], 4);
 
 const TOP: ViewGeo = {
   W: 600,
@@ -100,25 +148,25 @@ const TOP: ViewGeo = {
       ball: { x: 292, y: -16, r: 38 },
     },
     ustIc: {
-      d: `M150 128 ${TOP_SEAM_1} L263 372 C230 380 190 388 150 396 Z`,
-      px: 233, py: 256, lx: 142, ly: 238, anchor: 'end',
+      d: roundPoly([...withR(S1, 0, 13), ...withR(BOTTOM_IC, 13, 0).slice(0)]),
+      px: 233, py: 256, lx: 142, ly: 168, anchor: 'end',
       ball: { x: 176, y: 262, r: 38 },
     },
     ustTam: {
-      d: `M263 160.5 ${TOP_SEAM_2} L337 372 Q300 362 263 372 Z`,
+      d: roundPoly([...withR(S2, 13, 13), ...withR(BOTTOM_TAM, 13, 13)]),
       px: 300, py: 318, lx: 142, ly: 330, anchor: 'end',
       ball: { x: 296, y: -6, r: 38 },
     },
     ustDis: {
-      d: `M337 160.5 ${TOP_SEAM_3} L454 396 C410 388 370 380 337 372 Z`,
-      px: 372, py: 252, lx: 462, ly: 238, anchor: 'start',
+      d: roundPoly([...withR(S3, 13, 0), ...withR(BOTTOM_DIS, 0, 13)]),
+      px: 372, py: 252, lx: 462, ly: 168, anchor: 'start',
       ball: { x: 432, y: 264, r: 38 },
     },
   },
 };
 
 
-// ── Yan görünüm (burun solda, 640×420) ─────────────────────────────
+// ── Yan görünüm (burun solda, 720×420; çizim 24 birim sağa kaydırılır) ─────────────────────────────
 // Üst gövde silüeti (taban plakasına oturur) ve taban plakası.
 export const SIDE_UPPER =
   'M44 299C34 288 32 266 46 250C58 236 82 228 112 224C154 214 200 192 244 168C296 144 342 116 374 92C384 76 400 70 416 74C430 78 436 90 432 104C446 132 462 154 486 166C514 178 542 152 566 130C580 120 594 124 600 138C610 170 616 232 612 272L610 299Z';
@@ -131,11 +179,18 @@ const INSTEP_BAND = ribbon(
   [16, 26, 28, 26, 16],
 );
 
+// topuk: topuk koruyucusu (arka); top, topuğun arkasında yerde durur
+const SIDE_HEEL: ZoneShape = {
+  d: 'M606 301L611 160C602 146 580 150 560 164C528 186 500 214 494 252C490 276 494 292 500 301Z',
+  px: 566, py: 236, lx: 566, ly: 46, anchor: 'middle',
+  ball: { x: 652, y: 314, r: 38 },
+};
+
 const SIDE_IC: Partial<Record<FootZone, ZoneShape>> = {
   ustIc: {
     d: INSTEP_BAND,
     px: 214, py: 240, lx: 214, ly: 46, anchor: 'middle',
-    ball: { x: 158, y: 196, r: 30, air: true },
+    ball: { x: 170, y: 224, r: 30, air: true },
   },
   ic: {
     d: smoothClosed([
@@ -145,13 +200,14 @@ const SIDE_IC: Partial<Record<FootZone, ZoneShape>> = {
     px: 213, py: 278, lx: 213, ly: 396, anchor: 'middle',
     ball: { x: 136, y: 314, r: 38 },
   },
+  topuk: SIDE_HEEL,
 };
 
 const SIDE_DIS: Partial<Record<FootZone, ZoneShape>> = {
   ustDis: {
     d: INSTEP_BAND,
     px: 214, py: 240, lx: 214, ly: 46, anchor: 'middle',
-    ball: { x: 158, y: 196, r: 30, air: true },
+    ball: { x: 170, y: 224, r: 30, air: true },
   },
   dis: {
     d: smoothClosed([
@@ -161,6 +217,7 @@ const SIDE_DIS: Partial<Record<FootZone, ZoneShape>> = {
     px: 251, py: 282, lx: 251, ly: 396, anchor: 'middle',
     ball: { x: 136, y: 314, r: 38 },
   },
+  topuk: SIDE_HEEL,
 };
 
 // ── Alttan görünüm (taban + çiviler) ──────────────────────────────
@@ -204,7 +261,7 @@ const SOLE: ViewGeo = {
 
 export const GEO: Record<BootView, ViewGeo> = {
   ust: TOP,
-  ic: { W: 640, H: 420, ox: 0, oy: 0, flipsRight: false, zones: SIDE_IC },
-  dis: { W: 640, H: 420, ox: 0, oy: 0, flipsRight: true, zones: SIDE_DIS },
+  ic: { W: 720, H: 420, ox: 24, oy: 0, flipsRight: false, zones: SIDE_IC },
+  dis: { W: 720, H: 420, ox: 24, oy: 0, flipsRight: true, zones: SIDE_DIS },
   taban: SOLE,
 };

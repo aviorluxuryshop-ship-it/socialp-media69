@@ -452,7 +452,7 @@ export const PAS = [
     cat: 'pas',
     lv: 3,
     sub: 'Havadan paslar',
-    contact: 'Ayak üstü, topun alt yarısı',
+    contact: 'Ayak üstü ve ayak ucu, topun alt yarısı',
     purpose: 'Kısa-orta mesafede rakibin üzerinden havadan, ayağa ya da göğse pas',
     sum: 'Topu rakibin ya da engelin üzerinden hafifçe havalandırırsınız. Yükseklik ve iniş noktası kontrol edilirse, arkadaşınız topu rahat karşılar.',
     steps: [

@@ -10,7 +10,8 @@ export type BootView = 'ust' | 'ic' | 'dis' | 'taban';
 /** Görünüm sırası; eşitlikte önce gelen seçilir. */
 export const VIEW_ORDER: BootView[] = ['ust', 'ic', 'dis', 'taban'];
 
-export const ZONE_ORDER: FootZone[] = ['ustTam', 'ustDis', 'ustIc', 'uc', 'ic', 'dis', 'topuk', 'taban'];
+/** Okuma sırası: iç taraf → ayak üstü → dış taraf → uç → topuk → taban. */
+export const ZONE_ORDER: FootZone[] = ['ic', 'ustIc', 'ustTam', 'ustDis', 'dis', 'uc', 'topuk', 'taban'];
 
 export interface ZoneInfo {
   id: FootZone;
@@ -69,7 +70,7 @@ export const ZONES: Record<FootZone, ZoneInfo> = {
     id: 'topuk',
     short: 'Topuk',
     label: 'Topuk',
-    note: 'Ayağın arka kısmı.',
+    note: 'Ayağın arka kısmı; topukla vuruşta topa arkadan değen yüzey.',
   },
   taban: {
     id: 'taban',
@@ -99,14 +100,14 @@ export const VIEWS: Record<BootView, ViewInfo> = {
 /**
  * Her görünümde seçilebilen (vurgulanabilen) bölgeler.
  *  • Üstten: ayak üstü üç dilim + uç.
- *  • İç yüz: iç yüz + yandan görünen iç ayak üstü.
- *  • Dış yüz: dış kenar + yandan görünen dış ayak üstü.
- *  • Topuk/taban: topuk + taban.
+ *  • İç yüz: iç yüz + yandan görünen iç ayak üstü + topuk (arka, topuk koruyucusu).
+ *  • Dış yüz: dış kenar + yandan görünen dış ayak üstü + topuk (arka, topuk koruyucusu).
+ *  • Topuk/taban: tabandaki topuk bölgesi + taban.
  */
 export const VIEW_ZONES: Record<BootView, FootZone[]> = {
   ust: ['ustTam', 'ustDis', 'ustIc', 'uc'],
-  ic: ['ic', 'ustIc'],
-  dis: ['dis', 'ustDis'],
+  ic: ['ic', 'ustIc', 'topuk'],
+  dis: ['dis', 'ustDis', 'topuk'],
   taban: ['topuk', 'taban'],
 };
 

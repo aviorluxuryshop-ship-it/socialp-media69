@@ -52,6 +52,27 @@ export function BootDefs({ u, flip }: { u: string; flip: boolean }) {
         <stop offset="0.5" stopColor="#c4bfad" />
         <stop offset="1" stopColor="#8f8b7c" />
       </linearGradient>
+      <linearGradient id={id(u, 'plate')} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#e3ddcb" />
+        <stop offset="0.3" stopColor="#cfc9b6" />
+        <stop offset="0.75" stopColor="#a39f90" />
+        <stop offset="1" stopColor="#7d7a6d" />
+      </linearGradient>
+      <linearGradient id={id(u, 'sheen')} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#fff" stopOpacity="0.1" />
+        <stop offset="0.38" stopColor="#fff" stopOpacity="0.02" />
+        <stop offset="0.7" stopColor="#000" stopOpacity="0.12" />
+        <stop offset="1" stopColor="#000" stopOpacity="0.36" />
+      </linearGradient>
+      <linearGradient id={id(u, 'tongue')} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#1a1f1c" />
+        <stop offset="0.5" stopColor="#353b38" />
+        <stop offset="1" stopColor="#0f1211" />
+      </linearGradient>
+      <linearGradient id={id(u, 'eyestay')} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#434a46" />
+        <stop offset="1" stopColor="#272d2a" />
+      </linearGradient>
       <linearGradient id={id(u, 'liner')} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#050706" />
         <stop offset="1" stopColor="#1d2320" />
