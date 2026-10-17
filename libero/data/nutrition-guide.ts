@@ -94,7 +94,7 @@ export const AGE_NOTES: Record<string, AgeNotes> = {
     u11: { text: 'Su yeterlidir. Spor içeceği günlük bir içecek değildir; enerji içeceği kesinlikle yoktur (AAP). Mola verildikçe birkaç yudum içmeyi alışkanlık yap.' },
     u14: { text: 'Su yeterlidir. Sıcakta ek mola ve gölge iste; ısı sorunları değiştirilebilir etkenlerle (sıvı, mola, kıyafet) büyük ölçüde önlenebilir (AAP). Enerji içeceği ve kafein yoktur.' },
     u17: { text: 'Su yeterlidir. Uzun, yoğun ya da sıcak etkinliklerde ne yapılacağını antrenör, hekim ya da diyetisyenle önceden konuş; deneyim kazanmak için antrenmanda denenir. Enerji içeceği ve kafein yoktur.' },
-    a18: { text: '1 saati aşan yoğun ya da sıcak etkinliklerde karbonhidrat ve elektrolit içeren içecek faydalı olabilir (TÜBER); önce antrenmanda dene. Enerji içeceğinden ve fazla kafeinden kaçın.', review: 'sivi-sayilari' },
+    a18: { text: '1 saati aşan etkinliklerde karbonhidrat ve elektrolit içeren içecek faydalı olabilir (TÜBER); önce antrenmanda dene. Enerji içeceğinden ve fazla kafeinden kaçın.', review: 'sivi-sayilari' },
   },
   sonrasi: {
     u11: { text: 'Antrenmandan sonra su iç, sonra eve gidince normal öğününü ye. Özel ürün gerekmez; yoğurt-meyve ya da ayran-simit gibi sofra yiyecekleri yeter.' },
@@ -144,11 +144,11 @@ export const URINE_STEPS: { n: number; name: string; tone: 'ok' | 'ok2' | 'mid' 
 // ── Takviye tablosu ──────────────────────────────────────
 
 export const SUPPLEMENT_ROWS: { name: string; minor: string; adult: string; src: string[] }[] = [
-  { name: 'Protein tozu ve amino asit ürünleri', minor: 'Önerilmez. Protein gereksinimi çoğu zaman günlük yemeklerle karşılanır.', adult: 'Önce beslenme değerlendirmesi; çoğu sporcuda gerekmez.', src: ['tuber', 'ioc-supplements'] },
+  { name: 'Protein tozu ve amino asit ürünleri', minor: 'Önerilmez. Protein gereksinimi çoğu zaman günlük yemeklerle karşılanır.', adult: 'Önce beslenme değerlendirmesi; protein gereksinimi çoğu zaman yemekle de karşılanır (TÜBER).', src: ['tuber', 'ioc-supplements'] },
   { name: 'Kreatin', minor: 'Kullanılmaz.', adult: 'Kanıtı olan birkaç üründen biridir; kullanım kararı hekim ya da diyetisyenle verilir.', src: ['ioc-supplements'] },
   { name: 'Kafein (kapsül, toz, jel) ve kafeinli içecekler', minor: 'Kullanılmaz. Çocuk ve ergen beslenmesinde yeri yoktur.', adult: 'Etkisi kanıtlıdır ama yan etki ve doz riskleri vardır; karar uzmanla verilir.', src: ['aap-drinks-2011', 'ioc-supplements'] },
-  { name: 'Enerji içecekleri', minor: 'Kullanılmaz. İçerdiği kafein ve uyarıcılar çocuk ve ergenler için uygun değildir.', adult: 'Önerilmez; kafeinli içeceklerin sınırlandırılması önerilir.', src: ['aap-drinks-2011', 'tuber'] },
-  { name: 'Spor (elektrolit–karbonhidrat) içecekleri', minor: 'Günlük içecek değildir; sık tüketim fazla kilo riskini artırabilir. İhtiyaç sorusunu antrenör, hekim ya da diyetisyene sor.', adult: '1 saatten uzun, yoğun ya da sıcak etkinliklerde gerekebilir.', src: ['aap-drinks-2011', 'tuber'] },
+  { name: 'Enerji içecekleri', minor: 'Kullanılmaz. İçerdiği kafein ve uyarıcılar çocuk ve ergenler için uygun değildir.', adult: 'Tüketimin sınırlandırılması önerilir; sporcuların kafeinli içecekleri fazla tüketmekten kaçınması gerekir (TÜBER).', src: ['aap-drinks-2011', 'tuber'] },
+  { name: 'Spor (elektrolit–karbonhidrat) içecekleri', minor: 'Günlük içecek değildir; sık tüketim fazla kilo riskini artırabilir. İhtiyaç sorusunu antrenör, hekim ya da diyetisyene sor.', adult: '1 saatten uzun etkinliklerde gerekebilir (TÜBER).', src: ['aap-drinks-2011', 'tuber'] },
   { name: 'Yağ yakıcı ve kilo verdirici ürünler', minor: 'Kesinlikle kullanılmaz.', adult: 'Hekim ve diyetisyen olmadan kullanılmaz.', src: ['ioc-supplements', 'sda-adolescent'] },
   { name: 'Vitamin ve mineral (demir, D vitamini, kalsiyum…)', minor: 'Eksiklikten şüphelenirsen hekime git; kan tahlili ve doz hekimde. Kendi başına başlama.', adult: 'Kan değerlerine bakılır; doz ve süre hekim ve diyetisyenle belirlenir.', src: ['sda-adolescent', 'tuber', 'ioc-supplements'] },
 ];
@@ -176,7 +176,7 @@ export const RAMADAN_POINTS: { t: string; d: string }[] = [
   { t: 'Kaynak ne söylüyor?', d: 'Üst düzey yetişkin sporcuların antrenman, yeme-içme ve uyku iyi yönetildiğinde Ramazan’da performansı koruyabildiği bildirilir. Antrenman zamanı ve şiddetinin ayarlanması gerekebilir; akşam saatlerindeki antrenman, sonrasında beslenmeye olanak verir; uyku eksikliğine dikkat edilmelidir (Maughan ve ark.).' },
   { t: 'Çocuk ve ergenler için', d: 'Bu kaynak çocuk ve ergenler için bir öneri sunmaz ve bu sayfa da onlara oruç önermez ya da yasaklamaz. Oruç tutmak isteyen genç sporcu, ailesi ve antrenörüyle birlikte önce hekime danışmalıdır. Dinî konularda görüş bildirilmez.' },
   { t: 'Beslenme ve sıvı', d: 'İftar ve sahurda tabak modelini koru: sebze-meyve, tahıl, protein ve süt grubu. Sıvıyı iftardan sahura kadar yayarak iç; gece uykusunu çok kısaltacak şekilde sahura kalkma.' },
-  { t: 'Antrenman', d: 'Yoğunluğu ve süreyi hekim, antrenör ve ailenle konuşarak ayarla. Akşam saatlerine kaydırılan hafif antrenman çoğu zaman daha rahattır.' },
+  { t: 'Antrenman', d: 'Yoğunluğu ve süreyi hekim, antrenör ve ailenle konuşarak ayarla. Kaynak, gün batımına yakın ya da sonrasındaki antrenmanın avantajları olabileceğini ve antrenman sonrası beslenmeye olanak verdiğini belirtir; bu kişiye ve spora göre değişir.' },
   { t: 'Hemen dur ve söyle', d: 'Baş dönmesi, bayılma hissi, belirgin zayıflık, çok koyu idrar, çarpıntı ya da kendini kötü hissetme durumunda antrenmanı bırak, bir yetişkine söyle ve gerekirse hekime başvur.' },
 ];
 
@@ -190,7 +190,7 @@ export const DAY_PLANS: Record<AgeBand, Record<DayType, DayPlan>> = {
   u11: {
     antrenman: {
       slots: { kahvalti: 'yulaf-yogurt', ara: 'meyve-peynir', ogle: 'tavuk-pilav', once1: 'yogurt-meyve', sonra: 'ayran-simit', aksam: 'kuru-fasulye-pilav' },
-      tips: ['Tabağın yarısı sebze ve meyve olsun; kalanı tahıl ve protein arasında paylaşsın.', 'Antrenmana gitmeden önce hafif bir şeyler ye, su şişeni yanına al.', 'Yemek yemeye zorlama yok: doyduğunda durabilirsin.'],
+      tips: ['Her öğünde tabakta sebze, meyve, tahıl, protein ve süt grubundan birer yiyecek olsun.', 'Antrenmana gitmeden önce hafif bir şeyler ye, su şişeni yanına al.', 'Yemek yemeye zorlama yok: doyduğunda durabilirsin.'],
     },
     mac: {
       slots: { kahvalti: 'yulaf-muz', ara: 'meyve-peynir', once3: 'makarna-tavuk', once1: 'yogurt-meyve', sonra: 'ayran-simit', aksam: 'tavuk-patates' },
@@ -249,8 +249,8 @@ export const DAY_PLANS: Record<AgeBand, Record<DayType, DayPlan>> = {
 
 export const PORTION_GUIDE: Record<AgeBand, string[]> = {
   u11: [
-    'Tabağın yarısını sebze ve meyveyle doldurmaya çalış; kalanı tahıl ve protein arasında paylaşsın.',
-    'Tabağına yiyebileceğin kadar yemek konur, doyunca durabilirsin (TÜBER); “tabağı bitir” baskısı olmaz.',
+    'Her öğünde tabakta farklı gruplardan yiyecekler olsun: sebze, meyve, tahıl, protein ve süt grubu (TÜBER).',
+    'Tabağa yiyebileceğin kadar yemek konması önerilir (TÜBER); “tabağı bitir” baskısı olmaz.',
     'Süt, yoğurt, ayran ya da peynirden gün içinde birkaç kez.',
     'Ara öğünler küçük olsun: meyve, peynir, yoğurt ya da ekmek-peynir.',
   ],

@@ -124,7 +124,7 @@ export const FOODS: Food[] = [
   F('havuc', 'Havuç', 'sebze', 'sebze', { cost: 1, note: 'Atıştırmalık, vitamin.' }),
   // Sıvı
   F('su', 'Su', 'sivi', 'su', { cost: 1, pre: true, note: 'Temel sıvı kaynağı; gün boyunca düzenli.' }),
-  F('izotonik', 'Elektrolitli spor içeceği', 'sivi', 'spor-icecegi', { cost: 2, note: 'Yalnızca uzun (60 dk üstü), yoğun ya da sıcak havadaki antrenmanda gerekebilir; günlük içecek değildir.' }),
+  F('izotonik', 'Elektrolitli spor içeceği', 'sivi', 'spor-icecegi', { cost: 2, note: 'Yalnızca uzun (60 dk üstü) etkinliklerde gerekebilir; günlük içecek değildir.' }),
   F('meyve-suyu', 'Taze meyve suyu (az miktarda)', 'sivi', 'meyve-suyu', { cost: 2, note: 'Şeker içerir; su yerine değil, ölçülü.' }),
 ];
 

@@ -203,7 +203,7 @@ export default function Page() {
               </div>
               <div className="card card--pad card--hover" data-reveal>
                 <h3 className="h3">Elektrolit</h3>
-                <p>Uzun süren, yoğun ya da sıcak etkinliklerde karbonhidrat ve elektrolit içeren içecek faydalı olabilir (ACSM, TÜBER). Çocuk ve ergenlerde bu günlük bir içecek değildir; sık şekerli spor içeceği fazla kilo riskini artırabilir (AAP).</p>
+                <p>Belirli durumlarda, özellikle 1 saatten uzun etkinliklerde, karbonhidrat ve elektrolit içeren içecek sudan daha faydalı olabilir (ACSM, TÜBER). Çocuk ve ergenlerde bu günlük bir içecek değildir; sık şekerli spor içeceği fazla kilo riskini artırabilir (AAP).</p>
               </div>
             </div>
             <div className="grid cols-2 gcols gtools">

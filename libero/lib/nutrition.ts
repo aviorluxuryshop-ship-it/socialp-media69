@@ -137,7 +137,7 @@ export function buildMatchTimeline(inp: TimelineInput): TimelineStep[] | null {
       'Devre arası',
       minor
         ? 'Birkaç yudum su. Canınız istiyorsa muz gibi küçük bir meyve parçası. Enerji içeceği ve kafein çocuk ve ergenler için uygun değildir.'
-        : 'Birkaç yudum su; maç uzun, yoğun ya da sıcaksa karbonhidrat/elektrolit içeren içecek faydalı olabilir (TÜBER: 1 saatten uzun etkinlikler). Enerji içeceğinden kaçının.',
+        : 'Birkaç yudum su; etkinlik 1 saatten uzunsa karbonhidrat/elektrolit içeren içecek faydalı olabilir (TÜBER). Enerji içeceğinden kaçının.',
       minor ? undefined : 'sivi-sayilari',
     );
   }
@@ -159,13 +159,13 @@ export function buildMatchTimeline(inp: TimelineInput): TimelineStep[] | null {
     const end2 = k2 + dur;
     push(end2, 'mac', 'İkinci maç biter', 'Soğuma ve sıvı.');
     push(end2 + 20, 'yemek', 'Toparlanma atıştırmalığı', 'Karbonhidrat + protein + sıvı: ayran-simit, süt-muz, yoğurt-meyve, tavuklu dürüm.');
-    push(end2 + 120, 'yemek', 'Ana öğün', 'Tabak modeli: yarım tabak sebze-meyve, kalanı karbonhidrat ve protein; yanında süt grubu.', 'menuler');
+    push(end2 + 120, 'yemek', 'Ana öğün', 'Tabak modeli: her gruptan bir besin; maç günü karbonhidrat dilimi büyük, yanında protein, sebze-meyve ve süt grubu.', 'menuler');
   } else {
     push(end1 + 20, 'yemek', 'Toparlanma atıştırmalığı', 'Karbonhidrat + protein + sıvı: ayran-simit, süt-muz, yoğurt-meyve, tavuklu dürüm.', 'zamanlama');
     if (!minor) {
       push(end1 + 30, 'sivi', 'Sıvı açığını kapatın', 'Maç sonrası tartı farkını (varsa) ve idrar rengini izleyin. TÜBER yetişkin sporcular için kaybedilen her yarım kg için yaklaşık 450–675 mL sıvıyı örnek verir.', 'sivi-sayilari');
     }
-    push(end1 + 120, 'yemek', 'Ana öğün', 'Tabak modeli: yarım tabak sebze-meyve, kalanı karbonhidrat ve protein; yanında süt grubu.', 'menuler');
+    push(end1 + 120, 'yemek', 'Ana öğün', 'Tabak modeli: her gruptan bir besin; maç günü karbonhidrat dilimi büyük, yanında protein, sebze-meyve ve süt grubu.', 'menuler');
   }
   const last = steps.reduce((m, s) => Math.max(m, s.abs ?? 0), 0);
   push(Math.max(last + 90, 1260), 'dinlenme', 'Sakin akşam ve uyku', 'Ekranı azaltın; sıvıyı düzenli tutun. Uyku süresi yaşa göre değişir (bkz. Uyku bölümü).');
