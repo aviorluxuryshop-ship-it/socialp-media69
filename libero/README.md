@@ -59,7 +59,17 @@ styles/         tasarım belirteçleri ve bileşen/sayfa stilleri (Tailwind yok)
 scripts/        statik sunucu, e2e testi (tarayıcı), mantık denetimi, video doğrulama
 ```
 
-Teknolojiler: Next.js 16 (App Router, statik export), React 19, TypeScript, düz CSS. Yazı tipleri (Instrument Serif, Hanken Grotesk, JetBrains Mono) paketten yerel olarak gelir; dış servis yoktur. Ücretli API ya da anahtar gerekmez.
+Teknolojiler: Next.js 16 (App Router, statik export), React 19, TypeScript, düz CSS. Yazı tipleri (Instrument Serif, Hanken Grotesk, JetBrains Mono) paketten yerel olarak gelir; dış servis yoktur. Ücretli API ya da anahtar gerekmez. Otomatik video analizi için **Google MediaPipe Pose Landmarker** (`@mediapipe/tasks-vision` ve `.task` modelleri, **Apache-2.0**) kullanılır; ayrıntı ve tam lisans metni: `public/third-party-notices.txt`, modellerin kaynağı ve SHA-256 değerleri: `public/models/README.txt`.
+
+## Otomatik video analizi (aşama 1: motor)
+
+`/analiz/video/` sayfasında video yüklendikten sonra “Otomatik analiz” bölümü çalışır. **Video cihazdan çıkmaz; analiz tarayıcıda yapılır.** MediaPipe wasm dosyaları (`public/mediapipe/wasm`, `npm run build` / `npm run dev` öncesi `scripts/prepare-assets.mjs` ile kopyalanır) ve modeller (`public/models`) siteyle birlikte sunulur; CDN yoktur, ağ çağrısı yoktur.
+
+- **Motor** (`lib/pose/`): `engine.ts` (MediaPipe + `<video>`; tek örnek yükleyici, deterministik kare gezme, iptal), saf modüller `tracking.ts` (oyuncu seçimi/takip), `smoothing.ts` + `skeleton.ts` (düzleştirme, ≤3 kare boşluk doldurma), `metrics.ts` (eklem açıları, gövde eğimi, hız “gövde boyu/sn”, adım sıklığı), `events.ts` (vuruş/pas adayı, yön değiştirme, hızlanma/sprint, duruş, çömelme), `report.ts` (Türkçe rapor verisi). Tüm eşikler `thresholds.ts` içindedir.
+- **Rapor üç katmanlıdır**: *ölçülen* (sayılar), *kural tabanlı yönlendirme* (“kural tabanlı — yapay zekâ değildir”; ölçülen sayıyı ve eşiği yazar, sağlık/sakatlık iddiası içermez) ve *yapay zekâ* (**devre dışı** yer tutucu; ağ çağrısı yapılmaz).
+- **Dürüst sınırlar**: görüntü 2B’dir (açılar izdüşümdür); oyuncu kadrajın ~%15’inden küçükse güvenilmez; kamera hareketliyse hız/yön kameraya görelidir; **top izlenmez** (vuruş yalnızca bacak hareketinden çıkarılan adaydır); düşük örnekleme tepe hızı eksik ölçer; hızlar metre/sn’ye çevrilmez.
+- **Kayıt**: yalnızca küçük bir özet (en çok 20 video) `videoAnalyses` altında saklanır ve yedeğe girer; ham iskelet saklanmaz.
+- **Testler**: `scripts/logic-tests/pose.mjs` (sentetik iskeletler), `scripts/e2e-tests/video-analysis.mjs` (gerçek MediaPipe, başsız Chromium). Test görüntüsü kaynağı: `scripts/fixtures/README.md`.
 
 ## Antrenman programı: ortamlar, ekipman, fiziksel odak
 

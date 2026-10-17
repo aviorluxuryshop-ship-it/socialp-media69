@@ -1,0 +1,377 @@
+/* ───────────────────────────────────────────────────────────
+   Otomatik video analizi (aşama 1 test arayüzü) — .vauto*
+   Yalnızca tokens.css değişkenlerini kullanır.
+   ─────────────────────────────────────────────────────────── */
+.vauto {
+  margin-top: clamp(40px, 6vw, 72px);
+  padding-top: clamp(28px, 4vw, 48px);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 24px;
+}
+.vauto__head {
+  display: grid;
+  gap: 12px;
+  max-width: 78ch;
+}
+.vauto__head .h2 {
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+}
+.vauto__privacy {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(201, 165, 91, 0.4);
+  border-radius: var(--r-1);
+  background: var(--brass-wash);
+  color: var(--brass-hi);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+.vauto__privacy svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+.vauto__lead {
+  max-width: 68ch;
+}
+
+.vauto__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .vauto__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.vauto__form {
+  display: grid;
+  gap: 16px;
+}
+.vauto__form .panel__title,
+.vauto__out .panel__title {
+  margin-bottom: 0;
+}
+.vauto__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+.vauto__inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.vauto__inline .input {
+  min-width: 0;
+}
+.vauto__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.vauto__saved {
+  margin: 0;
+}
+.vauto__link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--brass-hi);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font: inherit;
+}
+.vauto__link:hover {
+  color: var(--ivory);
+}
+
+.vauto__out {
+  display: grid;
+  gap: 16px;
+  min-height: 160px;
+}
+.vauto__status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ivory-2);
+}
+.vauto__spin {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 2px solid var(--line-3);
+  border-top-color: var(--brass-hi);
+  border-radius: 50%;
+  animation: vauto-spin 0.9s linear infinite;
+}
+@keyframes vauto-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Oyuncu seçimi: kare + üstünde tıklanabilir kutular */
+.vauto__still {
+  display: grid;
+  gap: 12px;
+}
+.vauto__stillbox {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  background: var(--ink-950);
+  border: 1px solid var(--line-2);
+  overflow: hidden;
+  line-height: 0;
+}
+.vauto__stillbox canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.vauto__cand {
+  position: absolute;
+  padding: 0;
+  border: 2px solid var(--brass-hi);
+  border-radius: var(--r-1);
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease);
+}
+.vauto__cand:hover,
+.vauto__cand:focus-visible {
+  background: rgba(227, 196, 126, 0.18);
+}
+.vauto__cand:focus-visible {
+  outline: 2px solid var(--ivory);
+  outline-offset: 2px;
+}
+.vauto__candn {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  min-width: 24px;
+  padding: 2px 6px;
+  background: var(--brass-hi);
+  color: var(--ink-950);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* İlerleme */
+.vauto__prog {
+  display: grid;
+  gap: 10px;
+}
+.vauto__bar {
+  height: 8px;
+  background: var(--ink-700);
+  border-radius: var(--r-1);
+  overflow: hidden;
+}
+.vauto__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brass-lo), var(--brass-hi));
+  transition: width 0.25s var(--ease);
+}
+.vauto__progtxt {
+  font-size: 0.82rem;
+  color: var(--ivory-2);
+}
+
+/* Sonuçlar */
+.vauto__res {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.vauto__relrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+.vauto__warns {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.vauto__fixbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.vauto__fix {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+  background: var(--ink-900);
+}
+.vauto__h {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ivory-3);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.vauto__sum {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1px;
+  background: var(--line-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+  overflow: hidden;
+}
+.vauto__sum > div {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--ink-850);
+}
+.vauto__sum dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ivory-4);
+}
+.vauto__sum dd {
+  margin: 0;
+  color: var(--ivory);
+  font-variant-numeric: tabular-nums;
+}
+.vauto__events td:first-child,
+.vauto__events th:first-child {
+  white-space: nowrap;
+}
+.vauto__time {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  color: var(--brass-hi);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-size: 0.84rem;
+}
+.vauto__time:hover {
+  color: var(--ivory);
+}
+.vauto__chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+.vauto__chips li {
+  font-size: 0.8rem;
+  color: var(--ivory-3);
+}
+.vauto__chips b {
+  color: var(--ivory);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.vauto__finds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.vauto__finds li {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--line-3);
+  border-radius: var(--r-1);
+  background: var(--ink-900);
+  display: grid;
+  gap: 6px;
+}
+.vauto__finds li.is-attn {
+  border-left-color: var(--terra);
+}
+.vauto__finds p {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--ivory-2);
+}
+.vauto__finds .vauto__cite {
+  font-size: 0.74rem;
+  color: var(--ivory-4);
+}
+.vauto__limits {
+  border: 1px solid var(--line);
+  border-radius: var(--r-1);
+  padding: 10px 14px;
+  font-size: var(--fs-small);
+  color: var(--ivory-2);
+}
+.vauto__limits summary {
+  cursor: pointer;
+  color: var(--ivory);
+}
+.vauto__limits ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+.vauto__credit code {
+  font-family: var(--font-mono);
+  color: var(--ivory-3);
+}
+
+@media (max-width: 640px) {
+  .vauto__fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vauto__seg-wrap {
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vauto__spin {
+    animation: none;
+    border-top-color: var(--brass-hi);
+    border-right-color: var(--brass-hi);
+  }
+  .vauto__bar span,
+  .vauto__cand {
+    transition: none;
+  }
+}
