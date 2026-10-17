@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { CAT_BY_ID } from '@/data/categories';
 import { TECHNIQUES, TECH_BY_ID, techsByCat } from '@/data';
 import { CatGlyph } from '@/components/CatGlyph';
-import { FootMap } from '@/components/FootMap';
+import { BootMap } from '@/components/BootMap';
 import { Icon } from '@/components/Icon';
 import { PageHead } from '@/components/PageHead';
 import { SceneView } from '@/components/pitch/SceneView';
@@ -80,11 +80,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             </h2>
             <p className="prose lead" style={{ maxWidth: '60ch' }}>{t.purpose}.</p>
             {t.foot && t.foot.length > 0 && (
-              <div className="card surface" style={{ marginTop: 24 }}>
-                <FootMap active={t.foot} />
-                <div>
-                  <p className="mono muted">Temas yüzeyi</p>
-                  <p className="surface__t">{t.contact}</p>
+              <div style={{ marginTop: 24 }}>
+                <BootMap foot={t.foot} contact={t.contact}>
                   <ul className="surface__list">
                     {t.foot.includes('ustDis') && (
                       <li>
@@ -99,7 +96,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                     {t.foot.includes('ic') && <li>İç yüz, ayağın en geniş ve en kontrollü temas yüzeyidir.</li>}
                     {t.foot.includes('ustTam') && <li>Ayak üstü (bağcık bölgesi), güçlü vuruşlar için kullanılır.</li>}
                   </ul>
-                </div>
+                </BootMap>
               </div>
             )}
             {t.distinct && t.distinct.length > 0 && (
