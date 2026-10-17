@@ -9,11 +9,16 @@ import { Icon } from '@/components/Icon';
 import { PageHead } from '@/components/PageHead';
 import { SceneView } from '@/components/pitch/SceneView';
 import { StarRating } from '@/components/StarRating';
+import { TechMotionPlayer } from '@/components/TechMotionPlayer';
 import { DrillList, TechLevelCard } from '@/components/TechPlan';
 import { VideoCard } from '@/components/VideoCard';
 import { BODY_KEYS, BODY_LABEL, BODY_LABEL_HEAD, BODY_POSITION } from '@/data/body-position';
 import { VIDEOS_BY_TECH } from '@/data/videos';
+import { MOTIONS } from '@/data/technique-motion';
+import { assertMotions } from '@/data/technique-motion/validate';
 import { POSITION_NAME } from '@/lib/types';
+
+assertMotions(MOTIONS, TECH_BY_ID);
 
 export const dynamicParams = false;
 
@@ -40,6 +45,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const related = t.related.map((id) => TECH_BY_ID[id]).filter(Boolean);
   const videos = VIDEOS_BY_TECH[t.id] ?? [];
   const body = BODY_POSITION[t.id];
+  const motion = MOTIONS[t.id];
   const bodyLabel = t.cat === 'kafa' ? BODY_LABEL_HEAD : BODY_LABEL;
   let secNo = 0;
   const sec = () => String(++secNo).padStart(2, '0');
@@ -127,6 +133,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               </div>
             )}
           </section>
+
+          {motion && (
+            <section className="tsec" id="hareketi-izle">
+              <h2 className="h3 tsec__h">
+                <span className="tsec__n mono">{sec()}</span> Hareketi izle
+              </h2>
+              <TechMotionPlayer motion={motion} name={t.name} />
+            </section>
+          )}
 
           <section className="tsec">
             <h2 className="h3 tsec__h">
