@@ -48,6 +48,12 @@ export const mealsForSlot = (slot: SlotKey) => MEALS.filter((m) => mealFitsSlot(
 
 export type DayType = 'antrenman' | 'mac' | 'dinlenme';
 export const DAY_TYPES: DayType[] = ['antrenman', 'mac', 'dinlenme'];
+/** Gün tipine göre görünen öğün dilimleri (haftalık planlayıcı) */
+export const DAY_SLOTS: Record<DayType, SlotKey[]> = {
+  antrenman: ['kahvalti', 'ara', 'ogle', 'once1', 'sonra', 'aksam'],
+  mac: ['kahvalti', 'ara', 'once3', 'once1', 'sonra', 'aksam'],
+  dinlenme: ['kahvalti', 'ara', 'ogle', 'aksam'],
+};
 export const DAY_TYPE_LABEL: Record<DayType, string> = { antrenman: 'Antrenman günü', mac: 'Maç günü', dinlenme: 'Dinlenme günü' };
 
 // ── Zaman yardımcıları ──────────────────────────────────
@@ -272,7 +278,7 @@ export function normalizePlan(raw: unknown): PlanState {
       if (!d || typeof d !== 'object') continue;
       if (DAY_TYPES.includes(d.type as DayType)) p.days[k].type = d.type as DayType;
       if (d.slots && typeof d.slots === 'object') {
-        for (const s of SLOTS) {
+        for (const s of DAY_SLOTS[p.days[k].type]) {
           const id = (d.slots as Record<string, unknown>)[s];
           if (typeof id === 'string' && MEAL_BY_ID[id] && mealFitsSlot(MEAL_BY_ID[id], s)) p.days[k].slots[s] = id;
         }

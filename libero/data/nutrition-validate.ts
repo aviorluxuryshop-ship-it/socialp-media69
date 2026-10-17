@@ -1,9 +1,9 @@
 // Beslenme rehberi veri doğrulayıcısı. Sayfa yüklenirken (derleme dahil) çalışır; hata varsa fırlatır.
 // Mantık testleri (scripts/logic-tests/nutrition.mjs) aynı işlevi bilerek bozulmuş veriyle de dener.
 import { ALLERGEN_NAME, FOODS, FOOD_BY_ID, MEALS, MEAL_BY_ID, mealAllergens, type Allergen, type Meal } from './nutrition';
-import { AGE_NOTES, DAY_PLANS, PLATES, REVIEW_ITEMS, SECTIONS, SUPPLEMENT_ROWS, TOURNAMENT_POINTS, type GuideSection, type ReviewItem } from './nutrition-guide';
+import { AGE_NOTES, DAY_PLANS, PLATES, PORTION_GUIDE, REVIEW_ITEMS, SECTIONS, SUPPLEMENT_ROWS, TOURNAMENT_POINTS, type GuideSection, type ReviewItem } from './nutrition-guide';
 import { SOURCE_BY_ID } from './sources';
-import { AGE_BANDS, DAY_TYPES, SLOTS, mealFitsSlot, type AgeBand } from '@/lib/nutrition';
+import { AGE_BANDS, DAY_SLOTS, DAY_TYPES, SLOTS, mealFitsSlot, type AgeBand } from '@/lib/nutrition';
 
 /** Çocuk/ergen öğünlerinde ve planlarında bulunmaması gereken sözcükler */
 export const MINOR_FORBIDDEN = /kafein|kahve|\bçay\b|\bkola\b|enerji\s*içece|protein\s*toz|kreatin|takviye|supplement|izotonik|spor\s*içece|yağ\s*yakıcı|bcaa/i;
@@ -85,6 +85,7 @@ export function validateNutritionGuide(d: GuideData = realData()): string[] {
           continue;
         }
         if (!mealFitsSlot(m, slot)) errs.push(`${b.id}/${day}/${slot}: "${id}" bu dilime uygun değil`);
+        if (!DAY_SLOTS[day].includes(slot)) errs.push(`${b.id}/${day}/${slot}: dilim bu gün tipinde kullanılmıyor`);
         if (b.minor) {
           const txt = [m.name, m.why, ...m.parts, ...m.foods.map((f) => FOOD_BY_ID[f]?.name ?? '')].join(' ');
           if (MINOR_FORBIDDEN.test(txt)) errs.push(`${b.id}/${day}/${slot}: "${id}" çocuk/ergen öğününde yasak içerik (${txt.match(MINOR_FORBIDDEN)?.[0]})`);
@@ -125,6 +126,7 @@ export function prescriptionsForMinors(d: GuideData = realData()): string[] {
   const texts: [string, string][] = [];
   for (const [topic, notes] of Object.entries(d.ageNotes)) for (const b of minors) texts.push([`yaş notu ${topic}/${b}`, notes[b].text]);
   for (const b of minors) for (const day of DAY_TYPES) for (const t of d.dayPlans[b][day].tips) texts.push([`plan ${b}/${day}`, t]);
+  for (const b of minors) for (const t of PORTION_GUIDE[b]) texts.push([`porsiyon kılavuzu ${b}`, t]);
   for (const m of d.meals) for (const t of collectStrings([m.name, m.parts, m.why, m.prep])) texts.push([`öğün ${m.id}`, t]);
   for (const [where, t] of texts) if (PRESCRIPTION.test(t)) bad.push(`${where}: "${t}"`);
   return bad;

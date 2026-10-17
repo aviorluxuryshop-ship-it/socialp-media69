@@ -245,6 +245,34 @@ export const DAY_PLANS: Record<AgeBand, Record<DayType, DayPlan>> = {
   },
 };
 
+// ── Porsiyon kılavuzu (sayısal hedef yok; yaş bantlarına göre) ──
+
+export const PORTION_GUIDE: Record<AgeBand, string[]> = {
+  u11: [
+    'Tabağın yarısını sebze ve meyveyle doldurmaya çalış; kalanı tahıl ve protein arasında paylaşsın.',
+    'Tabağına yiyebileceğin kadar yemek konur, doyunca durabilirsin (TÜBER); “tabağı bitir” baskısı olmaz.',
+    'Süt, yoğurt, ayran ya da peynirden gün içinde birkaç kez.',
+    'Ara öğünler küçük olsun: meyve, peynir, yoğurt ya da ekmek-peynir.',
+  ],
+  u14: [
+    'Büyüme atılımı döneminde öğün atlama; okul ve antrenman arasında ara öğün önemlidir.',
+    'Süt ve süt ürünleri gün içine yayılmış yaklaşık 4 porsiyon: 1 su bardağı süt, 1 su bardağı yoğurt ya da 2 kibrit kutusu peynir birer porsiyondur (TÜBER, genç sporcular).',
+    'Demir için kırmızı et, yumurta ve baklagiller; C vitaminli sebze-meyveyle birlikte (TÜBER).',
+    'Yük arttıkça tabakta karbonhidrat dilimi büyür; sebze ve protein dilimi yerinde kalır.',
+  ],
+  u17: [
+    'Yoğun günlerde tabakta karbonhidrat dilimi büyür. Yetersiz yemek, yük arttıkça enerji açığı riskini büyütür; uyarı işaretlerini bil.',
+    'Süt ve süt ürünleri gün içinde yaklaşık 4 porsiyon (TÜBER, genç sporcular).',
+    'Kilo ya da vücut görünümü için kendi başına yemek kısıtlaması yapma; kaygı varsa hekim ve diyetisyene git.',
+    'Öğün atlamak yerine hazır bir ara öğünü çantada taşı.',
+  ],
+  a18: [
+    'Yük durumuna göre tabak: yoğun günde karbonhidrat dilimi büyür, dinlenme gününde küçülür.',
+    'Kişiye özel enerji ve besin planı, vücut bileşimi hedefleri ve takviye kararları için kayıtlı bir spor diyetisyeni gerekir (ACSM/AND/DC).',
+    'Kan değerlerin (demir, D vitamini) ve sağlığın için periyodik kontrol hekim işidir.',
+  ],
+};
+
 // ── Tabak modeli ─────────────────────────────────────────
 
 export type PlateGroup = 'sebze' | 'meyve' | 'tahil' | 'protein' | 'sut';
@@ -280,3 +308,46 @@ export const TOURNAMENT_POINTS: { t: string; d: string }[] = [
   { t: 'Gölge ve mola', d: 'Sıcakta maçlar arasında güneşten uzak dur, kıyafeti ısı tutmayacak şekilde seç.' },
   { t: 'Gün sonu', d: 'Turnuva günü sonunda tabak modeline uygun ana öğün ve erken uyku. Ertesi gün dinlenmeye öncelik ver.' },
 ];
+
+// ── Kısa kaynak adları (bölüm altı atıflar için) ──────────
+
+export const SOURCE_SHORT: Record<string, string> = {
+  tuber: 'TÜBER 2015',
+  'who-diet': 'WHO Sağlıklı beslenme',
+  'sda-adolescent': 'SDA ergen sporcu 2014',
+  'uefa-nutrition': 'UEFA beslenme 2021',
+  'acsm-nutrition': 'ACSM/AND/DC 2016',
+  'reds-2014': 'IOC RED-S 2014',
+  'reds-2023': 'IOC REDs 2023',
+  'acsm-fluid-2007': 'ACSM sıvı 2007',
+  'nata-fluid-2017': 'NATA sıvı 2017',
+  'aap-drinks-2011': 'AAP içecekler 2011',
+  'aap-heat-2011': 'AAP sıcak 2011',
+  'aasm-sleep-2016': 'AASM uyku 2016',
+  'sleep-athlete-2021': 'Sporcuda uyku 2021',
+  'aap-media-2016': 'AAP medya 2016',
+  'overtraining-2013': 'Aşırı antrenman 2013',
+  'ioc-supplements': 'IOC takviye 2018',
+  'ramadan-2012': 'Ramazan ve spor 2012',
+};
+
+/** Her kaynağın bu rehberde hangi düzeyde okunduğu (doğrulama şeffaflığı) */
+export const SOURCE_CHECK: Record<string, string> = {
+  tuber: 'İlgili bölümler (sporcu beslenmesi, ergen beslenmesi, tabak modeli) tam metinden okundu.',
+  'who-diet': 'Bilgi sayfası okundu.',
+  'sda-adolescent': 'Özet metni Europe PMC üzerinden okundu; tam metne erişilemedi.',
+  'uefa-nutrition': 'Özet metni Europe PMC üzerinden okundu; tam metne erişilemedi. Yalnızca “önce gıda” ilkesi ve konu başlıkları aktarıldı.',
+  'acsm-nutrition': 'Özet metni Europe PMC üzerinden okundu.',
+  'reds-2014': 'Özet metni Europe PMC üzerinden okundu.',
+  'reds-2023': 'Özet metni Europe PMC üzerinden okundu.',
+  'acsm-fluid-2007': 'Özet metni Europe PMC üzerinden okundu.',
+  'nata-fluid-2017': 'Özet metni Europe PMC üzerinden okundu.',
+  'aap-drinks-2011': 'Özet metni Europe PMC üzerinden okundu.',
+  'aap-heat-2011': 'Özet metni Europe PMC üzerinden okundu.',
+  'aasm-sleep-2016': 'Tam metin PubMed Central üzerinden okundu.',
+  'sleep-athlete-2021': 'Özet metni Europe PMC üzerinden okundu; tam metne erişilemedi.',
+  'aap-media-2016': 'Özet metni Europe PMC üzerinden okundu.',
+  'overtraining-2013': 'Özet metni Europe PMC üzerinden okundu.',
+  'ioc-supplements': 'Tam metnin ilk yarısı PubMed Central üzerinden okundu; özet tamamı okundu.',
+  'ramadan-2012': 'Özet metni Europe PMC üzerinden okundu.',
+};
