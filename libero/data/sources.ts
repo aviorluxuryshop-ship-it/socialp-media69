@@ -144,7 +144,7 @@ export const SOURCES: Source[] = [
     org: 'Amerikan Spor Hekimliği Koleji (ACSM), Sawka ve ark.',
     url: 'https://doi.org/10.1249/mss.0b013e31802ca597',
     topic: 'beslenme',
-    note: 'Etkinliğe sıvı dengesi yerinde başlamak; ön sıvı alımı etkinlikten birkaç saat önce başlatılmalı; egzersiz sırasında vücut ağırlığının %2’sinden fazla su kaybı önlenmeli; ter kaybı kişiden kişiye çok değişir (egzersiz öncesi ve sonrası tartı ile tahmin edilebilir); egzersiz sonrası eksik giderilmeli. Yetişkin odaklıdır.',
+    note: 'Etkinliğe sıvı dengesi yerinde başlamak; ön sıvı alımı etkinlikten birkaç saat önce başlatılmalı; egzersiz sırasında vücut ağırlığının %2’sinden fazla su kaybı önlenmeli; ter kaybı kişiden kişiye çok değişir (egzersiz öncesi ve sonrası tartı ile tahmin edilebilir); egzersiz sonrası eksik giderilmeli.',
   },
   {
     id: 'nata-fluid-2017',

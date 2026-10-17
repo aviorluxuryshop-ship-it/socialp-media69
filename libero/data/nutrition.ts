@@ -112,6 +112,8 @@ export const FOODS: Food[] = [
   F('elma', 'Elma', 'meyve', 'meyve', { cost: 1, note: 'Lifli, taşınması kolay.' }),
   F('portakal', 'Portakal / mandalina', 'meyve', 'meyve', { cost: 1, note: 'C vitamini ve sıvı.' }),
   F('uzum', 'Üzüm', 'meyve', 'hizli-enerji', { cost: 2, pre: true, note: 'Hızlı enerji.' }),
+  F('bal', 'Bal', 'karbonhidrat', 'seker', { vegan: false, cost: 2, pre: true, note: 'Hızlı enerji; ölçülü, bir kaşık kadar.' }),
+  F('pekmez', 'Pekmez (üzüm / dut)', 'karbonhidrat', 'seker', { cost: 1, pre: true, note: 'Hızlı enerji ve mineral; tahinle ya da ekmekle ölçülü.' }),
   F('hurma', 'Hurma', 'meyve', 'hizli-enerji', { cost: 2, pre: true, note: 'Yoğun ve hızlı enerji; küçük porsiyon.' }),
   F('kuru-kayisi', 'Kuru kayısı', 'meyve', 'kuru-meyve', { cost: 2, note: 'Enerji ve potasyum; küçük bir avuç.' }),
   F('cilek', 'Çilek / meyve karışımı', 'meyve', 'meyve', { cost: 2, note: 'Vitamin ve antioksidan; yoğurt ya da yulafa eklenir.' }),
@@ -210,6 +212,21 @@ export const MEALS: Meal[] = [
   { id: 'tofu-pirinc', name: 'Tofulu sebze ve pirinç', when: ['gunluk', 'sonra'], parts: ['Tofu', 'Sebzeler', 'Pirinç'], foods: ['tofu', 'brokoli', 'pirinc'], prep: '20 dk', why: 'Vegan seçenek: bitkisel protein ve karbonhidrat.' },
   { id: 'lor-meyve', name: 'Lor, meyve ve yulaf', when: ['kahvalti', 'sonra'], parts: ['Lor', 'Meyve', 'Yulaf'], foods: ['lor', 'cilek', 'yulaf'], prep: '5 dk', why: 'Yüksek protein, hafif; kahvaltı ya da ara öğün.' },
   { id: 'humus-lavas', name: 'Humuslu sebze lavaşı', when: ['gunluk', 'once-3sa'], parts: ['Lavaş', 'Humus', 'Havuç, salatalık, marul'], foods: ['lavas', 'humus', 'havuc', 'domates', 'yesillik'], prep: '10 dk', why: 'Vejetaryen/vegan; protein, karbonhidrat ve sebze.' },
+  { id: 'menemen', name: 'Menemen ve tam buğday ekmeği', when: ['kahvalti', 'sonra'], parts: ['Yumurta', 'Domates, biber', 'Tam buğday ekmeği'], foods: ['yumurta', 'domates', 'tam-bugday-ekmek'], prep: '10 dk', why: 'Protein ve karbonhidrat bir arada; sabah ya da antrenman sonrası için tanıdık bir seçenek.' },
+  { id: 'serpme-kahvalti', name: 'Kahvaltı tabağı: yumurta, peynir, zeytin, domates, ekmek', when: ['kahvalti'], parts: ['Haşlanmış yumurta', 'Beyaz peynir', 'Zeytin', 'Domates-salatalık', 'Tam buğday ekmeği'], foods: ['yumurta', 'beyaz-peynir', 'zeytin', 'domates', 'tam-bugday-ekmek'], prep: '5 dk', why: 'Geleneksel kahvaltı; protein, süt grubu, sebze ve tahılı bir araya getirir. Peynir ve zeytin tuzlu olabilir, ölçülü tüketin.' },
+  { id: 'sut-muz', name: 'Süt ve muz', when: ['once-hafif', 'sonra'], parts: ['Bir bardak süt', 'Muz'], foods: ['sut', 'muz'], prep: '1 dk', why: 'Sıvı, protein ve hızlı enerji; çantada taşınması kolay bir toparlanma atıştırmalığı.' },
+  { id: 'tavuk-pilav', name: 'Tavuklu pilav, cacık ve salata', when: ['gunluk', 'once-3sa', 'sonra', 'mac-sonrasi-gece'], parts: ['Pirinç pilavı', 'Tavuk', 'Cacık', 'Domates-salatalık'], foods: ['pirinc', 'tavuk', 'yogurt', 'domates'], prep: '25 dk', why: 'Sindirimi kolay karbonhidrat ve yağı az protein; maç öncesi de sonrası da uygun.' },
+  { id: 'izgara-et-bulgur', name: 'Izgara dana, bulgur pilavı ve salata', when: ['gunluk', 'mac-sonrasi-gece'], parts: ['Izgara ya da fırında az yağlı dana', 'Bulgur pilavı', 'Yeşil salata'], foods: ['dana', 'bulgur', 'yesillik', 'domates'], prep: '30 dk', why: 'Protein, demir ve lif; yoğun antrenmandan sonra doyurucu bir ana öğün.' },
+  { id: 'nohutlu-pilav', name: 'Nohutlu pilav ve yoğurt', when: ['gunluk', 'once-3sa'], parts: ['Pirinç pilavı', 'Nohut', 'Yoğurt'], foods: ['pirinc', 'nohut', 'yogurt'], prep: '25 dk', why: 'Karbonhidrat ve bitkisel protein bir arada; ekonomik ve vejetaryen.' },
+  { id: 'mercimekli-kofte', name: 'Mercimekli köfte ve yeşillik', when: ['gunluk', 'once-hafif'], parts: ['Mercimekli köfte', 'Marul, maydanoz', 'Zeytinyağı, limon'], foods: ['mercimek', 'bulgur', 'yesillik', 'zeytinyagi'], prep: '30 dk', why: 'Vegan seçenek: bitkisel protein, lif ve demir; bulgur nedeniyle gluten içerir.' },
+  { id: 'tahin-pekmez', name: 'Tahin-pekmezli ekmek', when: ['once-hafif', 'sonra'], parts: ['Tam buğday ekmeği', 'Tahin', 'Pekmez'], foods: ['tam-bugday-ekmek', 'tahin', 'pekmez'], prep: '2 dk', why: 'Geleneksel ve hızlı enerji kaynağı; vegan. Küçük porsiyon yeterlidir.' },
+  { id: 'tavuk-patates', name: 'Fırında tavuk, patates ve sebze', when: ['gunluk', 'mac-sonrasi-gece'], parts: ['Fırında tavuk', 'Fırın patates', 'Brokoli ya da mevsim sebzesi', 'Zeytinyağı'], foods: ['tavuk', 'patates', 'brokoli', 'zeytinyagi'], prep: '40 dk', why: 'Gluten içermeyen, dengeli akşam yemeği; tek tepside pişer.' },
+  { id: 'peynirli-tost', name: 'Peynirli tost ve domates', when: ['once-hafif', 'sonra', 'gunluk'], parts: ['Tam buğday ekmeği', 'Beyaz peynir', 'Domates'], foods: ['tam-bugday-ekmek', 'beyaz-peynir', 'domates'], prep: '5 dk', why: 'Okul çıkışı ya da antrenman sonrası için pratik; karbonhidrat ve süt grubu protein.' },
+  { id: 'yulaf-yogurt', name: 'Yoğurtlu yulaf, muz ve bal', when: ['kahvalti', 'once-3sa'], parts: ['Yulaf', 'Yoğurt', 'Muz', 'Bir kaşık bal'], foods: ['yulaf', 'yogurt', 'muz', 'bal'], prep: '5 dk', why: 'Uzun süre doyuran lifli karbonhidrat ve protein; sabah ya da antrenmana birkaç saat kala.' },
+  { id: 'balik-bulgur', name: 'Fırında balık, bulgur ve salata', when: ['gunluk', 'mac-sonrasi-gece'], parts: ['Fırında balık', 'Bulgur pilavı', 'Salata', 'Zeytinyağı'], foods: ['balik', 'bulgur', 'yesillik', 'zeytinyagi'], prep: '30 dk', why: 'Protein ve yararlı yağlar; akşam ana öğünü.' },
+  { id: 'yumurta-simit', name: 'Haşlanmış yumurta, simit ve ayran', when: ['kahvalti', 'once-hafif', 'sonra'], parts: ['Haşlanmış yumurta', 'Simit', 'Ayran'], foods: ['yumurta', 'simit', 'ayran'], prep: '10 dk', why: 'Sokakta ya da okul yolunda bulunabilen, dengeli ve ekonomik bir kombinasyon.' },
+  { id: 'meyve-peynir', name: 'Meyve ve birkaç dilim peynir', when: ['once-hafif', 'sonra', 'gunluk'], parts: ['Elma ya da mandalina', 'Birkaç dilim beyaz peynir'], foods: ['elma', 'beyaz-peynir'], prep: '2 dk', why: 'Okul çantası için kolay ara öğün; lif, vitamin ve süt grubu.' },
+  { id: 'domates-makarna', name: 'Domates soslu makarna ve yeşil salata', when: ['once-3sa', 'gunluk'], parts: ['Makarna', 'Domates sosu', 'Yeşil salata', 'Zeytinyağı'], foods: ['makarna', 'domates', 'yesillik', 'zeytinyagi'], prep: '20 dk', why: 'Maç öncesi klasik karbonhidrat öğünü; yağı ve lifi az tutulabilir, vegan.' },
 ];
 
 export function mealAllergens(m: Meal): Allergen[] {
@@ -219,6 +236,7 @@ export function mealAllergens(m: Meal): Allergen[] {
 }
 export const mealVegetarian = (m: Meal) => m.foods.every((id) => FOOD_BY_ID[id]?.vegetarian);
 export const mealVegan = (m: Meal) => m.foods.every((id) => FOOD_BY_ID[id]?.vegan);
+export const MEAL_BY_ID: Record<string, Meal> = Object.fromEntries(MEALS.map((m) => [m.id, m]));
 
 // ── Rehber metinleri ────────────────────────────────────
 
