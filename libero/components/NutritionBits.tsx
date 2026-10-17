@@ -77,7 +77,7 @@ function Plate({ id, title, caption, weights }: (typeof PLATES)[number]) {
   return (
     <figure className="plate" data-reveal="scale" data-plate={id}>
       <svg viewBox="0 0 240 240" role="img" aria-labelledby={`pl-${id}-t pl-${id}-d`}>
-        <title id={`pl-${id}-t`}>{title} tabağı</title>
+        <title id={`pl-${id}-t`}>{`${title} tabağı`}</title>
         <desc id={`pl-${id}-d`}>{caption}</desc>
         <defs>
           <radialGradient id={`pl-${id}-g`} cx="50%" cy="38%" r="70%">

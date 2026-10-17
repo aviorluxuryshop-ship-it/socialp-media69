@@ -64,7 +64,7 @@ export default async ({ ok, test, load, root }) => {
       for (const re of res) for (const m of t.matchAll(re)) used.add(m[1]);
     };
     const files = ['app/beslenme/page.tsx', ...fs.readdirSync(path.join(root, 'components')).filter((f) => /^Nutrition.*\.tsx$/.test(f)).map((f) => 'components/' + f)];
-    for (const f of files) scan(f, [/<Rv id="([^"]+)"/g, /review="([^"]+)"/g]);
+    for (const f of files) scan(f, [/<Rv id="([^"]+)"/g, /review="([^"]+)"/g, /\brv: '([^']+)'/g]);
     scan('data/nutrition-guide.ts', [/review: '([^']+)'/g]);
     scan('lib/nutrition.ts', [/[,:]\s*'([a-z]{4,}(?:-[a-z]+)*)'\s*,?\s*\)/g]);
     for (const u of used) ok(reviewIds.has(u), `rozet "${u}" inceleme listesinde yok`);

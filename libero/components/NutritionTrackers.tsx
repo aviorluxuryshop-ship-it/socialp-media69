@@ -91,7 +91,7 @@ export function WaterTracker() {
         <div className="water__ring" role="progressbar" aria-label="Bugünkü su bardağı sayısı" aria-valuemin={0} aria-valuemax={w.goal} aria-valuenow={Math.min(count, w.goal)} aria-valuetext={`${count} bardak, hedef ${w.goal}`}>
           <svg viewBox="0 0 140 140" aria-hidden="true">
             <circle cx="70" cy="70" r={R} fill="none" stroke="var(--ink-700)" strokeWidth="10" />
-            <circle cx="70" cy="70" r={R} fill="none" stroke="var(--sky)" strokeWidth="10" strokeLinecap="round" strokeDasharray={`${circ * pct} ${circ}`} transform="rotate(-90 70 70)" style={{ transition: 'stroke-dasharray 500ms var(--ease-out)' }} />
+            {pct > 0 && <circle cx="70" cy="70" r={R} fill="none" stroke="var(--sky)" strokeWidth="10" strokeLinecap="round" strokeDasharray={`${circ * pct} ${circ}`} transform="rotate(-90 70 70)" style={{ transition: 'stroke-dasharray 500ms var(--ease-out)' }} />}
           </svg>
           <div className="water__num">
             <strong data-water-count>{count}</strong>

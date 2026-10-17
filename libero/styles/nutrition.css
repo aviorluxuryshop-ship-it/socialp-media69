@@ -104,8 +104,8 @@
   backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: 1px solid var(--line-2);
 }
-.gnav__t,
-.gnav__age {
+.gnav .gnav__t,
+.gnav .gnav__age {
   display: none;
 }
 .gnav__list {
@@ -170,7 +170,7 @@
     border: 0;
     scrollbar-width: thin;
   }
-  .gnav__t {
+  .gnav .gnav__t {
     display: block;
     margin: 6px 0 14px;
   }
@@ -203,8 +203,10 @@
   .gnav a[aria-current='true'] .gnav__no {
     color: var(--accent);
   }
-  .gnav__age {
+  .gnav .gnav__age {
     display: grid;
+    width: auto;
+    min-height: 0;
     gap: 2px;
     margin-top: 18px;
     padding: 12px 14px;
@@ -374,6 +376,9 @@
   border-left: 3px solid var(--accent);
   display: grid;
   gap: 8px;
+}
+.agenote .rv {
+  justify-self: start;
 }
 .agenote__l {
   display: inline-flex;
@@ -732,6 +737,7 @@ html.motion-live .plate:not(.is-in) .plate__s {
   gap: 8px;
 }
 .urine__sw {
+  --c: var(--u1);
   display: grid;
   gap: 6px;
   justify-items: center;
@@ -943,6 +949,16 @@ html.motion-live .plate:not(.is-in) .plate__s {
   .prefs {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+.prefs .field,
+.dp__bar .field {
+  align-content: start;
+}
+.prefs .seg,
+.dp__bar .seg {
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
 }
 .dp__grid {
   display: grid;
