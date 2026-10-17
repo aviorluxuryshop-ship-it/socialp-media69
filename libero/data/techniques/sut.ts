@@ -255,7 +255,7 @@ export const SUT = [
     sub: 'Havadan vuruşlar',
     contact: 'Ayak üstü (tam) ya da iç yüz, top yere değmeden',
     purpose: 'Havadaki topu yere inmeden doğrudan kaleye göndermek',
-    foot: ['ustTam'],
+    foot: ['ustTam', 'ic'],
     sum: 'Top havadayken, yere değmeden vurursunuz. Doğru zamanlama ve vücut pozisyonu, topun yere yakın gitmesini sağlar.',
     steps: [
       'Topun iniş çizgisine erken girin; vücudunuzu topun arkasında konumlandırın.',

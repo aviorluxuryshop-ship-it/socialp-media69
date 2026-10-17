@@ -1,0 +1,293 @@
+/* ── Krampon temas yüzeyi haritası (BootMap) ─────────────────
+   Elle çizilmiş SVG krampon; vurgu pirinç parlaması. Bileşenler: components/BootMap.tsx, components/boot/*.
+   ─────────────────────────────────────────────────────────── */
+.bootwrap {
+  container: bootwrap / inline-size;
+}
+/* Dar sütunda (teknik sayfası ana sütunu, telefon) çizim üstte büyük, bilgi altta;
+   geniş alanda yan yana. */
+.bootcard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 28px);
+  align-items: start;
+  padding: clamp(12px, 2.4vw, 24px);
+  overflow: hidden;
+}
+@container bootwrap (min-width: 780px) {
+  .bootcard {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(24px, 3.2vw, 44px);
+    align-items: center;
+  }
+}
+
+.bootmap {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.bootmap__stage {
+  container-type: inline-size;
+  position: relative;
+  border-radius: var(--r-2);
+  background: radial-gradient(ellipse at 50% 52%, var(--ink-750) 0%, var(--ink-850) 62%, var(--ink-900) 100%);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.bootmap__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(239, 234, 220, 0.04), transparent 28%);
+}
+.bootsvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(560px, 74vh);
+  margin-inline: auto;
+}
+.bootmap__cap {
+  text-align: center;
+  font-size: var(--fs-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bootmap__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 28px;
+}
+.bootmap__views {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: min(100%, 392px);
+}
+.bootview {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  flex: 1 1 88px;
+  max-width: 120px;
+  padding: 6px 6px 7px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  background: var(--ink-900);
+  color: var(--ivory-3);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.bootview:hover {
+  border-color: var(--line-3);
+  color: var(--ivory);
+}
+.bootview[aria-pressed='true'] {
+  border-color: var(--brass);
+  background: var(--brass-wash);
+  color: var(--brass-hi);
+}
+.bootview__img {
+  display: block;
+  width: 100%;
+  height: 58px;
+}
+.bootsvg--mini {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+}
+.bootview__t {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.bootmap__ctl {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.bootball {
+  min-height: 42px;
+  padding: 0 14px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ivory-3);
+  transition: all var(--dur) var(--ease);
+}
+.bootball:hover {
+  color: var(--ivory);
+  border-color: var(--line-3);
+}
+.bootball[aria-pressed='true'] {
+  background: var(--brass-wash);
+  color: var(--brass-hi);
+  border-color: rgba(201, 165, 91, 0.5);
+}
+.bootball__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  background: transparent;
+  box-shadow: inset 0 0 0 2.5px var(--ink-850);
+}
+.bootball[aria-pressed='true'] .bootball__dot {
+  background: currentColor;
+}
+
+/* Etiketler (SVG içinde; yazı boyutu çizim birimidir) */
+.bootlab__line {
+  stroke: var(--ivory-4);
+  stroke-opacity: 0.4;
+  stroke-width: 1.4;
+  stroke-dasharray: 3 5;
+}
+.bootlab__dot {
+  fill: none;
+  stroke: var(--ivory-4);
+  stroke-opacity: 0.5;
+  stroke-width: 1.4;
+}
+.bootlab__t {
+  font-size: 19px;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  fill: var(--ivory-4);
+  paint-order: stroke;
+  stroke: var(--ink-900);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+.bootlab__sub {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  fill: var(--brass);
+  paint-order: stroke;
+  stroke: var(--ink-900);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.bootlab--on .bootlab__line {
+  stroke: var(--brass-hi);
+  stroke-opacity: 1;
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+.bootlab--on .bootlab__dot {
+  fill: var(--brass-hi);
+  stroke: var(--ink-900);
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+}
+.bootlab--on .bootlab__t {
+  fill: var(--brass-hi);
+  font-weight: 700;
+}
+@container (max-width: 480px) {
+  .bootlab__sub {
+    display: none;
+  }
+  .bootlab__t {
+    font-size: 26px;
+    letter-spacing: 0.05em;
+  }
+  .bootlab__dot {
+    stroke-width: 2;
+  }
+}
+
+/* Bölge vurgusu: yumuşak nabız (hareket azaltma tercihine uyar) */
+.boot-z__halo {
+  opacity: 0.5;
+}
+.boot-z__hatch {
+  pointer-events: none;
+}
+.boot-z--on .boot-z__fill {
+  animation: bootpulse 2.8s ease-in-out infinite;
+}
+@keyframes bootpulse {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.bootsvg--mini .boot-z--on .boot-z__fill {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .boot-z--on .boot-z__fill {
+    animation: none;
+  }
+}
+
+/* Bilgi sütunu */
+.bootcard__info {
+  min-width: 0;
+}
+.bootzones {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 12px 24px;
+}
+.bootzones li {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 0.9rem;
+  color: var(--ivory-3);
+}
+.bootzones__mark {
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  border: 1.5px solid var(--brass-hi);
+  background: repeating-linear-gradient(45deg, var(--brass) 0 2px, transparent 2px 5px);
+  border-radius: 2px;
+}
+.bootzones b {
+  display: block;
+  color: var(--brass-hi);
+  font-weight: 600;
+}
+.bootzones__n {
+  display: block;
+}
+.bootzones__v {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ivory-4);
+}
+.bootcard__info .surface__list {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
