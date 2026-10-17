@@ -1,77 +1,146 @@
 /* ───────────────────────────────────────────────────────────
-   LIBERO — tasarım belirteçleri
-   Tek kaynak: renk, tipografi, boşluk, hareket. Hiçbir bileşen
-   bu dosyanın dışında ham renk değeri kullanmaz.
+   LIBERO — tasarım belirteçleri (v2: "stadyum gecesi")
+   Tek kaynak: renk, tipografi, boşluk, yüzey, hareket. Bileşenler ham
+   renk yazmaz; gerekirse bu dosyadan türetir. Ayrıntılı kılavuz: styles/DESIGN.md
+
+   Renk rolleri (her rengin tek bir işi var):
+     --accent   volt / canlı limon-çim yeşili → birincil eylem, etkin durum, odak
+     --gold     altın                          → yıldız, başarı, ödül
+     --flare    kor / mercan                   → uyarı, rakip, enerji anı, "canlı" nokta
+     --sky      gök mavisi                     → veri, bilgi, ikincil vurgu
+     --grass    çim yeşili                     → saha/ilerleme (accent'ten ayrı bir yeşil)
+   ESKİ ADLAR ÇALIŞMAYA DEVAM EDER: --brass* → accent, --terra* → flare. Böylece
+   tüm sayfalar yeni görünümü kendiliğinden devralır.
    ─────────────────────────────────────────────────────────── */
 :root {
-  /* Zemin: gece çimi — saf siyah değil, yeşile çalan koyu mürekkep */
-  --ink-950: #060a08;
-  --ink-900: #0a100d;
-  --ink-850: #0e1511;
-  --ink-800: #121b16;
-  --ink-750: #17221c;
-  --ink-700: #1d2a23;
-  --ink-600: #2a3a31;
+  /* Zemin: gece stadyumu — saf siyah değil, çim yeşili/petrol mavisine çalan koyu mürekkep */
+  --ink-1000: #030706;
+  --ink-950: #050b0a;
+  --ink-900: #08100e;
+  --ink-850: #0c1715;
+  --ink-800: #111f1c;
+  --ink-750: #162a26;
+  --ink-700: #1d3631;
+  --ink-600: #2c4a43;
 
-  /* Metin: fildişi ölçeği */
-  --ivory: #efeadc;
-  --ivory-2: #cfcbbd;
-  --ivory-3: #a6a99f;
-  --ivory-4: #858b82; /* 4.5:1 üstü (ink-900 üzerinde) */
+  /* Metin: fildişi ölçeği (AA: ivory-4 bile ink-900 üzerinde ≥ 5.5:1) */
+  --ivory: #f3f0e5;
+  --ivory-2: #d5d3c8;
+  --ivory-3: #b0b4aa;
+  --ivory-4: #8b9289;
 
-  /* Vurgu: pirinç/altın — tek sıcak renk */
-  --brass: #c9a55b;
-  --brass-hi: #e3c47e;
-  --brass-lo: #8c7239;
-  --brass-wash: rgba(201, 165, 91, 0.1);
+  /* ── Vurgu: volt (birincil) ── */
+  --accent-rgb: 194 245 60;
+  --accent: #c2f53c;
+  --accent-hi: #dcff7d;
+  --accent-lo: #86b51a;
+  --accent-ink: #0a1403; /* accent üzerindeki metin: 14:1 */
+  --accent-wash: rgb(var(--accent-rgb) / 0.1);
+  --accent-glow: rgb(var(--accent-rgb) / 0.45);
+
+  /* ── Altın: yıldız ve başarı ── */
+  --gold-rgb: 233 185 73;
+  --gold: #e9b949;
+  --gold-hi: #f7d780;
+  --gold-lo: #9b7b2a;
+  --gold-wash: rgb(var(--gold-rgb) / 0.12);
+
+  /* ── Kor / mercan: uyarı, rakip, enerji ── */
+  --flare-rgb: 255 95 61;
+  --flare: #ff6142;
+  --flare-hi: #ff9078;
+  --flare-wash: rgb(var(--flare-rgb) / 0.14);
+
+  /* ── Gök mavisi: veri ve bilgi ── */
+  --sky-rgb: 77 184 255;
+  --sky: #4db8ff;
+  --sky-hi: #96d6ff;
+  --sky-wash: rgb(var(--sky-rgb) / 0.12);
 
   /* Saha yeşili — yalnızca saha çizimlerinde ve ilerleme göstergelerinde */
-  --pitch-1: #0f2a1e;
-  --pitch-2: #123324;
-  --pitch-line: rgba(239, 234, 220, 0.5);
-  --grass: #3f9a68;
-  --grass-wash: rgba(63, 154, 104, 0.14);
-
-  /* Uyarı/rakip: toprak kırmızısı */
-  --terra: #d8664c;
-  --terra-wash: rgba(216, 102, 76, 0.14);
+  --pitch-1: #0e2a20;
+  --pitch-2: #123628;
+  --pitch-line: rgb(243 240 229 / 0.5);
+  --grass: #2fc27c;
+  --grass-wash: rgb(47 194 124 / 0.14);
 
   /* Kaleci: soluk nane */
-  --mint: #8fd0bd;
+  --mint: #8fd8c4;
+
+  /* ── ESKİ ADLAR (diğer sayfalar bunları kullanır; yeni rollere bağlıdır) ── */
+  --brass: var(--accent);
+  --brass-hi: var(--accent-hi);
+  --brass-lo: var(--accent-lo);
+  --brass-wash: var(--accent-wash);
+  --terra: var(--flare);
+  --terra-wash: var(--flare-wash);
 
   /* Çizgiler */
-  --line: rgba(239, 234, 220, 0.1);
-  --line-2: rgba(239, 234, 220, 0.18);
-  --line-3: rgba(239, 234, 220, 0.3);
+  --line: rgb(243 240 229 / 0.09);
+  --line-2: rgb(243 240 229 / 0.17);
+  --line-3: rgb(243 240 229 / 0.3);
+
+  /* ── Yüzey katmanları (kartlar, paneller, camsı alanlar) ── */
+  --surface-1: var(--ink-850);
+  --surface-2: var(--ink-800);
+  --surface-3: var(--ink-750);
+  --glass: rgb(12 23 21 / 0.66);
+  /* kart zemini: üstte ince ışık, altta düz yüzey */
+  --grad-surface: linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0) 46%), var(--ink-850);
+  --grad-surface-hi: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0) 50%), var(--ink-800);
+  /* gradyan kenarlık (padding-box / border-box hilesiyle) */
+  --edge: linear-gradient(160deg, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.09) 38%, rgb(255 255 255 / 0.07) 62%, rgb(255 255 255 / 0.2));
+  --edge-accent: linear-gradient(160deg, rgb(var(--accent-rgb) / 0.75), rgb(var(--accent-rgb) / 0.1) 42%, rgb(var(--accent-rgb) / 0.08) 62%, rgb(var(--accent-rgb) / 0.4));
+  --grad-accent: linear-gradient(180deg, #d6ff62 0%, #b9ee2c 100%);
+  --grad-gold: linear-gradient(180deg, #f9dc8d 0%, #e0ab35 100%);
+  /* stadyum ışığı: sayfa/bant arka planlarında */
+  --floodlight: radial-gradient(60% 70% at 50% 0%, rgb(255 255 255 / 0.09), transparent 70%);
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* Gölge / parıltı */
+  --sh-1: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 10px 28px -14px rgb(0 0 0 / 0.7);
+  --sh-2: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 22px 50px -22px rgb(0 0 0 / 0.85);
+  --sh-3: 0 40px 90px -30px rgb(0 0 0 / 0.9);
+  --glow-accent: 0 0 0 1px rgb(var(--accent-rgb) / 0.35), 0 10px 44px -10px var(--accent-glow);
+  --glow-gold: 0 0 0 1px rgb(var(--gold-rgb) / 0.4), 0 10px 40px -12px rgb(var(--gold-rgb) / 0.4);
 
   /* Tipografi */
-  --font-display: 'Instrument Serif', 'Times New Roman', serif;
+  --font-display: 'Libero Display', 'Libero Display Fallback', 'Arial Narrow', 'Roboto Condensed', system-ui, sans-serif;
   --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* Ölçek */
-  --fs-display: clamp(3.1rem, 8.2vw, 7.4rem);
-  --fs-h1: clamp(2.5rem, 5.4vw, 4.6rem);
-  --fs-h2: clamp(2rem, 3.6vw, 3.1rem);
-  --fs-h3: clamp(1.4rem, 2vw, 1.75rem);
+  /* Ölçek — dramatik başlıklar (dar, ağır yazı tipi büyük boyutları taşır) */
+  --fs-hero: clamp(4.4rem, 14.5vw, 9.4rem);
+  --fs-display: clamp(3.6rem, 9.6vw, 7.8rem);
+  --fs-h1: clamp(2.7rem, 5.6vw, 4.7rem);
+  --fs-h2: clamp(2.3rem, 4.6vw, 3.9rem);
+  --fs-h3: clamp(1.55rem, 2.3vw, 2rem);
   --fs-lead: clamp(1.08rem, 1.5vw, 1.28rem);
   --fs-body: 1rem;
   --fs-small: 0.875rem;
   --fs-label: 0.72rem;
+  --fs-numeral: clamp(5rem, 14vw, 12rem); /* büyük dekoratif sayılar */
 
   /* Boşluk */
   --gutter: clamp(16px, 4vw, 44px);
   --maxw: 1280px;
-  --section: clamp(64px, 9vw, 132px);
+  --section: clamp(72px, 10vw, 148px);
+  --header-h: 72px;
 
-  /* Yarıçap: kontrollü, neredeyse keskin */
-  --r-1: 2px;
-  --r-2: 4px;
+  /* Yarıçap: kontrollü; düğme/girdi keskin, kart yumuşak değil */
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-3: 14px;
+  --r-pill: 999px;
 
   /* Hareket */
   --ease: cubic-bezier(0.22, 0.7, 0.18, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.45, 0.05, 0.2, 1);
+  --dur-fast: 140ms;
   --dur: 240ms;
+  --dur-slow: 640ms;
+  --stagger: 70ms;
 
   /* Katman */
   --z-header: 50;
@@ -80,4 +149,13 @@
   --z-toast: 100;
 
   color-scheme: dark;
+}
+
+/* Telefon: ağır gölge azaltılır, bölümler biraz sıkılaşır */
+@media (max-width: 640px) {
+  :root {
+    --section: clamp(56px, 14vw, 84px);
+    --header-h: 64px;
+    --sh-2: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 14px 30px -18px rgb(0 0 0 / 0.8);
+  }
 }

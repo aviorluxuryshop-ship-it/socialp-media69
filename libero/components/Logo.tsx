@@ -14,7 +14,7 @@ export function Wordmark() {
     <span className="wordmark">
       <LogoMark />
       <span className="wordmark__text">
-        <span className="wordmark__name">Libero</span>
+        <span className="wordmark__name" lang="en">Libero</span>
         <span className="wordmark__sub">Futbol Akademisi</span>
       </span>
     </span>

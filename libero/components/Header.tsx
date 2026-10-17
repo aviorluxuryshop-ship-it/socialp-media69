@@ -17,6 +17,7 @@ export function Header() {
   const [mobile, setMobile] = useState(false);
   const [search, setSearch] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const headerRef = useRef<HTMLElement | null>(null);
   const level = useStore(selLevel);
 
   const cancelClose = () => {
@@ -31,6 +32,31 @@ export function Header() {
     setOpen(null);
     setMobile(false);
   }, [pathname]);
+
+  // Kaydırınca gölge/zemin: React durumu değil, doğrudan öznitelik (pasif dinleyici + rAF)
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    let raf = 0;
+    let on = false;
+    const apply = () => {
+      raf = 0;
+      const next = window.scrollY > 8;
+      if (next !== on) {
+        on = next;
+        el.dataset.scrolled = String(next);
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    apply();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.overflow = mobile || search ? 'hidden' : '';
@@ -71,7 +97,7 @@ export function Header() {
       <a className="skip-link" href="#icerik">
         İçeriğe geç
       </a>
-      <header className="site-header" onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
+      <header ref={headerRef} className="site-header" data-scrolled="false" onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
         <div className="container site-header__bar">
           <Link href="/" className="site-header__logo" aria-label="Libero Futbol Akademisi — ana sayfa">
             <Wordmark />
@@ -150,8 +176,8 @@ export function Header() {
             <div className="container mega__inner">
               <p className="mega__label">{g.label}</p>
               <ul className="mega__list">
-                {g.items.map((i) => (
-                  <li key={i.href}>
+                {g.items.map((i, n) => (
+                  <li key={i.href} style={{ '--n': n } as React.CSSProperties}>
                     <Link href={i.href} tabIndex={open === g.label ? 0 : -1} data-active={isActive(i.href) || undefined}>
                       <span className="mega__icon">
                         <Icon name={i.icon} />
@@ -172,8 +198,8 @@ export function Header() {
       {/* Mobil menü */}
       <div className="mobile-menu" data-open={mobile} aria-hidden={!mobile}>
         <div className="container mobile-menu__inner">
-          {NAV_GROUPS.map((g) => (
-            <section key={g.label}>
+          {NAV_GROUPS.map((g, gi) => (
+            <section key={g.label} style={{ '--n': gi } as React.CSSProperties}>
               <p className="eyebrow">{g.label}</p>
               <ul>
                 {g.items.map((i) => (
@@ -186,7 +212,7 @@ export function Header() {
               </ul>
             </section>
           ))}
-          <section>
+          <section style={{ '--n': NAV_GROUPS.length } as React.CSSProperties}>
             <p className="eyebrow">Kütüphane</p>
             <ul>
               <li>
