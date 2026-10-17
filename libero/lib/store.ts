@@ -12,6 +12,7 @@ import {
   type EquipByEnv,
   type EquipId as EquipIdT,
 } from './environments';
+import type { EventType, VideoAnalysisSummary, ViewKind } from './pose/types';
 
 /* ───────────────────────────────────────────────────────────
    Kalıcı depolama
@@ -87,6 +88,8 @@ export interface AppState {
   videoNotes: Record<string, { name: string; markers: VideoMarker[]; updated: string }>;
   lastVisit: { path: string; title: string; at: string } | null;
   createdAt: string;
+  /** Otomatik video analizi: dosya anahtarı (videoNotes ile aynı) → yalnızca KÜÇÜK özet (en çok 20) */
+  videoAnalyses: Record<string, VideoAnalysisSummary>;
 }
 
 export const DEFAULT_PROFILE: Profile = {
@@ -117,6 +120,7 @@ export function makeDefault(): AppState {
     videoNotes: {},
     lastVisit: null,
     createdAt: '',
+    videoAnalyses: {},
   };
 }
 
@@ -213,6 +217,7 @@ export function sanitize(raw: unknown): AppState {
     videoNotes: r.videoNotes && typeof r.videoNotes === 'object' ? r.videoNotes : {},
     program: sanitizeProgram(r.program),
     lastVisit: r.lastVisit ?? null,
+    videoAnalyses: sanitizeVideoAnalyses((r as { videoAnalyses?: unknown }).videoAnalyses),
   };
 }
 
@@ -404,5 +409,86 @@ export function deleteVideoNotes(key: string) {
     const next = { ...s.videoNotes };
     delete next[key];
     return { ...s, videoNotes: next };
+  });
+}
+
+// ── Otomatik video analizi özetleri ────────────────────────
+// Yalnızca küçük özet saklanır (ham iskelet/seri yok). En çok 20 kayıt; en yeniler korunur.
+
+export const MAX_VIDEO_ANALYSES = 20;
+const VA_EVENTS: readonly EventType[] = ['vurus', 'yon-degistirme', 'hizlanma', 'durus', 'comelme'];
+const VA_VIEWS: readonly ViewKind[] = ['yan', 'önden-arkadan', 'çapraz', 'belirsiz'];
+const VA_REL = ['yüksek', 'orta', 'düşük'] as const;
+
+const finiteIn = (v: unknown, lo: number, hi: number): number | null =>
+  typeof v === 'number' && Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : null;
+
+function sanitizeVideoAnalysis(raw: unknown): VideoAnalysisSummary | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const r = raw as Record<string, unknown>;
+  if (r.v !== 1 || typeof r.name !== 'string') return null;
+  const startSec = finiteIn(r.startSec, 0, 1e6);
+  const endSec = finiteIn(r.endSec, 0, 1e6);
+  const fps = finiteIn(r.fps, 0.1, 240);
+  const frames = finiteIn(r.frames, 0, 1e6);
+  if (startSec === null || endSec === null || fps === null || frames === null) return null;
+  const counts: Record<string, number> = {};
+  const rc = r.eventCounts && typeof r.eventCounts === 'object' ? (r.eventCounts as Record<string, unknown>) : {};
+  for (const k of VA_EVENTS) counts[k] = Math.round(finiteIn(rc[k], 0, 9999) ?? 0);
+  const events = (Array.isArray(r.events) ? r.events : [])
+    .map((e) => {
+      const o = (e && typeof e === 'object' ? e : {}) as Record<string, unknown>;
+      const t = finiteIn(o.t, 0, 1e6);
+      const conf = finiteIn(o.conf, 0, 1);
+      return VA_EVENTS.includes(o.type as EventType) && t !== null && conf !== null ? { type: o.type as EventType, t, conf } : null;
+    })
+    .filter((e): e is { type: EventType; t: number; conf: number } => e !== null)
+    .slice(0, 40);
+  return {
+    v: 1,
+    name: r.name.slice(0, 120),
+    at: typeof r.at === 'string' ? r.at.slice(0, 40) : '',
+    startSec,
+    endSec,
+    fps,
+    quality: r.quality === 'full' ? 'full' : 'lite',
+    frames: Math.round(frames),
+    coveragePct: Math.round(finiteIn(r.coveragePct, 0, 100) ?? 0),
+    reliability: VA_REL.includes(r.reliability as (typeof VA_REL)[number]) ? (r.reliability as (typeof VA_REL)[number]) : 'düşük',
+    reliabilityScore: Math.round(finiteIn(r.reliabilityScore, 0, 100) ?? 0),
+    viewKind: VA_VIEWS.includes(r.viewKind as ViewKind) ? (r.viewKind as ViewKind) : 'belirsiz',
+    playerHeightPct: finiteIn(r.playerHeightPct, 0, 100),
+    hipSpeedMax: finiteIn(r.hipSpeedMax, 0, 1000),
+    cadence: finiteIn(r.cadence, 0, 1000),
+    eventCounts: counts,
+    events,
+    warnings: (Array.isArray(r.warnings) ? r.warnings : []).filter((w): w is string => typeof w === 'string').slice(0, 6).map((w) => w.slice(0, 220)),
+  };
+}
+
+function capVideoAnalyses(map: Record<string, VideoAnalysisSummary>): Record<string, VideoAnalysisSummary> {
+  const entries = Object.entries(map).sort((a, b) => (b[1].at > a[1].at ? 1 : b[1].at < a[1].at ? -1 : 0));
+  return Object.fromEntries(entries.slice(0, MAX_VIDEO_ANALYSES));
+}
+
+export function sanitizeVideoAnalyses(raw: unknown): Record<string, VideoAnalysisSummary> {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  const out: Record<string, VideoAnalysisSummary> = {};
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    const s = sanitizeVideoAnalysis(v);
+    if (s && k.length > 0 && k.length <= 300) out[k] = s;
+  }
+  return capVideoAnalyses(out);
+}
+
+export function saveVideoAnalysis(key: string, summary: VideoAnalysisSummary) {
+  update((s) => ({ ...s, videoAnalyses: capVideoAnalyses({ ...s.videoAnalyses, [key]: summary }) }));
+}
+
+export function deleteVideoAnalysis(key: string) {
+  update((s) => {
+    const next = { ...s.videoAnalyses };
+    delete next[key];
+    return { ...s, videoAnalyses: next };
   });
 }

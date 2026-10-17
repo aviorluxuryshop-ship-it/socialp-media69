@@ -35,6 +35,9 @@ const types = {
   '.txt': 'text/plain; charset=utf-8',
   '.xml': 'application/xml; charset=utf-8',
   '.webmanifest': 'application/manifest+json',
+  // otomatik video analizi: WebAssembly doğru MIME türüyle sunulmalı (akışlı derleme); .task modeli ikili dosyadır
+  '.wasm': 'application/wasm',
+  '.task': 'application/octet-stream',
 };
 
 if (!fs.existsSync(path.join(root, 'index.html'))) {

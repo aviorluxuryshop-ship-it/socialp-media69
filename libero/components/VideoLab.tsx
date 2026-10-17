@@ -5,6 +5,7 @@ import { deleteVideoNotes, getState, saveVideoNotes, useStore, type AppState, ty
 import { toast } from '@/lib/toast';
 import { uid } from '@/lib/utils';
 import { Icon } from './Icon';
+import { VideoAutoAnalysis } from './VideoAutoAnalysis';
 
 type Tool = 'none' | 'pen' | 'line' | 'arrow' | 'circle' | 'angle';
 interface Stroke {
@@ -572,6 +573,7 @@ export function VideoLab() {
           </div>
         </aside>
       </div>
+      {fileInfo && <VideoAutoAnalysis videoRef={videoRef} src={src} fileKey={fileInfo.key} fileName={fileInfo.name} />}
       {saved.length > 0 && <SavedList saved={saved} current={fileInfo?.key} />}
     </div>
   );

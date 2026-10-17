@@ -7,3 +7,6 @@ next-env.d.ts
 !.env.example
 .DS_Store
 .qa/
+
+# Üretilmiş varlıklar (scripts/prepare-assets.mjs): MediaPipe wasm kopyaları
+public/mediapipe/

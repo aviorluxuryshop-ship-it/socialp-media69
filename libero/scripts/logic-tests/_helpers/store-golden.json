@@ -1,0 +1,522 @@
+{
+ "cases": {
+  "v1": {
+   "v": 1,
+   "profile": {
+    "name": "Ali",
+    "age": 13,
+    "level": 3,
+    "positions": [
+     "forvet"
+    ],
+    "goal": "teknik",
+    "equipment": [
+     "top",
+     "koni"
+    ],
+    "envs": [
+     "saha",
+     "ev"
+    ],
+    "perWeek": 3,
+    "minutes": 50
+   },
+   "levels": {
+    "sert-sut": {
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   },
+   "levelLog": [
+    {
+     "id": "sert-sut",
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   ],
+   "practiced": {
+    "sert-sut": {
+     "count": 2,
+     "last": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "fav": [
+    "sert-pas"
+   ],
+   "program": null,
+   "logs": [],
+   "quiz": {
+    "q1": {
+     "tries": 2,
+     "right": 1,
+     "last": true,
+     "at": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "tests": [
+    {
+     "id": "t1",
+     "kind": "sprint10",
+     "value": 2.1,
+     "date": "2025-01-04"
+    }
+   ],
+   "board": [],
+   "videoNotes": {
+    "a.mp4|100|5": {
+     "name": "a.mp4",
+     "markers": [
+      {
+       "id": "m1",
+       "t": 1.5,
+       "label": "Giriş",
+       "note": "n"
+      }
+     ],
+     "updated": "2025-01-05T10:00:00.000Z"
+    }
+   },
+   "lastVisit": {
+    "path": "/teknikler/",
+    "title": "Teknikler",
+    "at": "2025-01-05T10:00:00.000Z"
+   },
+   "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  "v2": {
+   "v": 2,
+   "profile": {
+    "name": "Ali",
+    "age": 13,
+    "level": 3,
+    "positions": [
+     "forvet"
+    ],
+    "goal": "dengeli",
+    "envs": [
+     "saha",
+     "ev"
+    ],
+    "perWeek": 3,
+    "minutes": 50
+   },
+   "levels": {
+    "sert-sut": {
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   },
+   "levelLog": [
+    {
+     "id": "sert-sut",
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   ],
+   "practiced": {
+    "sert-sut": {
+     "count": 2,
+     "last": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "fav": [
+    "sert-pas"
+   ],
+   "program": null,
+   "logs": [],
+   "quiz": {
+    "q1": {
+     "tries": 2,
+     "right": 1,
+     "last": true,
+     "at": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "tests": [
+    {
+     "id": "t1",
+     "kind": "sprint10",
+     "value": 2.1,
+     "date": "2025-01-04"
+    }
+   ],
+   "board": [],
+   "videoNotes": {
+    "a.mp4|100|5": {
+     "name": "a.mp4",
+     "markers": [
+      {
+       "id": "m1",
+       "t": 1.5,
+       "label": "Giriş",
+       "note": "n"
+      }
+     ],
+     "updated": "2025-01-05T10:00:00.000Z"
+    }
+   },
+   "lastVisit": {
+    "path": "/teknikler/",
+    "title": "Teknikler",
+    "at": "2025-01-05T10:00:00.000Z"
+   },
+   "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  "weird": {
+   "profile": "x",
+   "levels": [],
+   "tests": "q",
+   "videoNotes": 5,
+   "fav": {
+    "a": 1
+   },
+   "extra": {
+    "keep": true
+   }
+  },
+  "nul": null,
+  "empty": {}
+ },
+ "golden": {
+  "v1": {
+   "v": 2,
+   "profile": {
+    "name": "Ali",
+    "age": 13,
+    "level": 3,
+    "positions": [
+     "forvet"
+    ],
+    "goal": "dengeli",
+    "equipByEnv": {
+     "ev": [
+      "koni",
+      "top"
+     ],
+     "salon": [
+      "dambil",
+      "halter",
+      "makine",
+      "kablo",
+      "bench",
+      "barfiks",
+      "kutu",
+      "bant",
+      "kardiyo",
+      "silindir"
+     ],
+     "saha": [
+      "top",
+      "koni"
+     ]
+    },
+    "envs": [
+     "saha",
+     "ev"
+    ],
+    "perWeek": 3,
+    "minutes": 50
+   },
+   "levels": {
+    "sert-sut": {
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   },
+   "levelLog": [
+    {
+     "id": "sert-sut",
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   ],
+   "practiced": {
+    "sert-sut": {
+     "count": 2,
+     "last": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "fav": [
+    "sert-pas"
+   ],
+   "program": null,
+   "logs": [],
+   "quiz": {
+    "q1": {
+     "tries": 2,
+     "right": 1,
+     "last": true,
+     "at": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "tests": [
+    {
+     "id": "t1",
+     "kind": "sprint10",
+     "value": 2.1,
+     "date": "2025-01-04"
+    }
+   ],
+   "board": [],
+   "videoNotes": {
+    "a.mp4|100|5": {
+     "name": "a.mp4",
+     "markers": [
+      {
+       "id": "m1",
+       "t": 1.5,
+       "label": "Giriş",
+       "note": "n"
+      }
+     ],
+     "updated": "2025-01-05T10:00:00.000Z"
+    }
+   },
+   "lastVisit": {
+    "path": "/teknikler/",
+    "title": "Teknikler",
+    "at": "2025-01-05T10:00:00.000Z"
+   },
+   "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  "v2": {
+   "v": 2,
+   "profile": {
+    "name": "Ali",
+    "age": 13,
+    "level": 3,
+    "positions": [
+     "forvet"
+    ],
+    "goal": "dengeli",
+    "equipByEnv": {
+     "ev": [],
+     "salon": [
+      "dambil",
+      "halter",
+      "makine",
+      "kablo",
+      "bench",
+      "barfiks",
+      "kutu",
+      "bant",
+      "kardiyo",
+      "silindir"
+     ],
+     "saha": [
+      "top",
+      "koni"
+     ]
+    },
+    "envs": [
+     "saha",
+     "ev"
+    ],
+    "perWeek": 3,
+    "minutes": 50
+   },
+   "levels": {
+    "sert-sut": {
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   },
+   "levelLog": [
+    {
+     "id": "sert-sut",
+     "level": 3,
+     "at": "2025-01-02T10:00:00.000Z"
+    }
+   ],
+   "practiced": {
+    "sert-sut": {
+     "count": 2,
+     "last": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "fav": [
+    "sert-pas"
+   ],
+   "program": null,
+   "logs": [],
+   "quiz": {
+    "q1": {
+     "tries": 2,
+     "right": 1,
+     "last": true,
+     "at": "2025-01-03T10:00:00.000Z"
+    }
+   },
+   "tests": [
+    {
+     "id": "t1",
+     "kind": "sprint10",
+     "value": 2.1,
+     "date": "2025-01-04"
+    }
+   ],
+   "board": [],
+   "videoNotes": {
+    "a.mp4|100|5": {
+     "name": "a.mp4",
+     "markers": [
+      {
+       "id": "m1",
+       "t": 1.5,
+       "label": "Giriş",
+       "note": "n"
+      }
+     ],
+     "updated": "2025-01-05T10:00:00.000Z"
+    }
+   },
+   "lastVisit": {
+    "path": "/teknikler/",
+    "title": "Teknikler",
+    "at": "2025-01-05T10:00:00.000Z"
+   },
+   "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  "weird": {
+   "v": 2,
+   "profile": {
+    "name": "",
+    "age": null,
+    "level": 2,
+    "positions": [],
+    "goal": "dengeli",
+    "equipByEnv": {
+     "ev": [],
+     "salon": [
+      "dambil",
+      "halter",
+      "makine",
+      "kablo",
+      "bench",
+      "barfiks",
+      "kutu",
+      "bant",
+      "kardiyo",
+      "silindir"
+     ],
+     "saha": [
+      "top",
+      "koni"
+     ]
+    },
+    "envs": [
+     "saha"
+    ],
+    "perWeek": 4,
+    "minutes": 60
+   },
+   "levels": [],
+   "levelLog": [],
+   "practiced": {},
+   "fav": [],
+   "program": null,
+   "logs": [],
+   "quiz": {},
+   "tests": [],
+   "board": [],
+   "videoNotes": {},
+   "lastVisit": null,
+   "createdAt": "",
+   "extra": {
+    "keep": true
+   }
+  },
+  "nul": {
+   "v": 2,
+   "profile": {
+    "name": "",
+    "age": null,
+    "level": 2,
+    "positions": [],
+    "goal": "dengeli",
+    "equipByEnv": {
+     "ev": [],
+     "salon": [
+      "dambil",
+      "halter",
+      "makine",
+      "kablo",
+      "bench",
+      "barfiks",
+      "kutu",
+      "bant",
+      "kardiyo",
+      "silindir"
+     ],
+     "saha": [
+      "top",
+      "koni"
+     ]
+    },
+    "envs": [
+     "saha"
+    ],
+    "perWeek": 4,
+    "minutes": 60
+   },
+   "levels": {},
+   "levelLog": [],
+   "practiced": {},
+   "fav": [],
+   "program": null,
+   "logs": [],
+   "quiz": {},
+   "tests": [],
+   "board": [],
+   "videoNotes": {},
+   "lastVisit": null,
+   "createdAt": ""
+  },
+  "empty": {
+   "v": 2,
+   "profile": {
+    "name": "",
+    "age": null,
+    "level": 2,
+    "positions": [],
+    "goal": "dengeli",
+    "equipByEnv": {
+     "ev": [],
+     "salon": [
+      "dambil",
+      "halter",
+      "makine",
+      "kablo",
+      "bench",
+      "barfiks",
+      "kutu",
+      "bant",
+      "kardiyo",
+      "silindir"
+     ],
+     "saha": [
+      "top",
+      "koni"
+     ]
+    },
+    "envs": [
+     "saha"
+    ],
+    "perWeek": 4,
+    "minutes": 60
+   },
+   "levels": {},
+   "levelLog": [],
+   "practiced": {},
+   "fav": [],
+   "program": null,
+   "logs": [],
+   "quiz": {},
+   "tests": [],
+   "board": [],
+   "videoNotes": {},
+   "lastVisit": null,
+   "createdAt": ""
+  }
+ }
+}
