@@ -16,7 +16,7 @@ export const THRESH = {
   despikeTL: 1.5,
 
   /** hız sınıfları (GB/sn): duruş < walk ≤ yürüyüş < run ≤ koşu < fast ≤ yüksek tempo */
-  speed: { standMax: 0.8, walkMax: 4, runMax: 9, minSegmentSec: 0.3 },
+  speed: { standMax: 0.8, walkMax: 4, runMax: 9, minSegmentSec: 0.5 },
 
   /** vuruş/pas hareketi adayı */
   kick: {
@@ -40,6 +40,12 @@ export const THRESH = {
   supportKneeStraight: 165,
   /** gövde bu kadar geriye eğikse not düşülür (derece, − = geriye) */
   trunkBackLean: -10,
+  /** destek ayağı kalça merkezinden bu kadar (gövde boyu) uzaktaysa not düşülür */
+  balanceFarTL: 0.6,
+  /** yön değiştirirken kalça yüksekliği bu orandan (%) az düştüyse "belirgin alçalma yok" notu */
+  turnDropMinPct: 5,
+  /** hızlanma başında gövde bu kadar (derece) öne eğikse not düşülür */
+  startLeanDeg: 10,
 
   turn: { minDeg: 55, minSpeed: 1.5, halfWinSec: 0.4, gapSec: 0.1, minSepSec: 0.8 },
   accel: { minPeak: 7, minRise: 4, maxRiseSec: 2.0, minSepSec: 1.0 },

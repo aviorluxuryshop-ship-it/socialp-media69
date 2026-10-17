@@ -244,3 +244,26 @@ export const EVENT_TITLE: Record<EventType, string> = {
   durus: 'Duruş / tek ayak denge anı',
   comelme: 'Alçalma / çömelme',
 };
+
+/** Kalıcı depoya yazılan KÜÇÜK özet (ham iskelet ya da seri içermez). Şema: lib/store.ts → sanitizeVideoAnalyses. */
+export interface VideoAnalysisSummary {
+  v: 1;
+  name: string;
+  /** ISO zamanı */
+  at: string;
+  startSec: number;
+  endSec: number;
+  fps: number;
+  quality: 'lite' | 'full';
+  frames: number;
+  coveragePct: number;
+  reliability: 'yüksek' | 'orta' | 'düşük';
+  reliabilityScore: number;
+  viewKind: ViewKind;
+  playerHeightPct: number | null;
+  hipSpeedMax: number | null;
+  cadence: number | null;
+  eventCounts: Record<string, number>;
+  events: { type: EventType; t: number; conf: number }[];
+  warnings: string[];
+}

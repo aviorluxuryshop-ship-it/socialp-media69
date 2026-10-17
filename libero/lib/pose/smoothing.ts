@@ -88,12 +88,18 @@ export interface SmoothOpts {
   order: number;
 }
 
-/** fps'e göre pencere: ≈0,2 sn, [3, 11] arası tek sayı; 3 örnekte doğrusal. */
+/**
+ * fps'e göre pencere: ≈0,2 sn, [3, 11] arası tek sayı.
+ * 3 örnekli pencerede (≈ 12 kare/sn ve altı) derece 2 kullanılır; bu, 3 noktadan geçen parabol olduğundan
+ * düzleştirme YAPMAZ (özdeşlik) — çünkü 3 noktalı bir hareketli ortalama düşük örneklemede vuruş gibi hızlı
+ * hareketi üç kareye yayıp tepe hızını üçte birine indirir. Bu durumda yalnızca sıçrama ayıklama ve boşluk
+ * doldurma uygulanır; titreşim bastırılmaz.
+ */
 export function smoothParams(fps: number): SmoothOpts {
   let w = Math.round(0.2 * fps);
   w = Math.max(3, Math.min(11, w));
   if (w % 2 === 0) w += 1;
-  const order = w >= 7 ? 3 : w >= 5 ? 2 : 1;
+  const order = w >= 7 ? 3 : 2;
   return { window: w, order };
 }
 
