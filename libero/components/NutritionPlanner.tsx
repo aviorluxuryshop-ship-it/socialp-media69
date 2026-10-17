@@ -85,17 +85,17 @@ export function SleepTable({ rows }: { rows: { age: string; hours: string; src: 
   const [plan] = usePlan();
   return (
     <div className="tablewrap" data-reveal>
-      <table className="table sleeptable" data-sleep>
+      <table className="table table--stack sleeptable" data-sleep role="table">
         <caption className="visually-hidden">Yaşa göre önerilen uyku süresi</caption>
         <thead>
-          <tr><th scope="col">Yaş</th><th scope="col">Önerilen süre</th><th scope="col">Not</th></tr>
+          <tr role="row"><th scope="col" role="columnheader">Yaş</th><th scope="col" role="columnheader">Önerilen süre</th><th scope="col" role="columnheader">Not</th></tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.age} data-me={r.bands.includes(plan.band) ? 'true' : undefined}>
-              <th scope="row">{r.age}</th>
-              <td className="sleeptable__h">{r.hours}</td>
-              <td>{r.note}</td>
+            <tr key={r.age} role="row" data-me={r.bands.includes(plan.band) ? 'true' : undefined}>
+              <th scope="row" role="rowheader">{r.age}</th>
+              <td role="cell" className="sleeptable__h" data-label="Önerilen süre">{r.hours}</td>
+              <td role="cell" data-label="Not">{r.note}</td>
             </tr>
           ))}
         </tbody>

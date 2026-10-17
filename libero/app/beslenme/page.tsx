@@ -324,17 +324,17 @@ export default function Page() {
           <GuideSection id="takviye">
             <AgeNote topic="takviye" />
             <div className="tablewrap" data-reveal>
-              <table className="table suptable">
+              <table className="table table--stack suptable" role="table">
                 <caption className="visually-hidden">Takviyeler ve yaş gruplarına göre yaklaşım</caption>
                 <thead>
-                  <tr><th scope="col">Ürün</th><th scope="col">Çocuk ve ergen (≤17)</th><th scope="col">18 yaş ve üstü</th></tr>
+                  <tr role="row"><th scope="col" role="columnheader">Ürün</th><th scope="col" role="columnheader">Çocuk ve ergen (≤17)</th><th scope="col" role="columnheader">18 yaş ve üstü</th></tr>
                 </thead>
                 <tbody>
                   {SUPPLEMENT_ROWS.map((r) => (
-                    <tr key={r.name}>
-                      <th scope="row">{r.name}</th>
-                      <td>{r.minor}</td>
-                      <td>{r.adult}</td>
+                    <tr key={r.name} role="row">
+                      <th scope="row" role="rowheader">{r.name}</th>
+                      <td role="cell" data-label="Çocuk ve ergen (≤17)">{r.minor}</td>
+                      <td role="cell" data-label="18 yaş ve üstü">{r.adult}</td>
                     </tr>
                   ))}
                 </tbody>
