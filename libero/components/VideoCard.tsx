@@ -23,6 +23,13 @@ export function levelText(v: Pick<Video, 'lv'>) {
 
 const levelWords = (v: Pick<Video, 'lv'>) => (v.lv[0] === v.lv[1] ? `seviye ${v.lv[0]}` : `seviye ${v.lv[0]} ile ${v.lv[1]} arası`);
 
+/** Aynı konudaki kartlar birbirinin aynısı görünmesin: kimlikten 0–3 arası kararlı bir çizim varyantı (çevir / yakınlaştır). */
+export function coverVariant(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return h % 4;
+}
+
 /**
  * Kapak: önce konuya özel çizilmiş kapak. Kullanıcı izin verdiyse (lib/ui-prefs.ts) YouTube'un
  * küçük resmi üstüne biner; yüklenemezse ya da kapalıysa çizim kalır. Kapalıyken dış istek yapılmaz.
@@ -34,7 +41,9 @@ export function VideoThumb({ id, topic }: { id: string; topic: Video['topic'] })
   const show = ui.hydrated && ui.ytThumbs && !bad;
   return (
     <>
-      <VideoCover topic={topic} />
+      <span className="vcard__art" data-v={coverVariant(id)}>
+        <VideoCover topic={topic} />
+      </span>
       {show && (
         // eslint-disable-next-line @next/next/no-img-element
         <img

@@ -16,7 +16,8 @@ type Api = 'loading' | 'ready' | 'noapi' | 'offline' | 'embed-off' | 'missing' |
 
 const HARD: Api[] = ['offline', 'embed-off', 'missing', 'other'];
 
-const FAIL_TEXT: Record<'offline' | 'embed-off' | 'missing' | 'other', { title: string; body: string }> = {
+const FAIL_TEXT: Record<'offline' | 'noapi' | 'embed-off' | 'missing' | 'other', { title: string; body: string }> = {
+  noapi: { title: 'Oynatıcıya bağlanılamadı', body: 'Çevrimdışı olabilirsin ya da bir içerik engelleyici YouTube bağlantısını kapatıyor olabilir. Video yine de yüklenmiş olabilir; aşağıdan deneyebilir ya da YouTube’da açabilirsin.' },
   offline: { title: 'Video şu an oynatılamıyor', body: 'İnternet bağlantısı yok ya da YouTube’a ulaşılamıyor. Bağlantı gelince bu pencereyi yeniden aç.' },
   'embed-off': { title: 'Bu video burada oynatılamıyor', body: 'Video sahibi gömülü oynatmaya izin vermiyor. YouTube’da açıp izleyebilirsin.' },
   missing: { title: 'Video bulunamadı', body: 'Video kaldırılmış ya da özel yapılmış olabilir. Doğrulama tarihinden sonra değişmiş olabilir.' },
@@ -55,6 +56,7 @@ export function VideoPlayerModal({ video, onClose, sidePanel }: { video: Video; 
   const [mounted, setMounted] = useState(false);
   const [api, setApi] = useState<Api>('loading');
   const [startAt, setStartAt] = useState(0);
+  const [peek, setPeek] = useState(false);
   const [now, setNow] = useState<number | null>(null);
   const [timeStr, setTimeStr] = useState('');
   const [text, setText] = useState('');
@@ -192,7 +194,7 @@ export function VideoPlayerModal({ video, onClose, sidePanel }: { video: Video; 
   };
 
   if (!mounted) return null;
-  const hard = HARD.includes(api) ? (api as 'offline' | 'embed-off' | 'missing' | 'other') : null;
+  const hard = HARD.includes(api) ? (api as 'offline' | 'embed-off' | 'missing' | 'other') : api === 'noapi' && !peek ? 'noapi' : null;
   const badges = videoBadges(video);
   const titleId = `vmodal-title-${video.id}`;
 
@@ -214,12 +216,15 @@ export function VideoPlayerModal({ video, onClose, sidePanel }: { video: Video; 
                   <div className="vmodal__fail-box">
                     <p className="h3">{FAIL_TEXT[hard].title}</p>
                     <p>{FAIL_TEXT[hard].body}</p>
-                    <a className="btn btn--primary" href={watchUrl(video.id)} target="_blank" rel="noopener noreferrer">YouTube’da aç <Icon name="external" /></a>
+                    <div className="vmodal__fail-actions">
+                      <a className="btn btn--primary" href={watchUrl(video.id)} target="_blank" rel="noopener noreferrer">YouTube’da aç <Icon name="external" /></a>
+                      {hard === 'noapi' && <button type="button" className="btn btn--ghost" onClick={() => setPeek(true)}>Oynatıcıyı yine de göster</button>}
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-            {api === 'noapi' && (
+            {api === 'noapi' && peek && (
               <p className="note note--warn vmodal__banner" role="status">
                 <Icon name="warn" />
                 <span>
