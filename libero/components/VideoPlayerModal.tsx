@@ -43,7 +43,7 @@ function embedSrc(id: string, start: number) {
   return `https://www.youtube-nocookie.com/embed/${id}?${q.toString()}`;
 }
 
-const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),iframe,[tabindex]:not([tabindex="-1"])';
 
 export function VideoPlayerModal({ video, onClose, sidePanel }: { video: Video; onClose: () => void; sidePanel?: ReactNode }) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -79,20 +79,26 @@ export function VideoPlayerModal({ video, onClose, sidePanel }: { video: Video; 
       if (e.key !== 'Tab') return;
       const root = panelRef.current;
       if (!root) return;
-      const f = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((x) => x.offsetParent !== null && x.tagName !== 'IFRAME');
+      // Odak döngüsü elle yönetilir: tarayıcıların kaydırılabilir alan / iframe gibi farklı sekme sıralarına bağlı kalmaz.
+      const f = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((x) => x.offsetParent !== null);
       if (!f.length) return;
-      const first = f[0];
-      const last = f[f.length - 1];
-      const a = document.activeElement;
-      if (!root.contains(a)) { e.preventDefault(); first.focus(); }
-      else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+      const at = f.indexOf(document.activeElement as HTMLElement);
+      const next = at === -1 ? (e.shiftKey ? f.length - 1 : 0) : (at + (e.shiftKey ? -1 : 1) + f.length) % f.length;
+      e.preventDefault();
+      f[next].focus();
     };
+    // Odak yine de dışarı kaçarsa (ör. tarayıcı arayüzü, iframe) geri çekilir
+    const onFocusIn = (e: FocusEvent) => {
+      const root = panelRef.current;
+      if (root && e.target instanceof Node && !root.contains(e.target) && !(e.target as HTMLElement).closest?.('.vmodal')) closeRef.current?.focus();
+    };
+    document.addEventListener('focusin', onFocusIn);
     document.addEventListener('keydown', onKey, true);
     const overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', onKey, true);
+      document.removeEventListener('focusin', onFocusIn);
       document.body.style.overflow = overflow;
       prev?.focus?.();
     };

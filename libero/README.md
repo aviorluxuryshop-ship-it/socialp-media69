@@ -124,6 +124,11 @@ Videolar zamanla kaldırılabilir; doğrulamayı periyodik çalıştırın ve ar
 - **Oynatıcı penceresi** (`components/VideoPlayerModal.tsx`): yalnızca resmî `youtube-nocookie` gömme oynatıcısı; odak tuzağı, Esc, odağı geri verme. Pencere açılınca YouTube’un resmî IFrame API betiği tembel yüklenir; yüklenemezse (çevrimdışı, engelleyici) dürüst bir mesaj ve “YouTube’da aç” bağlantısı gösterilir. Rozetler (`lib/video-honesty.ts`) yalnızca doğrulama verisinin desteklediğini söyler.
 - **Kişisel zaman notları**: “Bu ana not ekle” notu `{t, text, at}` olarak `videoMoments` alanına yazar (şema sürümü değişmedi, alan isteğe bağlıdır; eski yedekler yüklenir; yedeğe girer). Süreler kullanıcıya aittir; yaratıcı bölümü (chapter) uydurulmaz.
 
+- **Oyuncu analizi** (`/analiz/oyuncular/`): 24 oyuncu; dizinde konum/rol süzgeci, arama ve tipografik (fotoğrafsız) kartlar, en kapsamlı analiz (Messi) öne çıkarılır. Her oyuncu sayfasında 14 bölüm vardır: oyun tarzı özeti, pozisyon alma, topsuz hareket, pas tercihleri, top kontrolü ve ilk dokunuş, hücum, savunma ve top kazanma, karar verme, güçlü yanlar ve sınırlılıklar, kendi oyununa taşı (teknik bağlantıları), izlerken bak, videolar, benzer oyuncular, kaynaklar.
+  - **Kaynaklar**: yalnızca yazım sırasında gerçekten açılıp okunmuş sayfalar (`{başlık, adres, okunma tarihi, ne alındığı}`) gösterilir; kaynak bulunamayan konuda daha az şey yazılır. Metinler yeniden anlatımdır; sayı, ödül, transfer ya da özel hayat bilgisi içermez (`data/player-check.ts` bunu derlemede denetler).
+  - **Videolar**: her oyuncuya kütüphanedeki doğrulanmış videolardan 3–6 tane atanır (`data/player-deep/`); video penceresi yan panelde “Bu videoda bak” gösterir. Videolar çoğunlukla oyuncunun kendisi değil ilgili beceriyi anlatır; panel bunu açıkça söyler ve zaman kodu göstermez.
+  - Veri: temel alanlar `data/players.ts` ve `data/player-new.ts`, derin bölümler `data/player-deep/*.ts`, şema `data/player-types.ts`. Testler: `scripts/logic-tests/players.mjs`, `scripts/e2e-tests/players.mjs`.
+
 ## Bilinen sınırlar
 
 - Hesap/senkronizasyon yok (yukarıya bakın).
