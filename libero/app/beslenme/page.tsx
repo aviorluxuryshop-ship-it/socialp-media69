@@ -307,6 +307,7 @@ export default function Page() {
                 <div key={p.t} className="card card--pad card--hover" data-reveal>
                   <h3 className="h3">{p.t}</h3>
                   <p>{p.d}</p>
+                  {p.review && <Rv id={p.review} />}
                 </div>
               ))}
               <div className="card card--pad card--flat bag" data-reveal>
@@ -362,6 +363,7 @@ export default function Page() {
                 <div key={p.t} className={`card card--pad card--hover${i === 4 ? ' ram__stop' : ''}`} data-reveal>
                   <h3 className="h3">{p.t}</h3>
                   <p>{p.d}</p>
+                  {p.review && <Rv id={p.review} />}
                 </div>
               ))}
             </div>

@@ -112,7 +112,8 @@
   display: flex;
   gap: 6px;
   overflow-x: auto;
-  padding: 10px 0;
+  padding: 10px 6px;
+  margin-inline: -6px;
   list-style: none;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
@@ -179,6 +180,7 @@
     gap: 0;
     overflow: visible;
     padding: 0;
+    margin-inline: 0;
   }
   .gnav a {
     width: 100%;

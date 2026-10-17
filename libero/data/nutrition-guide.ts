@@ -172,12 +172,12 @@ export const RED_FLAGS_ENERGY: string[] = [
 
 // ── Ramazan ──────────────────────────────────────────────
 
-export const RAMADAN_POINTS: { t: string; d: string }[] = [
+export const RAMADAN_POINTS: { t: string; d: string; review?: string }[] = [
   { t: 'Kaynak ne söylüyor?', d: 'Üst düzey yetişkin sporcuların antrenman, yeme-içme ve uyku iyi yönetildiğinde Ramazan’da performansı koruyabildiği bildirilir. Antrenman zamanı ve şiddetinin ayarlanması gerekebilir; akşam saatlerindeki antrenman, sonrasında beslenmeye olanak verir; uyku eksikliğine dikkat edilmelidir (Maughan ve ark.).' },
   { t: 'Çocuk ve ergenler için', d: 'Bu kaynak çocuk ve ergenler için bir öneri sunmaz ve bu sayfa da onlara oruç önermez ya da yasaklamaz. Oruç tutmak isteyen genç sporcu, ailesi ve antrenörüyle birlikte önce hekime danışmalıdır. Dinî konularda görüş bildirilmez.' },
-  { t: 'Beslenme ve sıvı', d: 'İftar ve sahurda tabak modelini koru: sebze-meyve, tahıl, protein ve süt grubu. Sıvıyı iftardan sahura kadar yayarak iç; gece uykusunu çok kısaltacak şekilde sahura kalkma.' },
-  { t: 'Antrenman', d: 'Yoğunluğu ve süreyi hekim, antrenör ve ailenle konuşarak ayarla. Kaynak, gün batımına yakın ya da sonrasındaki antrenmanın avantajları olabileceğini ve antrenman sonrası beslenmeye olanak verdiğini belirtir; bu kişiye ve spora göre değişir.' },
-  { t: 'Hemen dur ve söyle', d: 'Baş dönmesi, bayılma hissi, belirgin zayıflık, çok koyu idrar, çarpıntı ya da kendini kötü hissetme durumunda antrenmanı bırak, bir yetişkine söyle ve gerekirse hekime başvur.' },
+  { t: 'Beslenme ve sıvı', d: 'İftar ve sahurda tabak modelini koru: sebze-meyve, tahıl, protein ve süt grubu. Sıvıyı iftardan sahura kadar yayarak iç; gece uykusunu çok kısaltacak şekilde sahura kalkma.', review: 'ramazan' },
+  { t: 'Antrenman', d: 'Yoğunluğu ve süreyi hekim, antrenör ve ailenle konuşarak ayarla. Kaynak, gün batımına yakın ya da sonrasındaki antrenmanın avantajları olabileceğini ve antrenman sonrası beslenmeye olanak verdiğini belirtir; bu kişiye ve spora göre değişir.', review: 'ramazan' },
+  { t: 'Hemen dur ve söyle', d: 'Baş dönmesi, bayılma hissi, belirgin zayıflık, çok koyu idrar, çarpıntı ya da kendini kötü hissetme durumunda antrenmanı bırak, bir yetişkine söyle ve gerekirse hekime başvur.', review: 'ramazan' },
 ];
 
 // ── Örnek günlük planlar ────────────────────────────────
@@ -301,12 +301,12 @@ export const PLATES: { id: DayType; title: string; caption: string; weights: Rec
 
 export const TOURNAMENT_BAG: string[] = ['Su şişesi (dolu ve yedek)', 'Muz', 'Ekmek-peynir ya da ekmek-bal', 'Kuru kayısı ya da hurma', 'Ayran ya da süt (soğuk çantada)', 'Peynirli tost ya da tavuklu dürüm (iyi saklanmış)', 'Yedek forma ve havlu', 'Şapka / gölge için örtü'];
 
-export const TOURNAMENT_POINTS: { t: string; d: string }[] = [
+export const TOURNAMENT_POINTS: { t: string; d: string; review?: string }[] = [
   { t: 'Önce sıvı', d: 'Her maçın bitişinde ilk iş sıvı. Aynı günde ardışık antrenman ya da maç turları arasında yetersiz toparlanma, ısı sorunlarının değiştirilebilir risk etkenleri arasındadır (AAP).' },
-  { t: 'Aralar kısaysa kolay sindirilen karbonhidrat', d: 'Aralar kısaysa muz, ekmek-bal gibi hafif karbonhidratlar; yağlı, kızarmış ve çok lifli yiyecekler mideyi yorar. Aralar uzunsa küçük bir öğün yenebilir.' },
-  { t: 'Tanıdık yiyecek', d: 'Turnuva günü yeni yiyecek denemek için uygun bir gün değildir. Evde sevdiğin ve iyi geldiğini bildiğin yiyeceklerle git.' },
+  { t: 'Aralar kısaysa kolay sindirilen karbonhidrat', d: 'Aralar kısaysa muz, ekmek-bal gibi hafif karbonhidratlar; yağlı, kızarmış ve çok lifli yiyecekler mideyi yorar. Aralar uzunsa küçük bir öğün yenebilir.', review: 'turnuva' },
+  { t: 'Tanıdık yiyecek', d: 'Turnuva günü yeni yiyecek denemek için uygun bir gün değildir. Evde sevdiğin ve iyi geldiğini bildiğin yiyeceklerle git.', review: 'turnuva' },
   { t: 'Gölge ve mola', d: 'Sıcakta maçlar arasında güneşten uzak dur, kıyafeti ısı tutmayacak şekilde seç.' },
-  { t: 'Gün sonu', d: 'Turnuva günü sonunda tabak modeline uygun ana öğün ve erken uyku. Ertesi gün dinlenmeye öncelik ver.' },
+  { t: 'Gün sonu', d: 'Turnuva günü sonunda tabak modeline uygun ana öğün ve erken uyku. Ertesi gün dinlenmeye öncelik ver.', review: 'turnuva' },
 ];
 
 // ── Kısa kaynak adları (bölüm altı atıflar için) ──────────
