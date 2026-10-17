@@ -165,10 +165,11 @@
   overflow: hidden;
   line-height: 0;
 }
-.vauto__stillbox canvas {
+.vauto__stillbox img {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 .vauto__cand {
   position: absolute;

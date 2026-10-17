@@ -23,6 +23,17 @@ const FPS_CHOICES = [5, 10, 15];
 const MAX_SEGMENT_SEC = 120;
 const selAnalyses = (s: AppState) => s.videoAnalyses;
 
+interface FixState {
+  open: boolean;
+  idx: number;
+  cands: Candidate[];
+  dims: Dims | null;
+  busy: boolean;
+  /** düzeltme karesi (data URL; nesne adresi üretilmez) */
+  src: string;
+}
+const FIX0: FixState = { open: false, idx: 0, cands: [], dims: null, busy: false, src: '' };
+
 interface Held {
   frames: RawFrame[];
   dims: Dims;
@@ -110,12 +121,11 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
   const [held, setHeld] = useState<Held | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [stillDims, setStillDims] = useState<Dims | null>(null);
-  const [fix, setFix] = useState<{ open: boolean; idx: number; cands: Candidate[]; dims: Dims | null; busy: boolean }>({ open: false, idx: 0, cands: [], dims: null, busy: false });
+  const [stillSrc, setStillSrc] = useState('');
+  const [fix, setFix] = useState<FixState>(FIX0);
 
   const abortRef = useRef<AbortController | null>(null);
   const pickRef = useRef<((seed: Seed | null) => void) | null>(null);
-  const stillRef = useRef<HTMLCanvasElement>(null);
-  const fixRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const pipelineRef = useRef<typeof import('@/lib/pose/pipeline') | null>(null);
 
@@ -158,7 +168,8 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
     setStatus('');
     setProgress(null);
     setCandidates([]);
-    setFix({ open: false, idx: 0, cands: [], dims: null, busy: false });
+    setFix(FIX0);
+    setStillSrc('');
     return () => {
       abortAll();
       void import('@/lib/pose/engine').then((e) => e.disposeLandmarker());
@@ -211,7 +222,10 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
 
       setPhase('finding');
       setStatus('Başlangıç karesinde oyuncular aranıyor…');
-      const cand = await eng.detectCandidates(av.video, s, { quality, delegate, canvas: stillRef.current ?? undefined, signal: ac.signal });
+      // kare, ekranda <canvas> bırakmamak için bellek içi tuvale çizilip data URL olarak gösterilir
+      const stillCanvas = document.createElement('canvas');
+      const cand = await eng.detectCandidates(av.video, s, { quality, delegate, canvas: stillCanvas, signal: ac.signal });
+      setStillSrc(stillCanvas.width ? stillCanvas.toDataURL('image/jpeg', 0.85) : '');
       if (!cand.candidates.length) {
         throw new Error('Başlangıç karesinde bir oyuncu bulunamadı. Oyuncunun net göründüğü bir an seçin (başlangıç süresini değiştirin) ya da daha yakından çekilmiş bir video kullanın.');
       }
@@ -293,14 +307,12 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
       try {
         await eng.prepareVideo(av.video);
         await eng.seekTo(av.video, frame.t);
-        const c = fixRef.current;
-        if (c) {
-          const w = Math.min(640, av.video.videoWidth);
-          c.width = w;
-          c.height = Math.round((w * av.video.videoHeight) / av.video.videoWidth);
-          c.getContext('2d')?.drawImage(av.video, 0, 0, c.width, c.height);
-        }
-        setFix({ open: true, idx, cands: candidatesFromFrame(frame, h.dims), dims: h.dims, busy: false });
+        const c = document.createElement('canvas');
+        const w = Math.min(640, av.video.videoWidth);
+        c.width = w;
+        c.height = Math.round((w * av.video.videoHeight) / av.video.videoWidth);
+        c.getContext('2d')?.drawImage(av.video, 0, 0, c.width, c.height);
+        setFix({ open: true, idx, cands: candidatesFromFrame(frame, h.dims), dims: h.dims, busy: false, src: c.toDataURL('image/jpeg', 0.85) });
       } catch {
         setFix((f) => ({ ...f, busy: false }));
       } finally {
@@ -361,7 +373,8 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
   const clearResult = () => {
     setHeld(null);
     setPhase('idle');
-    setFix({ open: false, idx: 0, cands: [], dims: null, busy: false });
+    setFix(FIX0);
+    setStillSrc('');
   };
 
   const report: Report | null = held?.result.report ?? null;
@@ -481,9 +494,11 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
             </p>
           )}
 
-          <div className="vauto__still" hidden={phase !== 'pick' && phase !== 'finding'}>
+          {phase === 'pick' && stillSrc && (
+          <div className="vauto__still">
             <div className="vauto__stillbox" style={{ aspectRatio: stillDims ? `${stillDims.w} / ${stillDims.h}` : undefined }}>
-              <canvas ref={stillRef} aria-label="Başlangıç karesi" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={stillSrc} alt="Başlangıç karesi: oyuncuyu seçmek için üzerindeki kutulardan birine tıklayın" />
               {phase === 'pick' &&
                 candidates.map((c, i) => (
                   <button
@@ -499,12 +514,11 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
                   </button>
                 ))}
             </div>
-            {phase === 'pick' && (
-              <p className="vauto__status" role="status">
-                {status}
-              </p>
-            )}
+            <p className="vauto__status" role="status">
+              {status}
+            </p>
           </div>
+          )}
 
           {phase === 'running' && progress && (
             <div className="vauto__prog" data-testid="vauto-progress">
@@ -546,7 +560,6 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
               onDownload={downloadReport}
               onClear={clearResult}
               fix={fix}
-              fixRef={fixRef}
               onOpenFix={() => void drawFixStill(Math.round(held.frames.length / 2), held)}
               onFixIndex={(i) => void drawFixStill(i, held)}
               onPickFix={pickFix}
@@ -572,8 +585,7 @@ interface ResultsProps {
   onSeek: (t: number) => void;
   onDownload: () => void;
   onClear: () => void;
-  fix: { open: boolean; idx: number; cands: Candidate[]; dims: Dims | null; busy: boolean };
-  fixRef: RefObject<HTMLCanvasElement | null>;
+  fix: FixState;
   onOpenFix: () => void;
   onFixIndex: (i: number) => void;
   onPickFix: (c: Candidate) => void;
@@ -581,7 +593,7 @@ interface ResultsProps {
   onResetSeeds: () => void;
 }
 
-function Results({ report, held, onSeek, onDownload, onClear, fix, fixRef, onOpenFix, onFixIndex, onPickFix, onCloseFix, onResetSeeds }: ResultsProps) {
+function Results({ report, held, onSeek, onDownload, onClear, fix, onOpenFix, onFixIndex, onPickFix, onCloseFix, onResetSeeds }: ResultsProps) {
   const rel = report.reliability;
   const sum = report.measured.summary;
   const events = report.measured.events;
@@ -638,7 +650,10 @@ function Results({ report, held, onSeek, onDownload, onClear, fix, fixRef, onOpe
           </label>
           <input id="va-fixidx" className="vlab__seek" type="range" min={0} max={held.frames.length - 1} value={fix.idx} disabled={fix.busy} onChange={(e) => onFixIndex(Number(e.target.value))} />
           <div className="vauto__stillbox" style={{ aspectRatio: fix.dims ? `${fix.dims.w} / ${fix.dims.h}` : '16 / 9' }}>
-            <canvas ref={fixRef} aria-label="Düzeltme karesi" />
+            {fix.src && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={fix.src} alt="Düzeltme karesi" />
+            )}
             {fix.open &&
               fix.cands.map((c, i) => (
                 <button
