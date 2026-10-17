@@ -299,7 +299,7 @@
   .hero__beam {
     width: 100%;
   }
-  .hero__cue {
+  .hero .hero__cue {
     display: none;
   }
 }
@@ -526,12 +526,10 @@
 }
 .bento__scene,
 .bento__art {
-  flex: 1;
-  min-height: 0;
+  flex: 1 1 auto;
 }
 .bento__scene {
   border-radius: var(--r-1);
-  overflow: hidden;
 }
 .bento__art {
   display: grid;

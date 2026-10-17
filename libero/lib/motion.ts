@@ -31,7 +31,9 @@ export function countValue(t: number, to: number, from = 0): number {
 /** "127" → 127; bozuk girişte null. */
 export function parseCountTarget(v: string | null | undefined): number | null {
   if (v == null) return null;
-  const n = Number(String(v).trim());
+  const s = String(v).trim();
+  if (s === '') return null;
+  const n = Number(s);
   return Number.isFinite(n) && n >= 0 && n <= 1e9 ? Math.round(n) : null;
 }
 

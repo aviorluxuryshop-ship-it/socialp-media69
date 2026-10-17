@@ -89,7 +89,7 @@
   --grad-surface: linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0) 46%), var(--ink-850);
   --grad-surface-hi: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0) 50%), var(--ink-800);
   /* gradyan kenarlık (padding-box / border-box hilesiyle) */
-  --edge: linear-gradient(160deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.04) 38%, rgb(255 255 255 / 0.04) 62%, rgb(255 255 255 / 0.12));
+  --edge: linear-gradient(160deg, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.09) 38%, rgb(255 255 255 / 0.07) 62%, rgb(255 255 255 / 0.2));
   --edge-accent: linear-gradient(160deg, rgb(var(--accent-rgb) / 0.75), rgb(var(--accent-rgb) / 0.1) 42%, rgb(var(--accent-rgb) / 0.08) 62%, rgb(var(--accent-rgb) / 0.4));
   --grad-accent: linear-gradient(180deg, #d6ff62 0%, #b9ee2c 100%);
   --grad-gold: linear-gradient(180deg, #f9dc8d 0%, #e0ab35 100%);
