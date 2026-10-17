@@ -31,6 +31,8 @@ const verified = (verifiedFile as { videos: Record<string, Verified> }).videos;
 
 export const VIDEOS: Video[] = buildVideos(curated as Curated[], verified, (id) => TECH_BY_ID[id]?.name);
 
+export const VIDEO_BY_ID: Record<string, Video> = Object.fromEntries(VIDEOS.map((v) => [v.id, v]));
+
 export const VIDEOS_BY_TECH: Record<string, Video[]> = {};
 VIDEOS.forEach((v) => v.techs.forEach((t) => (VIDEOS_BY_TECH[t] ??= []).push(v)));
 
