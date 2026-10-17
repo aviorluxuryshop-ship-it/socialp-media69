@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { ballGeometry } from '@/lib/boot-ball';
+import { ZONES } from '@/lib/boot';
 import { DEG, SEG, bootShape, footPoint, zonePatch, type Arm, type Foot, type Leg, type Skeleton, type Vec2 } from '@/lib/motion/rig';
 import { contactAt, type Frame, type TechMotion } from '@/lib/motion/timeline';
 import type { BallState } from '@/lib/motion/rig';
@@ -219,9 +220,10 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
 
   // yakın çekim: temas anında, sahnenin temas noktasından uzak yanında
   const vb = viewBoxFor(m.top);
-  const lensLeft = kc[0] > VW * 0.45;
-  const lx = lensLeft ? LENS_R + 22 : VW - 232;
+  // sol üst köşe (üstten bakış kutusu sağ üsttedir); temas noktası solda ise sahnenin ortasına
+  const lx = kc[0] >= 190 ? LENS_R + 22 : 300;
   const ly = vb.y0 + LENS_R + 14;
+  const zoneTag = (m.contact === 'alin' ? 'Alın' : ZONES[m.contact].short).toLocaleUpperCase('tr-TR');
   const lensOp = sstep(0.03, 0.4, glow);
   const lensOn = lensOp > 0.001;
 
@@ -396,6 +398,13 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
             <use href={`#${uid}-fig`} transform={`translate(${f1(lx - LENS_K * kc[0])} ${f1(ly - LENS_K * kc[1])}) scale(${LENS_K})`} />
           </g>
           <circle cx={f1(lx)} cy={f1(ly)} r={LENS_R} fill="none" stroke={K.accent} strokeWidth="2" strokeOpacity=".9" />
+          {/* değen yüzeyin adı (BootMap ile aynı kısa ad) */}
+          <g transform={`translate(${f1(lx)} ${f1(ly + LENS_R + 2)})`}>
+            <rect x={-(zoneTag.length * 5.2 + 12)} y="-11" width={zoneTag.length * 10.4 + 24} height="22" rx="11" fill={K.accent} />
+            <text textAnchor="middle" y="4.6" fontSize="12.5" fontWeight="700" letterSpacing=".06em" fill="#0a1403" style={{ fontFamily: 'var(--font-mono), ui-monospace, monospace' }}>
+              {zoneTag}
+            </text>
+          </g>
         </g>
       )}
     </svg>

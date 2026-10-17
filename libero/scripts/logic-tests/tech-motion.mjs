@@ -214,6 +214,9 @@ export default async ({ ok, test, load }) => {
       const toeTip = Math.max(...[f.sk.near, f.sk.far].map((l) => rig.footPoint(l.foot, 0.234, -0.03, 0)[0]));
       ok(f.ball.x - rig.SEG.ball > toeTip - 0.02, `top ayağın önünde değil t=${t.toFixed(2)} (top sol kenarı ${(f.ball.x - 0.11).toFixed(2)}, burun ${toeTip.toFixed(2)})`);
     }
+    // top yuvarlanırken döner: sola yuvarlanan top saat yönünün tersine (r artar), bırakıştan sonra ileri giden top saat yönünde (r azalır)
+    ok(c.ball && rig.ballAt(c.ball, 1.0).r > rig.ballAt(c.ball, 0).r + 100, 'gelen top yuvarlanırken dönmüyor');
+    ok(rig.ballAt(c.ball, m.dur).r < rig.ballAt(c.ball, m.carry[1] + 0.01).r - 50, 'bırakılan top ileri yuvarlanırken dönmüyor');
     // baş: temasa doğru topa bakar, takipte kalkar
     ok(at(m.tc).sk.headDeg > at(m.dur - 0.3).sk.headDeg + 15, 'baş takipte kalkmıyor');
   });

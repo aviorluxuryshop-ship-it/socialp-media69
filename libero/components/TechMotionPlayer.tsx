@@ -244,7 +244,8 @@ export function TechMotionPlayer({ motion: m, name = FALLBACK_NAME }: { motion: 
 
       <div className="tm__strip" role="group" aria-label="Hareketin üç evresi (sabit kareler)" data-tm-strip>
         {strip.map(({ t: ft, phase: ph }, i) => {
-          const f = frameAt(m, ft, compiled);
+          // sabit karede vurgu yalnızca Temas karesinde yanar (geçiş yumuşatması olmaz)
+          const f = { ...frameAt(m, ft, compiled), glow: ph === 'temas' ? 1 : 0 };
           return (
             <figure key={ph} className="tm__frame" data-frame={ph}>
               <Stage m={m} frame={f} trail={false} label={`${name}, ${PHASE_LABEL[ph]} evresi sabit kare`} planLabel={planLabel} />
