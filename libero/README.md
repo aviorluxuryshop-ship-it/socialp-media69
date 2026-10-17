@@ -117,6 +117,13 @@ Hesap ve sunucu yoktur. Profil, yıldız seviyeleri, program, antrenman geçmiş
 
 Videolar zamanla kaldırılabilir; doğrulamayı periyodik çalıştırın ve ardından yeniden derleyin.
 
+## Video kütüphanesi ve oyuncu analizi
+
+- **/videolar/**: kategori sekmeleri + konu çipleri (sayılarla), arama, dil/seviye/pozisyon süzgeçleri, sıralama ve derin bağlantılar (`?konu=pas&dil=tr`, `?grup=kaleci`). Süzgeç mantığı `lib/video-filter.ts` içindedir (mantık testleri: `scripts/logic-tests/video-library.mjs`).
+- **Kapaklar**: her konunun çizim kapağı vardır (`components/VideoCover.tsx`). “Kapak görselleri YouTube’dan yüklensin” anahtarı açıkken YouTube’un küçük resmi üstüne biner; tercih yedeğe girmeyen ayrı anahtarda (`libero:ui`) saklanır ve kapalıyken `i.ytimg.com`’a istek gitmez.
+- **Oynatıcı penceresi** (`components/VideoPlayerModal.tsx`): yalnızca resmî `youtube-nocookie` gömme oynatıcısı; odak tuzağı, Esc, odağı geri verme. Pencere açılınca YouTube’un resmî IFrame API betiği tembel yüklenir; yüklenemezse (çevrimdışı, engelleyici) dürüst bir mesaj ve “YouTube’da aç” bağlantısı gösterilir. Rozetler (`lib/video-honesty.ts`) yalnızca doğrulama verisinin desteklediğini söyler.
+- **Kişisel zaman notları**: “Bu ana not ekle” notu `{t, text, at}` olarak `videoMoments` alanına yazar (şema sürümü değişmedi, alan isteğe bağlıdır; eski yedekler yüklenir; yedeğe girer). Süreler kullanıcıya aittir; yaratıcı bölümü (chapter) uydurulmaz.
+
 ## Bilinen sınırlar
 
 - Hesap/senkronizasyon yok (yukarıya bakın).

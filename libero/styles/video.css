@@ -571,6 +571,10 @@
   z-index: 1;
 }
 .vmodal__head {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--ink-900);
   grid-column: 1 / -1;
   display: flex;
   justify-content: space-between;
