@@ -1369,59 +1369,6 @@
 }
 
 /* ── Oyuncu analizi ── */
-.player-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-@media (max-width: 1000px) {
-  .player-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 620px) {
-  .player-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-.player-card {
-  display: grid;
-  align-content: start;
-  gap: 8px;
-  height: 100%;
-  padding: 26px 24px;
-  transition: border-color 0.2s, transform 0.2s;
-}
-.player-card:hover {
-  border-color: var(--brass);
-  transform: translateY(-2px);
-}
-.player-card__name {
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  line-height: 1.1;
-}
-.player-card__role {
-  color: var(--brass-hi);
-  font-size: 0.82rem;
-}
-.player-card__tag {
-  color: var(--ivory-2);
-  font-size: 0.94rem;
-}
-.player-card__go {
-  margin-top: 6px;
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  font-size: 0.74rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ivory-3);
-}
-.player-card:hover .player-card__go {
-  color: var(--brass-hi);
-}
 
 /* ── Performans analizi ── */
 .empty {
@@ -1765,10 +1712,6 @@ kbd,
   border: 1px solid var(--line-3);
   background: var(--ink-850);
   color: var(--ivory-2);
-}
-.player-card__go svg {
-  width: 16px;
-  height: 16px;
 }
 .vlab__crit-row {
   flex-direction: column;
