@@ -1,6 +1,8 @@
 // Teknik hareket animasyonları: zaman çizelgesi (faz, örnekleme, kare üretimi). React yok, DOM yok.
 import type { FootZone } from '@/data/types';
 import {
+  DEG,
+  SEG,
   ballAt,
   compileBall,
   compilePose,
@@ -77,10 +79,23 @@ const cache = new WeakMap<TechMotion, Compiled>();
 export function compileMotion(m: TechMotion): Compiled {
   let c = cache.get(m);
   if (!c) {
-    c = { pose: compilePose(m.keys), ball: compileBall(withCurveZ(m)) };
+    c = { pose: compilePose(m.keys), ball: compileBall(withSpin(withCurveZ(m))) };
     cache.set(m, c);
   }
   return c;
+}
+
+/**
+ * Hiçbir top anahtarında `r` (dönüş) verilmemişse, topun yerde yuvarlanır gibi dönmesi yatay yer değiştirmeden türetilir
+ * (ileri giden top saat yönünde döner). `cut` anahtarlarında (vuruş/bırakış) dönüş korunur.
+ */
+function withSpin(keys: readonly BallKey[]): readonly BallKey[] {
+  if (keys.some((k) => k.r !== undefined)) return keys;
+  let r = 0;
+  return keys.map((k, i) => {
+    if (i > 0 && !k.cut) r -= (k.x - keys[i - 1].x) / SEG.ball / DEG;
+    return { ...k, r };
+  });
 }
 
 /** Top anahtarlarının bir kısmında `z` verilmiş mi (yazar derinliği kendisi belirlemiş)? */

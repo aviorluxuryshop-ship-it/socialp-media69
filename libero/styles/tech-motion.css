@@ -73,7 +73,7 @@ html.js .tm__strip {
   top: 10px;
   right: 10px;
   z-index: 1;
-  width: clamp(76px, 21cqw, 118px);
+  width: clamp(86px, 21cqw, 118px);
   padding: 4px 4px 16px;
   border-radius: var(--r-2);
   border: 1px solid var(--line-2);
@@ -92,8 +92,9 @@ html.js .tm__strip {
   bottom: 4px;
   text-align: center;
   color: var(--ivory-3);
-  font-size: 0.56rem;
-  letter-spacing: 0.12em;
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
   pointer-events: none;
 }
 .tm__plan-note {
@@ -114,6 +115,7 @@ html.js .tm__strip {
   background: var(--grad-surface);
 }
 .tm__pill {
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -365,7 +367,15 @@ html.js .tm__strip {
   }
 }
 
-/* dar ekran */
+/* dar ekran: sahne biraz daha yüksek ve sağ kenarı kırpılır (slice) → oyuncu ve ayak büyür */
+@container tm (max-width: 560px) {
+  .tm__stage {
+    aspect-ratio: 3 / 2;
+  }
+  .tm__stage > .tm-svg {
+    height: 100%;
+  }
+}
 @container tm (max-width: 520px) {
   .tm__now {
     grid-template-columns: minmax(0, 1fr);

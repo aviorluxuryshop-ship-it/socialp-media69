@@ -51,33 +51,40 @@ export function TechMotionPlayer({ motion: m, name = FALLBACK_NAME }: { motion: 
   const [speed, setSpeed] = useState<(typeof SPEEDS)[number]>(1);
   const [userPaused, setUserPaused] = useState(false);
   const [userPlay, setUserPlay] = useState(false);
-  const [inView, setInView] = useState(false);
+  const [inView, setInView] = useState(false); // sahne ≥ %30 görünür: kendiliğinden oynatma koşulu
+  const [anyView, setAnyView] = useState(false); // oynatıcının herhangi bir parçası görünür: elle başlatılan oynatma sürer
   const reduced = useReducedMotion();
   const tabHidden = useTabHidden();
   const clock = useRef<Clock>({ t: m.tc, hold: 0 });
   const started = useRef(false);
   const stageRef = useRef<HTMLDivElement>(null);
+  const liveRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const playing = !reduced && !tabHidden && !userPaused && (inView || userPlay);
+  // kendiliğinden oynama: sahne en az %30 görünürken. Elle "Oynat" denince, oynatıcının bir parçası (ör. denetimler) görünür olduğu sürece sürer.
+  const playing = !reduced && !tabHidden && !userPaused && (inView || (userPlay && anyView));
 
-  // yalnızca sahne görünürken (en az %30) otomatik oynar; dışarı çıkınca durur
+  // görünürlük: ekran dışına çıkınca durur
   useEffect(() => {
-    const el = stageRef.current;
-    if (!el) return;
+    const stage = stageRef.current;
+    const live = liveRef.current;
+    if (!stage || !live) return;
     if (typeof IntersectionObserver === 'undefined') {
       setInView(true);
+      setAnyView(true);
       return;
     }
-    const io = new IntersectionObserver(
-      ([e]) => {
-        setInView(e.isIntersecting);
-        if (!e.isIntersecting) setUserPlay(false);
-      },
-      { threshold: 0.3 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    const a = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.3 });
+    const b = new IntersectionObserver(([e]) => {
+      setAnyView(e.isIntersecting);
+      if (!e.isIntersecting) setUserPlay(false);
+    });
+    a.observe(stage);
+    b.observe(live);
+    return () => {
+      a.disconnect();
+      b.disconnect();
+    };
   }, []);
 
   // requestAnimationFrame yalnızca oynarken çalışır
@@ -153,7 +160,7 @@ export function TechMotionPlayer({ motion: m, name = FALLBACK_NAME }: { motion: 
 
   return (
     <div className="tm" ref={rootRef} data-tm data-tm-id={m.id} data-t={t.toFixed(2)} data-phase={phase} data-playing={playing ? 'true' : 'false'} data-speed={String(speed)} data-glow={frame.glow.toFixed(2)}>
-      <div className="tm__live" role="group" aria-label={`${name}: hareket gösterimi (şematik)`}>
+      <div className="tm__live" ref={liveRef} role="group" aria-label={`${name}: hareket gösterimi (şematik)`}>
         <div ref={stageRef}>
           <Stage m={m} frame={frame} label={label} planLabel={planLabel} />
         </div>

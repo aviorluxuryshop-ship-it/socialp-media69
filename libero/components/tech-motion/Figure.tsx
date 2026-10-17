@@ -230,7 +230,7 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
   const g = (n: string) => `url(#${uid}-${n})`;
 
   return (
-    <svg className={className ?? 'tm-svg'} viewBox={vb.box} role="img" aria-label={label} data-phase={frame.phase} focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <svg className={className ?? 'tm-svg'} viewBox={vb.box} preserveAspectRatio="xMinYMax slice" role="img" aria-label={label} data-phase={frame.phase} focusable="false" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id={`${uid}-skin`} gradientUnits="userSpaceOnUse" x1="0" y1="80" x2="0" y2="345">
           <stop offset="0" stopColor={K.limbHi} />
@@ -315,7 +315,7 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
 
       {/* ball izi */}
       {trailPts.map((q, i) => (
-        <circle key={i} cx={f1(q[0])} cy={f1(q[1])} r={rp(SEG.ball) * (0.35 + 0.4 * (i / Math.max(1, trailPts.length)))} fill="#f3f0e5" opacity={f2(0.04 + 0.16 * (i / Math.max(1, trailPts.length)))} />
+        <circle key={i} cx={f1(q[0])} cy={f1(q[1])} r={rp(SEG.ball) * (0.35 + 0.4 * (i / Math.max(1, trailPts.length)))} fill="#f3f0e5" opacity={f2(0.03 + 0.11 * (i / Math.max(1, trailPts.length)))} />
       ))}
 
       {ballFarBehind && <BallGfx cam={cam} b={ball} uid={uid} />}
@@ -361,14 +361,16 @@ export function Figure({ m, frame, trail, label, className }: FigureProps) {
       {/* temas bölgeleri: yalnızca tekniğin foot[] listesindeki bölgeler; temas anında parlar */}
       <g className="tm-zones">
         {patches.map(({ z, poly: pp, facing }) => {
+          // yalnızca temas penceresinde görünür: asıl bölge parlar, foot[] listesindeki diğerleri sönük çizgiyle işaretlenir
+          if (glow < 0.02) return null;
           const active = z === contactZone;
           const back = facing < -0.15;
-          const a = active ? 0.2 + 0.7 * glow : back ? 0.08 : 0.16;
+          const a = active ? 0.15 + 0.75 * glow : 0.12 * glow;
           const d = poly(pp.map(P));
           return (
             <g key={z} data-zone={z} data-active={active && glow > 0.05 ? 'true' : 'false'}>
-              {active && glow > 0.02 && <path d={d} fill={K.accent} opacity={f2(0.75 * glow)} filter={g('blur')} />}
-              <path d={d} fill={K.accent} fillOpacity={f2(a)} stroke={K.accentHi} strokeOpacity={f2(active ? 0.45 + 0.5 * glow : 0.45)} strokeWidth={active ? 1.4 : 1} strokeDasharray={back ? '3 2.4' : undefined} strokeLinejoin="round" />
+              {active && <path d={d} fill={K.accent} opacity={f2(0.75 * glow)} filter={g('blur')} />}
+              <path d={d} fill={K.accent} fillOpacity={f2(a)} stroke={K.accentHi} strokeOpacity={f2((active ? 0.45 + 0.5 * glow : 0.5) * Math.min(1, glow * 1.6))} strokeWidth={active ? 1.4 : 1} strokeDasharray={back ? '3 2.4' : undefined} strokeLinejoin="round" />
             </g>
           );
         })}
