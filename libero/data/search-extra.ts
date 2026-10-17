@@ -1,5 +1,6 @@
 import type { SearchDoc } from '@/lib/search';
 import { MEALS } from './nutrition';
+import { NUTRITION_SEARCH } from './nutrition-search';
 import { PLAYERS } from './players';
 import { POSITION_BY_ID } from './positions';
 import { VIDEOS, VIDEO_TOPIC_NAME } from './videos';
@@ -30,6 +31,7 @@ export const EXTRA_DOCS: SearchDoc[] = [
     u: '/beslenme/',
     x: m.parts.join(' '),
   })),
+  ...NUTRITION_SEARCH,
   ...FIELD_TESTS.map((t): SearchDoc => ({
     k: 'sayfa',
     t: `${t.name} testi`,

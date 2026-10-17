@@ -83,6 +83,16 @@ Teknolojiler: Next.js 16 (App Router, statik export), React 19, TypeScript, düz
 - **Teknik sayfalarında "Vuruş öncesi vücut pozisyonu"**: topa yaklaşma, destek ayağı, gövde, kalça ve denge; yalnızca topa/kafayla vuran 48 teknik için ve her teknik için ayrı yazılmıştır (kopyalanmış ya da çok benzer metin derlemeyi durdurur). Top sürme, savunma, kalecilik ve topsuz hareketlerde bu bölüm yoktur çünkü "vuruş öncesi" bir duruş anlatılmaz.
 - **İç yüzle kavisli pas ≠ trivela**: iç yüzle kavisli pasta temas ayağın iç yüzü ve ayak üstünün iç bölümüdür, top içe döner; trivela pasında (ve üst dış vuruşta) temas ayak üstünün dış bölümüdür ve top vuran ayağın tarafına döner. Teknik sayfalarında "Karıştırılmasın" notu ve temas yüzeyi haritası bunu ayırır.
 
+## Beslenme ve toparlanma
+
+`/beslenme/` yaşa göre (≤11, 12–14, 15–17, 18+) kaynaklı bir futbolcu beslenmesi rehberidir: temel ilkeler ve tabak modeli, antrenman/maç öncesi-sırası-sonrası, sıvı ve idrar rengi, uyku, dinlenme ve uyarı işaretleri (RED-S), maç günü ve turnuva, takviyeler, Ramazan, alerji filtresi, örnek günlük planlar. Araçlar: su takibi ve hatırlatıcı, idrar rengi kartı, maç günü çizelgesi, haftalık plan ve alışveriş listesi, yazdırma görünümü.
+
+- **Veri:** metinler ve planlar `data/nutrition-guide.ts` ve `data/nutrition.ts`; kaynaklar `data/sources.ts`. `data/nutrition-validate.ts` derlemede çalışır (kaynaksız bölüm, yanlış öğün dilimi, çocuk içeriğinde kalori/gram ya da takviye/kafein bulunursa derleme durur).
+- **Depolama:** su takibi `libero:su`, yaş grubu/plan/alışveriş işaretleri `libero:beslenme` anahtarındadır; `libero:v1` yedek dosyasına dâhil değildir.
+- **Uzman incelemesi:** rehber henüz bir diyetisyen ya da çocuk sağlığı uzmanı tarafından incelenmedi. İncelenmesi gereken her pasaj “Uzman incelemesi” rozetiyle işaretlidir ve `REVIEW_ITEMS` listesiyle (sayfada 16. bölüm) eşleşir; yeni rozet eklemek için önce listeye madde ekleyin.
+- **Kaynak kuralı:** bir bilgi yalnızca okunmuş ve doğrulanmış kaynaktan aktarılır; kaynağı doğrulanamayan genel pratikler listede “kaynak doğrulanamadı” diye anılır. Çocuk ve ergen için kalori, gram ya da kilo hedefi yazılmaz.
+- **Testler:** `scripts/logic-tests/nutrition.mjs` (veri ve mantık), `scripts/e2e-tests/nutrition.mjs` (tarayıcı).
+
 ## Kayıtlı veri ve sürüm geçişi
 
 Depolama anahtarı **`libero:v1` olarak kalır**; içindeki şema sürümü 2'dir. v1 kayıtları okunurken otomatik dönüştürülür ve **hiçbir şey silinmez**: yıldız seviyeleri, antrenman geçmişi, eski programlar (teknik/saha oturumları dahil), favoriler, test ve quiz kayıtları aynen korunur. Değişen tek şey profil: tek ekipman listesi ortam başına ayrılır (`equipByEnv`) ve kaldırılan "teknik" hedefi "dengeli fiziksel gelişim"e çevrilir. v1 JSON yedekleri de aynı yolla geri yüklenir. Programı yeniden oluşturduğunuzda yeni, fiziksel odaklı program yazılır; eski oturumlar silinmez, program yenilenene kadar görüntülenir.

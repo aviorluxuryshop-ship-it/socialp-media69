@@ -25,7 +25,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/program/', title: 'Kişisel program', desc: 'Yaşa, seviyeye ve ortama göre haftalık plan; tamamla, devam et, geçmişi gör.', icon: 'calendar' },
       { href: '/fiziksel/', title: 'Fiziksel gelişim', desc: 'Sürat, çeviklik, kuvvet, denge ve kas gruplarına göre egzersizler.', icon: 'dumbbell' },
-      { href: '/beslenme/', title: 'Beslenme ve toparlanma', desc: 'Antrenman öncesi-sonrası, sıvı, pratik öğünler ve yiyecek alternatifleri.', icon: 'leaf' },
+      { href: '/beslenme/', title: 'Beslenme ve toparlanma', desc: 'Yaşa göre rehber: maç günü çizelgesi, su takibi, uyku, öğün planı ve yiyecek alternatifleri.', icon: 'leaf' },
     ],
   },
   {

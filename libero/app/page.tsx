@@ -410,7 +410,7 @@ export default function Home() {
           <ul className="index-list">
             {[
               ['/fiziksel/', 'dumbbell', 'Fiziksel gelişim', 'Sürat, çeviklik, kuvvet, denge. Kas haritasından egzersiz bul; yaşa uygun doz gör.', `${EXERCISES.length} egzersiz`],
-              ['/beslenme/', 'leaf', 'Beslenme ve toparlanma', 'Antrenman öncesi-sonrası, sıvı ve pratik öğünler. Sevmediğin yiyeceğe alternatif bul.', 'Genel bilgi'],
+              ['/beslenme/', 'leaf', 'Beslenme ve toparlanma', 'Yaşa göre rehber: maç günü çizelgesi, su takibi, uyku, öğün planı ve alternatifler.', 'Genel bilgi'],
               ['/analiz/oyuncular/', 'user', 'Oyuncu analizi', 'Oyun tarzı, topsuz hareket ve kendi oyununa taşıyacağın dersler.', `${PLAYERS.length} oyuncu`],
               ['/videolar/', 'play', 'Video kütüphanesi', 'Konu, pozisyon ve seviyeye göre doğrulanmış eğitim videoları; Türkçe özetlerle.', `${VIDEOS.length} video`],
               ['/profil/', 'lock', 'Panelim ve verilerim', 'Profilini düzenle, yedek al, kaynakları gör. Verilerin nerede durduğu açıkça yazılı.', 'Yedek al'],

@@ -44,7 +44,7 @@ export function AgeSelector() {
       </div>
       <div className="seg agesel__seg" role="radiogroup" aria-label="Yaş grubu">
         {AGE_BANDS.map((b) => (
-          <button key={b.id} type="button" role="radio" aria-checked={plan.band === b.id} aria-pressed={plan.band === b.id} onClick={() => setPlan((p) => ({ ...p, band: b.id }))} data-band={b.id}>
+          <button key={b.id} type="button" role="radio" aria-checked={plan.band === b.id} onClick={() => setPlan((p) => ({ ...p, band: b.id }))} data-band={b.id}>
             {b.label}
           </button>
         ))}
@@ -157,9 +157,9 @@ export function DayPlans() {
       <div className="dp__bar np">
         <div className="field">
           <span className="field__label" id="dp-band-l">Yaş grubu</span>
-          <div className="seg" role="tablist" aria-labelledby="dp-band-l">
+          <div className="seg" role="group" aria-labelledby="dp-band-l">
             {AGE_BANDS.map((b) => (
-              <button key={b.id} type="button" role="tab" aria-selected={band === b.id} aria-pressed={band === b.id} onClick={() => setPlan((p) => ({ ...p, band: b.id }))} data-dp-band={b.id}>
+              <button key={b.id} type="button" aria-pressed={band === b.id} onClick={() => setPlan((p) => ({ ...p, band: b.id }))} data-dp-band={b.id}>
                 {b.short}
               </button>
             ))}
@@ -167,9 +167,9 @@ export function DayPlans() {
         </div>
         <div className="field">
           <span className="field__label" id="dp-day-l">Gün tipi</span>
-          <div className="seg" role="tablist" aria-labelledby="dp-day-l">
+          <div className="seg" role="group" aria-labelledby="dp-day-l">
             {DAY_TYPES.map((d) => (
-              <button key={d} type="button" role="tab" aria-selected={day === d} aria-pressed={day === d} onClick={() => setDay(d)} data-dp-day={d}>
+              <button key={d} type="button" aria-pressed={day === d} onClick={() => setDay(d)} data-dp-day={d}>
                 {DAY_TYPE_LABEL[d]}
               </button>
             ))}

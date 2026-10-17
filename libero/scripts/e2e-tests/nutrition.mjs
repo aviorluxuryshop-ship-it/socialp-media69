@@ -193,7 +193,7 @@ export default async ({ newPage, go, ok, test, txt }) => {
     // bant ve gün tipi sekmeleri
     await page.locator('[data-dayplans] [data-dp-band="u11"]').click();
     await page.locator('[data-dayplans] [data-dp-day="dinlenme"]').click();
-    ok((await page.locator('[data-dayplans] [data-dp-day="dinlenme"]').getAttribute('aria-selected')) === 'true', 'gün tipi seçilmedi');
+    ok((await page.locator('[data-dayplans] [data-dp-day="dinlenme"]').getAttribute('aria-pressed')) === 'true', 'gün tipi seçilmedi');
     ok(/Dinlenme günü açlık günü değildir/.test(await txt(page.locator('[data-dayplans]'))), '11 yaş dinlenme ipucu yok');
     ok(!/\b\d+\s*(kcal|kalori|g|gr|gram)\b/i.test(await txt(page.locator('[data-dayplans]'))), 'çocuk planında kalori/gram hedefi');
     await ctx.close();

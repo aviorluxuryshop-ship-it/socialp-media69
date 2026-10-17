@@ -176,13 +176,13 @@
   }
   .gnav__list {
     flex-direction: column;
-    gap: 2px;
+    gap: 0;
     overflow: visible;
     padding: 0;
   }
   .gnav a {
     width: 100%;
-    min-height: 38px;
+    min-height: 34px;
     padding: 0 12px;
     border: 0;
     border-left: 2px solid var(--line-2);
@@ -233,7 +233,7 @@
 /* ── Bölüm iskeleti ── */
 .gsec {
   position: relative;
-  padding-block: clamp(44px, 6vw, 84px);
+  padding-block: clamp(40px, 5vw, 68px);
   border-top: 1px solid var(--line);
   scroll-margin-top: calc(var(--header-h) + 56px);
 }
@@ -1042,6 +1042,7 @@ html.motion-live .plate:not(.is-in) .plate__s {
 }
 .wp__dh {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
@@ -1053,7 +1054,8 @@ html.motion-live .plate:not(.is-in) .plate__s {
   font-size: 1.35rem;
 }
 .wp__type {
-  max-width: 150px;
+  flex: 1 1 150px;
+  max-width: none;
   min-height: 38px;
   font-size: 0.8rem;
 }
