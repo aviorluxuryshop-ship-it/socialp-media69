@@ -1,12 +1,16 @@
+import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
+import '@/data/player-guard';
 import { PLAYERS } from '@/data/players';
+import { PLAYER_SECTIONS } from '@/data/player-types';
 import { Icon } from '@/components/Icon';
 import { PageHead } from '@/components/PageHead';
-import { PlayerGrid } from '@/components/PlayerGrid';
+import { PlayerIndex } from '@/components/PlayerIndex';
+import type { PlayerLite } from '@/lib/player-filter';
 
 export const metadata: Metadata = {
   title: 'Oyuncu analizi',
-  description: 'Profesyonel oyuncuların oyun tarzı, topsuz hareketleri ve senin oyununa taşıyabileceğin dersler. Eğitim amaçlı yorumdur; istatistik içermez.',
+  description: 'Profesyonel oyuncuların oyun tarzı, pozisyon alma, topsuz hareket, pas tercihleri ve senin oyununa taşıyabileceğin dersler. Kaynaklı, eğitim amaçlı yorum; istatistik içermez.',
 };
 
 const GUIDE = [
@@ -18,6 +22,25 @@ const GUIDE = [
 ];
 
 export default function Page() {
+  const lite: PlayerLite[] = PLAYERS.map((p) => ({
+    id: p.id,
+    name: p.name,
+    pos: p.pos,
+    role: p.role,
+    tagline: p.tagline,
+    kind: p.kind,
+    deep: !!p.deep,
+    sources: p.sources.length,
+    videos: p.videos.length,
+    sections: PLAYER_SECTIONS.length,
+  }));
+  const sources = PLAYERS.reduce((a, p) => a + p.sources.length, 0);
+  const stats: [string, string][] = [
+    [String(PLAYERS.length), 'oyuncu analizi'],
+    [String(PLAYER_SECTIONS.length), 'bölüm, her oyuncuda'],
+    [String(sources), 'okunmuş kaynak'],
+    [String(new Set(PLAYERS.flatMap((p) => p.videos)).size), 'doğrulanmış video'],
+  ];
   return (
     <>
       <PageHead
@@ -27,15 +50,24 @@ export default function Page() {
             Ustalardan <em>öğrenmenin</em> yolu: doğru izlemek.
           </>
         }
-        lead="Profesyonel oyuncuların oyun tarzını, topsuz hareketlerini ve senin oyununa taşıyabileceğin dersleri ayrıştırıyoruz. Her analizde izlerken nelere bakacağın ve kütüphanedeki ilgili teknikler yer alır."
+        lead="Profesyonel oyuncuların oyun tarzını bölüm bölüm ayrıştırıyoruz: pozisyon alma, topsuz hareket, pas tercihleri, ilk dokunuş, karar verme, güçlü yanlar ve sınırlılıklar. Her analizde okunmuş kaynaklar, ilgili videolar ve kendi oyununa taşıyacağın dersler yer alır."
         wide
-      />
+      >
+        <dl className="vstats enter" style={{ '--e': 3 } as CSSProperties}>
+          {stats.map(([n, label]) => (
+            <div key={label} className="vstats__i">
+              <dt className="vstats__n">{n}</dt>
+              <dd className="vstats__l mono">{label}</dd>
+            </div>
+          ))}
+        </dl>
+      </PageHead>
       <section className="section section--tight">
         <div className="container">
           <div className="note note--warn">
             <Icon name="warn" />
             <div>
-              <p><strong>Bu analizler eğitim amaçlı yorumdur.</strong> İstatistik, ölçüm verisi, transfer ya da kulüp bilgisi içermez; herkesçe bilinen oyun özelliklerini antrenman diline çevirir. Sayısal veri için resmî lig ve kulüp kaynaklarına bakın; biz uydurma veri göstermiyoruz.</p>
+              <p><strong>Bu analizler eğitim amaçlı yorumdur.</strong> İstatistik, ödül, transfer ya da kulüp bilgisi içermez; okunmuş kaynaklardaki oyun özelliklerini kendi cümlelerimizle antrenman diline çevirir. Her sayfanın sonunda hangi kaynakların okunduğu yazar; bir şey için kaynak bulamadıysak onu yazmak yerine daha azını söyleriz. Fotoğraf kullanmıyoruz.</p>
             </div>
           </div>
         </div>
@@ -43,7 +75,7 @@ export default function Page() {
 
       <section className="section section--tight">
         <div className="container">
-          <PlayerGrid players={PLAYERS.map(({ id, name, pos, role, tagline }) => ({ id, name, pos, role, tagline }))} />
+          <PlayerIndex players={lite} />
         </div>
       </section>
 

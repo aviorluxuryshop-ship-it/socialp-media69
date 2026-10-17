@@ -15,6 +15,8 @@ Dosyalar (hepsi `app/layout.tsx` içinden bir kez yüklenir):
 | `shell.css` | üst çubuk, mega menü, mobil menü, arama paleti, alt bilgi |
 | `motion.css` | görünürken yükselme, sayaç, giriş, çizgi çizme, mikro etkileşim (üstte kullanım kılavuzu) |
 | `home.css` | yalnızca ana sayfa bölümleri |
+| `players.css` | oyuncu analizi: dizin kartları (`.pcard`), oyuncu sayfası (`.pa*`, `.psec`, `.psrc`), video rayı (`.vrail`) ve yan panel (`.pvp`) |
+| `video.css` | video kütüphanesi: çizim kapaklar (`vc-*`), kartlar (`.vcard`), süzgeç çubuğu (`.vl__*`), oynatıcı penceresi (`.vmodal*`) |
 
 ## 1. Renk rolleri
 

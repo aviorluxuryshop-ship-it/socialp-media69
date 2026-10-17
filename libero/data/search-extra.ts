@@ -1,6 +1,7 @@
 import type { SearchDoc } from '@/lib/search';
 import { MEALS } from './nutrition';
 import { NUTRITION_SEARCH } from './nutrition-search';
+import { PLAYER_KIND_NAME } from './player-types';
 import { PLAYERS } from './players';
 import { POSITION_BY_ID } from './positions';
 import { VIDEOS, VIDEO_TOPIC_NAME } from './videos';
@@ -21,7 +22,7 @@ export const EXTRA_DOCS: SearchDoc[] = [
     t: `${p.name} oyun analizi`,
     d: p.tagline,
     u: `/analiz/oyuncular/${p.id}/`,
-    x: `${p.role} ${POSITION_BY_ID[p.pos].name}`,
+    x: `${p.role} ${POSITION_BY_ID[p.pos].name} ${PLAYER_KIND_NAME[p.kind]} pozisyon alma topsuz hareket pas tercihleri`,
     a: [p.name],
   })),
   ...MEALS.map((m): SearchDoc => ({

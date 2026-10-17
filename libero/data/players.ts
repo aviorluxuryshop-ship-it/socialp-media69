@@ -1,33 +1,26 @@
-import type { PositionId } from '@/lib/types';
+import { DEEP_ATT } from './player-deep/att';
+import { DEEP_BARCA } from './player-deep/barca';
+import { DEEP_DEF } from './player-deep/def';
+import { DEEP_MID } from './player-deep/mid';
+import { NEW_PLAYERS } from './player-new';
+import type { PlayerAnalysis, PlayerBase, PlayerDeep } from './player-types';
+
+export type { PlayerAnalysis, PlayerBase, PlayerDeep, PlayerExtraBlock, PlayerKind, PlayerSource } from './player-types';
+export { PLAYER_KIND_NAME, PLAYER_KIND_ORDER, PLAYER_SECTIONS } from './player-types';
 
 /**
  * Oyuncu analizleri — EĞİTİM AMAÇLI YORUMDUR.
- * Burada sayı, istatistik, transfer ya da kulüp bilgisi verilmez; yalnızca
- * geniş çevrelerce kabul gören oyun özellikleri anlatılır ve bunların kendi
- * oyununa nasıl taşınacağı gösterilir.
+ * Burada sayı, istatistik, ödül, transfer ya da özel hayat bilgisi verilmez; yalnızca
+ * geniş çevrelerce kabul gören oyun özellikleri, gerçekten okunmuş kaynaklardan yeniden
+ * anlatılır ve bunların kendi oyununa nasıl taşınacağı gösterilir.
+ *
+ * Yapı: bu dosya ilk sürümden gelen temel alanları (stil, topla/topsuz/savunma, dersler, izleme noktaları)
+ * taşır; derin bölümler (pozisyon alma, pas tercihleri, kontrol, karar verme, güçlü yanlar/sınırlılıklar,
+ * benzer oyuncular, kaynaklar, videolar) `data/player-deep/` içindedir ve kimliğe göre birleştirilir.
+ * Tutarlılık denetimi `data/player-check.ts` içindedir; derlemede `data/player-guard.ts` çalıştırır.
  */
-export interface PlayerAnalysis {
-  id: string;
-  name: string;
-  pos: PositionId;
-  /** kısa rol etiketi */
-  role: string;
-  tagline: string;
-  style: string;
-  onBall: string[];
-  offBall: string[];
-  defending: string[];
-  /** kendi oyununa taşı */
-  lessons: string[];
-  /** izlerken bak */
-  watch: string[];
-  /** kütüphanedeki ilgili teknikler (teknik kimlikleri) */
-  techs: string[];
-  /** YouTube arama sorgusu (arama bağlantısı olarak kullanılır) */
-  q: string;
-}
 
-export const PLAYERS: PlayerAnalysis[] = [
+const OLD_PLAYERS: PlayerBase[] = [
   {
     id: 'lionel-messi',
     name: 'Lionel Messi',
@@ -40,12 +33,18 @@ export const PLAYERS: PlayerAnalysis[] = [
       'Topu ayağına yakın, küçük ve sık dokunuşlarla sürer; her dokunuş bir sonraki seçeneği korur.',
       'Baskıya yakalanmadan hemen önce yön değiştirir; ilk adım çoğu zaman rakibin ağırlığını yanlış ayağa bindirir.',
       'Pas ile sürmeyi aynı hareketin parçası olarak kullanır; çalım yaptıktan sonra pas ya da şut için zaman kazanır.',
+      'Topu alırken bazen durur: rakibi kendine çeker, sonra omuz sahtesi ve duruştan ani hızlanmayla yanından geçer.',
     ],
     offBall: [
       'Topsuzken de yürüyerek ve etrafı tarayarak rakibin zayıf noktasını arar; sonra ani bir hareketle boşluğa girer.',
       'Top yokken çoğu zaman rakip orta saha ile savunma arasına yerleşir; oyun hızlandığında o aralıktan topu alır.',
+      'Rakipler hızlı koşarken o çoğu zaman yürür: yürüyerek ve bakınarak, rakibin görüş alanı dışında kalan boşluğu seçer.',
+      'Geçiş anlarında başkalarının koşularının açtığı alanı kullanır; arkadaşları ileri koşarken o boşalan alana girer.',
     ],
-    defending: ['Oyunu tam baskıyla savunmak yerine takım dengesini bozmayan konumda kalmayı ve top kaybı sonrasında anlık tepkiyi önemser.'],
+    defending: [
+      'Oyunu tam baskıyla savunmak yerine takım dengesini bozmayan konumda kalmayı ve top kaybı sonrasında anlık tepkiyi önemser.',
+      'Yıllar içinde savunma çalışmasını ve koşu miktarını azaltıp enerjisini hücumdaki kısa, etkili hamlelere ayırmıştır; bu seçim takımın pres yapısını da etkiler.',
+    ],
     lessons: [
       'İlk dokunuşunu bir sonraki hareketinin yönüne at — durdurmak için değil, yönlendirmek için.',
       'Topu almadan önce etrafına bak: nerede boşluk var, rakip hangi ayağında?',
@@ -457,5 +456,13 @@ export const PLAYERS: PlayerAnalysis[] = [
     q: 'Alexander-Arnold inverted full back analysis',
   },
 ];
+
+const DEEP: Record<string, PlayerDeep> = { ...DEEP_BARCA, ...DEEP_MID, ...DEEP_ATT, ...DEEP_DEF };
+
+export const PLAYERS: PlayerAnalysis[] = [...OLD_PLAYERS, ...NEW_PLAYERS].map((b) => {
+  const d = DEEP[b.id];
+  if (!d) throw new Error(`players: "${b.id}" için derin bölümler (data/player-deep) yok`);
+  return { ...b, ...d };
+});
 
 export const PLAYER_BY_ID: Record<string, PlayerAnalysis> = Object.fromEntries(PLAYERS.map((p) => [p.id, p]));
