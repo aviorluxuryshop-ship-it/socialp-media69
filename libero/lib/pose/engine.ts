@@ -29,6 +29,7 @@ export const MODEL_PATH: Record<Quality, string> = {
 };
 export const WASM_PATH = '/mediapipe/wasm';
 export const MAX_POSES = 5;
+export const DETECTION_CONFIDENCE = 0.3;
 /** bu boyutun üstündeki dosyalar için uyarı gösterilir (bayt) */
 export const LARGE_FILE_BYTES = 500 * 1024 * 1024;
 
@@ -102,8 +103,10 @@ export async function getLandmarker(opts: { quality: Quality; delegate?: Delegat
         baseOptions: { modelAssetPath: abs(MODEL_PATH[quality]), delegate: d },
         runningMode: 'IMAGE',
         numPoses,
-        minPoseDetectionConfidence: 0.5,
-        minPosePresenceConfidence: 0.5,
+        // Varsayılan 0,5 eşiği, yan yana duran ikinci kişiyi sık sık kaçırıyor (iki kişilik denemede 0,5 → 1 kişi, 0,3 → 2 kişi).
+        // Düşük eşik hayalet tespit riskini artırır; bunlar düşük görünürlükle elenir ve oyuncuyu kullanıcı seçer.
+        minPoseDetectionConfidence: DETECTION_CONFIDENCE,
+        minPosePresenceConfidence: DETECTION_CONFIDENCE,
         minTrackingConfidence: 0.5,
       });
     let used: Delegate = delegate;

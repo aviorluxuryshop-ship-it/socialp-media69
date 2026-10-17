@@ -66,6 +66,30 @@
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 16px;
 }
+.vauto__wide {
+  grid-column: 1 / -1;
+}
+/* seçenek grupları kendi sütununu doldursun (etiketler tek satıra sığsın) */
+.vauto__form .seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: 100%;
+}
+.vauto__form .seg button {
+  padding-inline: 10px;
+}
+/* devre dışı alanlar okunabilir kalsın (analiz sürerken ayarlar kilitlenir) */
+.vauto__form .input:disabled {
+  color: var(--ivory-3);
+  background: var(--ink-900);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.vauto__form .seg button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .vauto__inline {
   display: flex;
   gap: 8px;
@@ -358,9 +382,6 @@
 @media (max-width: 640px) {
   .vauto__fields {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .vauto__seg-wrap {
-    overflow-x: auto;
   }
 }
 

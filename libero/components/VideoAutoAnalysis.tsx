@@ -424,7 +424,7 @@ export function VideoAutoAnalysis({ videoRef, src, fileKey, fileName }: VideoAut
                 <button type="button" aria-pressed={quality === 'full'} disabled={running} onClick={() => setQuality('full')}>Daha doğru</button>
               </div>
             </div>
-            <div className="field">
+            <div className="field vauto__wide">
               <span className="field__label" id="va-d-l">Hesaplama</span>
               <div className="seg" role="group" aria-labelledby="va-d-l">
                 <button type="button" aria-pressed={delegate === 'CPU'} disabled={running} onClick={() => setDelegate('CPU')}>İşlemci</button>
