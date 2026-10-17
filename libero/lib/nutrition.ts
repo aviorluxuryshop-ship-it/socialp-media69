@@ -114,8 +114,10 @@ export function secondMatchStatus(inp: Pick<TimelineInput, 'kickoff' | 'duration
   const k1 = timeToMin(inp.kickoff);
   const k2 = timeToMin(inp.second);
   if (k1 === null || k2 === null) return { status: 'gecersiz', gap: null };
-  const gap = (((k2 - (k1 + clampDur(inp.duration))) % 1440) + 1440) % 1440;
-  if (gap < MIN_MATCH_GAP) return { status: 'cakisiyor', gap };
+  const dur = clampDur(inp.duration);
+  const sinceStart = (((k2 - k1) % 1440) + 1440) % 1440; // ilk maçın başlangıcından ikincisine
+  if (sinceStart < dur + MIN_MATCH_GAP) return { status: 'cakisiyor', gap: sinceStart - dur };
+  const gap = sinceStart - dur;
   if (gap >= MAX_MATCH_GAP) return { status: 'uzak', gap };
   return { status: 'tamam', gap };
 }
