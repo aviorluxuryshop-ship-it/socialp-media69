@@ -7,6 +7,7 @@ import type { TechMotion } from '@/lib/motion/timeline';
 // [pas]
 
 // [sut]
+import { SERT_SUT } from './sert-sut';
 
 // [kontrol]
 import { ILK_TEMAS } from './ilk-temas';
@@ -31,6 +32,7 @@ export const MOTIONS: Record<string, TechMotion> = {
   // [pas]
 
   // [sut]
+  'sert-sut': SERT_SUT,
 
   // [kontrol]
   'ilk-temas': ILK_TEMAS,
