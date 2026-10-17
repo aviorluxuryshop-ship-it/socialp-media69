@@ -3,6 +3,7 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import type { Level, PositionId } from './types';
 import type { Program, SessionLog } from './program-types';
+import { sanitizeMoments, type VideoMoments } from './video-moments';
 import {
   defaultEquipByEnv,
   migrateEquipment,
@@ -87,6 +88,8 @@ export interface AppState {
   videoNotes: Record<string, { name: string; markers: VideoMarker[]; updated: string }>;
   lastVisit: { path: string; title: string; at: string } | null;
   createdAt: string;
+  /** İsteğe bağlı (eski yedeklerde yok): video kütüphanesindeki kişisel zaman damgalı notlar, videoId → notlar */
+  videoMoments?: VideoMoments;
 }
 
 export const DEFAULT_PROFILE: Profile = {
@@ -117,6 +120,7 @@ export function makeDefault(): AppState {
     videoNotes: {},
     lastVisit: null,
     createdAt: '',
+    videoMoments: {},
   };
 }
 
@@ -213,6 +217,7 @@ export function sanitize(raw: unknown): AppState {
     videoNotes: r.videoNotes && typeof r.videoNotes === 'object' ? r.videoNotes : {},
     program: sanitizeProgram(r.program),
     lastVisit: r.lastVisit ?? null,
+    videoMoments: sanitizeMoments(r.videoMoments),
   };
 }
 
