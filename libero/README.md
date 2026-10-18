@@ -25,10 +25,12 @@ Geliştirme sırasında: `npm run dev` (http://localhost:3000).
 | `npm run typecheck` | TypeScript denetimi |
 | `npm run check:logic` | Mantık ve veri denetimi (tarayıcısız): doğrulayıcılar, program üretici değişmezleri (≈1850 program taraması), profil geçişi |
 | `npm run check` | `typecheck` + `check:logic` |
+| `npm run check:links` | Derlemeden sonra (`out/`) tüm iç bağlantıları, görselleri ve `#çıpa`ları denetler; eksik varsa çıkış kodu 1 |
+| `npm run qa:shots` | Seçili sayfaları 390 / 820 / 1280 px'te açar; yatay taşma, konsol hatası, kırık görsel, alt metni/adı olmayan öğe ve küçük dokunma hedeflerini raporlar, ekran görüntüsü kaydeder (`BASE=… OUT=… [--routes=/,/teknikler/]`) |
 | `npm run test:e2e` | Tarayıcı testleri (site `npm start` ile açık olmalı; Chromium gerekir) |
 | `npm run videos:verify` | Video kütüphanesindeki her YouTube kimliğini yeniden doğrular |
 
-Test için Chromium yolu `CHROME_PATH` ile verilebilir; site adresi `BASE` ile (`BASE=http://localhost:3100`). Video analizi testi için `ffmpeg` gerekir (yoksa o test başarısız sayılır).
+Test için Chromium yolu `CHROME_PATH` ile verilebilir; site adresi `BASE` ile (`BASE=http://localhost:3100`). Tek bir testi çalıştırmak için `E2E_ONLY="test adından bir parça"`. Alan bazlı testler `scripts/e2e-tests/` ve `scripts/logic-tests/` klasörlerindedir (her klasörde README var); mevcut testler başarısızlığı gizlemek için değiştirilmez. Video analizi testi için `ffmpeg` gerekir (yoksa o test başarısız sayılır).
 
 ## Windows'ta yerel çalıştırma (Vercel gerekmez)
 
@@ -41,9 +43,9 @@ Gereksinim: Node.js 20+ (`node -v`; yoksa https://nodejs.org LTS ya da `winget i
 
 Port doluysa 3101, 3102… otomatik denenir. Sunucu yalnızca bu bilgisayardan (127.0.0.1) erişilebilir.
 
-## Dağıtım
+## Dağıtım (Vercel dâhil)
 
-Statik çıktı verdiği için herhangi bir statik barındırıcıda çalışır. Vercel’de **ayrı bir proje** oluşturup *Root Directory* olarak `libero` seçin (Framework: Next.js; ayrı ayar gerekmez). Alan adı belirlendiğinde `NEXT_PUBLIC_SITE_URL` ortam değişkenini ayarlayın (site haritası ve sosyal önizleme için).
+Statik çıktı verdiği için herhangi bir statik barındırıcıda çalışır. **Vercel:** depodaki kök `vercel.json` `web/` klasörünü derler; Libero için projenin *Settings → General → Root Directory* değeri **`libero`** olmalıdır (Framework: Next.js; `libero/vercel.json` kurulum/derleme komutlarını, güvenlik başlıklarını ve model/wasm önbelleğini içerir). Mevcut bir Vercel projesini bu dizine yönlendirmek ya da `main` dalına birleştirmek hesap sahibinin kararıdır; bu depodaki çalışma hiçbir Vercel ayarını, alan adını ya da ortam değişkenini değiştirmez. Alan adı belirlendiğinde `NEXT_PUBLIC_SITE_URL` ortam değişkenini ayarlayın (site haritası ve sosyal önizleme için). Derleme sırasında MediaPipe wasm dosyaları `node_modules`'tan `public/mediapipe/wasm` altına kopyalanır (`prebuild`), modeller depoda `public/models` içindedir.
 
 ## Yapı
 
@@ -59,9 +61,9 @@ styles/         tasarım belirteçleri ve bileşen/sayfa stilleri (Tailwind yok)
 scripts/        statik sunucu, e2e testi (tarayıcı), mantık denetimi, video doğrulama
 ```
 
-Teknolojiler: Next.js 16 (App Router, statik export), React 19, TypeScript, düz CSS. Yazı tipleri (Instrument Serif, Hanken Grotesk, JetBrains Mono) paketten yerel olarak gelir; dış servis yoktur. Ücretli API ya da anahtar gerekmez. Otomatik video analizi için **Google MediaPipe Pose Landmarker** (`@mediapipe/tasks-vision` ve `.task` modelleri, **Apache-2.0**) kullanılır; ayrıntı ve tam lisans metni: `public/third-party-notices.txt`, modellerin kaynağı ve SHA-256 değerleri: `public/models/README.txt`.
+Teknolojiler: Next.js 16 (App Router, statik export), React 19, TypeScript, düz CSS, ana sayfada yalnızca gerektiğinde yüklenen **three.js** (3B top). Yazı tipleri (Barlow Condensed, Hanken Grotesk, JetBrains Mono, Instrument Serif) paketten yerel olarak gelir; dış servis yoktur. Ücretli API ya da anahtar gerekmez. Otomatik video analizi için **Google MediaPipe Pose Landmarker** (`@mediapipe/tasks-vision` ve `.task` modelleri, **Apache-2.0**) kullanılır; ayrıntı ve tam lisans metni: `public/third-party-notices.txt`, modellerin kaynağı ve SHA-256 değerleri: `public/models/README.txt`.
 
-## Otomatik video analizi (aşama 1: motor)
+## Otomatik video analizi
 
 `/analiz/video/` sayfasında video yüklendikten sonra “Otomatik analiz” bölümü çalışır. **Video cihazdan çıkmaz; analiz tarayıcıda yapılır.** MediaPipe wasm dosyaları (`public/mediapipe/wasm`, `npm run build` / `npm run dev` öncesi `scripts/prepare-assets.mjs` ile kopyalanır) ve modeller (`public/models`) siteyle birlikte sunulur; CDN yoktur, ağ çağrısı yoktur.
 
@@ -70,6 +72,14 @@ Teknolojiler: Next.js 16 (App Router, statik export), React 19, TypeScript, düz
 - **Dürüst sınırlar**: görüntü 2B’dir (açılar izdüşümdür); oyuncu kadrajın ~%15’inden küçükse güvenilmez; kamera hareketliyse hız/yön kameraya görelidir; **top izlenmez** (vuruş yalnızca bacak hareketinden çıkarılan adaydır); düşük örnekleme tepe hızı eksik ölçer; hızlar metre/sn’ye çevrilmez.
 - **Kayıt**: yalnızca küçük bir özet (en çok 20 video) `videoAnalyses` altında saklanır ve yedeğe girer; ham iskelet saklanmaz.
 - **Testler**: `scripts/logic-tests/pose.mjs` (sentetik iskeletler), `scripts/e2e-tests/video-analysis.mjs` (gerçek MediaPipe, başsız Chromium). Test görüntüsü kaynağı: `scripts/fixtures/README.md`.
+
+## Tasarım ve hareket
+
+Tasarım sistemi `styles/DESIGN.md` içinde belgelidir: koyu zemin, kontrollü canlı vurgu (volt yeşil), ağır yoğun başlıklar, derinlikli kartlar, ışık katmanları. Hareket yardımcıları `lib/motion.ts` + `styles/motion.css`: kaydırınca belirme (`data-reveal`, IntersectionObserver), kademeli kartlar, sayaçlar, kontrollü paralaks, hover/odak/basış durumları.
+
+- **Ana sayfa topu**: boşta ve görünürken yüklenen prosedürel 3B futbol topu (three.js). Dokunmatik/düşük güçlü cihazda, veri tasarrufunda, `prefers-reduced-motion` açıkken, WebGL yokken ve **GPU olmadan (yazılım) çizen tarayıcılarda** hafif SVG top gösterilir; ekran dışında ve sekme gizliyken çizim döngüsü durur. `localStorage` içinde `libero:ball` = `webgl` yazarak yazılım WebGL'de de 3B topu zorlayabilirsiniz (testler bunu kullanır).
+- **Güvenli görünürlük**: JavaScript kapalıyken, gözlemci çalışmazsa ya da hızlı kaydırmada içerik gizli kalmaz (5 sn yedek açılış).
+- **Hareketi izle**: seçili tekniklerde şematik hareket animasyonu (`components/TechMotionPlayer.tsx`, `lib/motion/`, `data/technique-motion/`); gerçek oyuncu videosu ya da hareket yakalama değildir, sayfada da böyle yazar.
 
 ## Antrenman programı: ortamlar, ekipman, fiziksel odak
 
@@ -147,4 +157,7 @@ Videolar zamanla kaldırılabilir; doğrulamayı periyodik çalıştırın ve ar
 - Video analizinde kare adımı, seçilen kare hızına göre **yaklaşıktır**; gerçek kare sayısı okunmaz.
 - Videoların Türkçe altyazısı YouTube’un otomatik çevirisine bağlıdır; kalite ve varlık garanti edilmez.
 - Beslenme ve fiziksel içerik genel rehberdir; kişisel plan yerine geçmez.
-- Oyuncu analizlerindeki betimlemeler yorumdur; yayımlanmış resmî veri değildir.
+- Oyuncu analizlerindeki betimlemeler yorumdur; yayımlanmış resmî veri değildir. Videolarda zaman damgası yoktur (uydurulmaz); kişisel zaman notları video penceresinden eklenir.
+- Otomatik video analizinde **yapay zekâ yorumu kapalıdır** (API anahtarı gerektirir, eklenmedi); top izlenmez; gerçek maç kaydıyla doğrulama yapılmadı (testler sentetik ve poz fotoğrafı üzerinedir).
+- Video kapakları YouTube küçük resimlerini isteğe bağlı yükler (kapatılabilir); çevrimdışıyken çizim kapaklar gösterilir. YouTube oynatıcısı çevrimdışı test edilemez.
+- 3B top yazılım çizen (GPU'suz) tarayıcılarda SVG'ye düşer; gerçek GPU'lu cihazda ayrı bir donanım testi yapılmadı.

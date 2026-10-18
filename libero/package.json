@@ -15,7 +15,9 @@
     "baslat": "node scripts/baslat.mjs",
     "check:logic": "node scripts/check-logic.mjs",
     "check": "npm run typecheck && node scripts/check-logic.mjs",
-    "prepare:assets": "node scripts/prepare-assets.mjs"
+    "prepare:assets": "node scripts/prepare-assets.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "qa:shots": "node scripts/qa-shots.mjs"
   },
   "dependencies": {
     "@fontsource-variable/hanken-grotesk": "^5.3.0",
