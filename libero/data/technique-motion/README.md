@@ -109,7 +109,10 @@ yakın (near) bacak = vuran sağ bacak, uzak (far) bacak = basma (sol) bacak. Ze
 * Topuk kalkarken ve basarken bilek yüksekliği ile ayak eğimi **birlikte** değişmeli, yoksa ayak kısa süre yere batar: ara anahtar yazın (`n1: 0.126, n2: -12` → `n1: 0.149, n2: -24`; basışta `0.107 / 14` → `0.104 / 7` → `0.099 / 0`; değerler `groundY(eğim)` ile aynıdır).
 * IK bacakta bilek, kalça yüksekliğinin **altında** kalmalıdır; üstüne çıkarsa diz ters bükülür (`check.ts` yakalar). Yüksek takip için bileği kalça hizasının biraz altında, bacağı uzatılmış bırakın.
 * Top yerdeyken ayak üstü / iç ayak üstü temasında kramponun en alçak noktası ile temas noktası arasında ≈ 0,12 m vardır; çivi yere batmadan (`sink` 6 mm) temas noktası top merkezinin en çok birkaç mm altına inebilir. Yani yerdeki topa "alt yarısından" vurulan bir temas bu iskeletle tam çizilemez: temas yaklaşık orta yükseklikte kalır, yükseltme vuruş yolunun yukarı gitmesi ve topun çıkış açısıyla anlatılır (`note` ile dürüstçe belirtin).
-* Ayağın temasta doğru yüzeyi göstermesi için dışa dönüş (`ny`) ve eğim (`n2`) birlikte çözülür: bağcık için `ny 0, n2 ≈ -68`, iç ayak üstü için `ny ≈ 45, n2 ≈ -73` (bkz. mantık testleri `scripts/logic-tests/tech-motion-b.mjs`).
+* Ayağın temasta doğru yüzeyi göstermesi için dışa dönüş (`ny`) ve eğim (`n2`) birlikte çözülür. Yerdeki topa ayak üstüyle değen **sert** ayakta (FK) parmak ucu yere çok yakındır:
+  bağcık için `ny 0, n2 ≈ -80` (toe yerden ≈ 6 mm), iç ayak üstü için `ny ≈ 45, n2 ≈ -89`; taban eğme (baldır açısı − ayak eğimi) ≤ 60° kalsın diye baldır geriye bakar (diz ≈ 70–80° bükülü) ve
+  top, basma ayağının hemen önünde durur (uzun pasta top x ≈ 1,5, basma bileği x ≈ 1,26). Arka salınımda ayak eğimi baldırla birlikte döner (bilek hafif taban eğmesinde, n2 ≈ −110…−113); sırt eğme −40°'yi geçemez (bkz. `scripts/logic-tests/tech-motion-pas.mjs`).
+* Vuran ayağın hızı: temas noktasının yer hızı temasta (ya da hemen öncesinde) en yüksek olmalı ve topun çıkış hızı bu hızın ≈ 1,2–1,7 katı kalmalıdır (top ayaktan hızlı çıkamaz); ayak hızı temas sonrasında düşer.
 * Vuruşta ayak hızı temasta en yüksek olmalı, çıkış hızı ayak hızının yaklaşık 1,4–1,7 katı olmalıdır (şematik ama tutarlı).
 
 ### Açıklamalar (`caps`) ve etiketler
