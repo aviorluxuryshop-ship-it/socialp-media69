@@ -32,20 +32,22 @@ const IK = poseKeys([
   { t: 1.06, px: 0.64, f0: 0.88, f1: 0.13, f2: 14 },
   // vuran ayak geriye alınır: topuk kalkar, ayak ucu aşağı ve içe döner (1.08 → 1.32)
   { t: 1.08, px: 0.655, n0: 0.55, n1: GR(-12), n2: -12 },
+  { t: 1.12, px: 0.685, n0: 0.55, n1: GR(-28) + 0.012, n2: -28 },
   { t: 1.14, px: 0.7, py: 0.92, f0: 0.955, f1: groundY(15), f2: 15 },
-  { t: 1.16, px: 0.715, n0: 0.5, n1: 0.2, n2: -35, hd: 20 },
-  { t: 1.24, px: 0.77, f0: 0.96, f1: 0.099, f2: 0, tr: 8, hd: 22, as: 6, ae: 22, bs: 4, be: 26, n0: 0.43, n1: 0.31, n2: -50, ny: 0 },
-  { t: 1.32, px: 0.8, py: 0.91, n0: 0.5, n1: 0.33, n2: -65, ny: -10, tr: 9, hd: 25, as: 10, ae: 24, bs: -4, be: 30 },
+  { t: 1.16, px: 0.715, n0: 0.53, n1: 0.23, n2: -45, hd: 20 },
+  // diz bükülü, ayak arkada ve aşağı bakar; uyluk neredeyse sabit, hareket diz ve bilekten gelir (1.24 → 1.5)
+  { t: 1.24, px: 0.77, f0: 0.96, f1: 0.099, f2: 0, tr: 5, hd: 22, as: 6, ae: 22, bs: 4, be: 26, n0: 0.595, n1: 0.366, n2: -90, ny: 0 },
+  { t: 1.32, px: 0.8, py: 0.91, n0: 0.704, n1: 0.366, n2: -95, ny: -10, tr: 5, hd: 28, as: 10, ae: 24, bs: -4, be: 30 },
   // vuruş: bilek kilitli, ayak aşağıda ve içe dönük; dış ayak üstü topa iner
-  { t: 1.4, px: 0.83, n0: 0.68, n1: 0.29, n2: -78, ny: -17, tr: 10, hd: 27, as: -8, ae: 20, bs: 16, be: 34 },
-  { t: 1.46, px: 0.845, py: 0.9, n0: 0.82, n1: 0.26, n2: -83, ny: -21 },
+  { t: 1.4, px: 0.83, n0: 0.82, n1: 0.297, n2: -94, ny: -17, hd: 30, as: -8, ae: 20, bs: 16, be: 34 },
+  { t: 1.46, px: 0.845, py: 0.9, n0: 0.895, n1: 0.258, n2: -88, ny: -21 },
   // temas
-  { t: 1.5, px: 0.85, py: 0.9, n0: 0.934, n1: 0.244, n2: -85, ny: -22, tr: 11, hd: 29, as: -16, ae: 18, bs: 24, be: 38 },
-  // takip: kısa ve kontrollü; ayak topun yönünde kalkar, sonra yere iner
-  { t: 1.56, px: 0.885, py: 0.905, n0: 1.05, n1: 0.285, n2: -76, ny: -17 },
-  { t: 1.64, px: 0.925, py: 0.91, n0: 1.18, n1: 0.35, n2: -64, ny: -10, tr: 11, hd: 24 },
-  { t: 1.76, px: 0.99, py: 0.92, n0: 1.3, n1: 0.4, n2: -48, ny: -2, tr: 10, hd: 12, as: -18, bs: 28 },
-  { t: 1.9, px: 1.07, py: 0.928, n0: 1.38, n1: 0.33, n2: -26, ny: 5, tr: 8, hd: 2, as: -8, bs: 14 },
+  { t: 1.5, px: 0.85, py: 0.9, n0: 0.934, n1: 0.244, n2: -85, ny: -22, hd: 33, as: -16, ae: 18, bs: 24, be: 38 },
+  // takip: kısa ve kontrollü; ayak topun yönünde alçakta kalır, sonra yere iner
+  { t: 1.56, px: 0.885, py: 0.905, n0: 0.99, n1: 0.27, n2: -78, ny: -17 },
+  { t: 1.64, px: 0.925, py: 0.91, n0: 1.07, n1: 0.3, n2: -68, ny: -10, hd: 26 },
+  { t: 1.76, px: 0.99, py: 0.92, n0: 1.2, n1: 0.33, n2: -55, ny: -2, hd: 14, as: -18, bs: 28 },
+  { t: 1.9, px: 1.07, py: 0.928, n0: 1.32, n1: 0.3, n2: -32, ny: 5, tr: 5, hd: 4, as: -8, bs: 14 },
   { t: 2.02, px: 1.14, py: 0.93, n0: 1.4, n1: 0.2, n2: -6, ny: 8, hd: -2, as: 2, bs: 0, f1: groundY(-8), f2: -8 },
   { t: 2.12, px: 1.2, n0: 1.41, n1: GR(15), n2: 15, as: 10, ae: 18, bs: -8, be: 16, f0: 0.965, f1: groundY(-18), f2: -18 },
   { t: 2.18, px: 1.24, n0: 1.42, n1: 0.099, n2: 0, f0: 1.05, f1: 0.2, f2: -22 },

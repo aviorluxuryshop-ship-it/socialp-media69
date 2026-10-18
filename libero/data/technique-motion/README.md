@@ -107,6 +107,32 @@ basma ayağı temas penceresinde yerden ≤ 4 mm kopuk ve ≤ 8 mm kayar (`airbo
 top yerin altına inmez, karelerarası hız ≤ 45 m/sn, pelvis ≤ 5 m/sn · temas anında top bildirilen bölgeden ≤ 3 cm · `carry` uçlarında sıçrama ≤ 3 cm ·
 baş temastan 0,3 sn önceye kadar topa ≤ 60° dönük · süre 1,8–3,5 sn · sıralı ve kapsayan anahtarlar.
 
+## Parmak ucu aşağı bakan vuran ayak (FK) ve havada giden top
+
+IK bacakta negatif ayak eğimi, ön ayağı otomatik yukarı büker (topuk kalkık yürüyüş: parmak yerde kalır). Ayak üstü, iç ayak üstü, dış ayak üstü gibi
+parmak ucu aşağı bakan **sert** ayak için vuran bacak FK olmalıdır (`legs: ['fk', 'ik']`). FK değerlerini elle hesaplamayın:
+
+* Vuran bacağı yine bilek konumuyla yazın (`n0` = x, `n1` = y, `n2` = ayak eğimi) ve `keys: nearIkToFk(poseKeys([...]))` ile çevirin
+  (`lib/motion/author-fk.ts`; 1/30 sn'lik örnekler ekler, ulaşılamayan hedefte yazım anında hata verir). Yerdeki sert ayakta bilek yüksekliği: `groundYRigid(eğim)`.
+* Yerdeki topa ayak üstü yüzeyiyle ancak ayak parmak ucu neredeyse yere bakarken (eğim ≈ −85…−92°, bilek ≈ 0,21–0,25 m) değilebilir; daha yatık ayak yere batar.
+  Taban eğme (`baldır açısı − ayak eğimi`) ≤ ~55° kalsın diye baldır geriye bakar (≈ −30…−40°); testler taban eğmeyi −40…62° içinde denetler.
+* Temas anı bileğini `zoneContact` ile çözün: ayağın yönelimi sabitken top merkezi = bilek + sabit bir ofset olduğundan, bilek "top merkezi − ofset"tir (birkaç yinelemeyle baldır açısı oturur).
+* Havada giden top için `flightKeys({ t0, x0, y0, z0, vx, vy, g, bend, tEnd, spin })` (`lib/motion/flight.ts`): yatayda sabit hız, dikeyde yavaşlatılmış parabol, yanalda kavis.
+  `bend > 0` oyuncunun sağına şişkin yol (sola kavis, sağ ayak iç yüz), `bend < 0` soluna şişkin yol (sağa kavis, trivela). Top, sahnenin sağ üstündeki "Üstten bakış" kutusunun altından geçecek kadar alçak tutulur (tepe ≈ 0,6–0,9 m).
+
+### Kavisli pas ↔ trivela (pas kategorisi)
+
+| | iç yüzle kavisli pas | trivela pası |
+| --- | --- | --- |
+| Temas bölgesi (`foot[]`) | `ic`, `ustIc` (parlayan: `ustIc`) | `ustDis` |
+| Vuran ayak (`ny`, temasta) | dışa ≈ +58° | içe ≈ −22° |
+| Kavis (`curve`) | `'sol'`: top oyuncunun soluna döner | `'sag'`: top oyuncunun sağına döner |
+| Üstten bakış yolu | önce sağa açılır, sola döner | önce sola açılır, sağa döner |
+| Gövde / takip | hafif geriye yaslı, yüksek ve çapraz takip | dik, kısa ve alçak takip |
+
+Oynatıcı, `curve` verilen hareketlerde üstten bakış notuna "Top oyuncunun soluna/sağına kavis çizer" ipucunu yazar (`data-curve-hint`) ve üstten bakış kutusunun adına ekler.
+`plan.press` kavisli harekette "pas yolundaki rakip" olarak okunur (topun düz yolundaki çarpı işareti; top rakibin dışından geçer).
+
 ## Bilinen kısıtlar
 
 * Rig tek düzlemli (yan görünüm) iskelettir; gövde dönüşü, omuz üstü bakış, kalça yaylanması görünmez. Yönler **üstten bakış kutusuyla** (`curve`, `z`, `plan.press`) anlatılır.
