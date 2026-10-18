@@ -14,6 +14,7 @@ Yeni bir hareket eklemek için **yalnızca veri dosyası** yazılır; oynatıcı
 | `lib/motion/rig.ts` | İskelet: FK/IK bacak, krampon geometrisi, temas bölgeleri (`ZONE_GEOM`), top yolu |
 | `lib/motion/timeline.ts` | `TechMotion` tipi, evreler, vurgu (glow), kare üretimi (`frameAt`) |
 | `lib/motion/author.ts` | Yazım yardımcıları: `poseKeys` (kısmi anahtar), `STAND`, `groundY` |
+| `lib/motion/author-limbs.ts` | `limbKeys`: uzuv (grup) başına ayrı anahtar listeleri (koşu, vuruş), bkz. aşağıdaki bölüm |
 | `lib/motion/check.ts` | Kinematik denetimler ve eşikler (`checkMotion`, `LIMITS`) |
 | `components/TechMotionPlayer.tsx` | Oynatıcı (oynat/duraklat, başa sar, 0,5×/1×, kaydırma, evre çubuğu, açıklama, şerit) |
 | `components/tech-motion/*` | `Figure` (SVG oyuncu+top+vurgu+yakın çekim), `PlanView` (üstten bakış), `Stage` |
@@ -93,6 +94,23 @@ yakın (near) bacak = vuran sağ bacak, uzak (far) bacak = basma (sol) bacak. Ze
 * Temas anındaki top konumu yüzey konumuyla aynı olmalı: bunu bulmak için küçük bir betik yazıp `zoneContact(frame.sk.near.foot, zone).ball` yazdırın (ilk temas dosyasındaki `n1` değerleri bu yolla, top yerde kalsın diye çözülmüştür).
 * Dönüş `r` verilmezse yatay yer değiştirmeden türetilir (ileri giden top saat yönünde döner).
 * `curve` verip `z` girmezseniz, temastan sonraki top yolu şematik olarak üretilir (ters yöne açılıp kavis yönüne döner). Gerçek bir yön istiyorsanız `z` anahtarlarını kendiniz girin.
+
+### Uzuv başına anahtar (`limbKeys`): koşu ve vuruş gibi hareketler
+
+`poseKeys` tek bir zaman çizelgesinde yazılır: bir uzuv hareket ederken başka bir uzvun anahtarı araya girerse, hareket eden uzvun değeri o anahtarda "beklemek" zorunda kalır. Uzuvlar farklı zamanlarda hareket ediyorsa (adım adım koşu, geriye kurulan vuruş bacağı) `lib/motion/author-limbs.ts` içindeki `limbKeys(gruplar, dur)` kullanılır. Her grup kendi anahtarını kendi zamanında yazar; yazılmayan kanal **aynı grubun** önceki değerini korur; birleşik zaman kümesinde her kanalın kendi yumuşak eğrisi örneklenip tam anahtar listesi üretilir (örnek: `data/technique-motion/uzun-pas.ts`).
+
+| Grup | Kanallar |
+| --- | --- |
+| `body` | `px`, `py`, `tr`, `hd` |
+| `armN` / `armF` | `as`, `ae` / `bs`, `be` |
+| `near` / `far` | `n0`–`n2`, `ny` / `f0`–`f2`, `fy` |
+
+* Basma ayağı: `{ t: 1.1, f0: 1.31, f1: 0.099, f2: 0 }` ve sonraki anahtarda `{ t: 1.78 }` (değer korunur) → ayak tam sabit.
+* Topuk kalkarken ve basarken bilek yüksekliği ile ayak eğimi **birlikte** değişmeli, yoksa ayak kısa süre yere batar: ara anahtar yazın (`n1: 0.126, n2: -12` → `n1: 0.149, n2: -24`; basışta `0.107 / 14` → `0.104 / 7` → `0.099 / 0`; değerler `groundY(eğim)` ile aynıdır).
+* IK bacakta bilek, kalça yüksekliğinin **altında** kalmalıdır; üstüne çıkarsa diz ters bükülür (`check.ts` yakalar). Yüksek takip için bileği kalça hizasının biraz altında, bacağı uzatılmış bırakın.
+* Top yerdeyken ayak üstü / iç ayak üstü temasında kramponun en alçak noktası ile temas noktası arasında ≈ 0,12 m vardır; çivi yere batmadan (`sink` 6 mm) temas noktası top merkezinin en çok birkaç mm altına inebilir. Yani yerdeki topa "alt yarısından" vurulan bir temas bu iskeletle tam çizilemez: temas yaklaşık orta yükseklikte kalır, yükseltme vuruş yolunun yukarı gitmesi ve topun çıkış açısıyla anlatılır (`note` ile dürüstçe belirtin).
+* Ayağın temasta doğru yüzeyi göstermesi için dışa dönüş (`ny`) ve eğim (`n2`) birlikte çözülür: bağcık için `ny 0, n2 ≈ -68`, iç ayak üstü için `ny ≈ 45, n2 ≈ -73` (bkz. mantık testleri `scripts/logic-tests/tech-motion-b.mjs`).
+* Vuruşta ayak hızı temasta en yüksek olmalı, çıkış hızı ayak hızının yaklaşık 1,4–1,7 katı olmalıdır (şematik ama tutarlı).
 
 ### Açıklamalar (`caps`) ve etiketler
 
