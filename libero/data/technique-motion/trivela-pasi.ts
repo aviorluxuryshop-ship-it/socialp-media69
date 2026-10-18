@@ -37,15 +37,15 @@ const IK = poseKeys([
   { t: 1.16, px: 0.715, n0: 0.53, n1: 0.23, n2: -45, hd: 20 },
   // diz bükülü, ayak arkada ve aşağı bakar; uyluk neredeyse sabit, hareket diz ve bilekten gelir (1.24 → 1.5)
   { t: 1.24, px: 0.77, f0: 0.96, f1: 0.099, f2: 0, tr: 5, hd: 22, as: 6, ae: 22, bs: 4, be: 26, n0: 0.595, n1: 0.366, n2: -90, ny: 0 },
-  { t: 1.32, px: 0.8, py: 0.91, n0: 0.704, n1: 0.366, n2: -95, ny: -10, tr: 5, hd: 28, as: 10, ae: 24, bs: -4, be: 30 },
+  { t: 1.32, px: 0.8, py: 0.91, n0: 0.66, n1: 0.366, n2: -95, ny: -10, tr: 5, hd: 28, as: 10, ae: 24, bs: -4, be: 30 },
   // vuruş: bilek kilitli, ayak aşağıda ve içe dönük; dış ayak üstü topa iner
-  { t: 1.4, px: 0.83, n0: 0.82, n1: 0.297, n2: -94, ny: -17, hd: 30, as: -8, ae: 20, bs: 16, be: 34 },
-  { t: 1.46, px: 0.845, py: 0.9, n0: 0.895, n1: 0.258, n2: -88, ny: -21 },
+  { t: 1.4, px: 0.83, n0: 0.745, n1: 0.3, n2: -94, ny: -17, hd: 30, as: -8, ae: 20, bs: 16, be: 34 },
+  { t: 1.46, px: 0.845, py: 0.9, n0: 0.835, n1: 0.262, n2: -88, ny: -21 },
   // temas
   { t: 1.5, px: 0.85, py: 0.9, n0: 0.934, n1: 0.244, n2: -85, ny: -22, hd: 33, as: -16, ae: 18, bs: 24, be: 38 },
   // takip: kısa ve kontrollü; ayak topun yönünde alçakta kalır, sonra yere iner
-  { t: 1.56, px: 0.885, py: 0.905, n0: 0.99, n1: 0.27, n2: -78, ny: -17 },
-  { t: 1.64, px: 0.925, py: 0.91, n0: 1.07, n1: 0.3, n2: -68, ny: -10, hd: 26 },
+  { t: 1.56, px: 0.885, py: 0.905, n0: 1.03, n1: 0.27, n2: -78, ny: -17 },
+  { t: 1.64, px: 0.925, py: 0.91, n0: 1.11, n1: 0.3, n2: -68, ny: -10, hd: 26 },
   { t: 1.76, px: 0.99, py: 0.92, n0: 1.2, n1: 0.33, n2: -55, ny: -2, hd: 14, as: -18, bs: 28 },
   { t: 1.9, px: 1.07, py: 0.928, n0: 1.32, n1: 0.3, n2: -32, ny: 5, tr: 5, hd: 4, as: -8, bs: 14 },
   { t: 2.02, px: 1.14, py: 0.93, n0: 1.4, n1: 0.2, n2: -6, ny: 8, hd: -2, as: 2, bs: 0, f1: groundY(-8), f2: -8 },
@@ -72,7 +72,7 @@ export const TRIVELA_PASI: TechMotion = {
   contact: 'ustDis',
   curve: 'sag',
   plan: { press: [3.6, -0.011] },
-  note: 'Sağ ayakta top oyuncunun sağına döner; temas ayağın yan kenarında değil, ayak üstünün dış bölümündedir.',
+  note: 'Sağ ayakta top oyuncunun sağına döner; temas ayağın yan kenarında değil, ayak üstünün dış bölümündedir. Temas yüksekliği yandan tam seçilmez, yönü üstten bakış kutusu gösterir.',
   caps: [
     'Topa hafif yandan yaklaşın, basma ayağınızı topun yanına basın. Vuran ayağın ucunu aşağı ve içe çevirip bileğinizi kilitleyin; gözünüz topta, gövdeniz dengede.',
     'Ayak üstünün dış bölümüyle (küçük parmağa yakın üst yüzey) topun yan-alt kısmına sürtün; hareket kısa ve kontrollü olsun. Dönüşü temas verir, güç değil.',

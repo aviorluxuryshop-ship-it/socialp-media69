@@ -73,7 +73,7 @@ export const KAVISLI_PAS: TechMotion = {
   contact: 'ustIc',
   curve: 'sol',
   plan: { press: [3.6, 0.131] },
-  note: 'Sağ ayakta top oyuncunun soluna döner; iç yüz ve ayak üstünün iç bölümü temas yüzeyidir, gösterimde ayak üstünün iç bölümü parlar.',
+  note: 'Sağ ayakta top oyuncunun soluna döner. Gösterimde ayak üstünün iç bölümü parlar; temas yüksekliği yandan tam seçilmez, yönü üstten bakış kutusu gösterir.',
   caps: [
     'Topa hafif yandan ve açıyla yaklaşın, basma ayağınızı topun yanına, biraz geriye basın. Vuran ayağın ucunu aşağı ve dışa çevirip bileğinizi kilitleyin; gözünüz topta olsun.',
     'Ayağın iç yüzünü ve ayak üstünün iç bölümünü topun dış-alt yarısına yerleştirip sürtün; top vuran ayağın tersine, sola dönüş kazanır. Tam ortadan vurmayın.',

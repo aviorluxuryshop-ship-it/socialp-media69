@@ -25,7 +25,7 @@ export interface FlightSpec {
   tEnd: number;
   /** örnekleme aralığı (sn) */
   step?: number;
-  /** toplam dönüş (derece, yandan görünümde; − saat yönünün tersi / geri dönüş) tEnd'e kadar */
+  /** toplam dönüş (derece, yandan görünümde; + saat yönünün tersi = ileri giden topta geri dönüş, − saat yönü) tEnd'e kadar */
   spin?: number;
 }
 
