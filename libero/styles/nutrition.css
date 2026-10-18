@@ -1147,6 +1147,64 @@ html.motion-live .plate:not(.is-in) .plate__s {
   color: var(--accent-hi);
 }
 
+/* Dar ekranda tablolar yatay kaydırılmaz: her satır etiketli bir kart olur (çocuk sütunu ekran dışında kalmasın) */
+@media (max-width: 640px) {
+  .tablewrap .table--stack {
+    min-width: 0;
+  }
+  .table--stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .table--stack,
+  .table--stack tbody,
+  .table--stack tr,
+  .table--stack th,
+  .table--stack td {
+    display: block;
+    width: 100%;
+  }
+  .table--stack tbody tr {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .table--stack tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .table--stack tbody th,
+  .table--stack tbody td {
+    padding: 0;
+    border: 0;
+    min-width: 0;
+    background: transparent;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .table--stack tbody th {
+    margin-bottom: 10px;
+  }
+  .table--stack tbody td + td {
+    margin-top: 10px;
+  }
+  .table--stack td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ivory-4);
+  }
+  .sleeptable tr[data-me='true'] {
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+}
+
 /* ── Kırmızı bayrak kutusu ── */
 .redflag {
   display: grid;

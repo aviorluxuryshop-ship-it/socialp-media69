@@ -16,6 +16,8 @@ import {
   type MealWhen,
 } from '@/data/nutrition';
 import { norm } from '@/lib/utils';
+import { isMinor } from '@/lib/nutrition';
+import { usePlan } from '@/lib/nutri-store';
 import { Icon } from './Icon';
 
 type Diet = 'hepsi' | 'vejetaryen' | 'vegan';
@@ -102,6 +104,8 @@ export function MealFinder() {
 }
 
 export function AlternativeFinder() {
+  const [plan] = usePlan();
+  const minor = isMinor(plan.band);
   const [q, setQ] = useState('');
   const [picked, setPicked] = useState('tavuk');
   const [avoid, setAvoid] = useState<Allergen[]>([]);
@@ -116,8 +120,8 @@ export function AlternativeFinder() {
   }, [q]);
   const food = FOOD_BY_ID[picked];
   const alts = useMemo(
-    () => alternativesFor(food, { avoid, vegetarian: diet !== 'hepsi', vegan: diet === 'vegan', cheap, exclude, forPre: false, forPost }).slice(0, 8),
-    [food, avoid, diet, cheap, exclude, forPost],
+    () => alternativesFor(food, { avoid, vegetarian: diet !== 'hepsi', vegan: diet === 'vegan', cheap, exclude, forPre: false, forPost, minor }).slice(0, 8),
+    [food, avoid, diet, cheap, exclude, forPost, minor],
   );
 
   return (
@@ -162,6 +166,7 @@ export function AlternativeFinder() {
                   <p className="mono muted" style={{ fontSize: '.62rem', marginTop: 4 }}>
                     {f.vegan ? 'vegan' : f.vegetarian ? 'vejetaryen' : 'hayvansal'}
                     {f.allergens.length > 0 && ` · içerir: ${f.allergens.map((a) => ALLERGEN_NAME[a].split(' (')[0].toLowerCase()).join(', ')}`}
+                    {f.mayContain.length > 0 && ` · içerebilir: ${f.mayContain.map((a) => ALLERGEN_NAME[a].split(' (')[0].toLowerCase()).join(', ')}`}
                     {' · '}{'₺'.repeat(f.cost)}
                   </p>
                 </div>

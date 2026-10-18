@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { URINE_STEPS } from '@/data/nutrition-guide';
-import { AGE_BANDS, REMINDER_CHOICES, addGlass, buildMatchTimeline, dayKey, glassesOn, lastDays, reminderDue, type StepKind } from '@/lib/nutrition';
+import { AGE_BANDS, REMINDER_CHOICES, addGlass, buildMatchTimeline, dayKey, glassesOn, lastDays, minToTime, reminderDue, secondMatchStatus, timeToMin, type SecondStatus, type StepKind } from '@/lib/nutrition';
 import { usePlan, useWater } from '@/lib/nutri-store';
 import { Icon } from './Icon';
 import { Rv } from './NutritionBits';
+import { radioNav } from './radioNav';
 
 /** Yazdırma: yalnızca hedef alanı basar (styles/nutrition.css içindeki html[data-print] kuralları) */
 export function PrintButton({ target, label = 'Yazdır' }: { target: 'timeline' | 'plan'; label?: string }) {
@@ -69,7 +70,12 @@ export function WaterTracker() {
     }
   }, [due, perm, w.lastAt]);
 
-  const add = (d: number) => key && setW((s) => addGlass(s, key, d, Date.now()));
+  // gün anahtarı tıklama anında hesaplanır: gece yarısı geçtiği hâlde 15 sn'lik saat henüz yenilenmediyse bile bardak doğru güne yazılır
+  const add = (d: number) => {
+    const t = Date.now();
+    setW((s) => addGlass(s, dayKey(new Date(t)), d, t));
+    setNow(t);
+  };
   const week = key ? lastDays(w, key, 7) : [];
   const maxBar = Math.max(w.goal, ...week.map((x) => x.n), 1);
   const R = 54;
@@ -82,7 +88,7 @@ export function WaterTracker() {
           <p className="eyebrow">Araç</p>
           <h3 className="h3">Günlük su takibi</h3>
           <p className="muted water__hint">
-            Bardak sayısını sen yazarsın. Hedef bir öneri değil, yalnızca sayaç içindir; idrar rengi daha iyi bir ölçüdür. <Rv id="su-takibi" />
+            Bardak sayısını sen yazarsın. Hedef bir öneri değil, yalnızca sayaç içindir; hedefe ulaşmak için zorla içme. İdrar rengi daha iyi bir ölçüdür. <Rv id="su-takibi" />
           </p>
         </div>
       </div>
@@ -128,8 +134,15 @@ export function WaterTracker() {
         </div>
       </div>
 
+      {count > w.goal && (
+        <p className="note note--warn" role="status" data-water-over>
+          <Icon name="info" />
+          <span>Bugünkü sayaç hedefini aştın. Susamıyorsan ve idrarın açık sarıysa daha fazla içmene gerek yok; aşırı içmek de risklidir (NATA).</span>
+        </p>
+      )}
+
       {week.length > 0 && (
-        <div className="water__week" aria-label="Son yedi gün">
+        <div className="water__week" role="group" aria-label="Son yedi gün">
           {week.map((d, i) => (
             <div key={d.key} className="water__day" title={`${d.key}: ${d.n} bardak`}>
               <span className="water__bar"><i style={{ height: `${(d.n / maxBar) * 100}%` }} data-today={i === week.length - 1 ? 'true' : undefined} /></span>
@@ -186,15 +199,17 @@ export function UrineCard() {
         İdrarının rengine en yakın kutuyu seç. Ekran renkleri gerçeğiyle birebir aynı değildir; bazı besin ve ilaçlar rengi değiştirebilir. <Rv id="idrar-karti" />
       </p>
       <div className="urine__scale" role="radiogroup" aria-label="İdrar rengi">
-        {URINE_STEPS.map((s) => (
+        {URINE_STEPS.map((s, i) => (
           <button
             key={s.n}
             type="button"
             role="radio"
             aria-checked={pick === s.n}
+            tabIndex={(pick ?? URINE_STEPS[0].n) === s.n ? 0 : -1}
             className="urine__sw"
             style={{ ['--c' as string]: `var(--u${s.n})` }}
             onClick={() => setPick(s.n)}
+            onKeyDown={(e) => radioNav(e, URINE_STEPS.length, i, (k) => setPick(URINE_STEPS[k].n))}
             data-urine-step={s.n}
           >
             <span className="urine__chip" aria-hidden="true" />
@@ -219,6 +234,13 @@ export function UrineCard() {
 
 // ── Maç günü çizelgesi oluşturucu ────────────────────────
 
+function secondNote(status: SecondStatus, endOfFirst: string): string | null {
+  if (status === 'gecersiz') return 'İkinci maç için geçerli bir saat gir. Şimdilik çizelgede yalnızca ilk maç var.';
+  if (status === 'cakisiyor') return `İkinci maç, ilk maçın bitişinden (${endOfFirst}) en az 20 dakika sonra başlamalı. Saatleri kontrol et; şimdilik çizelgede yalnızca ilk maç var.`;
+  if (status === 'uzak') return `İkinci maç, ilk maçın bitişinden (${endOfFirst}) 10 saatten fazla sonra ya da ilk maçtan önce görünüyor; bu yüzden aynı günün çizelgesine eklenmedi. Saatleri kontrol et ya da ikinci maç için ayrı bir çizelge oluştur.`;
+  return null;
+}
+
 const KIND_NAME: Record<StepKind, string> = { yemek: 'Yeme', sivi: 'Sıvı', mac: 'Maç', dinlenme: 'Dinlenme', kontrol: 'Kontrol' };
 function KindIcon({ k }: { k: StepKind }) {
   if (k === 'sivi') return <Drop />;
@@ -233,6 +255,9 @@ export function MatchTimelineBuilder() {
   const [second, setSecond] = useState('17:30');
   const band = AGE_BANDS.find((b) => b.id === plan.band);
   const steps = buildMatchTimeline({ kickoff: kick, band: plan.band, duration: dur, second: two ? second : undefined });
+  const k1 = timeToMin(kick);
+  const sec = two ? secondMatchStatus({ kickoff: kick, duration: dur, second }) : null;
+  const secMsg = sec && k1 !== null ? secondNote(sec.status, minToTime(k1 + dur)) : null;
   return (
     <div className="mt card card--pad card--edge" data-mt>
       <div className="mt__form np">
@@ -263,6 +288,12 @@ export function MatchTimelineBuilder() {
         )}
         <PrintButton target="timeline" label="Çizelgeyi yazdır" />
       </div>
+      {secMsg && (
+        <p className="note note--warn np" role="status" data-mt-second-note>
+          <Icon name="warn" />
+          <span>{secMsg}</span>
+        </p>
+      )}
 
       <div data-print-area="timeline">
         <div className="print-only">

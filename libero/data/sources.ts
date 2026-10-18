@@ -120,7 +120,7 @@ export const SOURCES: Source[] = [
     org: 'Uluslararası Olimpiyat Komitesi uzlaşı metni, Maughan ve ark.',
     url: 'https://doi.org/10.1136/bjsports-2018-099027',
     topic: 'beslenme',
-    note: 'Takviye kararından önce tam bir beslenme değerlendirmesi yapılmalı; yalnızca birkaç ürünün (kafein, kreatin vb.) iyi kanıtı vardır; ürünler bildirilmemiş yasaklı madde içerebilir ve istemeden pozitif teste yol açabilir. Metin yüksek performanslı yetişkin sporcuları kapsar; çocuklara yönelik ayrı bir öneri vermez.',
+    note: 'Takviye kararından önce tam bir beslenme değerlendirmesi yapılmalı; yalnızca birkaç ürünün (kafein, kreatin vb.) iyi kanıtı vardır; ürünler bildirilmemiş yasaklı madde içerebilir ve istemeden pozitif teste yol açabilir; yağ yakıcı sınıfındaki ürünlerin çoğunun etkili olduğuna dair kanıt yoktur; yüksek dozda kafeinin bulantı, kaygı, uykusuzluk ve huzursuzluk gibi yan etkileri artırdığı belirtilir. Metin yüksek performanslı yetişkin sporcuları kapsar; çocuklara yönelik ayrı bir öneri vermez. (Özet ve tam metnin ilgili bölümleri okundu.)',
   },
   {
     id: 'aap-drinks-2011',
@@ -128,7 +128,7 @@ export const SOURCES: Source[] = [
     org: 'Amerikan Pediatri Akademisi (AAP), Beslenme Komitesi ve Spor Hekimliği ve Fitness Konseyi',
     url: 'https://doi.org/10.1542/peds.2011-0965',
     topic: 'beslenme',
-    note: 'Enerji içeceklerindeki kafein ve diğer uyarıcıların çocuk ve ergen beslenmesinde yeri yoktur; sık ya da aşırı şekerli spor içeceği tüketimi fazla kilo ve obezite riskini artırabilir. Spor içeceği ile enerji içeceği aynı ürün değildir.',
+    note: 'Enerji içeceklerindeki kafein ve diğer uyarıcıların çocuk ve ergen beslenmesinde yeri yoktur; sık ya da aşırı şekerli spor içeceği tüketimi fazla kilo ve obezite riskini artırabilir. Spor içeceği ile enerji içeceği aynı ürün değildir. Düzenli dayanıklılık ya da yüksek şiddetli spor yapan gençlerde spor içeceğinin uygun kullanımı raporun kapsamı dışındadır. (Özet metnine dayanır.)',
   },
   {
     id: 'aap-heat-2011',
@@ -168,7 +168,7 @@ export const SOURCES: Source[] = [
     org: 'Walsh ve ark., British Journal of Sports Medicine',
     url: 'https://doi.org/10.1136/bjsports-2020-102025',
     topic: 'beslenme',
-    note: 'Elit sporcularda alışkanlık hâline gelmiş kısa uyku (gecede 7 saatten az) ve düşük uyku kalitesi sık görülür; 7 saatten az uyku solunum yolu enfeksiyonuna yatkınlığı artırır; “herkese aynı saat” yaklaşımı yerine bireysel yaklaşım önerilir. Yalnızca özet metnine dayanır.',
+    note: 'Elit sporcularda alışkanlık hâline gelmiş kısa uyku (gecede 7 saatten az) ve düşük uyku kalitesi sık görülür; genel nüfus çalışmalarında 7 saatten az uyku solunum yolu enfeksiyonuna yatkınlığı artırır (sporcuya özgü bir bulgu olarak verilmez); “herkese aynı saat” yaklaşımı yerine bireysel yaklaşım önerilir; şekerlemenin yararına dair araştırma gerektiği belirtilir. Yalnızca özet metnine dayanır.',
   },
   {
     id: 'aap-media-2016',

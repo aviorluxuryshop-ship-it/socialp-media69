@@ -24,17 +24,17 @@ export const SECTIONS: GuideSection[] = [
   { id: 'sirasinda', no: '03', nav: 'Sırasında', title: 'Antrenman', em: 'sırasında', lead: 'Çoğu antrenmanda su yeterlidir. Sıcakta ve uzun süren etkinliklerde ek önlemler gerekir; çocuklar için özel dikkat kuralları vardır.', sources: ['tuber', 'acsm-fluid-2007', 'aap-drinks-2011', 'aap-heat-2011'] },
   { id: 'sonrasi', no: '04', nav: 'Sonrası', title: 'Sonrası:', em: 'toparlanma', lead: 'Antrenmandan sonra karbonhidrat, protein ve sıvı birlikte iyi bir fikirdir. Ancak sihirli bir saat ya da özel bir ürün yoktur.', sources: ['sda-adolescent', 'tuber', 'acsm-nutrition'] },
   { id: 'sivi', no: '05', nav: 'Sıvı', title: 'Sıvı tüketimi ve', em: 'idrar rengi', lead: 'Susamayı beklemeyin, ama aşırıya da kaçmayın. İdrar rengi, evde yapılabilecek en kolay sıvı kontrolüdür.', sources: ['tuber', 'acsm-fluid-2007', 'nata-fluid-2017', 'aap-drinks-2011', 'aap-heat-2011', 'sda-adolescent'] },
-  { id: 'uyku', no: '06', nav: 'Uyku', title: 'Uyku:', em: 'görünmez antrenman', lead: 'Büyüme, onarım ve dikkat uykuda toparlanır. Uyku ihtiyacı yaşa göre değişir.', sources: ['aasm-sleep-2016', 'sleep-athlete-2021', 'aap-media-2016', 'aap-drinks-2011'] },
+  { id: 'uyku', no: '06', nav: 'Uyku', title: 'Uyku:', em: 'görünmez antrenman', lead: 'Uyku, çocuk ve ergenlerde sağlığın temel bir parçasıdır (AASM). Uyku ihtiyacı yaşa göre değişir.', sources: ['aasm-sleep-2016', 'sleep-athlete-2021', 'aap-media-2016', 'aap-drinks-2011'] },
   { id: 'dinlenme', no: '07', nav: 'Dinlenme', title: 'Dinlenme ve', em: 'toparlanma', lead: 'Gelişme yükle değil, yük ile dinlenmenin dengesiyle olur. Yoğun fikstürde bu denge daha da önemlidir.', sources: ['overtraining-2013', 'aap-heat-2011', 'reds-2023'] },
   { id: 'uyari', no: '08', nav: 'Uyarı işaretleri', title: 'Bunları görürsen', em: 'bir yetişkine söyle', lead: 'Yetersiz yeme ve yetersiz enerji sessizce ilerleyebilir. Bu sayfa tanı koymaz; ama işaretleri tanımak erken yardım almanın yoludur.', sources: ['reds-2023', 'reds-2014', 'tuber'] },
   { id: 'mac-gunu', no: '09', nav: 'Maç günü', title: 'Maç günü', em: 'planı', lead: 'Maç saatini gir; yeme, içme ve dinlenme çizelgeni oluştursun. Çizelge örnektir; sana göre ayarlanır.', sources: ['uefa-nutrition', 'tuber', 'acsm-fluid-2007', 'sda-adolescent'] },
-  { id: 'turnuva', no: '10', nav: 'Turnuva', title: 'Turnuva ve', em: 'birden çok maç', lead: 'Aynı gün birden çok maç, toparlanma için kısa bir zaman demektir. Plan yapan, enerjisini sona kadar taşır.', sources: ['aap-heat-2011', 'acsm-fluid-2007', 'uefa-nutrition', 'tuber'] },
+  { id: 'turnuva', no: '10', nav: 'Turnuva', title: 'Turnuva ve', em: 'birden çok maç', lead: 'Aynı gün birden çok maç, toparlanma için kısa bir zaman demektir. Önceden plan yapmak, günün sonuna kadar enerjiyi korumaya yardım eder.', sources: ['aap-heat-2011', 'acsm-fluid-2007', 'uefa-nutrition', 'tuber'] },
   { id: 'takviye', no: '11', nav: 'Takviyeler', title: 'Takviyeler:', em: 'çocuklar için değil', lead: 'Gençler için önce sofra. Takviye, hekim ya da diyetisyen değerlendirmesi olmadan kullanılmaz.', sources: ['ioc-supplements', 'aap-drinks-2011', 'sda-adolescent', 'tuber'] },
   { id: 'ramazan', no: '12', nav: 'Ramazan', title: 'Ramazan ve', em: 'sporcu', lead: 'Oruç tutmak kişisel bir karardır. Sporcu olarak oruç tutmayı düşünüyorsan, özellikle çocuk ve ergenlerde, önce hekime danış.', sources: ['ramadan-2012', 'uefa-nutrition'] },
   { id: 'alerji', no: '13', nav: 'Alerji', title: 'Alerji, intolerans ve', em: 'alternatifler', lead: 'Alerjin ya da yiyemediğin besinler varsa filtrele; sevmediğin ya da bulamadığın bir yiyeceğin yerine ne yiyebileceğini gör.', sources: ['tuber', 'who-diet'] },
   { id: 'menuler', no: '14', nav: 'Örnek menüler', title: 'Örnek öğünler ve', em: 'günlük planlar', lead: 'Yaş grubuna ve gün tipine göre Türk mutfağından örnekler. Kalori ya da gram verilmez; tabak modeli ve porsiyon kılavuzu kullanılır.', sources: ['tuber', 'sda-adolescent', 'who-diet'] },
   { id: 'planlayici', no: '15', nav: 'Haftalık plan', title: 'Haftalık öğün planlayıcı ve', em: 'alışveriş listesi', lead: 'Haftanı kur, alışveriş listeni çıkar, yazdır. Plan yalnızca bu tarayıcıda saklanır.', sources: ['tuber', 'who-diet'] },
-  { id: 'uzman', no: '16', nav: 'Uzman incelemesi', title: 'Uzman incelemesi gerektiren', em: 'içerik', lead: 'Bu sayfadaki şu maddeler henüz bir spor diyetisyeni ya da çocuk sağlığı uzmanı tarafından incelenmemiştir. Yayına almadan önce incelenmesi gerekir.', sources: [], meta: true },
+  { id: 'uzman', no: '16', nav: 'Uzman incelemesi', title: 'Uzman incelemesi gerektiren', em: 'içerik', lead: 'Bu sayfanın içeriğinin hiçbir bölümü henüz bir spor diyetisyeni, çocuk sağlığı uzmanı ya da spor hekimi tarafından incelenmemiştir. Aşağıdaki maddeler en çok dikkat isteyenlerdir ve yayına almadan önce incelenmelidir.', sources: [], meta: true },
   { id: 'kaynaklar', no: '17', nav: 'Kaynaklar', title: 'Dayandığımız', em: 'kaynaklar', lead: 'Bağlantılar bu rehber hazırlanırken denetlendi. Her kaynak için hangi düzeyde okunduğu belirtilmiştir.', sources: [], meta: true },
 ];
 export const SECTION_BY_ID: Record<string, GuideSection> = Object.fromEntries(SECTIONS.map((s) => [s.id, s]));
@@ -51,18 +51,19 @@ export interface ReviewItem {
   unverified?: boolean;
 }
 export const REVIEW_ITEMS: ReviewItem[] = [
-  { id: 'porsiyon', area: 'Temel ilkeler, Örnek menüler', what: 'Yaş grubuna göre porsiyon yaklaşımı (tabak payları, süt grubu için “yaklaşık 4 porsiyon”, çocuğun doyma sinyaline güvenme).', why: 'Büyüme dönemindeki sporcular için porsiyon ve enerji ihtiyacı kişiye göre çok değişir; sayfa kalori ya da gram vermez.', reviewer: 'Spor diyetisyeni ve çocuk sağlığı uzmanı' },
+  { id: 'porsiyon', area: 'Temel ilkeler, Örnek menüler', what: 'Yaş grubuna göre porsiyon yaklaşımı (tabak payları, süt grubu için “yaklaşık 4 porsiyon”, çocuğun doyma sinyaline güvenme).', why: 'Büyüme dönemindeki sporcular için porsiyon ve enerji ihtiyacı kişiye göre çok değişir; sayfa kalori ya da gram vermez. “Yaklaşık 4 porsiyon süt grubu” TÜBER’in genç sporcular için verdiği kalsiyum örneğine, “tabağa yiyebileceği kadar yemek konması” ise TÜBER’in okul öncesi çocuklara yönelik önerisine dayanır; 6–11 yaşa uygulanması ve doyma sinyaline güvenme ilkesi yorumdur.', reviewer: 'Spor diyetisyeni ve çocuk sağlığı uzmanı' },
   { id: 'tabak-oranlari', area: 'Temel ilkeler', what: 'Dinlenme, antrenman ve maç günü tabak çizimlerindeki göreli oranlar.', why: 'Beş besin grubu TÜBER’e dayanır; yüke göre oranları değiştiren görsel Libero’nun örnek çizimidir ve kaynakta birebir yoktur.', reviewer: 'Spor diyetisyeni', unverified: true },
-  { id: 'zamanlama', area: 'Öncesi, Sonrası, Maç günü', what: 'Öğün zamanlaması örnekleri (maçtan yaklaşık 3 saat önce ana öğün, 1 saat önce hafif atıştırmalık, devre arası, maç sonrası ilk 20 dakika).', why: 'Saatler genel pratik örnekleridir; tek bir kaynağa birebir dayandırılamadı. Çocuk ve ergenlerde mide hassasiyeti kişiye göre değişir.', reviewer: 'Spor diyetisyeni', unverified: true },
-  { id: 'sivi-sayilari', area: 'Sıvı, Maç günü', what: 'Yetişkin sporcular için TÜBER’den aktarılan sıvı değerleri (egzersizden yaklaşık 4 saat önce yaklaşık 500 mL; sırasında 15–20 dakikada bir 150–350 mL; kaybedilen her yarım kg için 450–675 mL) ve “yudum yudum içme” önerileri.', why: 'Değerler yetişkin içindir; çocuk ve ergenler için sayısal hedef verilmemiştir. Doğru aktarıldığı ve bağlamının doğru olduğu doğrulanmalıdır.', reviewer: 'Spor diyetisyeni ve spor hekimi' },
+  { id: 'zamanlama', area: 'Öncesi, Sonrası, Maç günü', what: 'Öğün zamanlaması örnekleri (maçtan 3–4 saat önce ana öğün, 30–60 dakika önce hafif atıştırmalık, devre arası, maç sonrası ilk 20 dakika).', why: 'TÜBER, ana öğünün antrenman ve müsabakadan 3–4 saat önce yenmesini ve öncesinde düşük yağ ve lif, yüksek karbonhidrat, orta protein ile alışık olunan yiyecekleri önerir; sayfadaki 1 saat önce atıştırmalık, devre arası ve maç sonrası ilk 20 dakika gibi diğer saatler genel pratik örnekleridir ve kaynakta birebir yoktur. Çocuk ve ergenlerde mide hassasiyeti kişiye göre değişir.', reviewer: 'Spor diyetisyeni', unverified: true },
+  { id: 'sivi-sayilari', area: 'Sıvı, Maç günü', what: 'TÜBER’in sporcular için verdiği sıvı değerlerinin 18 yaş ve üstüne gösterilen aktarımı (egzersizden yaklaşık 4 saat önce yaklaşık 500 mL; sırasında 15–20 dakikada bir 150–350 mL; kaybedilen her yarım kg için 450–675 mL) ve “yudum yudum içme” önerileri.', why: 'Değerler TÜBER’in sporcu bölümünden alınmıştır ve metinde yaş ayrımı yapılmamıştır; çocuk ve ergenler için ayrıca doğrulanmadığından onlara sayısal hedef verilmemiştir. Bağlamının doğru aktarıldığı doğrulanmalıdır.', reviewer: 'Spor diyetisyeni ve spor hekimi' },
   { id: 'idrar-karti', area: 'Sıvı', what: 'İdrar rengi kartındaki renk basamakları ve yorumları; koyu ya da kırmızı-kahverengi idrarda hekime yönlendirme.', why: 'TÜBER yalnızca “çok açık sarı” hedefini verir; basamaklandırma ve yorumlar genel pratiğe dayanır. Bazı besin ve ilaçlar renk değiştirebilir.', reviewer: 'Spor hekimi', unverified: true },
-  { id: 'su-takibi', area: 'Sıvı', what: 'Su takipçisindeki bardak sayacı hedefi (başlangıç değeri 8) ve hatırlatıcı aralıkları (30–120 dakika).', why: 'Hedef kişisel gereksinim değildir, yalnızca sayaç için başlangıç değeridir; yaşa, sıcağa ve antrenman yüküne göre değişir.', reviewer: 'Spor diyetisyeni', unverified: true },
+  { id: 'su-takibi', area: 'Sıvı', what: 'Su takipçisindeki bardak sayacı hedefi (başlangıç değeri 8) ve hatırlatıcı aralıkları (30–120 dakika).', why: 'Hedef kişisel gereksinim değildir, yalnızca sayaç için başlangıç değeridir; yaşa, sıcağa ve antrenman yüküne göre değişir. Aşırı içmenin de riski olduğu (NATA) için sayaç hedefe ulaşmak amacıyla zorla içmeyi teşvik etmemelidir; hatırlatıcı aralıkları genel örnektir.', reviewer: 'Spor diyetisyeni', unverified: true },
   { id: 'uyku-genel', area: 'Uyku', what: 'Uyku alışkanlıkları önerileri: sabit yatış saati, geç saatte kafeinden kaçınma, gündüz kısa uykusunun (şekerleme) gece uykusunun yerini tutmaması.', why: 'Uyku süreleri ve ekranın uykuyla ilişkisi kaynaklıdır; alışkanlık önerileri ve şekerleme yorumu genel pratiktir, kaynakla birebir doğrulanamadı.', reviewer: 'Çocuk sağlığı uzmanı', unverified: true },
   { id: 'toparlanma-genel', area: 'Dinlenme ve toparlanma', what: 'Dinlenme günü ve aktif toparlanma önerileri (hafif yürüyüş, esneme, oyun), yoğun fikstürde dinlenme planı.', why: 'Genel antrenman pratiğidir; yaş grubuna göre ayrıntı kaynaklarla doğrulanamadı.', reviewer: 'Spor hekimi ve antrenman bilimcisi', unverified: true },
   { id: 'toparlanma-yorum', area: 'Sonrası', what: 'Antrenman sonrası ilk saatler için “katı bir pencere aramaya gerek yok, günlük toplam ve düzen daha önemli” yorumu.', why: 'Kaynaklar antrenman hemen sonrasını öne çıkarır; “katı pencere gerekmez” kısmı yazarın yorumudur.', reviewer: 'Spor diyetisyeni', unverified: true },
-  { id: 'belirtiler', area: 'Dinlenme, Uyarı işaretleri', what: 'Aşırı antrenman, yetersiz enerji (RED-S) ve yeme bozukluğu uyarı işaretleri listeleri.', why: 'Kaynaklar kavramı ve etkilenen sistemleri anlatır; işaret listeleri bu sayfada sade dille derlenmiştir ve tanı koymaz. Eksik ya da yanlış vurgu riski vardır.', reviewer: 'Spor hekimi ve çocuk/ergen psikiyatrisi' },
+  { id: 'belirtiler', area: 'Dinlenme, Uyarı işaretleri', what: 'Aşırı antrenman, yetersiz enerji (RED-S) ve yeme bozukluğu uyarı işaretleri listeleri.', why: 'Okunan kaynak özetleri yalnızca kavramı ve etkilenen alanları anlatır (metabolizma, adet düzeni, kemik, bağışıklık, kalp-damar; yorgunluk, performans düşüşü, ruh hali değişimi). Listelerdeki diğer işaretler (ör. baş dönmesi, sürekli üşüme, yeme bozukluğu davranışları) bu sayfada sade dille derlenmiştir, kaynaklarda tek tek doğrulanmadı ve tanı koymaz. Eksik ya da yanlış vurgu riski vardır.', reviewer: 'Spor hekimi ve çocuk/ergen psikiyatrisi', unverified: true },
+  { id: 'isi-uyari', area: 'Antrenman sırasında', what: 'Sıcakta kendini kötü hissedince (baş dönmesi, bulantı, aşırı halsizlik, kafa karışıklığı) oyunu bırakıp gölgeye geçme ve bir yetişkine söyleme uyarısı.', why: 'AAP ısı sorunlarının çoğunlukla önlenebilir olduğunu söyler; belirtiler ve ilk adım için ise bu sayfada genel bir güvenlik mesajı verilir, kaynaktan alıntı değildir. Ciddi belirtilerde acil yardım gerekir.', reviewer: 'Spor hekimi ve çocuk sağlığı uzmanı', unverified: true },
   { id: 'turnuva', area: 'Turnuva, Maç günü', what: 'Aynı gün birden çok maçta maçlar arası yeme-içme önerileri ve çanta listesi.', why: 'Sıvı ve yetersiz toparlanma riski AAP’ye dayanır; yiyecek önerileri ve aralıkların süresine göre ayrım genel pratiktir.', reviewer: 'Spor diyetisyeni', unverified: true },
-  { id: 'takviye', area: 'Takviyeler', what: 'Ürün bazında takviye tablosu (protein tozu, kreatin, kafein, enerji içeceği, yağ yakıcı, vitamin/mineral) ve yaş gruplarına göre yaklaşım.', why: 'Çocuk ve ergenler için “önerilmez” çizgisi AAP, IOC ve SDA ile uyumludur; ürün bazında ayrıntı doğrulanmalıdır.', reviewer: 'Çocuk sağlığı uzmanı ve spor diyetisyeni' },
+  { id: 'takviye', area: 'Takviyeler', what: 'Ürün bazında takviye tablosu (protein tozu, kreatin, kafein, enerji içeceği, yağ yakıcı, vitamin/mineral) ve yaş gruplarına göre yaklaşım.', why: 'Çocuk ve ergen sütunu kanıta dayalı bir çocuk önerisi değil, temkinli bir çizgidir: AAP yalnızca enerji içeceklerindeki kafein ve uyarıcıların yerinin olmadığını söyler, SDA ihtiyaçların takviye yerine temel besinlerle karşılanmasını önerir; IOC metni yetişkin yüksek performanslı sporcular içindir, çocuklar için ayrı öneri vermez. Kreatin ve protein tozu için çocuklara özgü bir kaynak okunmadı. Ürün bazında ayrıntı doğrulanmalıdır.', reviewer: 'Çocuk sağlığı uzmanı ve spor diyetisyeni', unverified: true },
   { id: 'ramazan', area: 'Ramazan ve sporcu', what: 'Bölümün tamamı: yetişkin sporcular için kaynak özeti, çocuk ve ergenler için “hekime danışın” çerçevesi, sahur-iftar ve uyku önerileri, uyarı işaretleri.', why: 'Tek kaynak üst düzey yetişkin sporculara aittir; çocuk ve ergenler için kanıt verilmemiştir. Dinî konularda görüş bildirilmez.', reviewer: 'Spor hekimi ve çocuk sağlığı uzmanı' },
   { id: 'alerjen', area: 'Alerji, Örnek menüler', what: 'Besin–alerjen etiketleri, vejetaryen/vegan işaretleri ve alternatif önerileri.', why: 'Etiketler sade tarif içeriklerine göredir; hazır ürünlerde ve ev tariflerinde içerik değişebilir. Ciddi alerjide hekim planı geçerlidir.', reviewer: 'Alerji uzmanı ve diyetisyen' },
   { id: 'menuler', area: 'Örnek menüler, Haftalık plan', what: 'Yaş grubu ve gün tipine göre örnek öğünler ve günlük planlar (12 plan), haftalık plan örnek düzeni.', why: 'Menüler genel örneklerdir; kalori ve gram içermez. Yaşa uygunluk, çeşitlilik ve kültürel uygunluk uzmanca gözden geçirilmelidir.', reviewer: 'Spor diyetisyeni' },
@@ -80,7 +81,7 @@ export type AgeNotes = Record<AgeBand, AgeNote>;
 export const AGE_NOTES: Record<string, AgeNotes> = {
   temel: {
     u11: { text: 'Tabağını renkli yap, öğün atlama, sofrada acele etme. Ne kadar yiyeceğine karnının doyduğunu hissederek sen karar verirsin; yemek yemeye zorlanmaz, kilo ya da vücut hakkında yorum yapılmaz.', review: 'porsiyon' },
-    u14: { text: 'Büyüme atılımı bu yaşlarda hızlanır (TÜBER: en hızlı büyüme kızlarda yaklaşık 10–12, erkeklerde yaklaşık 11–14 yaşlarında başlar). Okul, ara öğün ve antrenman bir arada olduğundan öğün atlamamak özellikle önemlidir; süt grubu, demirli besinler ve D vitamini için güneşli vakitler öne çıkar.', review: 'porsiyon' },
+    u14: { text: 'Büyüme atılımı bu yaşlarda hızlanır (TÜBER: en hızlı büyüme kızlarda yaklaşık 10–12, erkeklerde yaklaşık 11–14 yaşlarında başlar). Okul, ara öğün ve antrenman bir arada olduğundan öğün atlamamak özellikle önemlidir; süt grubu, demirli besinler ve D vitamini için güneş ışınlarının dik gelmediği saatlerde açık havada vakit geçirmek önerilir (TÜBER).', review: 'porsiyon' },
     u17: { text: 'Antrenman yükü artar ve okul baskısı bir araya gelir. Enerjiyi yetersiz bırakmamak, vücut görünümüne takılmamak ve uykuyu korumak bu yaşın üç ana noktasıdır. Kilo ya da vücut görünümüyle ilgili her kaygı için hekim ve diyetisyen.', review: 'porsiyon' },
     a18: { text: 'Yetişkin sporcu için tabak modeli yük durumuna göre ayarlanır; kişiye özel plan, takviye kararı ve vücut bileşimi hedefleri için kayıtlı bir spor diyetisyeni gerekir (ACSM/AND/DC).', review: 'porsiyon' },
   },
@@ -91,15 +92,15 @@ export const AGE_NOTES: Record<string, AgeNotes> = {
     a18: { text: 'Mide hassasiyetin ve antrenman saatin kendi düzenini belirler; deneme ve gözlem antrenmanlarda yapılır, maç günü yeni bir şey denenmez.', review: 'zamanlama' },
   },
   sirasinda: {
-    u11: { text: 'Su yeterlidir. Spor içeceği günlük bir içecek değildir; enerji içeceği kesinlikle yoktur (AAP). Mola verildikçe birkaç yudum içmeyi alışkanlık yap.' },
+    u11: { text: 'Su yeterlidir. Enerji içeceğindeki kafein ve uyarıcıların çocuk beslenmesinde yeri yoktur; sık ya da fazla şekerli spor içeceği fazla kilo riskini artırabilir (AAP). Mola verildikçe birkaç yudum içmeyi alışkanlık yap.' },
     u14: { text: 'Su yeterlidir. Sıcakta ek mola ve gölge iste; ısı sorunları değiştirilebilir etkenlerle (sıvı, mola, kıyafet) büyük ölçüde önlenebilir (AAP). Enerji içeceği ve kafein yoktur.' },
     u17: { text: 'Su yeterlidir. Uzun, yoğun ya da sıcak etkinliklerde ne yapılacağını antrenör, hekim ya da diyetisyenle önceden konuş; deneyim kazanmak için antrenmanda denenir. Enerji içeceği ve kafein yoktur.' },
     a18: { text: '1 saati aşan etkinliklerde karbonhidrat ve elektrolit içeren içecek faydalı olabilir (TÜBER); önce antrenmanda dene. Enerji içeceğinden ve fazla kafeinden kaçın.', review: 'sivi-sayilari' },
   },
   sonrasi: {
     u11: { text: 'Antrenmandan sonra su iç, sonra eve gidince normal öğününü ye. Özel ürün gerekmez; yoğurt-meyve ya da ayran-simit gibi sofra yiyecekleri yeter.' },
-    u14: { text: 'Antrenman sonrası ilk saatte küçük bir karbonhidrat + protein atıştırmalığı (süt-muz, ayran-simit) ve sıvı; ardından akşam yemeği. Tozlar ve içecekler gerekmez.' },
-    u17: { text: 'Ardışık antrenman ya da maç yoksa özel bir acele yok; düzenli öğünler ve uyku yeterlidir. Ardışık yük varsa toparlanma atıştırmalığı fark yaratır.' },
+    u14: { text: 'Antrenman sonrası ilk saatte küçük bir karbonhidrat + protein atıştırmalığı (süt-muz, ayran-simit) ve sıvı; ardından akşam yemeği. Tozlar ve içecekler gerekmez.', review: 'zamanlama' },
+    u17: { text: 'Ardışık antrenman ya da maç yoksa özel bir acele yok; düzenli öğünler ve uyku yeterlidir. Ardışık yük varsa toparlanma atıştırmalığı yardımcı olabilir.', review: 'zamanlama' },
     a18: { text: 'Toparlanma atıştırmalığı yük ve süreye göre ayarlanır; protein tozu ve takviye kararları bir diyetisyenle verilir (IOC).' },
   },
   sivi: {
@@ -109,15 +110,15 @@ export const AGE_NOTES: Record<string, AgeNotes> = {
     a18: { text: 'Aşağıdaki TÜBER örnek değerleri yetişkin sporcular içindir; kişiye göre değişir.', review: 'sivi-sayilari' },
   },
   uyku: {
-    u11: { text: '6–12 yaş için 24 saatte 9–12 saat önerilir (AASM). Düzenli yatış ve kalkış saati, ekranları yatmadan önce kapatmak yardımcı olur.' },
-    u14: { text: '12 yaşta 9–12, 13–14 yaşta 8–10 saat aralığı geçerlidir (AASM). Gece antrenmanı ya da maçı sonrası uykuya geçişi sakin geçir.' },
+    u11: { text: '6–12 yaş için 24 saatte 9–12 saat önerilir (AASM). Düzenli yatış ve kalkış saati, ekranları yatmadan önce kapatmak yardımcı olur.', review: 'uyku-genel' },
+    u14: { text: '12 yaşta 9–12, 13–14 yaşta 8–10 saat aralığı geçerlidir (AASM). Gece antrenmanı ya da maçı sonrası uykuya geçişi sakin geçir.', review: 'uyku-genel' },
     u17: { text: '13–18 yaş için 24 saatte 8–10 saat önerilir (AASM). Sınav ve antrenman döneminde ilk feda edilen şey uyku olmasın.' },
-    a18: { text: 'Elit sporcularda 7 saatten kısa uyku sık görülür ve enfeksiyona yatkınlığı artırır; herkese tek bir saat önermek yerine bireysel yaklaşım önerilir (Walsh ve ark.).' },
+    a18: { text: 'Elit sporcularda 7 saatten kısa uyku sık görülür; genel nüfus çalışmaları 7 saatten kısa uykuyu solunum yolu enfeksiyonuna yatkınlıkla ilişkilendirir. Herkese tek bir saat önermek yerine bireysel yaklaşım önerilir (Walsh ve ark.).' },
   },
   takviye: {
-    u11: { text: 'Takviye, protein tozu, kafein ve enerji içeceği kullanılmaz. Sofra yeterlidir.' },
-    u14: { text: 'Takviye, protein tozu, kreatin, kafein, enerji içeceği ve yağ yakıcı kullanılmaz; arkadaş, mağaza ya da sosyal medya tavsiyesi de bir gerekçe değildir.' },
-    u17: { text: 'Takviye, protein tozu, kreatin, kafein, enerji içeceği ve yağ yakıcı kullanılmaz. Eksiklikten şüphelenirsen hekime git; kendi başına vitamin ya da mineral başlama.' },
+    u11: { text: 'Takviye, protein tozu, kafein ve enerji içeceği kullanılmaz. Sofra yeterlidir.', review: 'takviye' },
+    u14: { text: 'Takviye, protein tozu, kreatin, kafein, enerji içeceği ve yağ yakıcı kullanılmaz; arkadaş, mağaza ya da sosyal medya tavsiyesi de bir gerekçe değildir.', review: 'takviye' },
+    u17: { text: 'Takviye, protein tozu, kreatin, kafein, enerji içeceği ve yağ yakıcı kullanılmaz. Eksiklikten şüphelenirsen hekime git; kendi başına vitamin ya da mineral başlama.', review: 'takviye' },
     a18: { text: 'Kullanım kararı bir hekim ya da diyetisyen değerlendirmesinden sonra verilir; ürünler içeriği bildirilmemiş yasaklı madde taşıyabilir (IOC).' },
   },
 };
@@ -127,7 +128,7 @@ export const AGE_NOTES: Record<string, AgeNotes> = {
 export const SLEEP_ROWS: { age: string; hours: string; src: string; bands: AgeBand[]; note: string }[] = [
   { age: '6–12 yaş', hours: '24 saatte 9–12 saat', src: 'aasm-sleep-2016', bands: ['u11', 'u14'], note: 'Düzenli olarak önerilenden az uyumak dikkat, davranış ve öğrenme sorunlarıyla ilişkilidir.' },
   { age: '13–18 yaş', hours: '24 saatte 8–10 saat', src: 'aasm-sleep-2016', bands: ['u14', 'u17'], note: 'Aynı uyarı bu yaş için de geçerlidir.' },
-  { age: '18 yaş ve üstü sporcu', hours: 'Bireye göre', src: 'sleep-athlete-2021', bands: ['a18'], note: 'Alışkanlık hâlindeki 7 saatten kısa uyku solunum yolu enfeksiyonuna yatkınlığı artırır; tek bir saat yerine bireysel yaklaşım önerilir.' },
+  { age: '18 yaş ve üstü sporcu', hours: 'Bireye göre', src: 'sleep-athlete-2021', bands: ['a18'], note: 'Elit sporcularda alışkanlık hâlinde 7 saatten kısa uyku sık görülür; genel nüfus çalışmalarında 7 saatten kısa uyku solunum yolu enfeksiyonuna yatkınlıkla ilişkilidir. Tek bir saat yerine bireysel yaklaşım önerilir.' },
 ];
 
 // ── İdrar rengi ──────────────────────────────────────────
@@ -138,7 +139,7 @@ export const URINE_STEPS: { n: number; name: string; tone: 'ok' | 'ok2' | 'mid' 
   { n: 3, name: 'Sarı', tone: 'mid', advice: 'Bir sonraki öğünle birlikte ve gün içine yayarak biraz daha sıvı al. Antrenmana kısa süre varsa yudum yudum iç.' },
   { n: 4, name: 'Koyu sarı', tone: 'warn', advice: 'Sıvı alımını artır, özellikle antrenman ve maç öncesinde. Kana kana değil, düzenli yudumlarla.' },
   { n: 5, name: 'Amber / koyu turuncu', tone: 'high', advice: 'Belirgin sıvı eksikliği olabilir. Sıvıyı yudum yudum artır, dinlen. Düzelmiyorsa ya da kendini kötü hissediyorsan bir yetişkine ve hekime söyle.' },
-  { n: 6, name: 'Kahverengi, kırmızımsı ya da pembe', tone: 'stop', advice: 'Bu renkler yalnızca sıvı eksikliğiyle açıklanamaz. Antrenmanı bırak ve bir yetişkine söyleyerek hekime başvur.' },
+  { n: 6, name: 'Kahverengi, kırmızımsı ya da pembe', tone: 'stop', advice: 'Bu renkler sıvı eksikliğiyle tek başına açıklanamaz. Pancar gibi bazı besinler de renk verebilir, ama bunu kendi başına kestirmeye çalışma: antrenmanı bırak, bir yetişkine söyle ve hekime başvur.' },
 ];
 
 // ── Takviye tablosu ──────────────────────────────────────
@@ -146,10 +147,10 @@ export const URINE_STEPS: { n: number; name: string; tone: 'ok' | 'ok2' | 'mid' 
 export const SUPPLEMENT_ROWS: { name: string; minor: string; adult: string; src: string[] }[] = [
   { name: 'Protein tozu ve amino asit ürünleri', minor: 'Önerilmez. Protein gereksinimi çoğu zaman günlük yemeklerle karşılanır.', adult: 'Önce beslenme değerlendirmesi; protein gereksinimi çoğu zaman yemekle de karşılanır (TÜBER).', src: ['tuber', 'ioc-supplements'] },
   { name: 'Kreatin', minor: 'Kullanılmaz.', adult: 'Kanıtı olan birkaç üründen biridir; kullanım kararı hekim ya da diyetisyenle verilir.', src: ['ioc-supplements'] },
-  { name: 'Kafein (kapsül, toz, jel) ve kafeinli içecekler', minor: 'Kullanılmaz. Çocuk ve ergen beslenmesinde yeri yoktur.', adult: 'Etkisi kanıtlıdır ama yan etki ve doz riskleri vardır; karar uzmanla verilir.', src: ['aap-drinks-2011', 'ioc-supplements'] },
+  { name: 'Kafein (kapsül, toz, jel) ve kafeinli içecekler', minor: 'Kapsül, toz, jel ve enerji içeceği olarak kullanılmaz. Enerji içeceklerindeki kafein ve uyarıcıların çocuk ve ergen beslenmesinde yeri yoktur (AAP).', adult: 'Etkisi kanıtlıdır ama yan etki ve doz riskleri vardır; karar uzmanla verilir.', src: ['aap-drinks-2011', 'ioc-supplements'] },
   { name: 'Enerji içecekleri', minor: 'Kullanılmaz. İçerdiği kafein ve uyarıcılar çocuk ve ergenler için uygun değildir.', adult: 'Tüketimin sınırlandırılması önerilir; sporcuların kafeinli içecekleri fazla tüketmekten kaçınması gerekir (TÜBER).', src: ['aap-drinks-2011', 'tuber'] },
-  { name: 'Spor (elektrolit–karbonhidrat) içecekleri', minor: 'Günlük içecek değildir; sık tüketim fazla kilo riskini artırabilir. İhtiyaç sorusunu antrenör, hekim ya da diyetisyene sor.', adult: '1 saatten uzun etkinliklerde gerekebilir (TÜBER).', src: ['aap-drinks-2011', 'tuber'] },
-  { name: 'Yağ yakıcı ve kilo verdirici ürünler', minor: 'Kesinlikle kullanılmaz.', adult: 'Hekim ve diyetisyen olmadan kullanılmaz.', src: ['ioc-supplements', 'sda-adolescent'] },
+  { name: 'Spor (elektrolit–karbonhidrat) içecekleri', minor: 'Günlük içecek değildir; sık ya da fazla tüketim fazla kilo riskini artırabilir (AAP). Düzenli dayanıklılık ya da yüksek şiddetli sporda ne zaman uygun olduğu AAP raporunun kapsamı dışındadır; ihtiyaç sorusunu antrenör, hekim ya da diyetisyene sor.', adult: '1 saatten uzun etkinliklerde gerekebilir (TÜBER).', src: ['aap-drinks-2011', 'tuber'] },
+  { name: 'Yağ yakıcı ve kilo verdirici ürünler', minor: 'Kesinlikle kullanılmaz.', adult: 'Hekim ve diyetisyen olmadan kullanılmaz. Çoğunun etkili olduğuna dair kanıt yoktur (IOC).', src: ['ioc-supplements', 'sda-adolescent'] },
   { name: 'Vitamin ve mineral (demir, D vitamini, kalsiyum…)', minor: 'Eksiklikten şüphelenirsen hekime git; kan tahlili ve doz hekimde. Kendi başına başlama.', adult: 'Kan değerlerine bakılır; doz ve süre hekim ve diyetisyenle belirlenir.', src: ['sda-adolescent', 'tuber', 'ioc-supplements'] },
 ];
 
@@ -194,7 +195,7 @@ export const DAY_PLANS: Record<AgeBand, Record<DayType, DayPlan>> = {
     },
     mac: {
       slots: { kahvalti: 'yulaf-muz', ara: 'meyve-peynir', once3: 'makarna-tavuk', once1: 'yogurt-meyve', sonra: 'ayran-simit', aksam: 'tavuk-patates' },
-      tips: ['Maç günü tanıdık yiyecekler: yeni bir şey denemek için bugün uygun değil.', 'Maç öncesi karbonhidratlı, yağsız ve hafif; sonrası için ayran-simit gibi bir atıştırmalık çantada olsun.', 'Maç sonrası önce su, sonra yemek.'],
+      tips: ['Maç günü tanıdık yiyecekler: yeni bir şey denemek için bugün uygun değil.', 'Maç öncesi karbonhidratlı, yağı az ve hafif; sonrası için ayran-simit gibi bir atıştırmalık çantada olsun.', 'Maç sonrası önce su, sonra yemek.'],
     },
     dinlenme: {
       slots: { kahvalti: 'serpme-kahvalti', ara: 'meyve-peynir', ogle: 'mercimek-pilav', aksam: 'izgara-et-bulgur' },
@@ -250,7 +251,7 @@ export const DAY_PLANS: Record<AgeBand, Record<DayType, DayPlan>> = {
 export const PORTION_GUIDE: Record<AgeBand, string[]> = {
   u11: [
     'Her öğünde tabakta farklı gruplardan yiyecekler olsun: sebze, meyve, tahıl, protein ve süt grubu (TÜBER).',
-    'Tabağa yiyebileceğin kadar yemek konması önerilir (TÜBER); “tabağı bitir” baskısı olmaz.',
+    'Tabağa yiyebileceğin kadar yemek konur; “tabağı bitir” baskısı olmaz. Doyduğunu hissedince durabilirsin.',
     'Süt, yoğurt, ayran ya da peynirden gün içinde birkaç kez.',
     'Ara öğünler küçük olsun: meyve, peynir, yoğurt ya da ekmek-peynir.',
   ],
@@ -342,12 +343,12 @@ export const SOURCE_CHECK: Record<string, string> = {
   'reds-2023': 'Özet metni Europe PMC üzerinden okundu.',
   'acsm-fluid-2007': 'Özet metni Europe PMC üzerinden okundu.',
   'nata-fluid-2017': 'Özet metni Europe PMC üzerinden okundu.',
-  'aap-drinks-2011': 'Özet metni Europe PMC üzerinden okundu.',
-  'aap-heat-2011': 'Özet metni Europe PMC üzerinden okundu.',
+  'aap-drinks-2011': 'Özet metni Europe PMC üzerinden okundu. Düzenli dayanıklılık ya da yüksek şiddetli spor yapan gençlerde spor içeceğinin uygun kullanımı raporun kapsamı dışında bırakılmıştır.',
+  'aap-heat-2011': 'Özet metni Europe PMC üzerinden okundu. Belirtiler ve ilk müdahale ayrıntıları özette yoktur; sayfadaki “kendini kötü hissedersen dur ve söyle” uyarısı genel bir güvenlik mesajıdır.',
   'aasm-sleep-2016': 'Tam metin PubMed Central üzerinden okundu.',
   'sleep-athlete-2021': 'Özet metni Europe PMC üzerinden okundu; tam metne erişilemedi.',
   'aap-media-2016': 'Özet metni Europe PMC üzerinden okundu.',
   'overtraining-2013': 'Özet metni Europe PMC üzerinden okundu.',
-  'ioc-supplements': 'Tam metnin ilk yarısı PubMed Central üzerinden okundu; özet tamamı okundu.',
+  'ioc-supplements': 'Özet tamamı okundu; tam metnin kafein yan etkileri, yağ yakıcılar ve çocuk/ergen ifadeleri bölümleri Europe PMC üzerinden tarandı (tam metin baştan sona okunmadı). Metin çocuklar için ayrı öneri vermez.',
   'ramadan-2012': 'Özet metni Europe PMC üzerinden okundu.',
 };

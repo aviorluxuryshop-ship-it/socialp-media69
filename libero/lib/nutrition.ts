@@ -28,7 +28,7 @@ export const SLOT_LABEL: Record<SlotKey, string> = {
   kahvalti: 'Kahvaltı',
   ara: 'Ara öğün',
   ogle: 'Öğle',
-  once3: 'Antrenman/maçtan 2–3 saat önce',
+  once3: 'Antrenman/maçtan 3–4 saat önce',
   once1: 'Antrenman/maçtan 30–60 dk önce (hafif)',
   sonra: 'Antrenman/maç sonrası',
   aksam: 'Akşam',
@@ -60,7 +60,7 @@ export const DAY_TYPE_LABEL: Record<DayType, string> = { antrenman: 'Antrenman g
 
 /** "15:30" → 930; geçersizse null */
 export function timeToMin(v: string): number | null {
-  const m = /^(\d{1,2}):(\d{2})$/.exec(v.trim());
+  const m = /^(\d{1,2}):(\d{2})(?::\d{2})?$/.exec(v.trim());
   if (!m) return null;
   const h = Number(m[1]);
   const mi = Number(m[2]);
@@ -98,33 +98,80 @@ export interface TimelineInput {
   second?: string;
 }
 
+/** İki maç arası en çok bu kadar dakika olursa ikinci maç aynı günün çizelgesine alınır */
+export const MAX_MATCH_GAP = 600;
+/** İlk maçın bitişi ile ikinci maçın başlangıcı arasında en az bu kadar dakika olmalı */
+export const MIN_MATCH_GAP = 20;
+const clampDur = (d?: number) => Math.min(120, Math.max(30, Math.round(d ?? 70)));
+
+export type SecondStatus = 'yok' | 'tamam' | 'gecersiz' | 'cakisiyor' | 'uzak';
+/**
+ * İkinci maçın çizelgeye girip girmediği. `uzak`: ilk maçtan önce ya da bitişinden 10 saatten sonra;
+ * `cakisiyor`: ilk maç bitmeden ya da bitişinden 20 dakikadan önce başlıyor.
+ */
+export function secondMatchStatus(inp: Pick<TimelineInput, 'kickoff' | 'duration' | 'second'>): { status: SecondStatus; gap: number | null } {
+  if (inp.second === undefined || inp.second === null) return { status: 'yok', gap: null };
+  const k1 = timeToMin(inp.kickoff);
+  const k2 = timeToMin(inp.second);
+  if (k1 === null || k2 === null) return { status: 'gecersiz', gap: null };
+  const dur = clampDur(inp.duration);
+  const sinceStart = (((k2 - k1) % 1440) + 1440) % 1440; // ilk maçın başlangıcından ikincisine
+  if (sinceStart < dur + MIN_MATCH_GAP) return { status: 'cakisiyor', gap: sinceStart - dur };
+  const gap = sinceStart - dur;
+  if (gap >= MAX_MATCH_GAP) return { status: 'uzak', gap };
+  return { status: 'tamam', gap };
+}
+
+/** Gün içi dakika (0–1439) gece geç saat mi (22:30–05:59)? Büyük bir öğün için uygun olmayan saat. */
+const isLateHour = (abs: number) => {
+  const t = ((abs % 1440) + 1440) % 1440;
+  return t >= 1350 || t < 360;
+};
+
 export function buildMatchTimeline(inp: TimelineInput): TimelineStep[] | null {
   const k1 = timeToMin(inp.kickoff);
   if (k1 === null) return null;
   const minor = isMinor(inp.band);
-  const dur = Math.min(120, Math.max(30, Math.round(inp.duration ?? 70)));
-  const k2 = inp.second ? timeToMin(inp.second) : null;
+  const dur = clampDur(inp.duration);
+  const second = secondMatchStatus(inp);
+  const k2 = second.status === 'tamam' && inp.second ? timeToMin(inp.second) : null;
   const steps: TimelineStep[] = [];
-  const push = (at: number | null, kind: StepKind, title: string, detail: string, review?: string) =>
-    steps.push({ at: at === null ? null : ((at % 1440) + 1440) % 1440, abs: at, label: at === null ? 'Önceki akşam' : minToTime(at), kind, title, detail, review });
+  const push = (at: number | null, kind: StepKind, title: string, detail: string, review?: string, label?: string) =>
+    steps.push({ at: at === null ? null : ((at % 1440) + 1440) % 1440, abs: at, label: label ?? (at === null ? 'Önceki akşam' : minToTime(at)), kind, title, detail, review });
 
-  push(
-    null,
-    'yemek',
-    'Tanıdık, dengeli akşam yemeği',
-    'Pilav, makarna ya da patates gibi karbonhidrat ağırlıklı; yanında protein ve sebze. Maç öncesi yeni ya da ağır bir yemek denemeyin.',
-    'zamanlama',
-  );
-  push(null, 'dinlenme', 'Erken yat', 'Uyku toparlanmanın parçasıdır. Ekranları yatmadan önce bırakın.');
+  const night = k1 < 360; // 00:00–05:59'da başlayan maç: gece yarısını aşan çizelge
+  const early = k1 >= 360 && k1 < 540; // 06:00–08:59 arası sabah maçı
 
-  const early = k1 < 540; // 09:00'dan önce başlayan maç
+  if (night) {
+    push(null, 'yemek', 'Gün boyu düzenli öğünler ve su', 'Maç gece geç saatte olduğu için gün içinde öğün atlamayın, suyu düzenli için. Maç öncesi yeni ya da ağır bir yemek denemeyin.', 'zamanlama', 'Gün boyu');
+    push(
+      null,
+      'dinlenme',
+      'Gündüz dinlen, uykuyu koru',
+      minor
+        ? 'Çok geç saatte oynanan maçlar uyku düzenini bozabilir. Gün içinde dinlenmeye ve uyku süreni korumaya çalış (bkz. Uyku bölümü); mümkünse bir yetişkinle maç saatini konuş.'
+        : 'Gece geç saatteki maç uyku düzenini bozabilir. Gün içinde dinlenmeye ve uyku süreni korumaya çalış (bkz. Uyku bölümü).',
+      undefined,
+      'Gün boyu',
+    );
+  } else {
+    push(
+      null,
+      'yemek',
+      'Tanıdık, dengeli akşam yemeği',
+      'Pilav, makarna ya da patates gibi karbonhidrat ağırlıklı; yanında protein ve sebze. Maç öncesi yeni ya da ağır bir yemek denemeyin.',
+      'zamanlama',
+    );
+    push(null, 'dinlenme', 'Erken yat', 'Uyku toparlanmanın parçasıdır. Ekranları yatmadan önce bırakın.');
+  }
+
   if (early) {
     push(k1 - 120, 'yemek', 'Hafif kahvaltı', 'Sabah erken maçta mideyi yormayan, tanıdık bir kahvaltı: ekmek-bal, yoğurt-muz ya da yulaf. Uyanır uyanmaz yemek zorunda değilsiniz ama aç da başlamayın.', 'zamanlama');
   } else {
     push(k1 - 180, 'yemek', 'Ana öğün', 'Karbonhidrat ağırlıklı, tanıdık bir öğün (pilav, makarna, bulgur, patates + orta miktarda protein + sebze). Yağlı, kızartma ve çok lifli yiyecekler mideyi yorabilir.', 'zamanlama');
   }
   if (!minor) {
-    push(k1 - 240, 'sivi', 'Sıvı hazırlığı', 'Gün boyu düzenli su için. Yetişkin sporcular için TÜBER, egzersizden yaklaşık 4 saat önce yaklaşık 500 mL sıvıyı örnek verir; kişiye göre değişir.', 'sivi-sayilari');
+    push(k1 - 240, 'sivi', 'Sıvı hazırlığı', 'Gün boyu düzenli su için. TÜBER, sporcular için egzersizden yaklaşık 4 saat önce yaklaşık 500 mL sıvıyı örnek verir; kişiye göre değişir.', 'sivi-sayilari');
   }
   push(k1 - 120, 'kontrol', 'İdrar rengi ve sıvı', 'İdrar rengi açık sarıysa yolundasınız; koyuysa suyu yudum yudum artırın. Birden çok miktarda içmek yerine düzenli yudumlar daha rahattır.');
   push(k1 - 60, 'yemek', 'İsteğe bağlı hafif atıştırmalık', 'Mide hassassa atlayın ya da küçük bir porsiyon yeterlidir: muz, yoğurt-meyve, ekmek-bal. Yeni bir şey denemeyin.', 'zamanlama');
@@ -144,8 +191,24 @@ export function buildMatchTimeline(inp: TimelineInput): TimelineStep[] | null {
   const end1 = k1 + dur;
   push(end1, 'mac', 'Maç biter', 'Soğuma yürüyüşü yapın, serin bir yerde dinlenin.');
 
-  const gap = k2 !== null ? ((k2 - end1) % 1440 + 1440) % 1440 : null;
-  if (k2 !== null && gap !== null && gap < 600) {
+  /** Son maçtan sonra: toparlanma atıştırmalığı; saat uygunsa ana öğün, geç saatse büyük öğün yerine sakin kapanış */
+  const closing = (endAbs: number, snackTitle: string, withFluidStep: boolean, snackReview?: string): number => {
+    push(endAbs + 20, 'yemek', snackTitle, 'Karbonhidrat + protein + sıvı: ayran-simit, süt-muz, yoğurt-meyve, tavuklu dürüm.', snackReview);
+    if (withFluidStep && !minor) {
+      push(endAbs + 30, 'sivi', 'Sıvı açığını kapatın', 'Maç sonrası tartı farkını (varsa) ve idrar rengini izleyin. TÜBER, sporcular için kaybedilen her yarım kg için yaklaşık 450–675 mL sıvıyı örnek verir.', 'sivi-sayilari');
+    }
+    if (isLateHour(endAbs + 120)) {
+      push(endAbs + 60, 'dinlenme', 'Geç saat: büyük öğün yerine sakin kapanış', 'Gece geç saatte büyük bir öğün yerine toparlanma atıştırmalığı ve sıvıyla yetinmek daha rahat olabilir; yatmadan hemen önce ağır ve yağlı yemekten kaçının. Uykuya öncelik verin.', 'zamanlama');
+      return endAbs + 105;
+    }
+    push(endAbs + 120, 'yemek', 'Ana öğün', 'Tabak modeli: her gruptan bir besin; maç günü karbonhidrat dilimi büyük, yanında protein, sebze-meyve ve süt grubu.', 'menuler');
+    return endAbs + 120;
+  };
+
+  let lastEnd: number;
+  let lateClose = false;
+  if (k2 !== null) {
+    const gap = second.gap as number;
     // iki maç arası
     push(end1 + 5, 'sivi', 'Maçlar arası: önce sıvı', 'Hemen su içmeye başlayın, yudum yudum. Aynı gün birden çok maçta yetersiz toparlanma ve sıvı eksikliği ısı sorunlarının riskini artıran etkenlerdir (AAP).', 'turnuva');
     if (gap < 90) {
@@ -153,24 +216,25 @@ export function buildMatchTimeline(inp: TimelineInput): TimelineStep[] | null {
     } else {
       push(end1 + 20, 'yemek', 'Hafif öğün', 'Karbonhidrat ve biraz protein: ayran-simit, peynirli tost, süt-muz. Sonraki maça yaklaşırken küçük porsiyonlara geçin.', 'turnuva');
     }
-    push(k2 - 60, 'yemek', 'İsteğe bağlı hafif atıştırmalık', 'Sadece mideniz rahatsa ve zamanınız varsa; yeni bir şey denemeyin.', 'turnuva');
-    push(k2 - 30, 'kontrol', 'Isınma ve sıvı', 'Birkaç yudum su; idrar rengiyle kendinizi kontrol edin.');
+    if (k2 - 60 >= end1 + 30) push(k2 - 60, 'yemek', 'İsteğe bağlı hafif atıştırmalık', 'Sadece mideniz rahatsa ve zamanınız varsa; yeni bir şey denemeyin.', 'turnuva');
+    if (k2 - 30 >= end1 + 10) push(k2 - 30, 'kontrol', 'Isınma ve sıvı', 'Birkaç yudum su; idrar rengiyle kendinizi kontrol edin.');
     push(k2, 'mac', 'İkinci maç başlar', 'İlk maçtaki gibi: düzenli yudumlar ve gölgede mola.');
     const end2 = k2 + dur;
     push(end2, 'mac', 'İkinci maç biter', 'Soğuma ve sıvı.');
-    push(end2 + 20, 'yemek', 'Toparlanma atıştırmalığı', 'Karbonhidrat + protein + sıvı: ayran-simit, süt-muz, yoğurt-meyve, tavuklu dürüm.');
-    push(end2 + 120, 'yemek', 'Ana öğün', 'Tabak modeli: her gruptan bir besin; maç günü karbonhidrat dilimi büyük, yanında protein, sebze-meyve ve süt grubu.', 'menuler');
+    lateClose = isLateHour(end2 + 120);
+    lastEnd = closing(end2, 'Toparlanma atıştırmalığı', false);
   } else {
-    push(end1 + 20, 'yemek', 'Toparlanma atıştırmalığı', 'Karbonhidrat + protein + sıvı: ayran-simit, süt-muz, yoğurt-meyve, tavuklu dürüm.', 'zamanlama');
-    if (!minor) {
-      push(end1 + 30, 'sivi', 'Sıvı açığını kapatın', 'Maç sonrası tartı farkını (varsa) ve idrar rengini izleyin. TÜBER yetişkin sporcular için kaybedilen her yarım kg için yaklaşık 450–675 mL sıvıyı örnek verir.', 'sivi-sayilari');
-    }
-    push(end1 + 120, 'yemek', 'Ana öğün', 'Tabak modeli: her gruptan bir besin; maç günü karbonhidrat dilimi büyük, yanında protein, sebze-meyve ve süt grubu.', 'menuler');
+    lateClose = isLateHour(end1 + 120);
+    lastEnd = closing(end1, 'Toparlanma atıştırmalığı', true, 'zamanlama');
   }
   const last = steps.reduce((m, s) => Math.max(m, s.abs ?? 0), 0);
-  push(Math.max(last + 90, 1260), 'dinlenme', 'Sakin akşam ve uyku', 'Ekranı azaltın; sıvıyı düzenli tutun. Uyku süresi yaşa göre değişir (bkz. Uyku bölümü).');
+  if (lateClose || night) {
+    push(Math.max(lastEnd, last) + (lateClose ? 0 : 60), 'dinlenme', 'Sakin ol ve uyu', 'Ekranı azaltın; sıvıyı düzenli tutun. Uyku süresi yaşa göre değişir (bkz. Uyku bölümü).');
+  } else {
+    push(Math.max(last + 90, 1260), 'dinlenme', 'Sakin akşam ve uyku', 'Ekranı azaltın; sıvıyı düzenli tutun. Uyku süresi yaşa göre değişir (bkz. Uyku bölümü).');
+  }
 
-  // saat sırasına diz; önceki akşam ilk sırada kalır
+  // saat sırasına diz; saatsiz adımlar (önceki akşam / gün boyu) ilk sırada kalır
   const timed = steps.filter((s) => s.abs !== null).sort((a, b) => (a.abs as number) - (b.abs as number));
   return [...steps.filter((s) => s.abs === null), ...timed];
 }

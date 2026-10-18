@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { AGE_NOTES, DAY_PLANS, PORTION_GUIDE } from '@/data/nutrition-guide';
 import { ALLERGEN_NAME, MEAL_BY_ID, mealAllergens, mealVegan, mealVegetarian, type Allergen, type Meal } from '@/data/nutrition';
 import {
@@ -22,12 +22,14 @@ import {
   type DayKey,
   type DayType,
   type Diet,
+  type PlanState,
   type SlotKey,
 } from '@/lib/nutrition';
 import { usePlan } from '@/lib/nutri-store';
 import { Icon } from './Icon';
 import { PrintButton } from './NutritionTrackers';
 import { Rv } from './NutritionBits';
+import { radioNav } from './radioNav';
 
 const alName = (a: Allergen) => ALLERGEN_NAME[a].split(' (')[0].toLowerCase();
 
@@ -43,8 +45,17 @@ export function AgeSelector() {
         <p className="muted">Uyku süreleri, öğün örnekleri ve notlar yaş grubuna göre değişir. Seçimin yalnızca bu tarayıcıda saklanır.</p>
       </div>
       <div className="seg agesel__seg" role="radiogroup" aria-label="Yaş grubu">
-        {AGE_BANDS.map((b) => (
-          <button key={b.id} type="button" role="radio" aria-checked={plan.band === b.id} onClick={() => setPlan((p) => ({ ...p, band: b.id }))} data-band={b.id}>
+        {AGE_BANDS.map((b, i) => (
+          <button
+            key={b.id}
+            type="button"
+            role="radio"
+            aria-checked={plan.band === b.id}
+            tabIndex={plan.band === b.id ? 0 : -1}
+            onClick={() => setPlan((p) => ({ ...p, band: b.id }))}
+            onKeyDown={(e) => radioNav(e, AGE_BANDS.length, i, (k) => setPlan((p) => ({ ...p, band: AGE_BANDS[k].id })))}
+            data-band={b.id}
+          >
             {b.label}
           </button>
         ))}
@@ -74,17 +85,17 @@ export function SleepTable({ rows }: { rows: { age: string; hours: string; src: 
   const [plan] = usePlan();
   return (
     <div className="tablewrap" data-reveal>
-      <table className="table sleeptable" data-sleep>
+      <table className="table table--stack sleeptable" data-sleep role="table">
         <caption className="visually-hidden">Yaşa göre önerilen uyku süresi</caption>
         <thead>
-          <tr><th scope="col">Yaş</th><th scope="col">Önerilen süre</th><th scope="col">Not</th></tr>
+          <tr role="row"><th scope="col" role="columnheader">Yaş</th><th scope="col" role="columnheader">Önerilen süre</th><th scope="col" role="columnheader">Not</th></tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.age} data-me={r.bands.includes(plan.band) ? 'true' : undefined}>
-              <th scope="row">{r.age}</th>
-              <td className="sleeptable__h">{r.hours}</td>
-              <td>{r.note}</td>
+            <tr key={r.age} role="row" data-me={r.bands.includes(plan.band) ? 'true' : undefined}>
+              <th scope="row" role="rowheader">{r.age}</th>
+              <td role="cell" className="sleeptable__h" data-label="Önerilen süre">{r.hours}</td>
+              <td role="cell" data-label="Not">{r.note}</td>
             </tr>
           ))}
         </tbody>
@@ -225,11 +236,25 @@ export function DayPlans() {
 
 export function WeeklyPlanner() {
   const [plan, setPlan] = usePlan();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
+  /** Planı silen ya da üzerine yazan işlemden önceki kayıt: kısa süre geri alınabilir (veri kaybı koruması) */
+  const [undo, setUndo] = useState<{ plan: PlanState; what: string } | null>(null);
+  useEffect(() => {
+    if (!undo) return;
+    const t = window.setTimeout(() => setUndo(null), 20_000);
+    return () => window.clearTimeout(t);
+  }, [undo]);
+  const hasContent = (p: PlanState) => p.ticked.length > 0 || DAY_KEYS.some((k) => Object.keys(p.days[k].slots).length > 0);
+  const remember = (what: string) => setUndo(hasContent(plan) ? { plan, what } : null);
   const list = shoppingList(plan);
+  const badCount = DAY_KEYS.reduce(
+    (n, k) => n + DAY_SLOTS[plan.days[k].type].filter((s) => { const id = plan.days[k].slots[s]; return id && MEAL_BY_ID[id] && !mealAllowed(MEAL_BY_ID[id], plan.avoid, plan.diet); }).length,
+    0,
+  );
   const total = list.reduce((n, g) => n + g.items.length, 0);
 
-  const autofill = () =>
+  const autofill = () => {
+    remember('Plan önerilen düzenle dolduruldu');
     setPlan((p) => {
       const next = emptyPlan(p.band);
       next.diet = p.diet;
@@ -241,32 +266,46 @@ export function WeeklyPlanner() {
       }
       return next;
     });
-  const clear = () =>
+  };
+  const clear = () => {
+    remember('Plan ve alışveriş işaretleri temizlendi');
     setPlan((p) => {
       const next = emptyPlan(p.band);
       next.diet = p.diet;
       next.avoid = p.avoid;
       return next;
     });
-  const setType = (k: DayKey, type: DayType) =>
+  };
+  const restore = () => {
+    if (!undo) return;
+    const prev = undo.plan;
+    setPlan(() => prev);
+    setUndo(null);
+  };
+  const setType = (k: DayKey, type: DayType) => {
+    const dropped = Object.keys(plan.days[k].slots).filter((s) => !DAY_SLOTS[type].includes(s as SlotKey)).length;
+    setUndo(dropped > 0 ? { plan, what: `${DAY_NAME[k]} gün tipi değişti; ${dropped} öğün çıkarıldı` } : null);
     setPlan((p) => ({ ...p, days: { ...p.days, [k]: { type, slots: Object.fromEntries(Object.entries(p.days[k].slots).filter(([s]) => DAY_SLOTS[type].includes(s as SlotKey))) } } }));
-  const setSlot = (k: DayKey, s: SlotKey, id: string) =>
+  };
+  const setSlot = (k: DayKey, s: SlotKey, id: string) => {
+    setUndo(null);
     setPlan((p) => {
       const slots = { ...p.days[k].slots };
       if (id) slots[s] = id;
       else delete slots[s];
       return { ...p, days: { ...p.days, [k]: { ...p.days[k], slots } } };
     });
+  };
   const tick = (id: string) => setPlan((p) => ({ ...p, ticked: p.ticked.includes(id) ? p.ticked.filter((x) => x !== id) : [...p.ticked, id] }));
   const copy = async () => {
     const text = list.map((g) => `${g.title}\n${g.items.map((i) => `- ${i.name}${i.count > 1 ? ` (${i.count} öğün)` : ''}`).join('\n')}`).join('\n\n');
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      setCopied('ok');
     } catch {
-      setCopied(false);
+      setCopied('fail');
     }
+    window.setTimeout(() => setCopied(null), 2500);
   };
 
   return (
@@ -282,6 +321,23 @@ export function WeeklyPlanner() {
         <PrintButton target="plan" label="Planı ve listeyi yazdır" />
         <span className="mono muted wp__band">Yaş grubu: {AGE_BANDS.find((b) => b.id === plan.band)?.label}</span>
       </div>
+
+      {badCount > 0 && (
+        <p className="note note--warn np" role="status" data-wp-bad>
+          <Icon name="warn" />
+          <span>{badCount} öğün seçtiğin alerjen ya da beslenme tercihine uymuyor. Alışveriş listesi bu öğünlerin içeriğini de kapsar; “Önerilen planla doldur” uygun öğünlerle yeniler (önceki plan geri alınabilir).</span>
+        </p>
+      )}
+
+      {undo && (
+        <p className="note np" role="status" data-wp-undo>
+          <Icon name="info" />
+          <span>{undo.what}.</span>
+          <button type="button" className="btn btn--quiet" onClick={restore} data-wp-undo-btn>
+            Geri al
+          </button>
+        </p>
+      )}
 
       <div data-print-area="plan">
         <div className="print-only">
@@ -342,7 +398,7 @@ export function WeeklyPlanner() {
             </div>
             {total > 0 && (
               <button type="button" className="btn btn--ghost btn--sm np" onClick={copy}>
-                <Icon name="copy" /> {copied ? 'Kopyalandı' : 'Listeyi kopyala'}
+                <Icon name="copy" /> {copied === 'ok' ? 'Kopyalandı' : copied === 'fail' ? 'Kopyalanamadı: yazdırmayı dene' : 'Listeyi kopyala'}
               </button>
             )}
           </div>

@@ -91,7 +91,8 @@ Teknolojiler: Next.js 16 (App Router, statik export), React 19, TypeScript, düz
 - **Depolama:** su takibi `libero:su`, yaş grubu/plan/alışveriş işaretleri `libero:beslenme` anahtarındadır; `libero:v1` yedek dosyasına dâhil değildir.
 - **Uzman incelemesi:** rehber henüz bir diyetisyen ya da çocuk sağlığı uzmanı tarafından incelenmedi. İncelenmesi gereken her pasaj “Uzman incelemesi” rozetiyle işaretlidir ve `REVIEW_ITEMS` listesiyle (sayfada 16. bölüm) eşleşir; yeni rozet eklemek için önce listeye madde ekleyin.
 - **Kaynak kuralı:** bir bilgi yalnızca okunmuş ve doğrulanmış kaynaktan aktarılır; kaynağı doğrulanamayan genel pratikler listede “kaynak doğrulanamadı” diye anılır. Çocuk ve ergen için kalori, gram ya da kilo hedefi yazılmaz.
-- **Testler:** `scripts/logic-tests/nutrition.mjs` (veri ve mantık), `scripts/e2e-tests/nutrition.mjs` (tarayıcı).
+- **Bağımsız denetim:** metinler ve kaynak atıfları ayrı bir denetimde yeniden okundu (DOI'ler Crossref ve Europe PMC ile, TÜBER tam metinden). Kaynakla uyuşmayan ifadeler düzeltildi; `SOURCE_CHECK` her kaynağın hangi düzeyde okunduğunu söyler. TÜBER'in sıvı değerleri yaş ayrımı yapmaz ve yalnızca 18 yaş ve üstüne gösterilir; çocuk ve ergen takviye satırları kanıta dayalı bir öneri değil, temkinli bir çizgidir (sayfada da böyle yazar).
+- **Testler:** `scripts/logic-tests/nutrition.mjs` ve `nutrition-audit.mjs` (veri, mantık, gece yarısı ve ikinci maç, gün sınırı), `scripts/e2e-tests/nutrition.mjs` ve `nutrition-audit.mjs` (tarayıcı: bozuk kayıt, gece yarısı, klavye, geri alma, dar ekran tabloları).
 
 ## Kayıtlı veri ve sürüm geçişi
 
