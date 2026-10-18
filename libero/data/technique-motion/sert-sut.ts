@@ -1,0 +1,188 @@
+import { groundYRigid, nearIkToFk } from '@/lib/motion/author-fk';
+import { limbKeys } from '@/lib/motion/author-limbs';
+import type { TechMotion } from '@/lib/motion/timeline';
+
+// Sert şut (data/techniques/sut.ts, id: sert-sut): ayak üstü (bağcık) ile topun ortasına, yere yakın sert vuruş.
+//   Hazırlık : topa 3 adımla yaklaşılır, son adım en uzundur; basma ayağı topun yanına, ayak ucu hedefe dönük basılır; vuran bacak geriye kurulur.
+//   Temas    : diz ve gövde topun üzerinde, bilek kilitli, parmaklar aşağıda; bağcık bölgesi topun ortasına (hafif üst yarısına) değer.
+//   Takip    : vuruş bacağı hedefe doğru uzar, oyuncu vuruş ayağının üstüne iner; zıt kol açık ve ileridedir.
+// Dünya: x ileri (m), y yukarı. Sağ ayaklı oyuncu, kamera oyuncunun sağında. Basma (sol) bacak IK: yere sabit basar; vuran (sağ) bacak bilek konumuyla yazılıp sert ayaklı FK'ya çevrilir.
+// Topun temas anındaki yeri `zoneContact(ayak üstü)` ile çözüldü (ayak eğimi -68°, dışa dönüş 0°, top y = 0,11). Sert ayak: parmaklar aşağı bakarken ön ayak bükülmez.
+// Hızlar ve yerçekimi anlatım için yavaşlatılmıştır; yaklaşma açısı yandan görünümde okunmaz.
+const GR = (p: number) => groundYRigid(p);
+
+export const SERT_SUT: TechMotion = {
+  id: 'sert-sut',
+  label: 'Sert şut: ayak üstüyle (bağcık) topun ortasına vuruş',
+  dur: 2.7,
+  tc: 1.4,
+  win: [0.1, 0.18],
+  legs: ['fk', 'ik'],
+  cam: -1.1,
+  zones: ['ustTam'],
+  contact: 'ustTam',
+  note: 'Yaklaşma açısı yandan görünümde okunmaz; vuruş anındaki ayak, bilek ve gövde duruşuna bakın.',
+  caps: [
+    'Topa koşarak yaklaşın, son adımı biraz uzun atın ve basma ayağınızı topun yanına, ayak ucu kaleye dönük basın. Gözünüz topta, vuruş bacağınız geriye kurulur.',
+    'Dizinizi ve gövdenizi topun üzerinde tutun, ayak bileğini kilitleyip parmakları aşağıda tutun; ayak üstüyle (bağcık bölgesi) topun ortasına, hafif üst yarısına vurun.',
+    'Takip hareketini hedefe doğru uzatın ve vuruş ayağınızın üstüne inin. Bakışınız vuruştan sonra topun gittiği yöne döner.',
+  ],
+  keys: nearIkToFk(
+    limbKeys(
+      {
+        // gövde: pelvis konumu (m), gövde eğimi (tr) ve baş eğimi (hd); temasta gövde öne eğik, baş aşağıda (top)
+        body: [
+          { t: 0, px: -0.45, py: 0.94, tr: 3, hd: 0 },
+          { t: 0.14, px: -0.44 },
+          { t: 0.27, px: -0.34, py: 0.935, tr: 6 },
+          { t: 0.38, px: -0.18, py: 0.925, tr: 8 },
+          { t: 0.47, px: -0.07, py: 0.932 },
+          { t: 0.58, px: 0.06, py: 0.94 },
+          { t: 0.65, px: 0.17, py: 0.935 },
+          { t: 0.72, px: 0.28, py: 0.922, tr: 10 },
+          { t: 0.83, px: 0.52, py: 0.93 },
+          { t: 0.9, px: 0.7, py: 0.945 },
+          { t: 0.97, px: 0.9 },
+          { t: 1.04, px: 1.07, py: 0.925, tr: 9, hd: 14 },
+          { t: 1.1, px: 1.13, py: 0.918, tr: 10, hd: 22 },
+          { t: 1.2, px: 1.19, py: 0.915, tr: 12, hd: 30 },
+          { t: 1.3, px: 1.25, tr: 14, hd: 34 },
+          { t: 1.4, px: 1.29, py: 0.925, tr: 16, hd: 36 },
+          { t: 1.5, px: 1.36, py: 0.93, hd: 30 },
+          { t: 1.6, px: 1.46, py: 0.935, tr: 14, hd: 14 },
+          { t: 1.72, px: 1.6, py: 0.94, tr: 12, hd: 2 },
+          { t: 1.85, px: 1.76, py: 0.945, tr: 11, hd: -4 },
+          { t: 1.98, px: 1.92, py: 0.935, tr: 12, hd: -6 },
+          { t: 2.08, px: 2.04, py: 0.922, hd: -4 },
+          { t: 2.3, px: 2.14, py: 0.93, tr: 8 },
+          { t: 2.7, px: 2.2, py: 0.94, tr: 4, hd: 0 },
+        ],
+        // sağ kol: sol bacak öne giderken öne, sağ bacak öne giderken geriye
+        armN: [
+          { t: 0, as: 6, ae: 14 },
+          { t: 0.18, as: 14, ae: 28 },
+          { t: 0.27, as: 28, ae: 56 },
+          { t: 0.4, as: 8, ae: 34 },
+          { t: 0.52, as: -32, ae: 60 },
+          { t: 0.7, as: -6, ae: 30 },
+          { t: 0.88, as: 38, ae: 68 },
+          { t: 1.1, as: 14, ae: 38 },
+          { t: 1.26, as: -6, ae: 34 },
+          { t: 1.4, as: -27, ae: 30 },
+          { t: 1.55, as: -12, ae: 28 },
+          { t: 1.7, as: 14, ae: 30 },
+          { t: 1.9, as: 26, ae: 38 },
+          { t: 2.2, as: -6, ae: 34 },
+          { t: 2.7, as: 4, ae: 20 },
+        ],
+        // sol kol: zıt kol açık ve ileri uzanır (temasta öne ve yukarı)
+        armF: [
+          { t: 0, bs: -6, be: 14 },
+          { t: 0.18, bs: -12, be: 24 },
+          { t: 0.27, bs: -30, be: 56 },
+          { t: 0.4, bs: -6, be: 30 },
+          { t: 0.52, bs: 36, be: 64 },
+          { t: 0.7, bs: 6, be: 36 },
+          { t: 0.88, bs: -32, be: 60 },
+          { t: 1.1, bs: -12, be: 30 },
+          { t: 1.26, bs: 14, be: 40 },
+          { t: 1.4, bs: 42, be: 60 },
+          { t: 1.55, bs: 30, be: 50 },
+          { t: 1.7, bs: 4, be: 34 },
+          { t: 1.9, bs: -22, be: 30 },
+          { t: 2.2, bs: 14, be: 36 },
+          { t: 2.7, bs: -4, be: 20 },
+        ],
+        // sağ (vuran) bacak: 2. adım, arka salınım, ileri salınım, temas (1,40), takip, vuruş ayağının üstüne iniş.
+        // Bilek konumu (n0 = x, n1 = y) ve ayak eğimi (n2) yazılır; nearIkToFk sert ayaklı FK'ya çevirir. Yere basan anahtarlarda n1 = GR(eğim).
+        // Ayak eğimi arka salınımda baldırla birlikte döner (bilek 15–20° taban eğmesinde), temasa doğru parmaklar aşağı iner (taban eğme ≈ 30°).
+        near: [
+          { t: 0, n0: -0.58, n1: 0.099, n2: 0, ny: 8 },
+          { t: 0.23 },
+          { t: 0.26, n0: -0.58, n1: GR(-12), n2: -12 },
+          { t: 0.29, n0: -0.56, n1: GR(-24), n2: -24 },
+          { t: 0.32, n0: -0.5, n1: 0.21, n2: -30 },
+          { t: 0.38, n0: -0.4, n1: 0.25, n2: -32 },
+          { t: 0.47, n0: -0.12, n1: 0.23, n2: -18 },
+          { t: 0.58, n0: 0.26, n1: 0.2, n2: -2 },
+          { t: 0.65, n0: 0.44, n1: 0.16, n2: 8 },
+          { t: 0.7, n0: 0.5, n1: 0.107, n2: 14 },
+          { t: 0.73, n0: 0.5, n1: 0.104, n2: 7 },
+          { t: 0.76, n0: 0.5, n1: 0.099, n2: 0 },
+          { t: 0.84 },
+          { t: 0.86, n0: 0.5, n1: GR(-12), n2: -12 },
+          { t: 0.89, n0: 0.51, n1: GR(-24), n2: -24 },
+          { t: 0.92, n0: 0.5, n1: 0.185, n2: -32 },
+          { t: 0.98, n0: 0.4, n1: 0.3, n2: -48.9, ny: 10 },
+          { t: 1.04, n0: 0.46, n1: 0.4, n2: -74.9 },
+          // arka salınım: topuk kalçaya doğru (diz ≈ 100°), sonra uyluk önde, ayak sona kalarak ileri sallanır (hızlanarak)
+          { t: 1.12, n0: 0.72, n1: 0.55, n2: -110.4, ny: 4 },
+          { t: 1.23, n0: 0.8, n1: 0.55, n2: -113.7 },
+          { t: 1.27, n0: 0.823, n1: 0.501, n2: -110.1 },
+          { t: 1.31, n0: 0.891, n1: 0.392, n2: -98, ny: 0 },
+          { t: 1.34, n0: 0.96, n1: 0.33, n2: -92.1 },
+          { t: 1.36, n0: 1.03, n1: 0.29, n2: -88.3 },
+          { t: 1.38, n0: 1.12, n1: 0.262, n2: -85.4 },
+          // temas: bilek kilitli, parmaklar aşağıda; bağcık bölgesi topun ortasının hemen üstüne değer (ayak hızı en yüksek)
+          { t: 1.4, n0: 1.235, n1: 0.241, n2: -80 },
+          { t: 1.43, n0: 1.37, n1: 0.25, n2: -63 },
+          { t: 1.47, n0: 1.55, n1: 0.28, n2: -55 },
+          { t: 1.52, n0: 1.74, n1: 0.34, n2: -46 },
+          { t: 1.58, n0: 1.97, n1: 0.46, n2: -36 },
+          { t: 1.66, n0: 2.18, n1: 0.58, n2: -26 },
+          { t: 1.75, n0: 2.32, n1: 0.62, n2: -16 },
+          { t: 1.85, n0: 2.36, n1: 0.5, n2: -6 },
+          { t: 1.95, n0: 2.34, n1: 0.32, n2: 0, ny: 8 },
+          { t: 2.05, n0: 2.3, n1: 0.15, n2: 8 },
+          { t: 2.1, n0: 2.28, n1: 0.107, n2: 14 },
+          { t: 2.14, n0: 2.28, n1: 0.104, n2: 7 },
+          { t: 2.18, n0: 2.28, n1: 0.099, n2: 0 },
+        ],
+        // sol (basma) bacak: 1. adım, 3. (uzun) adım, topun yanına düz ve sabit basış (1,10 → 1,62), sonra öne adım
+        far: [
+          { t: 0, f0: -0.34, f1: 0.099, f2: 0, fy: 8 },
+          { t: 0.14 },
+          { t: 0.17, f0: -0.34, f1: 0.126, f2: -12 },
+          { t: 0.2, f0: -0.32, f1: 0.149, f2: -24 },
+          { t: 0.27, f0: -0.2, f1: 0.2, f2: -8 },
+          { t: 0.34, f0: -0.08, f1: 0.15, f2: 6 },
+          { t: 0.38, f0: 0.04, f1: 0.107, f2: 14 },
+          { t: 0.4, f0: 0.04, f1: 0.104, f2: 7 },
+          { t: 0.43, f0: 0.04, f1: 0.099, f2: 0 },
+          { t: 0.67 },
+          { t: 0.72, f0: 0.04, f1: 0.126, f2: -12 },
+          { t: 0.76, f0: 0.07, f1: 0.156, f2: -28 },
+          { t: 0.83, f0: 0.14, f1: 0.3, f2: -35 },
+          { t: 0.9, f0: 0.55, f1: 0.3, f2: -25 },
+          { t: 0.97, f0: 1.05, f1: 0.24, f2: -8 },
+          { t: 1.01, f0: 1.22, f1: 0.17, f2: 10 },
+          { t: 1.04, f0: 1.31, f1: 0.107, f2: 14 },
+          { t: 1.07, f0: 1.31, f1: 0.104, f2: 7 },
+          { t: 1.1, f0: 1.31, f1: 0.099, f2: 0 },
+          { t: 1.62 },
+          { t: 1.66, f0: 1.31, f1: 0.126, f2: -12 },
+          { t: 1.7, f0: 1.33, f1: 0.153, f2: -26 },
+          { t: 1.78, f0: 1.45, f1: 0.32, f2: -38 },
+          { t: 1.95, f0: 1.85, f1: 0.34, f2: -35 },
+          { t: 2.15, f0: 2.1, f1: 0.26, f2: -18 },
+          { t: 2.3, f0: 2.28, f1: 0.15, f2: 4 },
+          { t: 2.38, f0: 2.36, f1: 0.107, f2: 14 },
+          { t: 2.42, f0: 2.36, f1: 0.104, f2: 7 },
+          { t: 2.46, f0: 2.36, f1: 0.099, f2: 0 },
+        ],
+      },
+      2.7,
+    ),
+  ),
+  ball: [
+    // top temas anına kadar yerde durur
+    { t: 0, x: 1.41, y: 0.11, r: 0 },
+    { t: 1.4, x: 1.41, y: 0.11, r: 0 },
+    // vuruş: top bağcıktan çıkar, yere yakın uzaklaşır (anlatım için yavaşlatılmış hız), hafif ileri döner
+    { t: 1.4, x: 1.41, y: 0.11, vx: 7.4, vy: 1.4, r: 0, cut: true },
+    { t: 1.5, x: 2.15, y: 0.24, vx: 7.4, vy: 1.2, r: -25 },
+    { t: 1.64, x: 3.19, y: 0.4, vx: 7.4, vy: 0.92, r: -60 },
+    { t: 1.9, x: 5.13, y: 0.56, vx: 7.4, vy: 0.4, r: -125 },
+    { t: 2.7, x: 11.05, y: 0.3, vx: 7.4, vy: -1.2, r: -330 },
+  ],
+};

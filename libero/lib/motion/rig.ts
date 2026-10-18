@@ -412,8 +412,12 @@ export interface Contact {
   p: Vec2;
   /** dışa birim normal (x,y) ve kameraya doğru bileşen */
   n: Vec2;
-  /** topun merkezi (temas anında) */
+  /** topun merkezi (temas anında), ekrana izdüşüm */
   ball: Vec2;
+  /** topun merkezinin derinliği (m, + oyuncunun sağı / kameraya doğru) */
+  bz: number;
+  /** yüzey normalinin kameraya bakan bileşeni (−1…1): < 0 ise yüzey kameradan uzağa bakar, top yüzeyin arkasında kalır */
+  facing: number;
 }
 export function zoneContact(f: Foot, zone: FootZone): Contact {
   const g = ZONE_GEOM[zone];
@@ -421,7 +425,7 @@ export function zoneContact(f: Foot, zone: FootZone): Contact {
   const n = footDir(f, g.n);
   const l = Math.hypot(n[0], n[1]) || 1;
   // top yüzeye teğet olacak şekilde: merkez = temas noktası + yarıçap × normal (3B), ekrana izdüşüm
-  return { p: xy(p), n: [n[0] / l, n[1] / l], ball: [p[0] + n[0] * SEG.ball, p[1] + n[1] * SEG.ball] };
+  return { p: xy(p), n: [n[0] / l, n[1] / l], ball: [p[0] + n[0] * SEG.ball, p[1] + n[1] * SEG.ball], bz: p[2] + n[2] * SEG.ball, facing: n[2] };
 }
 
 /** Alın bölgesi: baş merkezinden alına doğru. */
@@ -433,7 +437,7 @@ export function foreheadContact(sk: Skeleton): Contact {
   const n: Vec2 = [Math.cos(k) * fw[0] + Math.sin(k) * up[0], Math.cos(k) * fw[1] + Math.sin(k) * up[1]];
   const R = SEG.headR;
   const p: Vec2 = [sk.head[0] + n[0] * R, sk.head[1] + n[1] * R];
-  return { p, n, ball: [p[0] + n[0] * SEG.ball, p[1] + n[1] * SEG.ball] };
+  return { p, n, ball: [p[0] + n[0] * SEG.ball, p[1] + n[1] * SEG.ball], bz: 0, facing: 0 };
 }
 
 // ── Anahtar kare izleri ──────────────────────────────────────
@@ -459,6 +463,8 @@ export interface BallKey {
   t: number;
   x: number;
   y: number;
+  /** derinlik (m): + oyuncunun sağı (kameraya doğru), − oyuncunun solu. Verilmezse 0 (oyuncunun orta düzlemi) */
+  z?: number;
   /** birikimli dönüş (derece) */
   r?: number;
   /** bu anahtardaki hız (m/sn); verilmezse yumuşak (aşımsız) hesaplanır */
@@ -471,6 +477,7 @@ interface BallSeg {
   t0: number;
   x: Spline;
   y: Spline;
+  z: Spline;
   r: Spline;
 }
 export type BallTrack = BallSeg[];
@@ -487,6 +494,7 @@ export function compileBall(keys: readonly BallKey[]): BallTrack {
       t0: ks[0].t,
       x: spline(t, ks.map((k) => k.x), 'free', ks.map((k) => k.vx)),
       y: spline(t, ks.map((k) => k.y), 'free', ks.map((k) => k.vy)),
+      z: spline(t, ks.map((k) => k.z ?? 0), 'free'),
       r: spline(t, ks.map((k) => k.r ?? 0), 'free'),
     };
   });
@@ -494,10 +502,12 @@ export function compileBall(keys: readonly BallKey[]): BallTrack {
 export interface BallState {
   x: number;
   y: number;
+  /** derinlik (m), bkz. BallKey.z */
+  z: number;
   r: number;
 }
 export function ballAt(tr: BallTrack, t: number): BallState {
   let seg = tr[0];
   for (const s of tr) if (s.t0 <= t) seg = s;
-  return { x: evalSpline(seg.x, t), y: evalSpline(seg.y, t), r: evalSpline(seg.r, t) };
+  return { x: evalSpline(seg.x, t), y: evalSpline(seg.y, t), z: evalSpline(seg.z, t), r: evalSpline(seg.r, t) };
 }

@@ -15,6 +15,7 @@ import '@/styles/players.css';
 import '@/styles/motion.css';
 import '@/styles/nutrition.css';
 import '@/styles/boot.css';
+import '@/styles/tech-motion.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Providers } from '@/components/Providers';

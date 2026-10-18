@@ -7,6 +7,14 @@ export const VH = 400;
 export const SC = 130;
 export const GY = 342;
 
+/** Sahnenin varsayılan üst sınırı (zeminden m): oyuncunun üstündeki boşluğu keser. Sıçrama/kafa vuruşları `top` ile yükseltir. */
+export const TOP_DEFAULT = 2.2;
+/** Görünüm kutusu "x y w h": üst sınır `top` metreye göre. */
+export const viewBoxFor = (top = TOP_DEFAULT) => {
+  const y0 = Math.max(0, Math.round(GY - top * SC));
+  return { y0, h: VH - y0, box: `0 ${y0} ${VW} ${VH - y0}` };
+};
+
 export const f1 = (n: number) => (Math.round(n * 10) / 10).toString();
 export const f2 = (n: number) => (Math.round(n * 100) / 100).toString();
 
