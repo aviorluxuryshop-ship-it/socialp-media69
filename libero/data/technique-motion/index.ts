@@ -8,8 +8,10 @@ import type { TechMotion } from '@/lib/motion/timeline';
 import { YERDEN_IC_YUZ_PAS } from './yerden-ic-yuz-pas';
 import { KAVISLI_PAS } from './kavisli-pas';
 import { TRIVELA_PASI } from './trivela-pasi';
+import { UZUN_PAS } from './uzun-pas';
 
 // [sut]
+import { SERT_SUT } from './sert-sut';
 
 // [kontrol]
 import { ILK_TEMAS } from './ilk-temas';
@@ -17,6 +19,7 @@ import { ILK_TEMAS } from './ilk-temas';
 // [surme]
 
 // [kafa]
+import { ALIN_KAFA } from './alin-kafa';
 
 // [bitiricilik]
 
@@ -35,8 +38,10 @@ export const MOTIONS: Record<string, TechMotion> = {
   'yerden-ic-yuz-pas': YERDEN_IC_YUZ_PAS,
   'kavisli-pas': KAVISLI_PAS,
   'trivela-pasi': TRIVELA_PASI,
+  'uzun-pas': UZUN_PAS,
 
   // [sut]
+  'sert-sut': SERT_SUT,
 
   // [kontrol]
   'ilk-temas': ILK_TEMAS,
@@ -44,6 +49,7 @@ export const MOTIONS: Record<string, TechMotion> = {
   // [surme]
 
   // [kafa]
+  'alin-kafa': ALIN_KAFA,
 
   // [bitiricilik]
 
