@@ -105,12 +105,16 @@ export default async ({ ok, test, load }) => {
       }
       ok(tl.hasPlan(m), `${m.id}: kavisli harekette üstten bakış kutusu açık olmalı`);
       // rakip, topun düz yolu üzerinde ve topun kavisli yolu rakibin kavis tarafından geçer
+      // rakip işareti: kavisli pas ve trivela (PAS kümesi) için zorunlu; havadan giden uzun pas gibi diğer kavisli hareketlerde isteğe bağlıdır
       const press = m.plan?.press;
-      ok(press && Math.abs(press[1] - z0) < 0.05 && press[0] > m.ball[0].x + 1, `${m.id}: rakip topun düz yolunda olmalı`);
-      let zAtPress = null;
-      for (let i = 1; i < pts.length; i++) if (pts[i - 1][0] <= press[0] && pts[i][0] >= press[0]) zAtPress = pts[i][1];
-      ok(zAtPress !== null, `${m.id}: top rakibin hizasına ulaşmıyor`);
-      ok(m.curve === 'sol' ? zAtPress - press[1] > 0.3 : press[1] - zAtPress > 0.3, `${m.id}: top rakibin dışından geçmeli (${(zAtPress - press[1]).toFixed(2)} m)`);
+      if (PAS.includes(m.id)) ok(press, `${m.id}: kavisli harekette pas yolundaki rakip işareti olmalı`);
+      if (press) {
+        ok(Math.abs(press[1] - z0) < 0.05 && press[0] > m.ball[0].x + 1, `${m.id}: rakip topun düz yolunda olmalı`);
+        let zAtPress = null;
+        for (let i = 1; i < pts.length; i++) if (pts[i - 1][0] <= press[0] && pts[i][0] >= press[0]) zAtPress = pts[i][1];
+        ok(zAtPress !== null, `${m.id}: top rakibin hizasına ulaşmıyor`);
+        ok(m.curve === 'sol' ? zAtPress - press[1] > 0.3 : press[1] - zAtPress > 0.3, `${m.id}: top rakibin dışından geçmeli (${(zAtPress - press[1]).toFixed(2)} m)`);
+      }
     }
     // iki kavis aynalıdır
     const zEnd = (id) => {
