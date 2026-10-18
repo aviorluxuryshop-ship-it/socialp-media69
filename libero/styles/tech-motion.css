@@ -102,6 +102,10 @@ html.js .tm__strip {
   color: var(--ivory-3);
   font-size: var(--fs-small);
 }
+.tm__plan-note strong {
+  color: var(--ivory-2);
+  font-weight: 600;
+}
 
 /* ── Evre + açıklama ───────────────────────────────────── */
 .tm__now {

@@ -12,8 +12,8 @@ import type { TechMotion } from '@/lib/motion/timeline';
 // Vuran (yakın) bacak IK terimleriyle yazılır, nearIkToFk ile sert ayaklı FK'ya çevrilir (bkz. trivela-pasi.ts).
 // Temas yüzeyi olarak "Üst iç" (ayak üstünün iç bölümü) vurgulanır: yerdeki topa dış-alt yarıdan, parmak ucu yere yakın bir ayakla ancak bu bölge değebilir;
 // "İç yüz" bölgesi de tekniğin temas yüzeyi olduğundan sönük çizgiyle işaretlenir.
-// Temas anı (t = 1,5): pelvis (1,0; 0,9), ayak eğimi −88°, ny 50°, bilek (0,955; 0,214): lib/motion/rig.ts zoneContact ile çözüldü,
-// top merkezi (1,10; 0,11; z = 0,107), ayak parmak ucu yerden ≈ 0 cm.
+// Temas anı (t = 1,5): pelvis (1,0; 0,9), ayak eğimi −92°, ny 58°, bilek (0,977; 0,214): lib/motion/rig.ts zoneContact ile çözüldü,
+// top merkezi (1,10; 0,11; z = 0,131), ayak parmak ucu yerden ≈ 0 cm.
 const GR = (p: number) => groundYRigid(p);
 
 const IK = poseKeys([
@@ -36,16 +36,16 @@ const IK = poseKeys([
   { t: 1.08, px: 0.74, n0: 0.62, n1: GR(-12), n2: -12 },
   { t: 1.14, px: 0.79, py: 0.92, f0: 0.95, f1: groundY(15), f2: 15 },
   { t: 1.16, px: 0.805, n0: 0.55, n1: 0.2, n2: -35, hd: 20 },
-  { t: 1.24, px: 0.86, f0: 0.95, f1: 0.099, f2: 0, tr: 8, hd: 22, as: 6, ae: 22, bs: 4, be: 26, n0: 0.45, n1: 0.32, n2: -50, ny: 20 },
-  { t: 1.32, px: 0.915, py: 0.91, n0: 0.5, n1: 0.36, n2: -68, ny: 35, tr: 8, hd: 25, as: 10, ae: 24, bs: -4, be: 30 },
-  { t: 1.4, px: 0.96, py: 0.905, n0: 0.68, n1: 0.3, n2: -80, ny: 45, tr: 8, hd: 27, as: -8, ae: 20, bs: 16, be: 34 },
-  { t: 1.46, px: 0.985, py: 0.9, n0: 0.83, n1: 0.25, n2: -86, ny: 49 },
+  { t: 1.24, px: 0.86, f0: 0.95, f1: 0.099, f2: 0, tr: 8, hd: 22, as: 6, ae: 22, bs: 4, be: 26, n0: 0.45, n1: 0.32, n2: -50, ny: 24 },
+  { t: 1.32, px: 0.915, py: 0.91, n0: 0.5, n1: 0.36, n2: -68, ny: 40, tr: 8, hd: 25, as: 10, ae: 24, bs: -4, be: 30 },
+  { t: 1.4, px: 0.96, py: 0.905, n0: 0.68, n1: 0.3, n2: -82, ny: 52, tr: 8, hd: 27, as: -8, ae: 20, bs: 16, be: 34 },
+  { t: 1.46, px: 0.985, py: 0.9, n0: 0.84, n1: 0.25, n2: -88, ny: 56 },
   // temas: ayak üstünün iç bölümü topun dış-alt yarısına değer
-  { t: 1.5, px: 1.0, py: 0.9, n0: 0.955, n1: 0.214, n2: -88, ny: 50, tr: 8, hd: 29, as: -16, ae: 18, bs: 24, be: 38 },
+  { t: 1.5, px: 1.0, py: 0.9, n0: 0.977, n1: 0.214, n2: -92, ny: 58, tr: 8, hd: 29, as: -16, ae: 18, bs: 24, be: 38 },
   // takip: ayak topa sürterek yukarı ve vücudun çaprazına süpürülür; sonra yere iner
-  { t: 1.56, px: 1.03, py: 0.905, n0: 1.08, n1: 0.27, n2: -80, ny: 46 },
-  { t: 1.64, px: 1.07, py: 0.912, n0: 1.22, n1: 0.37, n2: -68, ny: 38, tr: 7, hd: 22 },
-  { t: 1.76, px: 1.13, py: 0.925, n0: 1.38, n1: 0.5, n2: -50, ny: 25, tr: 4, hd: 10, as: -22, bs: 32 },
+  { t: 1.56, px: 1.03, py: 0.905, n0: 1.09, n1: 0.27, n2: -84, ny: 54 },
+  { t: 1.64, px: 1.07, py: 0.912, n0: 1.23, n1: 0.37, n2: -68, ny: 44, tr: 7, hd: 22 },
+  { t: 1.76, px: 1.13, py: 0.925, n0: 1.38, n1: 0.5, n2: -50, ny: 30, tr: 4, hd: 10, as: -22, bs: 32 },
   { t: 1.84, px: 1.17, py: 0.928, f0: 0.96, f1: groundY(-8), f2: -8 },
   { t: 1.94, px: 1.23, py: 0.93, n0: 1.46, n1: 0.5, n2: -35, ny: 15, tr: 4, hd: 2, as: -10, bs: 18, f0: 0.98, f1: groundY(-22), f2: -22 },
   { t: 2.06, px: 1.3, n0: 1.5, n1: 0.36, n2: -15, ny: 8, hd: -2, as: 2, bs: 0, f0: 1.1, f1: 0.2, f2: -22 },
@@ -72,7 +72,7 @@ export const KAVISLI_PAS: TechMotion = {
   zones: ['ic', 'ustIc'],
   contact: 'ustIc',
   curve: 'sol',
-  plan: { press: [3.6, 0.107] },
+  plan: { press: [3.6, 0.131] },
   note: 'Sağ ayakta top oyuncunun soluna döner; iç yüz ve ayak üstünün iç bölümü temas yüzeyidir, gösterimde ayak üstünün iç bölümü parlar.',
   caps: [
     'Topa hafif yandan ve açıyla yaklaşın, basma ayağınızı topun yanına, biraz geriye basın. Vuran ayağın ucunu aşağı ve dışa çevirip bileğinizi kilitleyin; gözünüz topta olsun.',
@@ -82,9 +82,9 @@ export const KAVISLI_PAS: TechMotion = {
   keys: nearIkToFk(IK),
   ball: [
     // top temasa kadar durur; z = temas yüzeyindeki derinlik
-    { t: 0, x: 1.1, y: 0.11, z: 0.107 },
-    { t: 1.5, x: 1.1, y: 0.11, z: 0.107 },
+    { t: 0, x: 1.1, y: 0.11, z: 0.131 },
+    { t: 1.5, x: 1.1, y: 0.11, z: 0.131 },
     // vuruş: top yukarı-ileri çıkar, hedefin sağından açılıp sola döner (üstten bakışta sağ şişkin yol)
-    ...flightKeys({ t0: 1.5, x0: 1.1, y0: 0.11, z0: 0.107, vx: 3.0, vy: 2.0, g: 3.4, bend: 0.9, tEnd: 3.0, spin: 200 }),
+    ...flightKeys({ t0: 1.5, x0: 1.1, y0: 0.11, z0: 0.131, vx: 3.0, vy: 2.0, g: 3.4, bend: 0.9, tEnd: 3.0, spin: 200 }),
   ],
 };

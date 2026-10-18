@@ -10,7 +10,7 @@ import type { TechMotion } from '@/lib/motion/timeline';
 // Dünya: x ileri (m), y yukarı, z oyuncunun sağı. Sağ ayaklı oyuncu, kamera oyuncunun sağında.
 // Vuran (yakın) bacak IK terimleriyle (n0/n1 = bilek x/y, n2 = ayak eğimi) yazılır ve nearIkToFk ile SERT ayaklı FK'ya çevrilir:
 // parmak ucu aşağı bakan ayak gerçek bir ayak gibi bükülmeden çizilir (legs: ['fk', 'ik']).
-// Temas anı (t = 1,5): pelvis (0,85; 0,90), ayak eğimi −85°, ny −10°, bilek (0,936; 0,243): lib/motion/rig.ts zoneContact ile çözüldü,
+// Temas anı (t = 1,5): pelvis (0,85; 0,90), ayak eğimi −85°, ny −22°, bilek (0,934; 0,244): lib/motion/rig.ts zoneContact ile çözüldü,
 // top merkezi (1,10; 0,11; z ≈ 0), ayak parmak ucu yerden ≈ 1 cm yukarıda.
 const GR = (p: number) => groundYRigid(p);
 
@@ -35,16 +35,16 @@ const IK = poseKeys([
   { t: 1.14, px: 0.7, py: 0.92, f0: 0.955, f1: groundY(15), f2: 15 },
   { t: 1.16, px: 0.715, n0: 0.5, n1: 0.2, n2: -35, hd: 20 },
   { t: 1.24, px: 0.77, f0: 0.96, f1: 0.099, f2: 0, tr: 8, hd: 22, as: 6, ae: 22, bs: 4, be: 26, n0: 0.43, n1: 0.31, n2: -50, ny: 0 },
-  { t: 1.32, px: 0.8, py: 0.91, n0: 0.5, n1: 0.33, n2: -65, ny: -6, tr: 9, hd: 25, as: 10, ae: 24, bs: -4, be: 30 },
+  { t: 1.32, px: 0.8, py: 0.91, n0: 0.5, n1: 0.33, n2: -65, ny: -10, tr: 9, hd: 25, as: 10, ae: 24, bs: -4, be: 30 },
   // vuruş: bilek kilitli, ayak aşağıda ve içe dönük; dış ayak üstü topa iner
-  { t: 1.4, px: 0.83, n0: 0.68, n1: 0.29, n2: -78, ny: -9, tr: 10, hd: 27, as: -8, ae: 20, bs: 16, be: 34 },
-  { t: 1.46, px: 0.845, py: 0.9, n0: 0.82, n1: 0.26, n2: -83, ny: -10 },
+  { t: 1.4, px: 0.83, n0: 0.68, n1: 0.29, n2: -78, ny: -17, tr: 10, hd: 27, as: -8, ae: 20, bs: 16, be: 34 },
+  { t: 1.46, px: 0.845, py: 0.9, n0: 0.82, n1: 0.26, n2: -83, ny: -21 },
   // temas
-  { t: 1.5, px: 0.85, py: 0.9, n0: 0.936, n1: 0.243, n2: -85, ny: -10, tr: 11, hd: 29, as: -16, ae: 18, bs: 24, be: 38 },
+  { t: 1.5, px: 0.85, py: 0.9, n0: 0.934, n1: 0.244, n2: -85, ny: -22, tr: 11, hd: 29, as: -16, ae: 18, bs: 24, be: 38 },
   // takip: kısa ve kontrollü; ayak topun yönünde kalkar, sonra yere iner
-  { t: 1.56, px: 0.885, py: 0.905, n0: 1.05, n1: 0.285, n2: -76, ny: -9 },
-  { t: 1.64, px: 0.925, py: 0.91, n0: 1.18, n1: 0.35, n2: -64, ny: -5, tr: 11, hd: 24 },
-  { t: 1.76, px: 0.99, py: 0.92, n0: 1.3, n1: 0.4, n2: -48, ny: 0, tr: 10, hd: 12, as: -18, bs: 28 },
+  { t: 1.56, px: 0.885, py: 0.905, n0: 1.05, n1: 0.285, n2: -76, ny: -17 },
+  { t: 1.64, px: 0.925, py: 0.91, n0: 1.18, n1: 0.35, n2: -64, ny: -10, tr: 11, hd: 24 },
+  { t: 1.76, px: 0.99, py: 0.92, n0: 1.3, n1: 0.4, n2: -48, ny: -2, tr: 10, hd: 12, as: -18, bs: 28 },
   { t: 1.9, px: 1.07, py: 0.928, n0: 1.38, n1: 0.33, n2: -26, ny: 5, tr: 8, hd: 2, as: -8, bs: 14 },
   { t: 2.02, px: 1.14, py: 0.93, n0: 1.4, n1: 0.2, n2: -6, ny: 8, hd: -2, as: 2, bs: 0, f1: groundY(-8), f2: -8 },
   { t: 2.12, px: 1.2, n0: 1.41, n1: GR(15), n2: 15, as: 10, ae: 18, bs: -8, be: 16, f0: 0.965, f1: groundY(-18), f2: -18 },
@@ -69,7 +69,7 @@ export const TRIVELA_PASI: TechMotion = {
   zones: ['ustDis'],
   contact: 'ustDis',
   curve: 'sag',
-  plan: { press: [3.6, 0.033] },
+  plan: { press: [3.6, -0.011] },
   note: 'Sağ ayakta top oyuncunun sağına döner; temas ayağın yan kenarında değil, ayak üstünün dış bölümündedir.',
   caps: [
     'Topa hafif yandan yaklaşın, basma ayağınızı topun yanına basın. Vuran ayağın ucunu aşağı ve içe çevirip bileğinizi kilitleyin; gözünüz topta, gövdeniz dengede.',
@@ -79,9 +79,9 @@ export const TRIVELA_PASI: TechMotion = {
   keys: nearIkToFk(IK),
   ball: [
     // top temasa kadar durur; z = temas yüzeyindeki derinlik
-    { t: 0, x: 1.1, y: 0.11, z: 0.033 },
-    { t: 1.5, x: 1.1, y: 0.11, z: 0.033 },
+    { t: 0, x: 1.1, y: 0.11, z: -0.011 },
+    { t: 1.5, x: 1.1, y: 0.11, z: -0.011 },
     // vuruş: top yukarı-ileri çıkar, hedefin solundan açılıp sağa döner (üstten bakışta sol şişkin yol)
-    ...flightKeys({ t0: 1.5, x0: 1.1, y0: 0.11, z0: 0.033, vx: 3.0, vy: 2.0, g: 3.4, bend: -0.9, tEnd: 3.0, spin: 200 }),
+    ...flightKeys({ t0: 1.5, x0: 1.1, y0: 0.11, z0: -0.011, vx: 3.0, vy: 2.0, g: 3.4, bend: -0.9, tEnd: 3.0, spin: 200 }),
   ],
 };

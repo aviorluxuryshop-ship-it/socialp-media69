@@ -44,12 +44,12 @@ export const YERDEN_IC_YUZ_PAS: TechMotion = {
     // vuran ayak geriye alınır: topuk kalkar, diz bükülür, ayak gövdenin arkasına çekilir (1.08 → 1.28)
     { t: 1.08, px: 0.655, n0: 0.55, n1: groundY(-12), n2: -12 },
     { t: 1.14, px: 0.7, py: 0.92, f0: 0.955, f1: groundY(15), f2: 15 },
-    { t: 1.16, px: 0.715, n0: 0.51, n1: 0.2, n2: -28, hd: 20 },
+    { t: 1.16, px: 0.715, n0: 0.51, n1: 0.2, n2: -34, hd: 20 },
     { t: 1.24, px: 0.77, f0: 0.96, f1: 0.099, f2: 0, tr: 8, hd: 22, as: 6, ae: 22, bs: 4, be: 26 },
-    { t: 1.28, px: 0.78, n0: 0.43, n1: 0.33, n2: -30, ny: 20, tr: 9, hd: 24, as: 10, ae: 24, bs: -4, be: 30 },
+    { t: 1.28, px: 0.78, n0: 0.43, n1: 0.33, n2: -48, ny: 20, tr: 9, hd: 24, as: 10, ae: 24, bs: -4, be: 30 },
     // vuran ayak ileri savrulur, dışa döner (ny 20 → 66)
-    { t: 1.38, px: 0.785, n0: 0.65, n1: 0.22, n2: -6, ny: 52, tr: 10, hd: 26, as: -8, ae: 20, bs: 16, be: 34 },
-    { t: 1.44, px: 0.79, n0: 0.77, n1: 0.17, n2: 3, ny: 62 },
+    { t: 1.38, px: 0.785, n0: 0.65, n1: 0.22, n2: -18, ny: 52, tr: 10, hd: 26, as: -8, ae: 20, bs: 16, be: 34 },
+    { t: 1.44, px: 0.79, n0: 0.77, n1: 0.17, n2: -4, ny: 62 },
     // temas: iç yüz topun ortasında (ayak eğimi +5°, ny 66°)
     { t: 1.5, px: 0.79, py: 0.915, n0: 0.94, n1: 0.144, n2: 5, ny: 66, tr: 10.5, hd: 28, as: -16, ae: 18, bs: 24, be: 38 },
     // takip: ayak hedefe uzanır, sonra yere basar

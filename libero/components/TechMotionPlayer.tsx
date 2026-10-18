@@ -122,6 +122,7 @@ export function TechMotionPlayer({ motion: m, name = FALLBACK_NAME }: { motion: 
   const phase = frame.phase;
   const pi = PHASES.indexOf(phase);
   const plan = hasPlan(m);
+  const curveText = m.curve === 'sol' ? 'Top oyuncunun soluna kavis çizer (saat yönünün tersi).' : m.curve === 'sag' ? 'Top oyuncunun sağına kavis çizer (saat yönü).' : '';
   const zones: string[] = m.zones === 'alin' ? ['alin'] : [...m.zones];
 
   const scrubTo = (v: number) => {
@@ -155,7 +156,7 @@ export function TechMotionPlayer({ motion: m, name = FALLBACK_NAME }: { motion: 
   };
 
   const label = `${name} hareket çizimi: sağ ayaklı oyuncu, sağdan görünüm. Şu anki evre: ${PHASE_LABEL[phase]}.`;
-  const planLabel = `Üstten bakış: topun yolu${m.plan?.press ? ' ve baskı yapan rakibin yeri' : ''}. Yukarı oyuncunun önüdür.`;
+  const planLabel = `Üstten bakış: topun yolu${m.plan?.press ? (m.curve ? ' ve pas yolundaki rakibin yeri' : ' ve baskı yapan rakibin yeri') : ''}. Yukarı oyuncunun önüdür.${curveText ? ` ${curveText}` : ''}`;
   const hot = frame.glow > 0.15;
 
   return (
@@ -236,8 +237,9 @@ export function TechMotionPlayer({ motion: m, name = FALLBACK_NAME }: { motion: 
           ))}
         </ul>
         {plan && (
-          <p className="tm__plan-note">
-            Sağ üstteki kutu üstten bakıştır: yukarı oyuncunun önüdür, yeşil çizgi topun yolunu gösterir{m.plan?.press ? '; çarpı işareti baskı yapan rakiptir' : ''}.
+          <p className="tm__plan-note" data-curve={m.curve ?? 'yok'}>
+            Sağ üstteki kutu üstten bakıştır: yukarı oyuncunun önüdür, yeşil çizgi topun yolunu gösterir{m.plan?.press ? (m.curve ? '; çarpı işareti pas yolundaki rakiptir' : '; çarpı işareti baskı yapan rakiptir') : ''}.
+            {curveText && <strong data-curve-hint> {curveText}</strong>}
           </p>
         )}
       </div>

@@ -67,7 +67,7 @@ export function PlanView({ m, frame, label }: { m: TechMotion; frame: Frame; lab
   const rBall = Math.max(2.6, SEG.ball * s);
 
   return (
-    <svg className="tm-plan" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} focusable="false" xmlns="http://www.w3.org/2000/svg" data-plan>
+    <svg className="tm-plan" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} focusable="false" xmlns="http://www.w3.org/2000/svg" data-plan data-curve={m.curve ?? 'yok'}>
       {/* ileri yönü gösteren ince ok */}
       <path d={`M${W - 12} ${H - 12}V${H - 34}m-3.5 5.5L${W - 12} ${H - 34}l3.5 5.5`} fill="none" stroke="#f3f0e5" strokeOpacity=".4" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
       {/* topun tüm yolu (soluk) ve gidilen kısım */}
