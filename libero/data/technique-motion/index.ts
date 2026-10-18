@@ -6,6 +6,8 @@ import type { TechMotion } from '@/lib/motion/timeline';
 
 // [pas]
 import { YERDEN_IC_YUZ_PAS } from './yerden-ic-yuz-pas';
+import { KAVISLI_PAS } from './kavisli-pas';
+import { TRIVELA_PASI } from './trivela-pasi';
 
 // [sut]
 
@@ -31,6 +33,8 @@ import { ILK_TEMAS } from './ilk-temas';
 export const MOTIONS: Record<string, TechMotion> = {
   // [pas]
   'yerden-ic-yuz-pas': YERDEN_IC_YUZ_PAS,
+  'kavisli-pas': KAVISLI_PAS,
+  'trivela-pasi': TRIVELA_PASI,
 
   // [sut]
 
