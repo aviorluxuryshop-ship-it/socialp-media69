@@ -5,6 +5,7 @@ import type { TechMotion } from '@/lib/motion/timeline';
 // (işaretler birbirinden uzak olduğundan paralel dallar çakışmadan birleşir; başka kategoriye dokunmayın).
 
 // [pas]
+import { UZUN_PAS } from './uzun-pas';
 
 // [sut]
 import { SERT_SUT } from './sert-sut';
@@ -31,6 +32,7 @@ import { ALIN_KAFA } from './alin-kafa';
 
 export const MOTIONS: Record<string, TechMotion> = {
   // [pas]
+  'uzun-pas': UZUN_PAS,
 
   // [sut]
   'sert-sut': SERT_SUT,
