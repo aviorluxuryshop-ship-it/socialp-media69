@@ -5,6 +5,7 @@ import type { TechMotion } from '@/lib/motion/timeline';
 // (işaretler birbirinden uzak olduğundan paralel dallar çakışmadan birleşir; başka kategoriye dokunmayın).
 
 // [pas]
+import { YERDEN_IC_YUZ_PAS } from './yerden-ic-yuz-pas';
 
 // [sut]
 
@@ -29,6 +30,7 @@ import { ILK_TEMAS } from './ilk-temas';
 
 export const MOTIONS: Record<string, TechMotion> = {
   // [pas]
+  'yerden-ic-yuz-pas': YERDEN_IC_YUZ_PAS,
 
   // [sut]
 
