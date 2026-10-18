@@ -15,6 +15,7 @@ import { ILK_TEMAS } from './ilk-temas';
 // [surme]
 
 // [kafa]
+import { ALIN_KAFA } from './alin-kafa';
 
 // [bitiricilik]
 
@@ -40,6 +41,7 @@ export const MOTIONS: Record<string, TechMotion> = {
   // [surme]
 
   // [kafa]
+  'alin-kafa': ALIN_KAFA,
 
   // [bitiricilik]
 
