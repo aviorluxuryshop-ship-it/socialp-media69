@@ -1,5 +1,5 @@
 // Alp Book — minimal offline cache (app shell + static assets).
-const CACHE = "alpbook-v1";
+const CACHE = "alpbook-v2";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["/", "/icon-192.png"])).then(() => self.skipWaiting()));

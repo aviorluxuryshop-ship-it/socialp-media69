@@ -1,35 +1,67 @@
-export type Category = "saglik" | "kod" | "ders" | "fitness" | "beslenme" | "hijyen" | "diger";
+/** Rutin gruplarının görünen adı (tablo, analiz ve kategori özetlerinde kullanılır). */
+export type GroupId = "yazilim" | "egitim" | "okul" | "saglik" | "uyku" | "dijital" | "bakim" | "duzen" | "aktivite" | "beslenme";
 
-export const CATEGORIES: Record<Category, { label: string; color: string }> = {
-  saglik: { label: "Sağlık", color: "#00ff66" },
-  kod: { label: "Kodlama", color: "#8a2be2" },
-  ders: { label: "Dersler", color: "#38bdf8" },
-  fitness: { label: "Fitness", color: "#ff3b6b" },
-  beslenme: { label: "Beslenme", color: "#ffb020" },
-  hijyen: { label: "Hijyen", color: "#2dd4bf" },
-  diger: { label: "Diğer", color: "#a1a1aa" },
-};
+export type RoutineKind =
+  | "yesno" // Evet / Hayır
+  | "yesno_min" // Evet / Hayır + isteğe bağlı süre (dk)
+  | "count" // Sayı (bardak)
+  | "time" // Saat (HH:MM)
+  | "sleep" // Yatış ve uyanıştan otomatik hesaplanır
+  | "duration" // Saat + dakika
+  | "walk" // Adım veya dakika
+  | "meals"; // Öğün listesi
 
-/** toggle: evet = başarı. avoid: "hayır/kaçamak yok" = başarı. */
-export type HabitKind = "toggle" | "avoid";
-
-export interface Habit {
+export interface Routine {
   id: string;
-  name: string;
+  emoji: string;
+  group: GroupId;
+  /** Tabloda görünen kısa ad. */
+  label: string;
+  /** Günlük girişte sorulan tam soru. */
   question: string;
-  kind: HabitKind;
-  category: Category;
+  kind: RoutineKind;
 }
 
-/** true = evet/yapıldı, false = hayır. undefined = cevaplanmadı. */
-export type DayLog = { v: Record<string, boolean>; meal?: string };
+export interface Meal {
+  id: string;
+  type: string;
+  items: string;
+  note?: string;
+}
+
+export interface YesNoMin {
+  done: boolean;
+  minutes?: number;
+}
+
+export type WalkUnit = "steps" | "min";
+export interface WalkValue {
+  unit: WalkUnit;
+  value: number;
+}
+
+export type RoutineValue = boolean | number | string | YesNoMin | WalkValue | Meal[];
+
+/** Bir güne ait kayıtlar. Anahtarın olmaması = "kaydedilmedi" (başarısızlık değil). */
+export type DayEntry = Record<string, RoutineValue>;
+
+export interface Goals {
+  /** Günlük su hedefi (bardak). */
+  waterGlasses: number;
+  /** Uyku hedefi (saat). */
+  sleepHours: number;
+  /** Günlük ekran süresi üst sınırı (saat). */
+  screenMaxHours: number;
+  /** Günlük adım hedefi. */
+  steps: number;
+  /** Günlük yürüyüş süresi hedefi (dk). */
+  walkMinutes: number;
+}
 
 export interface Profile {
   name: string;
-  ais: string[];
-  fitness: string[];
-  focus: string[];
   onboarded: boolean;
+  walkUnit: WalkUnit;
 }
 
 export interface Course {
@@ -49,8 +81,11 @@ export interface Exam {
 
 export interface AppData {
   profile: Profile;
-  habits: Habit[];
-  logs: Record<string, DayLog>;
+  goals: Goals;
+  /** tarih (YYYY-MM-DD) → o günün kayıtları. */
+  entries: Record<string, DayEntry>;
   courses: Course[];
   exams: Exam[];
+  /** Eski sürümden (v1) taşınan ve yeni rutinlerle eşleşmeyen ham kayıtlar — silinmez. */
+  legacy?: unknown;
 }

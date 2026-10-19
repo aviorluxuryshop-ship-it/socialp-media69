@@ -45,3 +45,53 @@ export function greeting(): string {
   if (h < 18) return "İyi günler";
   return "İyi akşamlar";
 }
+
+/** Haftanın ilk günü (Pazartesi). */
+export function weekStart(key: string): string {
+  const d = fromKey(key);
+  const off = (d.getDay() + 6) % 7;
+  return addDays(key, -off);
+}
+
+export function weekDays(key: string): string[] {
+  const s = weekStart(key);
+  return Array.from({ length: 7 }, (_, i) => addDays(s, i));
+}
+
+/** Ay ekler; gün taşarsa ayın son gününe sabitler (31 Ocak + 1 ay = 28/29 Şubat). */
+export function addMonths(key: string, n: number): string {
+  const d = fromKey(key);
+  const day = d.getDate();
+  const first = new Date(d.getFullYear(), d.getMonth() + n, 1);
+  const last = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+  first.setDate(Math.min(day, last));
+  return toKey(first);
+}
+
+export const monthOf = (key: string) => key.slice(0, 7);
+
+export function monthDaysOf(key: string): string[] {
+  const d = fromKey(key);
+  return monthDays(d.getFullYear(), d.getMonth());
+}
+
+/** Başlangıç ve bitiş dahil tüm günler (en fazla 400 gün). */
+export function rangeDays(from: string, to: string): string[] {
+  if (from > to) [from, to] = [to, from];
+  const n = Math.min(daysBetween(from, to), 399);
+  return Array.from({ length: n + 1 }, (_, i) => addDays(from, i));
+}
+
+export function longDate(key: string): string {
+  const d = fromKey(key);
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}, ${DAYS[d.getDay()]}`;
+}
+
+export const dayNum = (key: string) => fromKey(key).getDate();
+export const shortMonth = (key: string) => MONTHS[fromKey(key).getMonth()].slice(0, 3);
+export const monthLabel = (key: string) => {
+  const d = fromKey(key);
+  return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+};
+export const isValidKey = (s: unknown): s is string =>
+  typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s) && toKey(fromKey(s)) === s;

@@ -7,7 +7,7 @@ import { examInsight } from "@/components/ExamPanel";
 import { daysBetween, prettyDate, todayKey } from "@/lib/dates";
 import { useStore } from "@/lib/store";
 
-const COLORS = ["#00ff66", "#8a2be2", "#38bdf8", "#ff3b6b", "#ffb020", "#2dd4bf"];
+const COLORS = ["#7c9cff", "#b794f6", "#5ec8e5", "#f0788a", "#f2b35e", "#52d6c4"];
 const num = (v: string) => (v.trim() === "" ? null : Math.max(0, Math.min(100, Number(v))));
 
 export default function ExamsPage() {
@@ -22,23 +22,23 @@ export default function ExamsPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-5">
       <header>
-        <p className="label">Dersler & Sınavlar</p>
-        <h1 className="mt-1 text-3xl font-bold">Beklenti <span className="text-neon text-glow">Analizi</span></h1>
+        <p className="eyebrow">Dersler ve sınavlar</p>
+        <h1 className="h-title mt-1 text-[28px] md:text-[32px]">Beklenti analizi</h1>
       </header>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <section className="card card-violet p-5">
-          <h2 className="mb-5 text-lg font-semibold">Beklentim vs Gerçekleşen</h2>
+        <section className="panel p-5">
+          <h2 className="h-title mb-5 text-lg">Beklentim vs Gerçekleşen</h2>
           <ExpectActual exams={exams} courses={courses} />
           {insight && (
             <p className="mt-4 font-mono text-sm">
-              Ortalama fark: <b style={{ color: insight.avg >= 0 ? "#00ff66" : "#ff3b6b" }}>{insight.avg >= 0 ? "+" : ""}{insight.avg} puan</b>
+              Ortalama fark: <b style={{ color: insight.avg >= 0 ? "#00ff66" : "#f2677a" }}>{insight.avg >= 0 ? "+" : ""}{insight.avg} puan</b>
             </p>
           )}
         </section>
 
-        <section className="card p-5">
-          <h2 className="mb-4 text-lg font-semibold">Dersler</h2>
+        <section className="panel p-5">
+          <h2 className="h-title mb-4 text-lg">Dersler</h2>
           <form
             className="mb-4 flex gap-2"
             onSubmit={(e) => {
@@ -49,20 +49,20 @@ export default function ExamsPage() {
             }}
           >
             <input className="input" placeholder="Ders adı (ör. Veri Yapıları)" value={course} onChange={(e) => setCourse(e.target.value)} />
-            <button className="btn btn-neon !px-4" aria-label="Ders ekle"><Plus size={18} /></button>
+            <button className="btn btn-primary !px-4" aria-label="Ders ekle"><Plus size={18} /></button>
           </form>
           <div className="flex flex-wrap gap-2">
             {courses.map((c) => (
-              <span key={c.id} className="flex items-center gap-2 rounded-full border border-line bg-black/40 py-1.5 pl-3 pr-1.5 text-sm">
-                <i className="h-2.5 w-2.5 rounded-full" style={{ background: c.color, boxShadow: `0 0 8px ${c.color}` }} />
+              <span key={c.id} className="flex items-center gap-2 rounded-full border border-line bg-ink/60 py-1.5 pl-3 pr-1.5 text-sm">
+                <i className="h-2.5 w-2.5 rounded-full" style={{ background: c.color }} />
                 {c.name}
-                <button className="grid h-6 w-6 place-items-center rounded-full text-mute hover:text-danger" onClick={() => confirm(`${c.name} ve sınavları silinsin mi?`) && removeCourse(c.id)} aria-label="Dersi sil"><Trash2 size={13} /></button>
+                <button className="grid h-6 w-6 place-items-center rounded-full text-mute hover:text-rose" onClick={() => confirm(`${c.name} dersi ve bağlı sınavları silinsin mi?`) && removeCourse(c.id)} aria-label="Dersi sil"><Trash2 size={13} /></button>
               </span>
             ))}
             {!courses.length && <p className="text-sm text-mute">Önce bir ders ekle.</p>}
           </div>
 
-          <h2 className="mb-3 mt-7 text-lg font-semibold">Sınav ekle</h2>
+          <h2 className="h-title mb-3 mt-7 text-lg">Sınav ekle</h2>
           <form
             className="grid grid-cols-2 gap-2"
             onSubmit={(e) => {
@@ -78,13 +78,13 @@ export default function ExamsPage() {
             <input className="input" placeholder="Vize, Final…" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} />
             <input className="input" type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} />
             <input className="input col-span-2" inputMode="numeric" placeholder="Beklentim (0-100)" value={f.expected} onChange={(e) => setF({ ...f, expected: e.target.value.replace(/\D/g, "") })} />
-            <button className="btn btn-neon col-span-2" disabled={!cid}><Plus size={16} /> Sınavı ekle</button>
+            <button className="btn btn-primary col-span-2" disabled={!cid}><Plus size={16} /> Sınavı ekle</button>
           </form>
         </section>
       </div>
 
-      <section className="card p-5">
-        <h2 className="mb-4 text-lg font-semibold">Tüm Sınavlar</h2>
+      <section className="panel p-5">
+        <h2 className="h-title mb-4 text-lg">Tüm Sınavlar</h2>
         {!sorted.length && <p className="text-sm text-mute">Henüz sınav yok.</p>}
         <div className="space-y-2">
           {sorted.map((e) => {
@@ -92,7 +92,7 @@ export default function ExamsPage() {
             const left = daysBetween(today, e.date);
             const past = left < 0;
             return (
-              <div key={e.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-black/40 p-3">
+              <div key={e.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-ink/60 p-3">
                 <span className="h-10 w-1 rounded-full" style={{ background: c?.color }} />
                 <div className="min-w-[140px] flex-1">
                   <p className="text-sm font-semibold">{c?.name} · {e.title}</p>
@@ -104,7 +104,7 @@ export default function ExamsPage() {
                 <label className="flex flex-col gap-1 text-[10px] text-mute">Gerçekleşen
                   <input className="input !w-20 !py-2 text-center font-mono" inputMode="numeric" placeholder={past ? "?" : "-"} value={e.actual ?? ""} onChange={(ev) => updateExam(e.id, { actual: num(ev.target.value.replace(/\D/g, "")) })} />
                 </label>
-                <button className="grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-danger" onClick={() => removeExam(e.id)} aria-label="Sınavı sil"><Trash2 size={16} /></button>
+                <button className="grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-rose" onClick={() => removeExam(e.id)} aria-label="Sınavı sil"><Trash2 size={16} /></button>
               </div>
             );
           })}
