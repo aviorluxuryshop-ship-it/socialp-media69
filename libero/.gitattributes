@@ -1,0 +1,3 @@
+# Windows toplu iş dosyaları CRLF kalmalı; Git satır sonunu değiştirmesin.
+*.cmd -text
+*.bat -text

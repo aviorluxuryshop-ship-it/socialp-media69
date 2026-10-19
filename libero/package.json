@@ -1,0 +1,41 @@
+{
+  "name": "libero-futbol-akademisi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Libero — Türkçe futbol akademisi: teknik kütüphanesi, taktik tahtası, antrenman programı ve gelişim takibi",
+  "scripts": {
+    "predev": "node scripts/prepare-assets.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/prepare-assets.mjs",
+    "build": "next build",
+    "start": "node scripts/serve-out.mjs 3100",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "node scripts/e2e.mjs",
+    "videos:verify": "node scripts/verify-videos.mjs",
+    "baslat": "node scripts/baslat.mjs",
+    "check:logic": "node scripts/check-logic.mjs",
+    "check": "npm run typecheck && node scripts/check-logic.mjs",
+    "prepare:assets": "node scripts/prepare-assets.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "qa:shots": "node scripts/qa-shots.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/hanken-grotesk": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
+    "@mediapipe/tasks-vision": "^1.1.1",
+    "next": "^16.4.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@types/three": "^0.186.0",
+    "playwright-core": "^1.64.1",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,288 @@
+/* ───────────────────────────────────────────────────────────
+   LIBERO — HAREKET SİSTEMİ (CSS + küçük JS; animasyon kitaplığı yok)
+
+   Çalışma zamanı: lib/motion.ts (IntersectionObserver, rAF) ← components/MotionScope.tsx
+   Kural: yalnızca transform ve opacity canlandırılır; will-change çok az; mobilde ve
+   "hareketi azalt" tercihinde etkiler kapanır ya da anında biter.
+
+   ┌ KULLANIM ──────────────────────────────────────────────
+   │ Görünürken yükselme     <div data-reveal>…</div>   ya da  <Reveal>…</Reveal>
+   │   varyantlar            data-reveal="fade|left|right|scale|heading"
+   │   elle gecikme (ms)     data-delay="150"
+   │   kademe                aynı anda görünen kardeşler otomatik 70 ms arayla açılır
+   │ Sayaç                   <span data-count="127">127</span>  (<Count to={127} />)
+   │                         — görünür olunca 0'dan sayar; metin zaten son değerdir
+   │ Hero girişi (JS'siz)    class="enter" style="--e:2"  → CSS animasyonu, JS'ye bağlı değil
+   │ Paralaks                <div data-parallax><i data-depth="0.4"/></div> (yalnız ince imleç, ≥1024px)
+   │ Kart ışığı              a.card, .card--hover, [data-spot]  → imleci izleyen volt ışık
+   │ İlerleme çubuğu         .bar > span  /  .bar-fill   (ilk görünümde soldan açılır)
+   │ Çizgi çizme (SVG)       <path class="draw-line" pathLength="1"/>  (kapsayıcı .is-in olunca çizilir)
+   │ Bağlantı alt çizgisi    .link-wipe   (soldan sağa çizilen alt çizgi)
+   │ Simge kıpırtısı         .nudge-group:hover .nudge  (sağa kayar)
+   │ Süzülme / nabız         .float   .pulse-ring
+   │ Sayfa geçişi            app/template.tsx → .page-enter (opacity + 10px yükselme)
+   │
+   │ ERİŞİLEBİLİRLİK / GÜVENLİK
+   │ • Gizli ilk durum yalnızca html.js varken uygulanır (JS'siz sayfa tam görünür).
+   │ • JS çalışırsa html.motion-live eklenir; çalışmazsa 5 sn sonra CSS her şeyi açar.
+   │ • prefers-reduced-motion: tüm öğeler hemen görünür, animasyonlar biter.
+   └────────────────────────────────────────────────────────── */
+
+/* imleci izleyen ışığın yoğunluğu (kart hover'ında yumuşakça açılır) */
+@property --spot {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+/* ── Sayfa girişi ─────────────────────────────────────────── */
+.page-enter {
+  animation: page-in 460ms var(--ease-out) both;
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+/* ── Görünürken yükselme ──────────────────────────────────
+   Gizli durum ve animasyon aynı değişkenlerden beslenir; animasyon `backwards` dolgulu
+   olduğundan bittiğinde öğe kendi transform'una (ör. kart hover'ı) geri döner. */
+[data-reveal] {
+  --rx: 0px;
+  --ry: 24px;
+  --rs: 1;
+}
+[data-reveal='fade'] {
+  --ry: 0px;
+}
+[data-reveal='left'] {
+  --rx: -34px;
+  --ry: 0px;
+}
+[data-reveal='right'] {
+  --rx: 34px;
+  --ry: 0px;
+}
+[data-reveal='scale'] {
+  --ry: 12px;
+  --rs: 0.94;
+}
+[data-reveal='heading'] {
+  --ry: 38px;
+}
+
+.js [data-reveal]:not(.is-in) {
+  opacity: 0;
+  transform: translate3d(var(--rx), var(--ry), 0) scale(var(--rs));
+}
+.js [data-reveal].is-in {
+  animation: reveal 860ms var(--ease-out) var(--d, 0ms) backwards;
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--rx), var(--ry), 0) scale(var(--rs));
+  }
+}
+/* JS hiç devreye girmezse (hidrasyon yok): 5 sn sonra her şey açılır */
+:root.js:not(.motion-live) [data-reveal]:not(.is-in) {
+  animation: reveal-failsafe 1ms linear 5s forwards;
+}
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* gizliyken ilerleme çubukları ve çizgiler de beklesin */
+.js [data-reveal]:not(.is-in) :is(.bar > span, .bar-fill) {
+  animation: none;
+  transform: scaleX(0);
+}
+
+/* ── JS'siz giriş (hero): bulunduğu anda CSS çalıştırır ──── */
+.js .enter {
+  animation: enter 1000ms var(--ease-out) calc(var(--e, 0) * 90ms + 80ms) backwards;
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+}
+.js .enter--fade {
+  animation-name: enter-fade;
+}
+@keyframes enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+.js .enter--scale {
+  animation-name: enter-scale;
+}
+@keyframes enter-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* ── Çizgi çizme (SVG yolu, pathLength="1") ───────────────── */
+.draw-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.js .is-in .draw-line,
+.js .draw-line.is-in {
+  animation: draw 1500ms var(--ease-out) var(--d, 0ms) backwards;
+}
+.js [data-reveal]:not(.is-in) .draw-line {
+  stroke-dashoffset: 1;
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* ── Mikro etkileşimler ───────────────────────────────────── */
+.link-wipe {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size 320ms var(--ease-out), color var(--dur) var(--ease);
+}
+.link-wipe:hover,
+.link-wipe:focus-visible {
+  background-size: 100% 1px;
+  color: var(--accent-hi);
+}
+.nudge {
+  display: inline-flex;
+  transition: transform var(--dur) var(--ease);
+}
+.nudge-group:hover .nudge,
+.nudge-group:focus-visible .nudge {
+  transform: translateX(5px);
+}
+
+.float {
+  animation: float 7s ease-in-out infinite;
+}
+@keyframes float {
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 2.4s var(--ease-out) infinite;
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(var(--accent-rgb) / 0.5);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 14px rgb(var(--accent-rgb) / 0);
+  }
+}
+
+/* aşağı kaydır ipucu: çizgi boyunca inen nokta */
+.scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ivory-3);
+}
+.scroll-cue__line {
+  position: relative;
+  width: 1px;
+  height: 46px;
+  background: linear-gradient(var(--line-3), transparent);
+  overflow: hidden;
+}
+.scroll-cue__line::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 3px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+  animation: cue 2s var(--ease-in-out) infinite;
+}
+@keyframes cue {
+  from {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(48px);
+    opacity: 0;
+  }
+}
+
+/* ── Paralaks katmanları: yalnızca transform, JS yazar ───── */
+[data-parallax] [data-depth] {
+  backface-visibility: hidden;
+}
+
+/* ── Küçük ekran: daha sakin ──────────────────────────────── */
+@media (max-width: 760px) {
+  [data-reveal] {
+    --ry: 16px;
+  }
+  [data-reveal='heading'] {
+    --ry: 22px;
+  }
+  .js [data-reveal].is-in {
+    animation-duration: 640ms;
+  }
+  .float {
+    animation-duration: 9s;
+  }
+}
+
+/* ── Hareketi azalt: hemen görünür, süslemeler durur ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal]:not(.is-in),
+  .js [data-reveal].is-in {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .js .enter,
+  .page-enter,
+  .float,
+  .pulse-ring,
+  .scroll-cue__line::after,
+  .eyebrow--live::before {
+    animation: none !important;
+  }
+  .bar > span,
+  .bar-fill {
+    animation: none !important;
+    transform: none !important;
+  }
+  .draw-line {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .btn--primary::after,
+  .btn--ghost::after {
+    display: none;
+  }
+}

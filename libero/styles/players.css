@@ -1,0 +1,506 @@
+/* ───────────────────────────────────────────────────────────
+   Oyuncu analizi (v2) — dizin kartları (tipografik, fotoğrafsız), oyuncu sayfası, video rayı ve yan panel
+   Belirteçler styles/tokens.css'ten gelir. Hareket: yalnızca transform/opacity; hareket azaltmada kapalı.
+   ─────────────────────────────────────────────────────────── */
+
+/* ── Dizin ── */
+.pidx__bar {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+.pidx__search {
+  max-width: 640px;
+}
+.pidx__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pidx__count {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.pidx__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pidx__grid > li {
+  min-width: 0;
+}
+.pidx__feat {
+  grid-column: span 2;
+}
+@media (max-width: 1000px) {
+  .pidx__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 620px) {
+  .pidx__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pidx__feat {
+    grid-column: auto;
+  }
+}
+.pcard {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  height: 100%;
+  min-height: 292px;
+  padding: clamp(18px, 2vw, 26px);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+.pcard__mono {
+  position: absolute;
+  right: -6px;
+  bottom: -26px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(8rem, 13vw, 11rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(243 240 229 / 0.09);
+  pointer-events: none;
+  transition: transform 0.7s var(--ease-out), -webkit-text-stroke-color var(--dur) var(--ease);
+}
+.pcard:hover .pcard__mono,
+.pcard:focus-visible .pcard__mono {
+  transform: translate(-6px, -6px) scale(1.04);
+  -webkit-text-stroke-color: rgb(var(--accent-rgb) / 0.4);
+}
+.pcard__top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pcard__pos {
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.pcard__name {
+  position: relative;
+  display: grid;
+  margin-top: 6px;
+  line-height: 0.95;
+}
+.pcard__first {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ivory-3);
+}
+.pcard__last {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 3.4vw, 3rem);
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  overflow-wrap: anywhere;
+}
+.pcard__role {
+  position: relative;
+  font-size: 0.9rem;
+  color: var(--ivory-2);
+}
+.pcard__tag {
+  position: relative;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ivory-3);
+  max-width: 46ch;
+}
+.pcard__foot {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  align-self: end;
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ivory-4);
+}
+.pcard__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  color: var(--accent);
+}
+.pcard__go svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--dur) var(--ease-out);
+}
+.pcard:hover .pcard__go svg {
+  transform: translateX(4px);
+}
+.pcard--feat {
+  min-height: 292px;
+  background-image: radial-gradient(120% 120% at 100% 0%, rgb(var(--accent-rgb) / 0.14), transparent 60%), var(--grad-surface);
+}
+.pcard--feat .pcard__last {
+  font-size: clamp(2.8rem, 5.4vw, 4.8rem);
+}
+.pcard--feat .pcard__mono {
+  -webkit-text-stroke-color: rgb(var(--accent-rgb) / 0.2);
+  font-size: clamp(9rem, 18vw, 15rem);
+}
+
+/* ── Oyuncu sayfası ── */
+.pfacts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px clamp(20px, 3vw, 44px);
+  margin: clamp(22px, 3vw, 34px) 0 0;
+  padding: 18px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--line-2);
+}
+.pfacts li {
+  display: grid;
+  gap: 2px;
+}
+.pfacts .mono {
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ivory-3);
+}
+.pfacts strong {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1;
+  color: var(--accent);
+}
+.pa {
+  display: grid;
+  grid-template-columns: minmax(0, 290px) minmax(0, 1fr);
+  gap: clamp(28px, 4.5vw, 72px);
+  align-items: start;
+}
+.pa__aside,
+.pa__toc {
+  min-width: 0;
+}
+.pa__aside {
+  position: sticky;
+  top: calc(var(--header-h) + 20px);
+  display: grid;
+  gap: 16px;
+  max-height: calc(100vh - var(--header-h) - 40px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.pa__main {
+  min-width: 0;
+}
+.pa__id {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  overflow: hidden;
+}
+.pa__mono {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 4.2rem;
+  line-height: 0.9;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(var(--accent-rgb) / 0.55);
+}
+.pa__toc ol {
+  display: grid;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pa__toc li {
+  border-top: 1px solid var(--line);
+}
+.pa__toc li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.pa__toc a {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 2px;
+  font-size: 0.88rem;
+  color: var(--ivory-3);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+}
+.pa__toc a:hover,
+.pa__toc a:focus-visible {
+  color: var(--accent-hi);
+  padding-left: 8px;
+}
+.pa__toc .mono {
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+@media (max-width: 960px) {
+  .pa {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pa__aside {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+  .pa__id {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+  }
+  .pa__mono {
+    font-size: 3rem;
+  }
+  .pa__toc ol {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .pa__toc ol::-webkit-scrollbar {
+    display: none;
+  }
+  .pa__toc li,
+  .pa__toc li:last-child {
+    flex: none;
+    border: 0;
+  }
+  .pa__toc a {
+    padding: 9px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-1);
+    white-space: nowrap;
+  }
+  .pa__toc a:hover,
+  .pa__toc a:focus-visible {
+    padding-left: 14px;
+  }
+}
+@media (max-width: 760px) {
+  .pidx__bar .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .pidx__bar .chips::-webkit-scrollbar {
+    display: none;
+  }
+  .pidx__bar .chip {
+    flex: none;
+  }
+}
+.psec {
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+.psec .tsec__h {
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+.pa__lead {
+  margin: 0;
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--ivory);
+  max-width: 62ch;
+}
+.pcols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.pcols__warn {
+  border-color: rgb(var(--flare-rgb) / 0.35);
+}
+@media (max-width: 760px) {
+  .pcols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.ptechs {
+  margin-top: 26px;
+}
+.psim {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.psim__card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+}
+.psim__mono {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(var(--accent-rgb) / 0.45);
+  border-radius: 50%;
+  font-weight: 700;
+  color: var(--accent);
+}
+.psim__role {
+  display: block;
+  font-size: 0.82rem;
+}
+.psim__card > svg {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+.psrc {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.psrc li {
+  padding: 14px 18px;
+  border: 1px solid var(--line-2);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--r-2) var(--r-2) 0;
+  background: var(--grad-surface);
+}
+.psrc__t {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--accent-hi);
+  text-underline-offset: 3px;
+}
+.psrc__t svg {
+  flex: none;
+}
+.psrc__n {
+  margin: 6px 0 0;
+  font-size: 0.92rem;
+  color: var(--ivory-2);
+}
+.psrc__d {
+  margin: 6px 0 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ivory-4);
+}
+
+/* ── Video rayı ve yan panel ── */
+.vrail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(270px, 330px);
+  gap: 16px;
+  margin: 0;
+  padding: 4px 2px 18px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--accent-rgb) / 0.5) transparent;
+}
+.vrail > li {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+@media (max-width: 520px) {
+  .vrail {
+    grid-auto-columns: minmax(250px, 84%);
+  }
+}
+.pvp {
+  display: grid;
+  gap: 14px;
+}
+.pvp .eyebrow,
+.pvp p {
+  margin: 0;
+}
+.pvp__intro {
+  color: var(--ivory-2);
+  line-height: 1.6;
+}
+.pvp__techs {
+  display: grid;
+  gap: 8px;
+}
+.pvp__techs .chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pvp__techs a.chip {
+  text-decoration: none;
+}
+.pvp__sum {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  background: var(--grad-surface);
+}
+.pvp__sum .vbadges {
+  margin-top: 2px;
+}
+.pvp__note {
+  font-size: 0.86rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard__mono,
+  .pcard__go svg,
+  .pa__toc a {
+    transition: none;
+  }
+  .pcard:hover .pcard__mono,
+  .pcard:focus-visible .pcard__mono,
+  .pcard:hover .pcard__go svg {
+    transform: none;
+  }
+}
