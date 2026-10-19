@@ -36,7 +36,7 @@ TAIL = 2.6          # kapanış kartı seslendirmeden sonra ekranda kalır
 LENGTH_SCALE = 1.16  # 1'den büyük = daha ağır, dramatik okuma
 MAX_SECONDS = 60.0
 VISUAL_LEAD = 0.15  # görsel, sesten biraz önce gelir
-CROSSFADE = 0.25
+CROSSFADE = 0.1  # glitch kesmesi geçişi örter; uzun olursa iki sayı üst üste biner
 
 
 def ensure_model():
