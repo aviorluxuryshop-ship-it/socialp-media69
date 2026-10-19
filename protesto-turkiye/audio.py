@@ -203,10 +203,11 @@ def _listen(text, wav, sr):
     idx = np.arange(0, len(wav), sr / 16000).astype(int)
     segments, _ = _whisper.transcribe(wav[idx], language="tr", word_timestamps=True)
     want = _words(text)
-    heard = [(_closest(tok, want), w.end) for seg in segments for w in seg.words
-             for tok in _words(w.word)]
+    raw = [(tok, w.end) for seg in segments for w in seg.words for tok in _words(w.word)]
+    heard = [(_closest(tok, want), end) for tok, end in raw]
     match = difflib.SequenceMatcher(None, want, [h[0] for h in heard], autojunk=False)
-    score = match.ratio()
+    # Puan, Whisper'ın duyduğu ham kelimelerle: "olmalıdır" ≠ "olmalı".
+    score = difflib.SequenceMatcher(None, want, [r[0] for r in raw], autojunk=False).ratio()
     blocks = [b for b in match.get_matching_blocks() if b.size]
     if blocks and blocks[-1].a + blocks[-1].size == len(want):
         last = blocks[-1].b + blocks[-1].size - 1
@@ -215,7 +216,7 @@ def _listen(text, wav, sr):
             fade = min(cut, int(0.04 * sr))
             wav = wav[:cut].copy()
             wav[cut - fade:] *= np.linspace(1, 0, fade, dtype=np.float32)
-            score = difflib.SequenceMatcher(None, want, [h[0] for h in heard[: last + 1]],
+            score = difflib.SequenceMatcher(None, want, [r[0] for r in raw[: last + 1]],
                                             autojunk=False).ratio()
     return score, wav
 
