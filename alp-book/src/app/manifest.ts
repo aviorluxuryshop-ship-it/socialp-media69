@@ -4,12 +4,12 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Alp Book",
     short_name: "Alp Book",
-    description: "Efehan'ın yaşam, alışkanlık ve sınav defteri.",
-    start_url: "/",
+    description: "Günlük rutinlerini tek tabloda kaydet, ilerlemeni analiz et.",
+    start_url: "/takip",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#000000",
-    theme_color: "#000000",
+    background_color: "#08080a",
+    theme_color: "#08080a",
     lang: "tr",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },

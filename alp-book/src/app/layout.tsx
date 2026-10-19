@@ -6,7 +6,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Alp Book",
-  description: "Efehan'ın yaşam, alışkanlık ve sınav defteri.",
+  description: "Günlük rutinlerini tek tabloda kaydet, ilerlemeni analiz et.",
   applicationName: "Alp Book",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Alp Book", statusBarStyle: "black-translucent" },
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#08080a",
   viewportFit: "cover",
   width: "device-width",
   initialScale: 1,

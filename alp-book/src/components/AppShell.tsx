@@ -1,7 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import { motion } from "framer-motion";
-import { GraduationCap, Grid3x3, LayoutDashboard, Settings } from "lucide-react";
+import { BarChart3, GraduationCap, LayoutDashboard, Settings, Table2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
@@ -9,9 +10,10 @@ import { useStore } from "@/lib/store";
 import { Onboarding } from "./Onboarding";
 
 const NAV = [
-  { href: "/", label: "Bugün", icon: LayoutDashboard },
-  { href: "/matrix", label: "Matris", icon: Grid3x3 },
-  { href: "/exams", label: "Dersler", icon: GraduationCap },
+  { href: "/", label: "Özet", icon: LayoutDashboard },
+  { href: "/takip", label: "Takip", icon: Table2 },
+  { href: "/analiz", label: "Analiz", icon: BarChart3 },
+  { href: "/exams", label: "Sınavlar", icon: GraduationCap },
   { href: "/settings", label: "Ayarlar", icon: Settings },
 ];
 
@@ -39,37 +41,41 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (!hydrated && !timedOut) return <Splash />;
   if (!onboarded) return <Onboarding />;
 
+  const isOn = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
+
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[1400px]">
-      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-line px-4 py-8 md:flex">
-        <p className="mb-10 px-3 font-mono text-lg font-bold tracking-[0.3em] text-neon text-glow">ALP BOOK</p>
-        <nav className="flex flex-col gap-1">
-          {NAV.map((n) => {
-            const on = n.href === "/" ? path === "/" : path.startsWith(n.href);
-            return (
-              <Link key={n.href} href={n.href} className="relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-colors" style={{ color: on ? "#00ff66" : "#8b8b93" }}>
-                {on && <motion.span layoutId="side-pill" className="absolute inset-0 rounded-xl border border-neon/30 bg-neon/10" />}
-                <n.icon size={18} className="relative" />
-                <span className="relative">{n.label}</span>
-              </Link>
-            );
-          })}
+    <div className="mx-auto flex min-h-dvh max-w-[1480px]">
+      <aside className="sticky top-0 hidden h-dvh w-[232px] shrink-0 flex-col border-r border-line px-4 py-7 md:flex">
+        <Link href="/" className="mb-9 flex items-center gap-2.5 px-3">
+          <span className="grid h-7 w-7 place-items-center rounded-lg border border-line-2 bg-raised text-[13px] font-bold text-accent">A</span>
+          <span className="text-[15px] font-semibold tracking-tight">Alp Book</span>
+        </Link>
+        <nav className="flex flex-col gap-0.5" aria-label="Ana menü">
+          {NAV.map((n) => (
+            <Link
+              key={n.href}
+              href={n.href}
+              aria-current={isOn(n.href) ? "page" : undefined}
+              className={clsx("relative flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium transition-colors", isOn(n.href) ? "text-text" : "text-mute hover:text-text")}
+            >
+              {isOn(n.href) && <motion.span layoutId="side-pill" className="absolute inset-0 rounded-[10px] bg-raised" transition={{ duration: 0.2 }} />}
+              <n.icon size={17} className={clsx("relative", isOn(n.href) && "text-accent")} />
+              <span className="relative">{n.label}</span>
+            </Link>
+          ))}
         </nav>
       </aside>
 
-      <main className="min-w-0 flex-1 px-4 pb-28 pt-6 safe-top md:px-8 md:pb-10 md:pt-8">{children}</main>
+      <main className="min-w-0 flex-1 px-4 pb-28 pt-6 safe-top md:px-8 md:pb-12 md:pt-9">{children}</main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-black/85 backdrop-blur-xl md:hidden safe-bottom">
-        <div className="mx-auto grid max-w-md grid-cols-4">
-          {NAV.map((n) => {
-            const on = n.href === "/" ? path === "/" : path.startsWith(n.href);
-            return (
-              <Link key={n.href} href={n.href} className="flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold" style={{ color: on ? "#00ff66" : "#6b6b73" }}>
-                <n.icon size={21} style={on ? { filter: "drop-shadow(0 0 6px #00ff66)" } : undefined} />
-                {n.label}
-              </Link>
-            );
-          })}
+      <nav aria-label="Ana menü" className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ink/90 backdrop-blur-xl md:hidden safe-bottom">
+        <div className="mx-auto grid max-w-lg grid-cols-5">
+          {NAV.map((n) => (
+            <Link key={n.href} href={n.href} aria-current={isOn(n.href) ? "page" : undefined} className={clsx("flex min-h-[52px] flex-col items-center justify-center gap-1 text-[10px] font-medium", isOn(n.href) ? "text-accent" : "text-faint")}>
+              <n.icon size={20} />
+              {n.label}
+            </Link>
+          ))}
         </div>
       </nav>
     </div>
@@ -79,8 +85,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 function Splash() {
   return (
     <div className="grid min-h-dvh place-items-center">
-      <motion.p className="font-mono text-xl font-bold tracking-[0.35em] text-neon text-glow" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 1.4 }}>
-        ALP BOOK
+      <motion.p className="text-lg font-semibold tracking-tight text-mute" animate={{ opacity: [0.35, 1, 0.35] }} transition={{ repeat: Infinity, duration: 1.6 }}>
+        Alp Book
       </motion.p>
     </div>
   );
