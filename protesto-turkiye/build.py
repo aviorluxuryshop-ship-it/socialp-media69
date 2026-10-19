@@ -3,12 +3,14 @@
     python3 build.py            # 12 videonun hepsi
     python3 build.py 01 07      # yalnızca adı bu öneklerle başlayanlar
     python3 build.py --jobs 3   # aynı anda kaç video işlensin
+    python3 build.py --voice piper  # XTTS yerine küçük Piper sesi
 
 Çıktı: videolar/<ad>.mp4 (1080x1920, 30 fps, en fazla 60 sn) ve
 kapaklar/<ad>.jpg.
 """
 
 import argparse
+import functools
 import subprocess
 import sys
 import tempfile
@@ -21,6 +23,7 @@ import cv2
 import numpy as np
 
 import audio
+import voiceover
 import visuals as vs
 from content import VIDEOS
 
@@ -30,6 +33,8 @@ COVERS = HERE / "kapaklar"
 CACHE = HERE / ".cache"
 MODEL_URL = "https://huggingface.co/rhasspy/piper-voices/resolve/main/tr/tr_TR/dfki/medium/"
 MODEL = "tr_TR-dfki-medium.onnx"
+XTTS_URL = "https://huggingface.co/coqui/XTTS-v2/resolve/main/"
+XTTS_DIR = CACHE / "xtts-v2"
 
 INTRO = 1.0         # konu başlığı kartı; giriş sorusu hemen ardından gelir
 TAIL = 2.6          # kapanış kartı seslendirmeden sonra ekranda kalır
@@ -47,6 +52,22 @@ def ensure_model():
             print(f"indiriliyor: {name}")
             urllib.request.urlretrieve(MODEL_URL + name, path)
     return CACHE / MODEL
+
+
+def ensure_xtts():
+    XTTS_DIR.mkdir(parents=True, exist_ok=True)
+    for name in ("config.json", "vocab.json", "speakers_xtts.pth", "model.pth"):
+        path = XTTS_DIR / name
+        if not path.exists():
+            print(f"indiriliyor: XTTS {name}")
+            urllib.request.urlretrieve(XTTS_URL + name, path)
+    return XTTS_DIR
+
+
+def make_voice(kind):
+    if kind == "xtts":
+        return audio.XttsVoice(ensure_xtts(), CACHE / "xtts")
+    return audio.Voice(ensure_model())
 
 
 def timeline(video, timings, total):
@@ -148,6 +169,9 @@ def render(video, lines, scenes, total, audio_path, out_path):
 
 def plan(video, voice, tmp):
     """Seslendirir ve zaman çizelgesini çıkarır; video 60 sn'yi aşarsa hızlandırır."""
+    rec = voiceover.recording(video["slug"])
+    if rec:
+        return plan_recorded(video, rec)
     scale = LENGTH_SCALE
     while True:
         deep, timings = audio.build_voice(voice, video["lines"], tmp, INTRO, scale)
@@ -160,9 +184,24 @@ def plan(video, voice, tmp):
     return deep, total, lines, scenes
 
 
-def build(video):
+def plan_recorded(video, path):
+    """seslendirme/ içindeki hazır kaydı kullanır; satır zamanlarını kayıttan çıkarır."""
+    speech = voiceover.load(path)
+    room = MAX_SECONDS - INTRO - TAIL - 0.1
+    factor = len(speech) / audio.SR / room
+    if factor > 1:
+        speech = voiceover.speed_up(speech, factor)
+    rel = voiceover.line_timings(speech, audio.SR, video["lines"])
+    deep = np.concatenate([np.zeros(int(INTRO * audio.SR), np.float32), speech])
+    timings = [(INTRO + s, INTRO + e) for s, e in rel]
+    total = INTRO + len(speech) / audio.SR + TAIL
+    lines, scenes = timeline(video, timings, total)
+    return deep, total, lines, scenes
+
+
+def build(video, voice_kind="xtts"):
     started = time.time()
-    voice = audio.Voice(ensure_model())
+    voice = make_voice(voice_kind)
     with tempfile.TemporaryDirectory() as tmp:
         deep, total, lines, scenes = plan(video, voice, tmp)
         hits = [s["t"] for s in scenes]
@@ -185,13 +224,22 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("only", nargs="*", help="ad önekleri, ör. 01 07")
     ap.add_argument("--jobs", type=int, default=3)
+    ap.add_argument("--voice", choices=["xtts", "piper"], default="xtts")
     args = ap.parse_args()
     todo = [v for v in VIDEOS if not args.only or any(v["slug"].startswith(p) for p in args.only)]
     if not todo:
         sys.exit("eşleşen video yok")
-    ensure_model()
+    voice = make_voice(args.voice)
+    if args.voice == "xtts":
+        # XTTS büyük bir model: bütün satırları önce tek süreçte seslendirip
+        # önbelleğe al, paralel işlerde model hiç yüklenmesin.
+        for video in todo:
+            if not voiceover.recording(video["slug"]):
+                with tempfile.TemporaryDirectory() as tmp:
+                    plan(video, voice, tmp)
+            print(f"{video['slug']}: seslendirildi", flush=True)
     with Pool(min(args.jobs, len(todo))) as pool:
-        for slug, total in pool.imap_unordered(build, todo):
+        for slug, total in pool.imap_unordered(functools.partial(build, voice_kind=args.voice), todo):
             pass
 
 

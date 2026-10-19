@@ -43,13 +43,16 @@ görüntü" riski yok.
 
 - **Seslendirme:** referans videodaki ses bir TikTok hesabına ait olduğu için
   kopyalanmadı. Yerine ücretsiz ve çevrimdışı çalışan
-  [Piper TTS](https://github.com/rhasspy/piper)'in Türkçe erkek sesi
-  (`tr_TR-dfki-medium`) kullanıldı; perdesi düşürülüp kalınlaştırıldı ve
-  salon yankısı eklendi, böylece referanstaki gibi derin, dramatik bir
-  anlatıcıya benziyor.
-  Bu sesin eğitim verisi **CC BY-NC-SA 4.0** lisanslı: kanal para kazanmıyorsa
-  sorun yok; para kazanmaya başlarsa sesi değiştirin (kendi sesiniz ya da
+  [XTTS v2](https://huggingface.co/coqui/XTTS-v2)'nin derin erkek sesi
+  ("Damien Black") kullanıldı; Türkçeyi doğal bir anlatıcı gibi okur. Her satır
+  ayrı seslendirilir, Whisper'a dinletilir; XTTS'in kısa cümlelerin sonuna
+  eklediği fazladan heceler kesilir, bozuk çıkan satır yeniden üretilir.
+  XTTS modeli **Coqui Public Model License** ile lisanslı ve ticari kullanıma
+  kapalı: kanal para kazanmaya başlarsa sesi değiştirin (kendi sesiniz ya da
   ücretli bir ses).
+- **Kendi kaydınız:** `seslendirme/<video-adı>.mp3` dosyası koyarsanız (ör.
+  ElevenLabs'ten ya da kendi sesinizle) video o kaydı kullanır; satırların
+  zamanı Whisper ile kayıttan çıkarılır, altyazılar ona göre akar.
 - **Müzik:** hiçbir kayıt kullanılmadı; karanlık drone, bas vuruşları,
   geçiş efektleri ve kapanıştaki yükselme `audio.py` içinde sentezleniyor.
   Telif uyarısı almaz.
@@ -60,9 +63,11 @@ Metinler ve ekrandaki rakamlar `content.py` içinde. Bir satırı değiştirip
 yeniden üretmek yeterli:
 
 ```bash
-pip install piper-tts opencv-python-headless scipy numpy pillow
-python3 build.py              # 12 videonun hepsi (Piper sesi ilk seferde indirilir)
-python3 build.py 03 08        # yalnızca 03 ve 08
+pip install torch torchaudio torchcodec --index-url https://download.pytorch.org/whl/cpu
+pip install coqui-tts faster-whisper opencv-python-headless scipy numpy pillow
+COQUI_TOS_AGREED=1 python3 build.py   # 12 videonun hepsi (XTTS modeli ilk seferde iner, ~1,9 GB)
+python3 build.py 03 08                # yalnızca 03 ve 08
+python3 build.py --voice piper        # torch kurmadan, daha robotik Piper sesiyle
 ```
 
 ffmpeg (rubberband filtresiyle) ve Inter yazı tipi sistemde kurulu olmalı;

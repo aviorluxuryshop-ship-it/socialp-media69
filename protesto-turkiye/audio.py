@@ -1,8 +1,9 @@
 """Seslendirme, ses efekti ve müzik.
 
-Ses: Piper TTS'in Türkçe erkek sesi (tr_TR-dfki-medium), çevrimdışı ve
-ücretsiz. Referans videodaki gibi derin, yankılı bir anlatıcıya benzemesi için
-perdesi düşürülür, alt frekansları kalınlaştırılır, sıkıştırılır ve salona
+Ses: varsayılan olarak XTTS v2'nin derin erkek sesi (Damien Black), çevrimdışı
+ve ücretsiz; Türkçeyi doğal bir anlatıcı gibi okur. XTTS kurulu değilse Piper
+TTS'in Türkçe sesi (tr_TR-dfki-medium) kullanılır; o daha robotik olduğu için
+perdesi düşürülür. Her iki ses de kalınlaştırılır, sıkıştırılır ve salona
 yayılan bir yankı eklenir.
 
 Müzik: telif sorunu olmasın diye hiçbir kayıt kullanılmaz; karanlık drone,
@@ -10,6 +11,7 @@ kalp atışı gibi bas vuruşları, geçiş "whoosh"ları ve kapanıştaki yüks
 burada sentezlenir.
 """
 
+import hashlib
 import re
 import subprocess
 import wave
@@ -101,6 +103,10 @@ def word_weights(show):
 
 
 class Voice:
+    """Piper: küçük ve hızlı, ama robotik; perdesi düşürülerek kullanılır."""
+    sr = PIPER_SR
+    pitch = 0.87
+
     def __init__(self, model_path):
         from piper import PiperVoice, SynthesisConfig
 
@@ -112,6 +118,106 @@ class Voice:
         chunks = [c.audio_float_array for c in self.voice.synthesize(text, syn_config=cfg)]
         audio = np.concatenate(chunks).astype(np.float32)
         return trim_silence(audio, PIPER_SR)
+
+
+class XttsVoice:
+    """XTTS v2: doğal Türkçe anlatıcı. Model yalnızca önbellekte olmayan bir satır
+    için yüklenir; üretilen her satır .cache/xtts/ içinde saklanır."""
+    sr = 24000
+    pitch = 1.0
+    SPEAKER = "Damien Black"
+    BASE_SPEED = 1.10  # length_scale 1.16 ≈ 0.95 hız: ağır ama doğal
+
+    def __init__(self, model_dir, cache_dir):
+        self.model_dir = Path(model_dir)
+        self.cache = Path(cache_dir)
+        self.cache.mkdir(parents=True, exist_ok=True)
+        self.model = None
+
+    def _load(self):
+        import torch
+        from TTS.tts.configs.xtts_config import XttsConfig
+        from TTS.tts.models.xtts import Xtts
+
+        cfg = XttsConfig()
+        cfg.load_json(str(self.model_dir / "config.json"))
+        self.model = Xtts.init_from_config(cfg)
+        self.model.load_checkpoint(cfg, checkpoint_dir=str(self.model_dir), use_deepspeed=False)
+        self.torch = torch
+
+    def line(self, text, length_scale):
+        speed = round(self.BASE_SPEED / length_scale, 3)
+        key = hashlib.sha1(f"{self.SPEAKER}|{speed}|{text}".encode()).hexdigest()[:16]
+        path = self.cache / f"{key}.wav"
+        if not path.exists():
+            write_wav(path, self._best_take(text, speed), self.sr)
+        audio, _ = read_wav(path)
+        return trim_silence(audio, self.sr)
+
+    def _best_take(self, text, speed, tries=5):
+        """XTTS kısa cümlelerin sonuna bazen fazladan hece ekler ya da bir
+        kelimeyi yutar. Her denemeyi Whisper'a dinletir, sondaki fazlalığı keser,
+        metne en çok uyanı seçer."""
+        if self.model is None:
+            self._load()
+        spk = self.model.speaker_manager.speakers[self.SPEAKER]
+        best = (-1.0, None)
+        for seed in range(1, tries + 1):
+            self.torch.manual_seed(seed)
+            out = self.model.inference(text, "tr", spk["gpt_cond_latent"], spk["speaker_embedding"],
+                                       temperature=0.65, speed=speed, enable_text_splitting=False)
+            wav = trim_silence(np.asarray(out["wav"], np.float32), self.sr)
+            score, wav = _listen(text, wav, self.sr)
+            if score > best[0]:
+                best = (score, wav)
+            if score >= 0.97:
+                break
+        return best[1]
+
+
+_whisper = None
+
+
+def _words(text):
+    text = speakable(text).replace("I", "ı").replace("İ", "i").lower()
+    return re.findall(r"[a-zçğıöşüâîû]+", text)
+
+
+def _closest(token, vocab):
+    """Whisper'ın biraz farklı yazdığı kelimeyi (sevep → sebep) metindekine eşler."""
+    import difflib
+
+    hit = difflib.get_close_matches(token, vocab, n=1, cutoff=0.75)
+    return hit[0] if hit else token
+
+
+def _listen(text, wav, sr):
+    """(metne uyum 0..1, sondaki fazlalığı kesilmiş ses)."""
+    global _whisper
+    import difflib
+
+    from faster_whisper import WhisperModel
+
+    if _whisper is None:
+        _whisper = WhisperModel("small", compute_type="int8")
+    idx = np.arange(0, len(wav), sr / 16000).astype(int)
+    segments, _ = _whisper.transcribe(wav[idx], language="tr", word_timestamps=True)
+    want = _words(text)
+    heard = [(_closest(tok, want), w.end) for seg in segments for w in seg.words
+             for tok in _words(w.word)]
+    match = difflib.SequenceMatcher(None, want, [h[0] for h in heard], autojunk=False)
+    score = match.ratio()
+    blocks = [b for b in match.get_matching_blocks() if b.size]
+    if blocks and blocks[-1].a + blocks[-1].size == len(want):
+        last = blocks[-1].b + blocks[-1].size - 1
+        if last < len(heard) - 1:  # son kelimeden sonra duyulan her şey fazlalık
+            cut = min(len(wav), int((heard[last][1] + 0.06) * sr))
+            fade = min(cut, int(0.04 * sr))
+            wav = wav[:cut].copy()
+            wav[cut - fade:] *= np.linspace(1, 0, fade, dtype=np.float32)
+            score = difflib.SequenceMatcher(None, want, [h[0] for h in heard[: last + 1]],
+                                            autojunk=False).ratio()
+    return score, wav
 
 
 def trim_silence(audio, sr, threshold=0.015, keep=0.03):
@@ -142,14 +248,15 @@ def read_wav(path):
         return data, w.getframerate()
 
 
-def deepen(raw, work_dir):
-    """Ham Piper sesini derin, dolgun bir anlatıcı sesine çevirir (44.1 kHz mono)."""
+def deepen(raw, work_dir, sr=PIPER_SR, pitch=0.87):
+    """Ham sesi derin, dolgun bir anlatıcı sesine çevirir (44.1 kHz mono)."""
     src = Path(work_dir) / "voice_raw.wav"
     dst = Path(work_dir) / "voice_deep.wav"
-    write_wav(src, raw, PIPER_SR)
+    write_wav(src, raw, sr)
+    shift = [f"rubberband=pitch={pitch}:tempo=1:formant=shifted:pitchq=quality"] if pitch != 1 else []
     chain = ",".join([
         f"aresample={SR}",
-        "rubberband=pitch=0.87:tempo=1:formant=shifted:pitchq=quality",
+        *shift,
         "highpass=f=55",
         "equalizer=f=120:t=q:w=0.9:g=5",
         "equalizer=f=380:t=q:w=1.2:g=-2",
@@ -194,27 +301,27 @@ def build_voice(voice, lines, work_dir, intro, length_scale):
     Dönüş: (derinleştirilmiş mono ses, satır başlangıç/bitiş zamanları)."""
     pieces, timings = [], []
     cursor = intro
-    pieces.append(np.zeros(int(intro * PIPER_SR), np.float32))
+    pieces.append(np.zeros(int(intro * voice.sr), np.float32))
     for i, line in enumerate(lines):
         text = line["say"] or speakable(line["show"])
         audio = voice.line(text, length_scale * line.get("pace", 1.0))
         is_cta = line["v"] and line["v"]["kind"] == "cta"
         if is_cta:
             gap = 0.55  # kapanış öncesi yükselme için yer
-            pieces.append(np.zeros(int(gap * PIPER_SR), np.float32))
+            pieces.append(np.zeros(int(gap * voice.sr), np.float32))
             cursor += gap
         start = cursor
         pieces.append(audio)
-        cursor += len(audio) / PIPER_SR
+        cursor += len(audio) / voice.sr
         timings.append((start, cursor))
         pause = line["pause"]
         if pause is None:
             pause = 0.12 if line["show"].rstrip("*").endswith("...") else 0.34
         if i < len(lines) - 1:
-            pieces.append(np.zeros(int(pause * PIPER_SR), np.float32))
+            pieces.append(np.zeros(int(pause * voice.sr), np.float32))
             cursor += pause
     raw = np.concatenate(pieces)
-    deep = deepen(raw, work_dir)
+    deep = deepen(raw, work_dir, voice.sr, voice.pitch)
     return deep, timings
 
 
