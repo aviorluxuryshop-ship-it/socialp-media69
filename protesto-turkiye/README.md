@@ -1,8 +1,17 @@
 # Protesto Türkiye — kısa videolar
 
 "Protesto Türkiye" kanalı için 12 dikey protesto videosu (1080x1920, 30 fps,
-her biri 1 dakikanın altında). Hepsi barışçıl protesto çağrısıdır ve
-**"Sen de bize katıl. Bize destek ol."** kapanışıyla biter.
+her biri 1 dakikanın altında). Hepsi barışçıl protesto çağrısıdır ve aynı
+yapıdadır:
+
+1. **Giriş (herkese seslenir):** "Sence neden protesto yapılır? Çünkü ortada
+   halkın beğenmediği bir sebep vardır. Peki biz neden yapmıyoruz? Sebep yok
+   diyorsunuz. Oysa sebep çok. İşte biri: …" ve konu açıklanır.
+2. **Nedir?** Konunun ne olduğu bir iki cümleyle anlatılır (ör. enflasyon
+   nedir).
+3. **Ne zararı var?** Halka etkisi ve kaynaklı rakamlar.
+4. **Kapanış:** **"Sen de protesto etmek istiyorsan, bizden haber bekle ve
+   takipte kal. Bu sayfayı yay."**
 
 | # | Dosya | Konu |
 | --- | --- | --- |

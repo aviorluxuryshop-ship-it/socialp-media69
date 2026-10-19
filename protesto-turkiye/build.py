@@ -31,7 +31,7 @@ CACHE = HERE / ".cache"
 MODEL_URL = "https://huggingface.co/rhasspy/piper-voices/resolve/main/tr/tr_TR/dfki/medium/"
 MODEL = "tr_TR-dfki-medium.onnx"
 
-INTRO = 1.7         # seslendirme başlamadan önce başlık kartı
+INTRO = 1.0         # konu başlığı kartı; giriş sorusu hemen ardından gelir
 TAIL = 2.6          # kapanış kartı seslendirmeden sonra ekranda kalır
 LENGTH_SCALE = 1.16  # 1'den büyük = daha ağır, dramatik okuma
 MAX_SECONDS = 60.0
@@ -175,7 +175,7 @@ def build(video):
         out = OUT / f"{video['slug']}.mp4"
         render(video, lines, scenes, total, wav, out)
     COVERS.mkdir(exist_ok=True)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "1.2", "-i", str(out), "-frames:v", "1",
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "0.6", "-i", str(out), "-frames:v", "1",
                     "-q:v", "3", str(COVERS / f"{video['slug']}.jpg")], check=True)
     print(f"{video['slug']}: {total:.1f} sn, {time.time() - started:.0f} sn'de üretildi", flush=True)
     return video["slug"], total

@@ -3,11 +3,15 @@
 TikTok / Instagram Reels / YouTube Shorts için hazır metinler. Kaynak
 linkleri README.md'de; yorumlarda soran olursa oradan paylaşılabilir.
 
+Her açıklamanın sonuna şu satırı ekleyin:
+
+> Sen de protesto etmek istiyorsan bizden haber bekle, takipte kal. Bu sayfayı yay. 📢
+
 ---
 
 ### 01 · Enflasyon
 TÜİK'e göre %29,73, ENAG'a göre %46,61. Rakam düşse bile fiyatlar düşmüyor.
-Bu bir rakam değil, bu bizim hayatımız. Sen de bize katıl, bize destek ol.
+Paranın her gün biraz daha eridiği bir ülkede protesto için sebep çok.
 
 `#protestotürkiye #enflasyon #hayatpahalılığı #zam #türkiye`
 

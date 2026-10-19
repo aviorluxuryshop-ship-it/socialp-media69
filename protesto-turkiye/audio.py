@@ -197,7 +197,7 @@ def build_voice(voice, lines, work_dir, intro, length_scale):
     pieces.append(np.zeros(int(intro * PIPER_SR), np.float32))
     for i, line in enumerate(lines):
         text = line["say"] or speakable(line["show"])
-        audio = voice.line(text, length_scale)
+        audio = voice.line(text, length_scale * line.get("pace", 1.0))
         is_cta = line["v"] and line["v"]["kind"] == "cta"
         if is_cta:
             gap = 0.55  # kapanış öncesi yükselme için yer

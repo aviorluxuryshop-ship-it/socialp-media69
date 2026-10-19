@@ -741,18 +741,22 @@ def v_cta(canvas, v, tl, ctx):
     blit(canvas, m_red_s, W / 2, 470, DEEP_RED, o1, g_s, RED, 1.1)
     blit(canvas, m_white_s, W / 2, 470, WHITE, o1)
     o2 = ease_out((tl - 0.25) / 0.3)
-    draw_text(canvas, "SEN DE", INTER_B, 52, W / 2, 720, WHITE, o2, tracking=14, glow_gain=0.4)
-    o3 = ease_out((tl - 0.4) / 0.3)
-    draw_text(canvas, "BİZE KATIL", ANTON, 200, W / 2, 870, WHITE, o3, glow_gain=0.8,
-              scale=1 + (1 - ease_out((tl - 0.4) / 0.35)) * 0.1)
-    o4 = ease_out((tl - 1.0) / 0.3)
-    draw_text(canvas, "BİZE DESTEK OL", ANTON, 128, W / 2, 1110, RED, o4, glow_gain=0.8,
-              scale=1 + (1 - ease_out((tl - 1.0) / 0.35)) * 0.1)
-    o5 = ease_out((tl - 1.5) / 0.4)
-    draw_rect(canvas, 110, 1258, 230, 1262, DEEP_RED, o5)
-    draw_rect(canvas, W - 230, 1258, W - 110, 1262, DEEP_RED, o5)
-    draw_text(canvas, "PROTESTO TÜRKİYE", INTER_B, 38, W / 2, 1260, WHITE, o5, tracking=9, glow_gain=0.3)
-    draw_text(canvas, "BARIŞÇIL · KARARLI · BİRLİKTE", INTER_SB, 28, W / 2, 1328, GREY, o5,
+    draw_text(canvas, "SEN DE PROTESTO ETMEK İSTİYORSAN", INTER_B, 40, W / 2, 700, WHITE, o2,
+              tracking=4, glow_gain=0.4)
+    o3 = ease_out((tl - 2.4) / 0.3)
+    draw_text(canvas, "BİZDEN HABER BEKLE", INTER_XB, 64, W / 2, 780, WHITE, o3, tracking=3,
+              glow_gain=0.5)
+    o4 = ease_out((tl - 3.7) / 0.3)
+    draw_text(canvas, "TAKİPTE KAL", ANTON, fit_size(["TAKİPTE KAL"], ANTON, 900, 200), W / 2, 972,
+              WHITE, o4, glow_gain=0.8, scale=1 + (1 - ease_out((tl - 3.7) / 0.35)) * 0.1)
+    o5 = ease_out((tl - 4.9) / 0.3)
+    draw_text(canvas, "BU SAYFAYI YAY", ANTON, fit_size(["BU SAYFAYI YAY"], ANTON, 900, 132), W / 2,
+              1182, RED, o5, glow_gain=0.8, scale=1 + (1 - ease_out((tl - 4.9) / 0.35)) * 0.1)
+    o6 = ease_out((tl - 5.6) / 0.4)
+    draw_rect(canvas, 110, 1310, 230, 1314, DEEP_RED, o6)
+    draw_rect(canvas, W - 230, 1288, W - 110, 1314, DEEP_RED, o6)
+    draw_text(canvas, "PROTESTO TÜRKİYE", INTER_B, 38, W / 2, 1312, WHITE, o6, tracking=9, glow_gain=0.3)
+    draw_text(canvas, "BARIŞÇIL · KARARLI · BİRLİKTE", INTER_SB, 28, W / 2, 1380, GREY, o6,
               tracking=6, glow=False)
 
 
