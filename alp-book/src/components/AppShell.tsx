@@ -2,16 +2,18 @@
 
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { BarChart3, GraduationCap, LayoutDashboard, Settings, Table2 } from "lucide-react";
+import { BarChart3, CalendarDays, GraduationCap, LayoutDashboard, Settings, Table2, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { installGlobalSounds, sfx } from "@/lib/sound";
 import { useStore } from "@/lib/store";
 import { Onboarding } from "./Onboarding";
 
 const NAV = [
   { href: "/", label: "Özet", icon: LayoutDashboard },
   { href: "/takip", label: "Takip", icon: Table2 },
+  { href: "/takvim", label: "Takvim", icon: CalendarDays },
   { href: "/analiz", label: "Analiz", icon: BarChart3 },
   { href: "/exams", label: "Sınavlar", icon: GraduationCap },
   { href: "/settings", label: "Ayarlar", icon: Settings },
@@ -21,6 +23,13 @@ export function AppShell({ children }: { children: ReactNode }) {
   const hydrated = useStore((s) => s.hydrated);
   const onboarded = useStore((s) => s.profile.onboarded);
   const path = usePathname();
+  const soundOn = useStore((s) => s.profile.soundOn);
+  const setProfile = useStore((s) => s.setProfile);
+  const toggleSound = () => {
+    setProfile({ soundOn: !soundOn });
+    if (!soundOn) sfx.preview();
+  };
+  const SoundBtn = soundOn ? Volume2 : VolumeX;
   const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
@@ -29,6 +38,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     const ready = () => useStore.setState({ hydrated: true });
     if (useStore.persist.hasHydrated()) ready();
     const off = useStore.persist.onFinishHydration(ready);
+    installGlobalSounds();
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
@@ -56,6 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               key={n.href}
               href={n.href}
               aria-current={isOn(n.href) ? "page" : undefined}
+              onClick={() => sfx.nav()}
               className={clsx("relative flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium transition-colors", isOn(n.href) ? "text-text" : "text-mute hover:text-text")}
             >
               {isOn(n.href) && <motion.span layoutId="side-pill" className="absolute inset-0 rounded-[10px] bg-raised" transition={{ duration: 0.2 }} />}
@@ -64,14 +75,21 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
+        <button type="button" onClick={toggleSound} aria-pressed={soundOn} className="mt-auto flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium text-mute transition-colors hover:text-text">
+          <SoundBtn size={17} /> {soundOn ? "Sesler açık" : "Sesler kapalı"}
+        </button>
       </aside>
 
-      <main className="min-w-0 flex-1 px-4 pb-28 pt-6 safe-top md:px-8 md:pb-12 md:pt-9">{children}</main>
+      <button type="button" onClick={toggleSound} aria-pressed={soundOn} aria-label={soundOn ? "Sesleri kapat" : "Sesleri aç"} className="fixed right-3 top-3 z-30 grid h-9 w-9 place-items-center rounded-full border border-line bg-ink/80 text-mute backdrop-blur md:hidden" style={{ marginTop: "env(safe-area-inset-top)" }}>
+        <SoundBtn size={16} />
+      </button>
+
+      <main className="min-w-0 flex-1 px-4 pb-28 pt-14 safe-top md:px-8 md:pb-12 md:pt-9">{children}</main>
 
       <nav aria-label="Ana menü" className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ink/90 backdrop-blur-xl md:hidden safe-bottom">
-        <div className="mx-auto grid max-w-lg grid-cols-5">
+        <div className="mx-auto grid max-w-lg grid-cols-6">
           {NAV.map((n) => (
-            <Link key={n.href} href={n.href} aria-current={isOn(n.href) ? "page" : undefined} className={clsx("flex min-h-[52px] flex-col items-center justify-center gap-1 text-[10px] font-medium", isOn(n.href) ? "text-accent" : "text-faint")}>
+            <Link key={n.href} href={n.href} onClick={() => sfx.nav()} aria-current={isOn(n.href) ? "page" : undefined} className={clsx("flex min-h-[52px] flex-col items-center justify-center gap-1 text-[10px] font-medium", isOn(n.href) ? "text-accent" : "text-faint")}>
               <n.icon size={20} />
               {n.label}
             </Link>

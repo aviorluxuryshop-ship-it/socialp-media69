@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { Minus, Plus, X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
+import { sfx } from "@/lib/sound";
 
 /**
  * Sayısal giriş. Yazarken doğrular: geçerliyse hemen kaydeder, geçersizse mesaj gösterir ve kaydetmez.
@@ -68,7 +69,10 @@ export function NumberField({
 
 export function ClearButton({ onClick, label = "Temizle" }: { onClick: () => void; label?: string }) {
   return (
-    <button type="button" onClick={onClick} className="inline-flex min-h-[36px] items-center gap-1 rounded-lg px-2 text-[12px] text-mute transition-colors hover:text-text">
+    <button type="button" onClick={() => {
+      sfx.clear();
+      onClick();
+    }} className="inline-flex min-h-[36px] items-center gap-1 rounded-lg px-2 text-[12px] text-mute transition-colors hover:text-text">
       <X size={13} /> {label}
     </button>
   );
@@ -84,7 +88,12 @@ export function YesNo({ value, onChange, name }: { value: boolean | null; onChan
         role="radio"
         aria-checked={active}
         aria-label={`${name}: ${label}`}
-        onClick={() => onChange(active ? undefined : v)}
+        onClick={() => {
+          if (active) sfx.clear();
+          else if (v) sfx.yes();
+          else sfx.no();
+          onChange(active ? undefined : v);
+        }}
         className={clsx("min-h-[40px] min-w-[76px] rounded-[9px] px-4 text-[13px] font-semibold transition-colors", active ? on : "text-mute hover:text-text")}
       >
         {label}
@@ -102,11 +111,17 @@ export function YesNo({ value, onChange, name }: { value: boolean | null; onChan
 export function Stepper({ value, onChange, max, label }: { value: number | undefined; onChange: (n: number | undefined) => void; max: number; label: string }) {
   return (
     <div className="inline-flex items-center gap-2">
-      <button type="button" aria-label={`${label}: azalt`} disabled={value === undefined || value <= 0} onClick={() => onChange(Math.max(0, (value ?? 0) - 1))} className="btn btn-quiet !min-h-[44px] !w-11 !px-0">
+      <button type="button" aria-label={`${label}: azalt`} disabled={value === undefined || value <= 0} onClick={() => {
+          sfx.step(false);
+          onChange(Math.max(0, (value ?? 0) - 1));
+        }} className="btn btn-quiet !min-h-[44px] !w-11 !px-0">
         <Minus size={16} />
       </button>
       <span className={clsx("num w-12 text-center text-2xl font-semibold", value === undefined && "text-faint")} aria-live="polite">{value ?? "—"}</span>
-      <button type="button" aria-label={`${label}: artır`} disabled={value !== undefined && value >= max} onClick={() => onChange(Math.min(max, (value ?? 0) + 1))} className="btn btn-quiet !min-h-[44px] !w-11 !px-0">
+      <button type="button" aria-label={`${label}: artır`} disabled={value !== undefined && value >= max} onClick={() => {
+          sfx.step(true);
+          onChange(Math.min(max, (value ?? 0) + 1));
+        }} className="btn btn-quiet !min-h-[44px] !w-11 !px-0">
         <Plus size={16} />
       </button>
     </div>

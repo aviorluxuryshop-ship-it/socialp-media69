@@ -62,6 +62,20 @@ export interface Profile {
   name: string;
   onboarded: boolean;
   walkUnit: WalkUnit;
+  /** Ses efektleri açık mı. */
+  soundOn: boolean;
+  /** 0–1 arası ses seviyesi. */
+  volume: number;
+}
+
+export interface Plan {
+  id: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  /** İsteğe bağlı saat (HH:MM). */
+  time?: string;
+  note?: string;
+  done: boolean;
 }
 
 export interface Course {
@@ -86,6 +100,7 @@ export interface AppData {
   entries: Record<string, DayEntry>;
   courses: Course[];
   exams: Exam[];
+  plans: Plan[];
   /** Eski sürümden (v1) taşınan ve yeni rutinlerle eşleşmeyen ham kayıtlar — silinmez. */
   legacy?: unknown;
 }

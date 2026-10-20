@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { sfx } from "@/lib/sound";
 import { useStore } from "@/lib/store";
 
 export function Onboarding() {
@@ -19,6 +20,7 @@ export function Onboarding() {
         className="w-full"
         onSubmit={(e) => {
           e.preventDefault();
+          sfx.welcome();
           finish(name);
         }}
       >

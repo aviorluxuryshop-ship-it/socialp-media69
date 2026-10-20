@@ -1,14 +1,15 @@
 import { isValidKey } from "./dates";
 import { DEFAULT_GOALS, ROUTINE_BY_ID } from "./routines";
 import { parseTime } from "./time";
-import type { AppData, Course, DayEntry, Exam, Goals, Meal, Profile, RoutineValue, WalkUnit } from "./types";
+import type { AppData, Course, DayEntry, Exam, Goals, Meal, Plan, Profile, RoutineValue, WalkUnit } from "./types";
 
 export const emptyData = (): AppData => ({
-  profile: { name: "Efehan", onboarded: false, walkUnit: "steps" },
+  profile: { name: "Efehan", onboarded: false, walkUnit: "steps", soundOn: true, volume: 0.6 },
   goals: { ...DEFAULT_GOALS },
   entries: {},
   courses: [],
   exams: [],
+  plans: [],
 });
 
 const isObj = (x: unknown): x is Record<string, unknown> => !!x && typeof x === "object" && !Array.isArray(x);
@@ -101,6 +102,8 @@ function cleanProfile(raw: unknown): Profile {
   if (typeof raw.name === "string" && raw.name.trim()) p.name = raw.name.trim().slice(0, 40);
   p.onboarded = raw.onboarded === true;
   if (raw.walkUnit === "min") p.walkUnit = "min";
+  if (raw.soundOn === false) p.soundOn = false;
+  if (isNum(raw.volume) && raw.volume >= 0 && raw.volume <= 1) p.volume = raw.volume;
   return p;
 }
 
@@ -108,6 +111,24 @@ function cleanCourses(raw: unknown): Course[] {
   return Array.isArray(raw)
     ? raw.filter(isObj).filter((c) => typeof c.id === "string" && typeof c.name === "string").map((c) => ({ id: c.id as string, name: c.name as string, color: typeof c.color === "string" ? c.color : "#7c9cff" }))
     : [];
+}
+
+function cleanPlans(raw: unknown): Plan[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter(isObj)
+    .filter((p) => typeof p.id === "string" && isValidKey(p.date) && typeof p.title === "string" && p.title.trim() !== "")
+    .map((p) => {
+      const t = parseTime(p.time);
+      return {
+        id: p.id as string,
+        date: p.date as string,
+        title: (p.title as string).trim().slice(0, 120),
+        ...(t !== null ? { time: `${pad(Math.floor(t / 60))}:${pad(t % 60)}` } : {}),
+        ...(typeof p.note === "string" && p.note.trim() ? { note: p.note.trim().slice(0, 500) } : {}),
+        done: p.done === true,
+      };
+    });
 }
 
 const score = (x: unknown) => (isNum(x) ? Math.max(0, Math.min(100, x)) : null);
@@ -171,6 +192,7 @@ export function normalizeData(raw: unknown): { data: AppData; dropped: number } 
       entries,
       courses: cleanCourses(src.courses),
       exams: cleanExams(src.exams),
+      plans: cleanPlans(src.plans),
       ...(src.legacy !== undefined ? { legacy: src.legacy } : {}),
     },
   };

@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 
 const out = mkdtempSync(join(tmpdir(), "alpbook-test-"));
 execSync(
-  `npx tsc src/lib/time.ts src/lib/dates.ts src/lib/stats.ts src/lib/normalize.ts src/lib/insights.ts src/lib/routines.ts src/lib/types.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
+  `npx tsc src/lib/time.ts src/lib/dates.ts src/lib/stats.ts src/lib/normalize.ts src/lib/insights.ts src/lib/routines.ts src/lib/types.ts src/lib/plans.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
   { stdio: "inherit" },
 );
 // Göreli import'lara .js ekle (Node ESM için) ve modülleri yükle.
@@ -113,5 +113,24 @@ t("v1 verisi taşınır, ham kayıt korunur", () => {
   assert.deepEqual(m.legacy.logs, v1.logs);
 });
 t("bozuk giriş null döner", () => { assert.equal(normalizeData(null), null); assert.equal(normalizeData({ foo: 1 }), null); });
+
+console.log("Planlar");
+const { sortPlans, plansByDate } = await load("plans");
+t("planlar saate göre sıralanır, saatsizler sona", () => {
+  const r = sortPlans([{ id: "a", date: "2026-10-20", title: "x", done: false }, { id: "b", date: "2026-10-20", title: "y", time: "14:00", done: false }, { id: "c", date: "2026-10-20", title: "z", time: "09:30", done: false }]);
+  assert.deepEqual(r.map((p) => p.id), ["c", "b", "a"]);
+});
+t("plansByDate günlere ayırır", () => assert.equal(plansByDate([{ id: "a", date: "2026-10-20", title: "x", done: false }, { id: "b", date: "2026-10-21", title: "y", done: true }]).size, 2));
+t("normalize: geçersiz plan atılır, saat düzeltilir, ses tercihi korunur", () => {
+  const r = normalizeData({ profile: { soundOn: false, volume: 0.3 }, entries: {}, plans: [{ id: "1", date: "2026-10-20", title: "  Toplantı ", time: "9:05", done: true }, { id: "2", date: "kötü", title: "x" }, { id: "3", date: "2026-10-20", title: "  " }] });
+  assert.equal(r.data.plans.length, 1);
+  assert.equal(r.data.plans[0].time, "09:05"); assert.equal(r.data.plans[0].title, "Toplantı"); assert.equal(r.data.plans[0].done, true);
+  assert.equal(r.data.profile.soundOn, false); assert.equal(r.data.profile.volume, 0.3);
+});
+t("normalize: eski veride ses varsayılanı açık", () => assert.equal(normalizeData({ entries: {} }).data.profile.soundOn, true));
+t("takvim ızgarası tam haftalardan oluşur ve Pazartesi başlar", () => {
+  const g = D.monthGrid("2026-10-15");
+  assert.equal(g.length % 7, 0); assert.equal(g[0], "2026-09-28"); assert.equal(g[g.length - 1], "2026-11-01");
+});
 
 console.log(`\n${n} test geçti.`);
