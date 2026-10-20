@@ -1,6 +1,6 @@
 # Protesto Türkiye — kısa videolar
 
-"Protesto Türkiye" kanalı için 12 dikey protesto videosu (1080x1920, 30 fps,
+"Protesto Türkiye" kanalı için 13 dikey protesto videosu (1080x1920, 30 fps,
 her biri 1 dakikanın altında). Hepsi barışçıl protesto çağrısıdır ve aynı
 yapıdadır:
 
@@ -27,6 +27,7 @@ yapıdadır:
 | 10 | `videolar/10-polis-ve-protesto.mp4` | Polisin protestoculara tavrı |
 | 11 | `videolar/11-verilen-cezalar.mp4` | Verilen cezalar |
 | 12 | `videolar/12-adalet-nerede.mp4` | Adaletin olmadığı bir ülke |
+| 13 | `videolar/13-protestoda-guvenlik.mp4` | Protestoda güvenlik: barışçıl yürüyüş rehberi |
 
 Her videonun kapak karesi `kapaklar/` içinde, paylaşım açıklamaları ve
 etiketler `aciklamalar.md` içinde.
@@ -65,7 +66,7 @@ yeniden üretmek yeterli:
 ```bash
 pip install torch torchaudio torchcodec --index-url https://download.pytorch.org/whl/cpu
 pip install coqui-tts faster-whisper opencv-python-headless scipy numpy pillow
-COQUI_TOS_AGREED=1 python3 build.py   # 12 videonun hepsi (XTTS modeli ilk seferde iner, ~1,9 GB)
+COQUI_TOS_AGREED=1 python3 build.py   # 13 videonun hepsi (XTTS modeli ilk seferde iner, ~1,9 GB)
 python3 build.py 03 08                # yalnızca 03 ve 08
 python3 build.py --voice piper        # torch kurmadan, daha robotik Piper sesiyle
 ```
@@ -124,6 +125,15 @@ Emin olunamayan iddialar videolara konmadı.
 - **WJP Hukukun Üstünlüğü Endeksi 2025 (118/143, 136., 134.):**
   [Turkish Minute](https://turkishminute.com/2025/10/29/turkey-remains-near-bottom-in-global-rule-of-law-ranking/),
   [World Justice Project](https://worldjusticeproject.org/rule-of-law-index/)
+- **Protestoda güvenlik (13. video):** 48 saat önceden bildirim (md. 10), silah
+  ve yüz kapatmanın toplantıyı kanuna aykırı hale getirmesi (md. 23) —
+  [2911 sayılı Kanun, AYM kararı üzerinden](https://www.hukukihaber.net/aymnin-20132394-basvuru-numarali-karari);
+  zor kullanmanın kademeli ve ölçülü olması (PVSK md. 16) —
+  [bianet](https://bianet.org/haber/gazin-orantili-olup-olmadigina-vali-mi-karar-verecek-146438);
+  yüzme gözlüğü, lens ve yağlı krem, giyim, gözü ovmama, bol suyla yıkama —
+  [Physicians for Human Rights](https://phr.org/our-work/resources/preparing-for-protecting-against-and-treating-tear-gas-and-other-chemical-irritant-exposure-a-protesters-guide/).
+  Maske önerisi bilerek videoya konmadı: yüzü örtmek 2911 md. 23'e göre toplantıyı
+  kanuna aykırı hale getirebiliyor. Video hukuki tavsiye değildir.
 
 **Not:** "08:00–18:00" için resmi bir MEB kararı bulunamadı; video bu yüzden
 bir yönetmelikten değil, okul + etüt + kursla 10 saate uzayan günden söz eder.

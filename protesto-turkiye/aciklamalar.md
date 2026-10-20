@@ -81,3 +81,10 @@ Hukukun Üstünlüğü Endeksi 2025: Türkiye 143 ülke arasında 118. Bağıms�
 yargı, eşit hukuk istiyoruz.
 
 `#protestotürkiye #adalet #hukukunüstünlüğü #bağımsızyargı #türkiye`
+
+### 13 · Protestoda güvenlik
+Barışçıl yürüyüş hakkın: bildirimi 48 saat önce ver, silah ve şiddetten uzak dur.
+Yüzme gözlüğü, kalın kıyafet, su, şarjlı telefon, avukat numarası. Yalnız gitme,
+provokasyona gelme. Hukuki tavsiye değildir.
+
+`#protestotürkiye #protestodagüvenlik #barışçılprotesto #anayasa34 #haklarınıbil`
