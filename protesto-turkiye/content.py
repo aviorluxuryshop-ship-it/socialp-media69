@@ -43,17 +43,12 @@ def quote(text, cite):
     return {"kind": "quote", "text": text, "cite": cite}
 
 
-def hook(reveal, title):
-    """Bütün videolarda aynı giriş; sonunda o videonun konusu açıklanır."""
-    fast = {"pause": 0.2, "pace": 0.86}  # giriş daha seri okunur
-    return [
-        L("Sence neden protesto yapılır?", big("NEDEN\nPROTESTO?"), **fast),
-        L("Çünkü ortada, halkın *beğenmediği* bir sebep vardır.", **fast),
-        L("Peki biz neden yapmıyoruz?", big("PEKİ\nBİZ?"), **fast),
-        L("Sebep yok diyorsunuz.", big("SEBEP\nYOK MU?"), **fast),
-        L("*Oysa sebep çok.* İşte biri:", big("SEBEP\nÇOK", red=True), **fast),
-        L(f"*{reveal}*", big(title, red=True)),
-    ]
+QUICK = {"pause": 0.2, "pace": 0.9}  # giriş cümleleri daha seri okunur
+
+
+def h(show, v=None):
+    """Giriş cümlesi: kısa, hızlı ve ekrana hemen büyük yazıyla gelir."""
+    return L(show, v, **QUICK)
 
 
 CHART = {"kind": "chart"}
@@ -80,7 +75,11 @@ VIDEOS = [
         "slug": "01-enflasyon",
         "title": "ENFLASYON",
         "kicker": "Türkiye'deki enflasyon artışı",
-        "lines": hook("Enflasyon.", "ENFLASYON") + [
+        "lines": [
+            h("Maaşın aynı kaldı.", big("MAAŞ\nAYNI")),
+            h("Fiyatlar *aynı kalmadı.*", big("FİYATLAR\nUÇTU", red=True)),
+            h("Adı: *enflasyon.*", big("ENFLASYON", red=True)),
+        ] + [
             L("Enflasyon nedir? Fiyatların *sürekli ve genel olarak* artması.",
               big("FİYATLAR\nHEP ARTIYOR")),
             L("Yani cebindeki para her gün *biraz daha değersiz.*", big("PARAN\nERİYOR", red=True)),
@@ -100,7 +99,11 @@ VIDEOS = [
         "slug": "02-adaletsiz-maas",
         "title": "ADALETSİZ MAAŞ",
         "kicker": "Türkiye'deki maaş düzeni",
-        "lines": hook("Adaletsiz maaşlar.", "ADALETSİZ\nMAAŞ") + [
+        "lines": [
+            h("Tam gün çalışıyorsun.", big("TAM GÜN\nÇALIŞIYORSUN")),
+            h("Peki ay sonunu *getirebiliyor musun?*", big("AY SONU\nGELİYOR MU?", red=True)),
+            h("İşte adaletsiz maaş düzeni.", big("ADALETSİZ\nMAAŞ", red=True)),
+        ] + [
             L("Adil ücret nedir? Çalışan birinin *insanca yaşayabilmesi.*",
               big("ADİL ÜCRET\nNEDİR?")),
             L("Ücret adaletsizse çalışan yoksullaşır, *emek değersizleşir.*",
@@ -120,7 +123,10 @@ VIDEOS = [
         "slug": "03-okullarda-guvenlik",
         "title": "OKULLAR GÜVENLİ Mİ?",
         "kicker": "Okullarda önlem alınmıyor",
-        "lines": hook("Okullarda güvenlik.", "OKULLAR\nGÜVENLİ Mİ?") + [
+        "lines": [
+            h("Bir yılda *beş okul saldırısı.*", stat("5", "OKUL SALDIRISI · 2026", count=False)),
+            h("Okullarda önlem *nerede?*", big("ÖNLEM\nNEREDE?", red=True)),
+        ] + [
             L("Önlem almak ne demek? Kapıda görevli, giriş kontrolü, *psikolojik destek.*",
               big("GÖREVLİ\nKONTROL\nDESTEK")),
             L("Önlem alınmazsa ne olur? *Bu olur:*"),
@@ -140,7 +146,10 @@ VIDEOS = [
         "slug": "04-okul-saatleri-08-18",
         "title": "08:00 – 18:00",
         "kicker": "Okul saatleri",
-        "lines": hook("Bitmeyen okul saatleri.", "08:00 – 18:00") + [
+        "lines": [
+            h("Bir yetişkin, haftada en fazla 45 saat çalışır.", big("45 SAAT", "İŞ KANUNU MD. 63")),
+            h("Peki ya çocuklar?", big("PEKİ\nÇOCUKLAR?", red=True)),
+        ] + [
             L("Sabah sekiz. Akşam altı. *On saat.*", CLOCK),
             L("Ders, etüt, kurs, ödev...", big("DERS\nETÜT\nKURS\nÖDEV")),
             L("Haftada 50 saat. *Bir yetişkinin yasal mesaisinden bile fazla.*",
@@ -158,7 +167,11 @@ VIDEOS = [
         "slug": "05-ic-savasa-hayir",
         "title": "İÇ SAVAŞA HAYIR",
         "kicker": "Bizi birbirimize düşürmeyin",
-        "lines": hook("Kutuplaşma.", "KUTUPLAŞMA") + [
+        "lines": [
+            h("Komşunla aranda ne fark var?", big("FARK\nVAR MI?")),
+            h("Biri sana *öteki* diyene kadar, hiç.", big("ÖTEKİ", red=True)),
+            h("Kutuplaşma işte böyle başlar.", big("KUTUPLAŞMA")),
+        ] + [
             L("Kutuplaşma ilerlerse ne olur? En kötüsü: *iç savaş.*", big("İÇ SAVAŞ", red=True)),
             L("Yani bir ülkenin insanlarının *birbirine düşman* olması.",
               big("KARDEŞ\nKARDEŞE")),
@@ -177,13 +190,15 @@ VIDEOS = [
         "slug": "06-plansiz-goc",
         "title": "PLANSIZ GÖÇ",
         "kicker": "Mülteci politikası",
-        "lines": hook("Plansız göç.", "PLANSIZ\nGÖÇ") + [
+        "lines": [
+            h("Ülkede 2,2 milyondan fazla insan geçici koruma altında.",
+              stat("2,2 MİLYON+", "GEÇİCİ KORUMA · GÖÇ İDARESİ · 2026", count=False)),
+            h("Peki bunun bir *planı* var mı?", big("PLAN\nVAR MI?", red=True)),
+        ] + [
             L("Göç politikası nedir? Kimin, nasıl ve ne kadar geleceğinin *planlanması.*",
               big("KİM?\nNASIL?\nNE KADAR?")),
             L("Türkiye, yıllarca dünyada en çok mülteci barındıran ülke oldu.",
               big("DÜNYADA\n1 NUMARA", "BMMYK · KÜRESEL EĞİLİMLER RAPORLARI")),
-            L("Bugün hâlâ *2,2 milyonu aşkın* Suriyeli geçici koruma altında.",
-              stat("2,2 MİLYON+", "GEÇİCİ KORUMA · GÖÇ İDARESİ · 2026", count=False)),
             L("Kayıt dışı göçün gerçek boyutu ise *belirsiz.*", big("KAYIT DIŞI\n?", red=True)),
             L("Plan yoksa kira artar, ucuz emek sömürülür, *gerginlik büyür.*",
               big("KİRA\nSÖMÜRÜ\nGERGİNLİK")),
@@ -197,7 +212,11 @@ VIDEOS = [
         "slug": "07-siyasi-baski",
         "title": "İRADEYE SAYGI",
         "kicker": "Siyasi baskılar",
-        "lines": hook("Siyasi baskılar.", "SİYASİ\nBASKI") + [
+        "lines": [
+            h("Sen seçtin.", big("SEN\nSEÇTİN")),
+            h("Mahkeme karar verdi.", big("MAHKEME\nKARAR VERDİ")),
+            h("Peki halkın *iradesi* nerede?", big("İRADE\nNEREDE?", red=True)),
+        ] + [
             L("Demokrasi nedir? Ülkeyi kimin yöneteceğine *halkın sandıkta* karar vermesi.",
               big("SANDIK", "demokrasi")),
             L("Halkın seçtiği İstanbul Büyükşehir Belediye Başkanı, *Mart 2025'ten beri tutuklu.*",
@@ -217,7 +236,11 @@ VIDEOS = [
         "slug": "08-yasaklar",
         "title": "YASAKLAR",
         "kicker": "Gelen yasaklar",
-        "lines": hook("Bitmeyen yasaklar.", "YASAKLAR") + [
+        "lines": [
+            h("Yasaklar bir gecede gelmez.", big("YASAK\nYASAK\nYASAK")),
+            h("Önce bir uygulama kapanır.", big("ERİŞİM\nENGELİ")),
+            h("Sonra sıra *sana* gelir.", big("SIRA\nSANA", red=True)),
+        ] + [
             L("Instagram: *dokuz gün* erişim engeli.", stamp(["INSTAGRAM"], "AĞUSTOS 2024"),
               say="İnstagram: dokuz gün erişim engeli."),
             L("Roblox. Discord. *Erişim engeli.*", stamp(["ROBLOX", "DISCORD"], "2024"),
@@ -237,10 +260,12 @@ VIDEOS = [
         "slug": "09-gecim-derdi",
         "title": "GEÇİNEMİYORUZ",
         "kicker": "Mali geçim",
-        "lines": hook("Geçim derdi.", "GEÇİM\nDERDİ") + [
+        "lines": [
+            h("Ayın kaçında paran bitiyor?", big("PARA\nNE ZAMAN\nBİTİYOR?")),
+            h("Çoğumuz için cevap: *ayın ortasında.*", big("AYIN\nORTASI", red=True)),
+        ] + [
             L("Geçinmek nedir? Kirayı, mutfağı, faturayı *ay sonuna kadar* çıkarabilmek.",
               big("KİRA\nMUTFAK\nFATURA")),
-            L("Biz ayın sonunu değil, *ortasını* getiremiyoruz.", big("AYIN\nORTASI", red=True)),
             L("Bekâr bir çalışanın aylık yaşam maliyeti: *48.884 lira.*",
               bars([("YAŞAM MALİYETİ · BEKÂR", 48884), ("NET ASGARİ ÜCRET", 28075)], 1,
                    "TÜRK-İŞ · EYLÜL 2026")),
@@ -257,14 +282,18 @@ VIDEOS = [
         "slug": "10-polis-ve-protesto",
         "title": "POLİS VE PROTESTO",
         "kicker": "Polislerin protestoculara tavrı",
-        "lines": hook("Polisin protestocuya tavrı.", "POLİS VE\nPROTESTO") + [
+        "lines": [
+            h("Barışçıl yürüyen birine ne yapılır?", big("BARIŞÇIL\nYÜRÜYÜŞ")),
+            h("Biber gazı. Tazyikli su. *Gözaltı.*", big("BİBER GAZI\nTAZYİKLİ SU\nGÖZALTI", red=True)),
+            h("Peki hukuk ne diyor?", big("HUKUK\nNE DİYOR?")),
+        ] + [
             L("Protesto hakkı nedir? Anayasa, madde 34:",
               quote("Herkes, önceden izin almaksızın, silahsız ve saldırısız toplantı "
                     "ve gösteri yürüyüşü düzenleme hakkına sahiptir.",
                     "T.C. ANAYASASI · MADDE 34")),
             L("Herkes, önceden izin almaksızın, silahsız ve saldırısız toplantı ve gösteri yürüyüşü "
               "düzenleme *hakkına sahiptir.*"),
-            L("Peki sahada ne oldu? Biber gazı, tazyikli su, *plastik mermi.*",
+            L("Mart 2025'te Saraçhane'de ise *plastik mermi* bile kullanıldı.",
               big("BİBER GAZI\nTAZYİKLİ SU\nPLASTİK MERMİ", "SARAÇHANE · MART 2025")),
             L("İçişleri Bakanlığı'na göre *1.879 gözaltı*, 260 tutuklama.",
               stat("1.879", "GÖZALTI · İÇİŞLERİ BAKANLIĞI · MART 2025", sub="260 TUTUKLAMA")),
@@ -278,11 +307,13 @@ VIDEOS = [
         "slug": "11-verilen-cezalar",
         "title": "VERİLEN CEZALAR",
         "kicker": "Düşüncenin bedeli",
-        "lines": hook("Verilen cezalar.", "VERİLEN\nCEZALAR") + [
+        "lines": [
+            h("Bir paylaşım.", big("BİR\nPAYLAŞIM")),
+            h("Bir slogan.", big("BİR\nSLOGAN")),
+            h("Bir haber. Ve karşılığı: *tutuklama.*", big("TUTUKLAMA", red=True)),
+        ] + [
             L("Ceza neden verilir? Suçu önlemek ve *adaleti sağlamak* için.",
               big("CEZA\nNEDEN VAR?")),
-            L("Ama bugün bir paylaşım, bir slogan, bir haber bile yetiyor.",
-              big("PAYLAŞIM\nSLOGAN\nHABER")),
             L("Gazeteci Alican Uludağ, paylaşımları yüzünden *tutuklandı*, üç ay cezaevinde kaldı.",
               stat("3 AY", "GAZETECİ · CEZAEVİNDE · ŞUBAT–MAYIS 2026")),
             L("Saraçhane'de gözaltına alınan 87 kişi aylarca yargılandı, sonunda *beraat* etti.",
@@ -297,10 +328,13 @@ VIDEOS = [
         "slug": "12-adalet-nerede",
         "title": "ADALET NEREDE?",
         "kicker": "Adaletin olmadığı bir ülke",
-        "lines": hook("Adalet.", "ADALET\nNEREDE?") + [
-            L("Hukukun üstünlüğü nedir? Kuralların *herkese eşit* uygulanması.", SCALE),
-            L("Dünya Adalet Projesi'ne göre Türkiye, 143 ülke arasında *118'inci.*",
+        "lines": [
+            h("143 ülke arasında kaçıncı sıradayız?", big("143 ÜLKE\nKAÇINCIYIZ?")),
+            h("Adalet endeksinde: *118'inci.*",
               stat("118 / 143", "WJP HUKUKUN ÜSTÜNLÜĞÜ ENDEKSİ · 2025")),
+        ] + [
+            L("Hukukun üstünlüğü nedir? Kuralların *herkese eşit* uygulanması.", SCALE),
+            L("Bu sıralamayı yapan Dünya Adalet Projesi, hukukun üstünlüğünü ölçüyor."),
             L("Temel haklarda *134'üncü.*", stat("134.", "TEMEL HAKLAR")),
             L("Adalet yoksa ne olur? *Kimse güvende değildir.*", big("KİMSE\nGÜVENDE DEĞİL")),
             L("Bugün gazeteci. Yarın öğrenci. *Öbür gün sen.*",

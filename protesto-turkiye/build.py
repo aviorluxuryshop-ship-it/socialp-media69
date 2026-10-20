@@ -36,7 +36,7 @@ MODEL = "tr_TR-dfki-medium.onnx"
 XTTS_URL = "https://huggingface.co/coqui/XTTS-v2/resolve/main/"
 XTTS_DIR = CACHE / "xtts-v2"
 
-INTRO = 1.0         # konu başlığı kartı; giriş sorusu hemen ardından gelir
+INTRO = 0.3         # video doğrudan giriş cümlesiyle başlar; başlık kartı yalnızca kapakta
 TAIL = 2.6          # kapanış kartı seslendirmeden sonra ekranda kalır
 LENGTH_SCALE = 1.16  # 1'den büyük = daha ağır, dramatik okuma
 MAX_SECONDS = 60.0
@@ -118,8 +118,6 @@ def composer(video, lines, scenes, total):
                 red += 0.28 * np.exp(-(t - h) * 3.2)
         frame = bg.render(t, red)
 
-        title_o = 1.0 if t < INTRO - 0.25 else max(0.0, 1 - (t - (INTRO - 0.25)) / 0.3)
-        vs.draw_title_card(frame, video, t, title_o)
         header_o = min(1.0, max(0.0, (t - INTRO + 0.1) / 0.4)) * (1 - min(1.0, max(0.0, (t - cta_t) / 0.3)))
         vs.draw_header(frame, video["title"], header_o)
 
@@ -147,6 +145,15 @@ def composer(video, lines, scenes, total):
         np.clip(frame, 0, 1, out=frame)
         return frame
 
+    def cover():
+        """Kapak: konu başlığı kartı, videonun kendisinde yer almaz."""
+        frame = bg.render(1.0, 0.16)
+        vs.draw_title_card(frame, video, 1.0, 1.0)
+        frame = bg.finish(frame, 1)
+        np.clip(frame, 0, 1, out=frame)
+        return frame
+
+    compose.cover = cover
     return compose
 
 
@@ -214,8 +221,8 @@ def build(video, voice_kind="xtts"):
         out = OUT / f"{video['slug']}.mp4"
         render(video, lines, scenes, total, wav, out)
     COVERS.mkdir(exist_ok=True)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "0.6", "-i", str(out), "-frames:v", "1",
-                    "-q:v", "3", str(COVERS / f"{video['slug']}.jpg")], check=True)
+    cover = cv2.convertScaleAbs(composer(video, lines, scenes, total).cover(), alpha=255)
+    cv2.imwrite(str(COVERS / f"{video['slug']}.jpg"), cover[..., ::-1], [cv2.IMWRITE_JPEG_QUALITY, 92])
     print(f"{video['slug']}: {total:.1f} sn, {time.time() - started:.0f} sn'de üretildi", flush=True)
     return video["slug"], total
 
