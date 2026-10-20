@@ -36,5 +36,5 @@ Ortam değişkenleri tanımlı değilse uygulama yalnızca yerel depolamayla ça
 - İlk girişte bulut ve cihazdaki veri **birleştirilir**; hiçbir kayıt silinmez. Aynı gün ve rutinde çakışma olursa bu cihazdaki değer kazanır.
 - Sonraki değişiklikler yaklaşık 1 saniye içinde buluta yazılır; başka cihazlardaki değişiklikler canlı gelir.
 - Ses ve yürüyüş birimi gibi cihaz tercihleri eşitlenmez.
-- Çıkış yapınca cihazdaki veri silinmez, yalnızca eşitleme durur.
+- Çok kullanıcılı: her Google hesabı yalnızca kendi verisini görür (Firestore kuralları). Çıkışta iki seçenek vardır: "çıkış yap ve bu cihazdan sil" (ortak cihazlar için) veya "sadece çıkış". Sadece çıkıştan sonra başka bir hesapla girilirse cihazdaki eski veri o hesaba karıştırılmaz; silinir ve yalnızca girilen hesabın verisi yüklenir.
 - Sınırlama: iki cihazda aynı ay içinde aynı anda (özellikle çevrimdışıyken) yapılan düzenlemelerde son yazan kazanır.

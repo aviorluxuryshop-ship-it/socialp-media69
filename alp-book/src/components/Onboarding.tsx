@@ -13,7 +13,7 @@ export function Onboarding() {
   const current = useStore((s) => s.profile.name);
   const cloud = useCloud((c) => c.status);
   const [preset, setPreset] = useState(true);
-  const [name, setName] = useState(current === "Efehan" ? "" : current);
+  const [name, setName] = useState(current);
 
   return (
     <div className="mx-auto grid min-h-dvh max-w-md place-items-center px-6 py-10 safe-top">
@@ -34,8 +34,8 @@ export function Onboarding() {
           Her gün rutinlerini tek bir tabloda işaretlersin. Kaydetmediğin bir alan başarısızlık sayılmaz; yalnızca girdiğin veriler hesaplanır.
         </p>
 
-        <label className="eyebrow mt-9 block" htmlFor="name">Adın</label>
-        <input id="name" className="input mt-2" value={name} onChange={(e) => setName(e.target.value)} placeholder="Efehan" maxLength={40} autoComplete="given-name" />
+        <label className="eyebrow mt-9 block" htmlFor="name">Sana nasıl hitap edelim?</label>
+        <input id="name" className="input mt-2" value={name} onChange={(e) => setName(e.target.value)} placeholder="Adın" maxLength={40} autoComplete="given-name" />
 
         <fieldset className="mt-6">
           <legend className="eyebrow">Rutinler</legend>

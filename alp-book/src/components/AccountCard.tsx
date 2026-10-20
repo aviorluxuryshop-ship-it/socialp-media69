@@ -1,6 +1,7 @@
 "use client";
 
 import { Cloud, CloudOff, LogOut, RefreshCw } from "lucide-react";
+import { useState } from "react";
 import { cloudConfigured, signInWithGoogle, signOutCloud, syncNow, useCloud } from "@/lib/cloud";
 import { SectionHead } from "./ui";
 
@@ -20,6 +21,7 @@ const time = (t: number) => new Date(t).toLocaleTimeString("tr-TR", { hour: "2-d
 export function AccountCard() {
   const { status, user, lastSync, error } = useCloud();
   const busy = status === "connecting" || status === "syncing";
+  const [leaving, setLeaving] = useState(false);
 
   return (
     <section className="panel p-5 sm:p-6" aria-labelledby="acc">
@@ -61,11 +63,28 @@ export function AccountCard() {
             <button type="button" className="btn btn-quiet btn-sm" disabled={busy} onClick={() => void syncNow()}>
               <RefreshCw size={14} /> Şimdi eşitle
             </button>
-            <button type="button" className="btn btn-quiet btn-sm" onClick={() => void signOutCloud()}>
+            <button type="button" className="btn btn-quiet btn-sm" aria-expanded={leaving} onClick={() => setLeaving((v) => !v)}>
               <LogOut size={14} /> Çıkış yap
             </button>
           </div>
-          <p className="mt-3 text-[12px] leading-relaxed text-faint">Çıkış yapınca bu cihazdaki veriler silinmez; yalnızca eşitleme durur.</p>
+          {leaving && (
+            <div className="mt-4 rounded-xl border border-line-2 bg-ink/50 p-4" role="group" aria-label="Çıkış seçenekleri">
+              <p className="text-[13px] leading-relaxed text-mute">
+                Verilerin Google hesabında güvende. Bu cihaz başkalarıyla ortak kullanılıyorsa kopyayı silmeni öneririz.
+              </p>
+              {status !== "synced" && <p className="mt-2 text-[12px] text-amber">Eşitleme tamamlanmadı; kopyayı silmeden önce “Eşitlendi” yazısını bekle.</p>}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button type="button" className="btn btn-primary btn-sm" disabled={status !== "synced"} onClick={() => void signOutCloud(true)}>
+                  Çıkış yap ve bu cihazdan sil
+                </button>
+                <button type="button" className="btn btn-quiet btn-sm" onClick={() => void signOutCloud(false)}>
+                  Sadece çıkış yap
+                </button>
+                <button type="button" className="btn btn-quiet btn-sm" onClick={() => setLeaving(false)}>Vazgeç</button>
+              </div>
+              <p className="mt-2 text-[11.5px] text-faint">“Sadece çıkış”ta veri bu cihazda kalır; başka bir hesapla giriş yapılırsa bu veri silinip o hesabın verisi yüklenir.</p>
+            </div>
+          )}
         </>
       )}
     </section>
