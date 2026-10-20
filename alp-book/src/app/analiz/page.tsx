@@ -115,6 +115,7 @@ export default function AnalysisPage() {
             <div className="grid gap-5 lg:grid-cols-2">
               <Measure title="Su tüketimi" id="su" dates={dates} entries={entries} goals={goals} unit="bardak" fmt={(n) => String(Math.round(n * 10) / 10)} goal={{ value: goals.waterGlasses, label: `hedef ${goals.waterGlasses}` }} summary={(v) => `ort. ${fmtNum(mean(v) as number, 1)} bardak`} />
               <Measure title="Uyku süresi" id="uyku_sure" dates={dates} entries={entries} goals={goals} unit="sa" fmt={(n) => (Math.round(n * 10) / 10).toString().replace(".", ",")} goal={{ value: goals.sleepHours, label: `hedef ${goals.sleepHours} sa` }} summary={(v) => `ort. ${fmtDuration((mean(v) as number) * 60)}`} note="Yatış ve uyanış saatinden otomatik hesaplanır" />
+              <Measure title="Gün içi uyku" id="uyku_gunici" dates={dates} entries={entries} goals={goals} unit="sa" fmt={(n) => (Math.round(n * 10) / 10).toString().replace(".", ",")} summary={(v) => `ort. ${fmtDuration((mean(v) as number) * 60)}`} note="Gece uykusundan ayrı; hedefi yok. Kaydettiğin günler (0 dahil) gösterilir" />
               <Measure title="Ekran süresi" id="ekran" dates={dates} entries={entries} goals={goals} unit="sa" fmt={(n) => (Math.round(n * 10) / 10).toString().replace(".", ",")} goal={{ value: goals.screenMaxHours, label: `sınır ${goals.screenMaxHours} sa` }} summary={(v) => `ort. ${fmtDuration((mean(v) as number) * 60)}`} />
               <Measure
                 title="Yürüyüş"
@@ -192,7 +193,7 @@ function Measure({
   title, id, dates, entries, goals, unit, fmt, goal, summary, walkUnit, right, note,
 }: {
   title: string; id: string; dates: string[]; entries: Entries; goals: Goals; unit: string; fmt: (n: number) => string;
-  goal: { value: number; label: string }; summary: (v: number[]) => string; walkUnit?: WalkUnit; right?: React.ReactNode; note?: string;
+  goal?: { value: number; label: string }; summary: (v: number[]) => string; walkUnit?: WalkUnit; right?: React.ReactNode; note?: string;
 }) {
   const r = ROUTINE_BY_ID[id];
   const ys = numericSeries(r, dates, entries, walkUnit);

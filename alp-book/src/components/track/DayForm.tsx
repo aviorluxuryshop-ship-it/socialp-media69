@@ -183,7 +183,14 @@ function Field({ r, date, highlight }: { r: Routine; date: string; highlight: bo
     case "duration":
       return (
         <Row {...base} hint={`Sınır: günde ${goals.screenMaxHours} saat`}>
-          <ScreenField key={`${date}-${r.id}`} value={typeof v === "number" ? v : undefined} onCommit={set} />
+          <ScreenField key={`${date}-${r.id}`} id={r.id} name="Ekran süresi" value={typeof v === "number" ? v : undefined} onCommit={set} />
+        </Row>
+      );
+
+    case "nap":
+      return (
+        <Row {...base} hint="Gece uykusundan ayrı tutulur. Hiç uyumadıysan “Uyumadım”a bas; boş bırakırsan o gün kaydedilmemiş sayılır.">
+          <ScreenField key={`${date}-${r.id}`} id={r.id} name="Gün içi uyku" value={typeof v === "number" ? v : undefined} onCommit={set} noneLabel="Uyumadım" />
         </Row>
       );
 
@@ -216,7 +223,7 @@ function Field({ r, date, highlight }: { r: Routine; date: string; highlight: bo
   }
 }
 
-function ScreenField({ value, onCommit }: { value: number | undefined; onCommit: (n: number | undefined) => void }) {
+function ScreenField({ id, name, value, onCommit, noneLabel }: { id: string; name: string; value: number | undefined; onCommit: (n: number | undefined) => void; noneLabel?: string }) {
   const [h, setH] = useState(value === undefined ? "" : String(Math.floor(value / 60)));
   const [m, setM] = useState(value === undefined ? "" : String(value % 60));
   const [err, setErr] = useState<string | null>(null);
@@ -241,10 +248,13 @@ function ScreenField({ value, onCommit }: { value: number | undefined; onCommit:
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2">
-        <input id="field-ekran" className="input num w-20 text-center" inputMode="numeric" aria-label="Ekran süresi, saat" aria-invalid={err ? true : undefined} placeholder="0" value={h} onChange={(ev) => update(digits(ev.target.value), m)} />
+        <input id={`field-${id}`} className="input num w-20 text-center" inputMode="numeric" aria-label={`${name}, saat`} aria-invalid={err ? true : undefined} placeholder="0" value={h} onChange={(ev) => update(digits(ev.target.value), m)} />
         <span className="text-[13px] text-mute">sa</span>
-        <input className="input num w-20 text-center" inputMode="numeric" aria-label="Ekran süresi, dakika" aria-invalid={err ? true : undefined} placeholder="0" value={m} onChange={(ev) => update(h, digits(ev.target.value))} />
+        <input className="input num w-20 text-center" inputMode="numeric" aria-label={`${name}, dakika`} aria-invalid={err ? true : undefined} placeholder="0" value={m} onChange={(ev) => update(h, digits(ev.target.value))} />
         <span className="text-[13px] text-mute">dk</span>
+        {noneLabel && value !== 0 && (
+          <button type="button" className="btn btn-quiet btn-sm" onClick={() => update("0", "0")}>{noneLabel}</button>
+        )}
         {(h !== "" || m !== "") && <ClearButton onClick={() => update("", "")} />}
       </div>
       {err && <p role="alert" className="mt-1 text-[11px] text-rose">{err}</p>}

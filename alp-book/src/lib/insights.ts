@@ -106,6 +106,23 @@ export function buildInsights(dates: string[], entries: Entries, goals: Goals, w
     }
   }
 
+  // 3b) Gün içi uyku (hedefsiz, yalnızca gözlem)
+  {
+    const { cur, curAvg } = avgPair("uyku_gunici", dates, entries);
+    if (curAvg !== null && cur.length >= 3) {
+      const napDays = cur.filter((h) => h > 0);
+      out.push({
+        id: "nap",
+        tone: "info",
+        basis: "observation",
+        title: `Gün içi uyku ${napDays.length}/${cur.length} gün`,
+        body: napDays.length
+          ? `Kayıt girdiğin ${cur.length} günün ${napDays.length} gününde gün içinde uyudun; uyuduğun günlerde ortalama ${fmtDuration((mean(napDays) as number) * 60)}.`
+          : `Kayıt girdiğin ${cur.length} günde gün içi uyku olmadı.`,
+      });
+    }
+  }
+
   // 4) Ekran süresi
   {
     const { cur, prev, curAvg, prevAvg } = avgPair("ekran", dates, entries);

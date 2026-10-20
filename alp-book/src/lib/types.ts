@@ -8,6 +8,7 @@ export type RoutineKind =
   | "time" // Saat (HH:MM)
   | "sleep" // Yatış ve uyanıştan otomatik hesaplanır
   | "duration" // Saat + dakika
+  | "nap" // Gün içi uyku süresi (0 = uyumadım)
   | "walk" // Adım veya dakika
   | "meals"; // Öğün listesi
 

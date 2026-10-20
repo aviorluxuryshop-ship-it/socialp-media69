@@ -23,6 +23,7 @@ export const ROUTINES: Routine[] = [
   { id: "uyku_yatis", emoji: "😴", group: "uyku", label: "Yatış saati", question: "Saat kaçta yattın?", kind: "time" },
   { id: "uyku_kalkis", emoji: "😴", group: "uyku", label: "Uyanış saati", question: "Saat kaçta uyandın?", kind: "time" },
   { id: "uyku_sure", emoji: "😴", group: "uyku", label: "Uyku süresi", question: "Kaç saat uyudun?", kind: "sleep" },
+  { id: "uyku_gunici", emoji: "💤", group: "uyku", label: "Gün içi uyku", question: "Gün içinde uyudun mu? Ne kadar?", kind: "nap" },
   { id: "ekran", emoji: "📱", group: "dijital", label: "Ekran süresi", question: "Kaç saat ekran başında kaldın?", kind: "duration" },
   { id: "dis_sabah", emoji: "🪥", group: "bakim", label: "Sabah dişler", question: "Sabah dişlerini fırçaladın mı?", kind: "yesno" },
   { id: "dis_aksam", emoji: "🪥", group: "bakim", label: "Akşam dişler", question: "Akşam dişlerini fırçaladın mı?", kind: "yesno" },
