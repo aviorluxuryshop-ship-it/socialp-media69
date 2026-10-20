@@ -1,8 +1,10 @@
 "use client";
 
-import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, ListPlus } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-import { Segmented } from "@/components/ui";
+import { AddRoutineForm } from "@/components/AddRoutineForm";
+import { EmptyState, Segmented } from "@/components/ui";
+import { useRoutines } from "@/lib/useRoutines";
 import { DayForm } from "@/components/track/DayForm";
 import { HabitTable } from "@/components/track/HabitTable";
 import { addDays, addMonths, monthDaysOf, monthLabel, prettyDate, shortMonth, todayKey, weekDays, isValidKey } from "@/lib/dates";
@@ -15,6 +17,8 @@ export default function TrackPage() {
   const [selected, setSelected] = useState(today);
   const [mode, setMode] = useState<Mode>("week");
   const [focus, setFocus] = useState<{ id: string; nonce: number } | null>(null);
+  const routines = useRoutines();
+  const [adding, setAdding] = useState(false);
   const hasAny = useStore((s) => Object.keys(s.entries).length > 0);
 
   const dates = useMemo(() => (mode === "week" ? weekDays(selected) : monthDaysOf(selected)), [mode, selected]);
@@ -51,12 +55,24 @@ export default function TrackPage() {
             <CalendarDays size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-mute" />
             <input type="date" className="input num !min-h-9 !w-[158px] !py-1 !pl-9 text-[13px]" max={today} value={selected} onChange={(e) => isValidKey(e.target.value) && setSelected(clamp(e.target.value))} />
           </label>
+          <button type="button" className="btn btn-quiet btn-sm" aria-expanded={adding} onClick={() => setAdding((v) => !v)}>
+            <ListPlus size={15} /> Rutin ekle
+          </button>
           <button type="button" className="btn btn-quiet btn-sm" disabled={selected === today} onClick={() => setSelected(today)}>
             Bugün
           </button>
         </div>
       </header>
 
+      {adding && (
+        <section className="panel mb-5 p-4 sm:p-5" aria-label="Rutin ekle">
+          <AddRoutineForm />
+        </section>
+      )}
+
+      {routines.length === 0 ? (
+        <EmptyState title="Henüz rutin yok" body="Takip etmek istediğin ilk rutini yaz; sistem türünü (Evet/Hayır, sayı, saat) kendisi algılar." action={<button type="button" className="btn btn-primary btn-sm" onClick={() => setAdding(true)}><ListPlus size={15} /> Rutin ekle</button>} />
+      ) : (
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0 space-y-3">
           {!hasAny && (
@@ -71,6 +87,7 @@ export default function TrackPage() {
           <DayForm date={selected} onDate={(d) => setSelected(clamp(d))} focus={focus} />
         </div>
       </div>
+      )}
       <span className="sr-only">{shortMonth(selected)}</span>
     </div>
   );

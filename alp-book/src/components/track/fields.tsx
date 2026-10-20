@@ -19,6 +19,7 @@ export function NumberField({
   placeholder = "—",
   width = "w-24",
   label,
+  decimal = false,
 }: {
   id?: string;
   value: number | undefined;
@@ -29,37 +30,39 @@ export function NumberField({
   placeholder?: string;
   width?: string;
   label: string;
+  /** Ondalık sayı (virgül veya nokta) kabul eder. */
+  decimal?: boolean;
 }) {
   const [text, setText] = useState(value === undefined ? "" : String(value));
   const [err, setErr] = useState<string | null>(null);
 
   // Değer dışarıdan değişirse (ör. hazır süre düğmesi) metni eşitle.
   useEffect(() => {
-    setText((t) => ((t === "" ? undefined : Number(t)) === value ? t : value === undefined ? "" : String(value)));
+    setText((t) => ((t === "" ? undefined : Number(t.replace(",", "."))) === value ? t : value === undefined ? "" : String(value)));
     if (value !== undefined) setErr(null);
   }, [value]);
 
   function change(raw: string) {
-    const t = raw.replace(/[^\d]/g, "").slice(0, 7);
+    const t = (decimal ? raw.replace(/[^\d.,]/g, "").slice(0, 10) : raw.replace(/[^\d]/g, "").slice(0, 7));
     setText(t);
     if (t === "") {
       setErr(null);
       onCommit(undefined);
       return;
     }
-    const n = Number(t);
-    if (n < min || n > max) {
+    const n = Number(t.replace(",", "."));
+    if (Number.isNaN(n) || n < min || n > max) {
       setErr(`${min} – ${max} arasında bir değer gir`);
       return;
     }
     setErr(null);
-    onCommit(n);
+    onCommit(decimal ? Math.round(n * 100) / 100 : n);
   }
 
   return (
     <div className="inline-flex flex-col gap-1">
       <div className="flex items-center gap-2">
-        <input id={id} className={clsx("input num text-center", width)} inputMode="numeric" pattern="[0-9]*" aria-label={label} aria-invalid={err ? true : undefined} placeholder={placeholder} value={text} onChange={(e) => change(e.target.value)} />
+        <input id={id} className={clsx("input num text-center", width)} inputMode={decimal ? "decimal" : "numeric"} aria-label={label} aria-invalid={err ? true : undefined} placeholder={placeholder} value={text} onChange={(e) => change(e.target.value)} />
         {suffix && <span className="text-[13px] text-mute">{suffix}</span>}
       </div>
       {err && <p role="alert" className="text-[11px] text-rose">{err}</p>}

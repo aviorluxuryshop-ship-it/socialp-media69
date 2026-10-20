@@ -1,6 +1,7 @@
 import type { GroupId, Goals, Routine } from "./types";
 
 export const GROUPS: Record<GroupId, { label: string; color: string }> = {
+  ozel: { label: "Özel", color: "#9aa4b2" },
   yazilim: { label: "Yazılım", color: "#7c9cff" },
   egitim: { label: "Eğitim", color: "#b794f6" },
   okul: { label: "Okul", color: "#5ec8e5" },
@@ -14,7 +15,7 @@ export const GROUPS: Record<GroupId, { label: string; color: string }> = {
 };
 
 /** Varsayılan rutin listesi — sıra sabittir. */
-export const ROUTINES: Routine[] = [
+export const DEFAULT_ROUTINES: Routine[] = [
   { id: "yazilim", emoji: "💻", group: "yazilim", label: "Kodlama", question: "Bugün kodlama yaptın mı?", kind: "yesno_min" },
   { id: "egitim", emoji: "📚", group: "egitim", label: "Ders çalışma", question: "Ders çalıştın mı?", kind: "yesno_min" },
   { id: "okul_gitti", emoji: "🏫", group: "okul", label: "Okula gitme", question: "Bugün okula gittin mi?", kind: "yesno" },
@@ -32,7 +33,25 @@ export const ROUTINES: Routine[] = [
   { id: "beslenme", emoji: "🥗", group: "beslenme", label: "Yemekler", question: "Bugün ne yedin?", kind: "meals" },
 ];
 
-export const ROUTINE_BY_ID: Record<string, Routine> = Object.fromEntries(ROUTINES.map((r) => [r.id, r]));
+const byId = (list: Routine[]): Record<string, Routine> => Object.fromEntries(list.map((r) => [r.id, r]));
+
+/**
+ * Etkin rutin listesi (varsayılanlar + kullanıcının eklediği − gizlenenler). `let` dışa aktarımlar canlı bağlantıdır:
+ * `setRoutineRegistry` çağrılınca tüm modüller güncel listeyi görür. Store her değişiklikte bunu günceller.
+ */
+export let ROUTINES: Routine[] = DEFAULT_ROUTINES;
+/** Gizlenenler dahil bilinen tüm rutinler. */
+export let ALL_ROUTINES: Routine[] = DEFAULT_ROUTINES;
+export let ROUTINE_BY_ID: Record<string, Routine> = byId(DEFAULT_ROUTINES);
+
+export function setRoutineRegistry(custom: Routine[], hidden: string[]) {
+  ALL_ROUTINES = [...DEFAULT_ROUTINES, ...custom];
+  ROUTINE_BY_ID = byId(ALL_ROUTINES);
+  const h = new Set(hidden);
+  ROUTINES = ALL_ROUTINES.filter((r) => !h.has(r.id));
+}
+
+export const isActive = (id: string) => ROUTINES.some((r) => r.id === id);
 
 export const MEAL_TYPES = ["Kahvaltı", "Öğle yemeği", "Akşam yemeği", "Ara öğün", "Diğer"];
 

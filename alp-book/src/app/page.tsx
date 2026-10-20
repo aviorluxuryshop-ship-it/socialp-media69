@@ -13,13 +13,14 @@ import { cloudConfigured, useCloud } from "@/lib/cloud";
 import { sfx } from "@/lib/sound";
 import { greeting, lastNDays, longDate, prettyDate, shortDay, todayKey, weekDays } from "@/lib/dates";
 import { buildInsights } from "@/lib/insights";
-import { ROUTINES } from "@/lib/routines";
+import { useRoutines } from "@/lib/useRoutines";
 import { comparePeriods, daySummary, groupStats, hasRecord, pct, rangeSummary, recordStreak, routineIdsMissing, statusOf, strongestWeakest } from "@/lib/stats";
 import { useStore } from "@/lib/store";
 
 export default function Dashboard() {
   const { entries, goals, profile, plans } = useStore();
   const togglePlan = useStore((s) => s.togglePlan);
+  const ROUTINES = useRoutines();
   const cloudStatus = useCloud((c) => c.status);
   const today = todayKey();
 
@@ -46,7 +47,7 @@ export default function Dashboard() {
       todayPlans: sortPlans(plans.filter((p) => p.date === today)),
       upcoming: plans.filter((p) => p.date > today && !p.done).sort((a, b) => a.date.localeCompare(b.date) || (a.time ?? "99").localeCompare(b.time ?? "99")).slice(0, 3),
     };
-  }, [entries, goals, today, profile.walkUnit, plans]);
+  }, [entries, goals, today, profile.walkUnit, plans, ROUTINES]);
 
   const weekBars = d.week.map((day) => {
     const s = daySummary(entries[day], goals);

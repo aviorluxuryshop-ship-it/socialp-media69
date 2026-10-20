@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Check, Minus, X } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 import { dayNum, longDate, shortDay, todayKey } from "@/lib/dates";
-import { ROUTINES } from "@/lib/routines";
+import { useRoutines } from "@/lib/useRoutines";
 import { asWalk, asYesNoMin, daySummary, pct, sleepOf, statusOf, validMeals, type Status } from "@/lib/stats";
 import { sfx } from "@/lib/sound";
 import { useStore } from "@/lib/store";
@@ -46,6 +46,12 @@ function Cell({ r, e, status }: { r: Routine; e: DayEntry | undefined; status: S
     }
     case "duration":
       if (typeof v === "number") main = <span className="num text-[12px] font-semibold">{compactHM(v)}</span>;
+      break;
+    case "number":
+      if (typeof v === "number") {
+        main = <span className="num text-[12px] font-semibold">{fmtNum(v, 2)}</span>;
+        sub = r.unit ? r.unit.slice(0, 5) : null;
+      }
       break;
     case "nap":
       if (typeof v === "number") main = <span className="num text-[12px] font-semibold">{v === 0 ? "yok" : compactHM(v)}</span>;
@@ -92,9 +98,10 @@ export function HabitTable({
   const setValue = useStore((s) => s.setValue);
   const today = todayKey();
   const wrap = useRef<HTMLDivElement>(null);
+  const ROUTINES = useRoutines();
   const compact = dates.length > 10;
 
-  const summaries = useMemo(() => dates.map((d) => daySummary(entries[d], goals)), [dates, entries, goals]);
+  const summaries = useMemo(() => dates.map((d) => daySummary(entries[d], goals)), [dates, entries, goals, ROUTINES]);
 
   // Seçili sütun görünür kalsın (özellikle ay görünümünde).
   useEffect(() => {

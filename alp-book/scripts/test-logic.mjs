@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 
 const out = mkdtempSync(join(tmpdir(), "alpbook-test-"));
 execSync(
-  `npx tsc src/lib/time.ts src/lib/dates.ts src/lib/stats.ts src/lib/normalize.ts src/lib/insights.ts src/lib/routines.ts src/lib/types.ts src/lib/plans.ts src/lib/merge.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
+  `npx tsc src/lib/time.ts src/lib/dates.ts src/lib/stats.ts src/lib/normalize.ts src/lib/insights.ts src/lib/routines.ts src/lib/types.ts src/lib/plans.ts src/lib/merge.ts src/lib/infer.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
   { stdio: "inherit" },
 );
 // Göreli import'lara .js ekle (Node ESM için) ve modülleri yükle.
@@ -125,6 +125,44 @@ t("gün içi uyku serisi saat cinsinden, kayıtsız gün null", () => { const r 
 t("normalize: gün içi uyku sınırları", () => { const r = normalizeData({ entries: { "2026-10-20": { uyku_gunici: 60 }, "2026-10-21": { uyku_gunici: 5000 } } }); assert.equal(r.data.entries["2026-10-20"].uyku_gunici, 60); assert.equal(r.data.entries["2026-10-21"], undefined); });
 t("rutin sırası: gün içi uyku, uyku süresinden hemen sonra", () => { const ids = ROUTINES.map((r) => r.id); assert.equal(ids[ids.indexOf("uyku_sure") + 1], "uyku_gunici"); });
 
+console.log("Bulut birleştirme");
+const M = await load("merge");
+const base = () => emptyData();
+console.log("Özel rutinler");
+const { inferRoutine } = await load("infer");
+const RT = await load("routines");
+const inf = (t) => inferRoutine(t);
+t("algılama: Evet/Hayır", () => { assert.equal(inf("Kitap okudun mu?").kind, "yesno"); assert.equal(inf("Şeker yedin mi?").kind, "yesno"); assert.equal(inf("Boks antrenmanı").kind, "yesno"); });
+t("algılama: sayı + birim", () => { const r = inf("Kaç bardak su içtin?"); assert.equal(r.kind, "number"); assert.equal(r.unit, "bardak"); assert.equal(inf("Okunan sayfa").unit, "sayfa"); assert.equal(inf("Kaç km koştun?").unit, "km"); assert.equal(inf("Kaç dakika meditasyon yaptın?").unit, "dk"); assert.equal(inf("Şınav sayısı").unit, "şınav"); });
+t("algılama: hedef ve yön", () => { const a = inf("8 bardak su"); assert.equal(a.goal, 8); assert.equal(a.goalDir, "min"); const b = inf("Günde en fazla 2 fincan kahve"); assert.equal(b.goal, 2); assert.equal(b.goalDir, "max"); assert.equal(b.unit, "fincan"); });
+t("algılama: saat", () => assert.equal(inf("Saat kaçta kalktın?").kind, "time"));
+t("algılama: parantezli birim ve soru cümlesi", () => { assert.equal(inf("Su (bardak)").unit, "bardak"); assert.equal(inf("Günde 3 litre su içtin mi?").kind, "yesno"); });
+t("algılama: kısa ad ve simge", () => { assert.equal(inf("Kaç bardak su içtin?").label, "Bardak su"); assert.equal(inf("Kaç bardak su içtin?").emoji, "💧"); assert.equal(inf("Kitap okudun mu?").emoji, "📖"); });
+t("özel sayı rutini: hedefli (en az / en fazla) ve hedefsiz", () => {
+  const min = { id: "c_1", emoji: "x", group: "ozel", label: "a", question: "a", kind: "number", custom: true, unit: "sayfa", goal: 20, goalDir: "min" };
+  const max = { ...min, id: "c_2", goal: 2, goalDir: "max" }; const free = { id: "c_3", emoji: "x", group: "ozel", label: "a", question: "a", kind: "number", custom: true };
+  assert.equal(S.statusOf(min, { c_1: 25 }, G), "done"); assert.equal(S.statusOf(min, { c_1: 10 }, G), "missed");
+  assert.equal(S.statusOf(max, { c_2: 2 }, G), "done"); assert.equal(S.statusOf(max, { c_2: 3 }, G), "missed");
+  assert.equal(S.statusOf(free, { c_3: 7 }, G), "recorded"); assert.equal(S.statusOf(free, {}, G), "unrecorded");
+});
+t("etkin rutin listesi: özel eklenir, gizlenen çıkar, veri korunur", () => {
+  const custom = [{ id: "c_a", emoji: "📖", group: "ozel", label: "Okuma", question: "Kitap okudun mu?", kind: "yesno", custom: true }];
+  RT.setRoutineRegistry(custom, ["su"]);
+  assert.ok(RT.ROUTINES.some((r) => r.id === "c_a")); assert.ok(!RT.ROUTINES.some((r) => r.id === "su")); assert.ok(RT.ROUTINE_BY_ID.su);
+  const sum = S.daySummary({ c_a: true, su: 1 }, G); assert.equal(sum.done, 1); assert.equal(sum.missed, 0); // gizli su sayılmaz
+  RT.setRoutineRegistry([], []);
+});
+t("normalize: özel rutin değerleri ve tanımları korunur, geçersiz tanım atılır", () => {
+  const r = normalizeData({ entries: { "2026-10-20": { c_a: true, c_b: 2.5, c_c: "07:30", c_d: -1, zzz: 1 } }, customRoutines: [{ id: "c_a", label: "A", kind: "yesno" }, { id: "x_bad", label: "B", kind: "yesno" }, { id: "c_n", label: "N", kind: "number", unit: "dk", goal: 30, goalDir: "max" }], hidden: ["su", 5] });
+  assert.equal(r.data.entries["2026-10-20"].c_a, true); assert.equal(r.data.entries["2026-10-20"].c_b, 2.5); assert.equal(r.data.entries["2026-10-20"].c_c, "07:30"); assert.equal(r.data.entries["2026-10-20"].c_d, undefined); assert.equal(r.data.entries["2026-10-20"].zzz, undefined);
+  assert.deepEqual(r.data.customRoutines.map((x) => x.id), ["c_a", "c_n"]); assert.equal(r.data.customRoutines[1].goalDir, "max"); assert.deepEqual(r.data.hidden, ["su"]);
+});
+t("birleştirme: özel rutinler id ile birleşir; yeni cihazda bulut gizlilikleri gelir", () => {
+  const c = (id) => ({ id, emoji: "x", group: "ozel", label: id, question: id, kind: "yesno", custom: true });
+  const m = M.mergeData({ ...base(), customRoutines: [c("c_1")], hidden: ["su"] }, { ...base(), customRoutines: [c("c_2")] });
+  assert.deepEqual(m.customRoutines.map((x) => x.id).sort(), ["c_1", "c_2"]); assert.deepEqual(m.hidden, ["su"]);
+});
+
 console.log("Planlar");
 const { sortPlans, plansByDate } = await load("plans");
 t("planlar saate göre sıralanır, saatsizler sona", () => {
@@ -144,9 +182,7 @@ t("takvim ızgarası tam haftalardan oluşur ve Pazartesi başlar", () => {
   assert.equal(g.length % 7, 0); assert.equal(g[0], "2026-09-28"); assert.equal(g[g.length - 1], "2026-11-01");
 });
 
-console.log("Bulut birleştirme");
-const M = await load("merge");
-const base = () => emptyData();
+
 t("birleştirme hiçbir kaydı silmez, çakışmada yerel kazanır", () => {
   const cloud = { ...base(), entries: { "2026-10-01": { su: 5, yazilim: true }, "2026-10-02": { su: 7 } } };
   const local = { ...base(), profile: { ...base().profile, onboarded: true, name: "Ali" }, entries: { "2026-10-01": { su: 9 }, "2026-11-03": { egitim: true } } };

@@ -1,5 +1,5 @@
 import { addDays } from "./dates";
-import { ROUTINE_BY_ID, ROUTINES } from "./routines";
+import { ROUTINE_BY_ID, ROUTINES, isActive } from "./routines";
 import {
   comparePeriods,
   hasRecord,
@@ -28,6 +28,7 @@ const prevOf = (dates: string[]) => dates.map((_, i) => addDays(dates[0], i - da
 
 function avgPair(id: string, dates: string[], entries: Entries, walkUnit?: WalkUnit) {
   const r = ROUTINE_BY_ID[id];
+  if (!isActive(id)) return { cur: [] as number[], prev: [] as number[], curAvg: null, prevAvg: null };
   const cur = present(numericSeries(r, dates, entries, walkUnit));
   const prev = present(numericSeries(r, prevOf(dates), entries, walkUnit));
   return { cur, prev, curAvg: mean(cur), prevAvg: mean(prev) };
@@ -145,6 +146,7 @@ export function buildInsights(dates: string[], entries: Entries, goals: Goals, w
   // 5) Kodlama ve ders çalışma kayıtları
   for (const id of ["yazilim", "egitim"] as const) {
     const r = ROUTINE_BY_ID[id];
+    if (!isActive(id)) continue;
     const t = routineTally(r, dates, entries, goals);
     if (t.judged >= 4) {
       const mins = present(numericSeries(r, dates, entries));
@@ -198,7 +200,7 @@ export function buildInsights(dates: string[], entries: Entries, goals: Goals, w
   // 8) Öğün kaydı
   {
     const days = dates.filter((d) => hasRecord(entries[d]));
-    if (days.length >= 4) {
+    if (days.length >= 4 && isActive("beslenme")) {
       const withMeals = days.filter((d) => statusOf(ROUTINE_BY_ID.beslenme, entries[d], goals) === "done").length;
       out.push({
         id: "meals",
