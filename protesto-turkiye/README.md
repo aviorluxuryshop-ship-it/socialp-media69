@@ -4,7 +4,8 @@
 her biri 1 dakikanın altında). Hepsi barışçıl protesto çağrısıdır:
 
 1. **Giriş:** her videonun kendi konusuna özel, 2–3 kısa ve dikkat çeken cümle;
-   video başlık kartıyla değil doğrudan bu cümlelerle açılır.
+   video başlık kartıyla değil doğrudan bu cümlelerle açılır. Hemen ardından
+   **"Sonunu izle."** der; izleyiciyi sona kadar tutmak için.
 2. **Nedir?** Konunun ne olduğu bir iki cümleyle anlatılır.
 3. **Ne zararı var?** Halka etkisi ve kaynaklı rakamlar.
 4. **Kapanış:** **"Sen de protesto etmek istiyorsan, bizden haber bekle ve
