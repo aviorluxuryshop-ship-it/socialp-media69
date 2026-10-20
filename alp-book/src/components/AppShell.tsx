@@ -2,10 +2,11 @@
 
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { BarChart3, CalendarDays, GraduationCap, LayoutDashboard, Settings, Table2, Volume2, VolumeX } from "lucide-react";
+import { BarChart3, CalendarDays, Cloud, CloudOff, GraduationCap, LayoutDashboard, Settings, Table2, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { cloudConfigured, initCloud, useCloud } from "@/lib/cloud";
 import { installGlobalSounds, sfx } from "@/lib/sound";
 import { useStore } from "@/lib/store";
 import { Onboarding } from "./Onboarding";
@@ -29,6 +30,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     setProfile({ soundOn: !soundOn });
     if (!soundOn) sfx.preview();
   };
+  const cloud = useCloud((c) => c.status);
   const SoundBtn = soundOn ? Volume2 : VolumeX;
   const [timedOut, setTimedOut] = useState(false);
 
@@ -39,6 +41,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     if (useStore.persist.hasHydrated()) ready();
     const off = useStore.persist.onFinishHydration(ready);
     installGlobalSounds();
+    initCloud();
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
@@ -75,7 +78,13 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <button type="button" onClick={toggleSound} aria-pressed={soundOn} className="mt-auto flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium text-mute transition-colors hover:text-text">
+        {cloudConfigured && (
+          <Link href="/settings" className="mt-auto flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-[13px] text-mute transition-colors hover:text-text">
+            {cloud === "idle" || cloud === "error" ? <CloudOff size={16} /> : <Cloud size={16} className={cloud === "synced" ? "text-accent" : ""} />}
+            {cloud === "synced" ? "Hesapla eşitlendi" : cloud === "syncing" || cloud === "connecting" ? "Eşitleniyor…" : cloud === "error" ? "Eşitleme sorunu" : "Giriş yapılmadı"}
+          </Link>
+        )}
+        <button type="button" onClick={toggleSound} aria-pressed={soundOn} className="mt-1 flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium text-mute transition-colors hover:text-text">
           <SoundBtn size={17} /> {soundOn ? "Sesler açık" : "Sesler kapalı"}
         </button>
       </aside>

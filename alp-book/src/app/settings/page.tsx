@@ -2,10 +2,12 @@
 
 import { Download, Trash2, Upload, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
+import { AccountCard } from "@/components/AccountCard";
 import { NumberField } from "@/components/track/fields";
 import { SectionHead } from "@/components/ui";
 import { normalizeData } from "@/lib/normalize";
 import { GROUPS, ROUTINES } from "@/lib/routines";
+import { useCloud } from "@/lib/cloud";
 import { sfx } from "@/lib/sound";
 import { snapshot, useStore } from "@/lib/store";
 import { todayKey } from "@/lib/dates";
@@ -34,6 +36,7 @@ export default function SettingsPage() {
   const [pending, setPending] = useState<Pending | null>(null);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
+  const signedIn = useCloud((c) => c.user !== null);
 
   const days = Object.keys(entries).length;
   const values = countValues(snapshot());
@@ -69,9 +72,11 @@ export default function SettingsPage() {
 
       <section className="panel p-5 sm:p-6">
         <SectionHead title="Profil" />
-        <label className="eyebrow" htmlFor="pname">Adın</label>
+        <label className="eyebrow block" htmlFor="pname">Adın</label>
         <input id="pname" className="input mt-2 max-w-sm" value={profile.name} maxLength={40} onChange={(e) => setProfile({ name: e.target.value })} onBlur={(e) => !e.target.value.trim() && setProfile({ name: "Efehan" })} />
       </section>
+
+      <AccountCard />
 
       <section className="panel p-5 sm:p-6">
         <SectionHead title="Ses efektleri" />
@@ -149,7 +154,7 @@ export default function SettingsPage() {
           <button className="btn btn-quiet !text-rose" onClick={() => setConfirmReset(true)}><Trash2 size={16} /> Tüm verileri sil</button>
         ) : (
           <div className="rounded-xl border border-rose/40 bg-rose/[0.05] p-4">
-            <p className="text-[14px] font-medium">Tüm kayıtlar, hedefler ve sınavlar silinecek. Bu işlem geri alınamaz.</p>
+            <p className="text-[14px] font-medium">Tüm kayıtlar, planlar, hedefler ve sınavlar silinecek.{signedIn ? " Google hesabına bağlı olduğun için buluttaki kopya da silinir." : ""} Bu işlem geri alınamaz.</p>
             <p className="mt-1 text-[13px] text-mute">Önce "Yedek al" ile bir kopya indirmeni öneririz.</p>
             <div className="mt-3 flex gap-2">
               <button className="btn btn-sm !bg-rose !text-black" onClick={() => { reset(); setConfirmReset(false); }}>Evet, hepsini sil</button>

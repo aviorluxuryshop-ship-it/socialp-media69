@@ -3,12 +3,15 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { cloudConfigured, signInWithGoogle, useCloud } from "@/lib/cloud";
 import { sfx } from "@/lib/sound";
+import { GoogleMark } from "./AccountCard";
 import { useStore } from "@/lib/store";
 
 export function Onboarding() {
   const finish = useStore((s) => s.finishOnboarding);
   const current = useStore((s) => s.profile.name);
+  const cloud = useCloud((c) => c.status);
   const [name, setName] = useState(current === "Efehan" ? "" : current);
 
   return (
@@ -36,8 +39,23 @@ export function Onboarding() {
         <button className="btn btn-primary mt-5 w-full">
           Başla <ArrowRight size={16} />
         </button>
-        <p className="mt-4 text-center text-xs text-faint">Veriler yalnızca bu cihazda saklanır. Ayarlar'dan yedek alabilirsin.</p>
+        {cloudConfigured && (
+          <>
+            <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-wider text-faint"><span className="h-px flex-1 bg-line" />veya<span className="h-px flex-1 bg-line" /></div>
+            <button type="button" className="btn btn-quiet w-full" disabled={cloud === "connecting" || cloud === "syncing"} onClick={() => void signInWithGoogle()}>
+              <GoogleMark /> {cloud === "connecting" || cloud === "syncing" ? "Verilerin getiriliyor…" : "Google ile giriş yap"}
+            </button>
+            <p className="mt-2 text-center text-[12px] text-mute">Daha önce kayıt tuttuysan verilerin otomatik gelir.</p>
+            {cloud === "error" && <CloudError />}
+          </>
+        )}
+        <p className="mt-4 text-center text-xs text-faint">{cloudConfigured ? "Giriş yapmazsan veriler yalnızca bu cihazda saklanır." : "Veriler yalnızca bu cihazda saklanır. Ayarlar'dan yedek alabilirsin."}</p>
       </motion.form>
     </div>
   );
+}
+
+function CloudError() {
+  const error = useCloud((c) => c.error);
+  return <p role="alert" className="mt-3 text-center text-[13px] text-rose">{error}</p>;
 }
