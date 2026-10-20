@@ -5,7 +5,7 @@ import { createJSONStorage, persist, type StateStorage } from "zustand/middlewar
 import { isValidKey, todayKey } from "./dates";
 import { migrateV1, emptyData, normalizeData, cleanValue } from "./normalize";
 import { uid } from "./uid";
-import type { AppData, Course, Exam, Goals, Profile, RoutineValue } from "./types";
+import type { AppData, Course, Exam, Goals, Plan, Profile, RoutineValue } from "./types";
 
 export const STORAGE_KEY = "alpbook:v2";
 const LEGACY_KEY = "alpbook:v1";
@@ -22,6 +22,10 @@ interface Actions {
   addExam: (e: Omit<Exam, "id">) => void;
   updateExam: (id: string, patch: Partial<Exam>) => void;
   removeExam: (id: string) => void;
+  addPlan: (p: Omit<Plan, "id" | "done">) => boolean;
+  updatePlan: (id: string, patch: Partial<Omit<Plan, "id">>) => void;
+  togglePlan: (id: string) => void;
+  removePlan: (id: string) => void;
   replaceData: (d: AppData) => void;
   reset: () => void;
 }
@@ -101,6 +105,17 @@ export const useStore = create<Store>()(
       updateExam: (id, patch) => set((s) => ({ exams: s.exams.map((e) => (e.id === id ? { ...e, ...patch } : e)) })),
       removeExam: (id) => set((s) => ({ exams: s.exams.filter((e) => e.id !== id) })),
 
+      addPlan: (p) => {
+        const title = p.title.trim().slice(0, 120);
+        if (!title || !isValidKey(p.date)) return false;
+        const plan: Plan = { id: uid(), date: p.date, title, done: false, ...(p.time ? { time: p.time } : {}), ...(p.note?.trim() ? { note: p.note.trim().slice(0, 500) } : {}) };
+        set((s) => ({ plans: [...s.plans, plan] }));
+        return true;
+      },
+      updatePlan: (id, patch) => set((s) => ({ plans: s.plans.map((p) => (p.id === id ? { ...p, ...patch } : p)) })),
+      togglePlan: (id) => set((s) => ({ plans: s.plans.map((p) => (p.id === id ? { ...p, done: !p.done } : p)) })),
+      removePlan: (id) => set((s) => ({ plans: s.plans.filter((p) => p.id !== id) })),
+
       replaceData: (d) => set({ ...emptyData(), ...d }),
       reset: () => set({ ...emptyData() }),
     }),
@@ -108,7 +123,7 @@ export const useStore = create<Store>()(
       name: STORAGE_KEY,
       version: 2,
       storage: createJSONStorage(() => storage),
-      partialize: (s) => ({ profile: s.profile, goals: s.goals, entries: s.entries, courses: s.courses, exams: s.exams, legacy: s.legacy }),
+      partialize: (s) => ({ profile: s.profile, goals: s.goals, entries: s.entries, courses: s.courses, exams: s.exams, plans: s.plans, legacy: s.legacy }),
       // Kayıtlı veri bozuk/kısmi olsa bile uygulama açılır; geçerli kısımlar korunur.
       merge: (persisted, current) => {
         const n = normalizeData(persisted);
@@ -119,6 +134,6 @@ export const useStore = create<Store>()(
 );
 
 export const snapshot = (): AppData => {
-  const { profile, goals, entries, courses, exams, legacy } = useStore.getState();
-  return { profile, goals, entries, courses, exams, ...(legacy !== undefined ? { legacy } : {}) };
+  const { profile, goals, entries, courses, exams, plans, legacy } = useStore.getState();
+  return { profile, goals, entries, courses, exams, plans, ...(legacy !== undefined ? { legacy } : {}) };
 };

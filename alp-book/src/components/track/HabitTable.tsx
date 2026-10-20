@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { dayNum, longDate, shortDay, todayKey } from "@/lib/dates";
 import { ROUTINES } from "@/lib/routines";
 import { asWalk, asYesNoMin, daySummary, pct, sleepOf, statusOf, validMeals, type Status } from "@/lib/stats";
+import { sfx } from "@/lib/sound";
 import { useStore } from "@/lib/store";
 import { fmtNum } from "@/lib/time";
 import type { DayEntry, Routine } from "@/lib/types";
@@ -105,9 +106,16 @@ export function HabitTable({
     const e = entries[d];
     const y = asYesNoMin(e?.[r.id]);
     if (y?.minutes) return onEditField(d, r.id); // süreyi yanlışlıkla silmemek için formda düzenlenir
-    if (!y) setValue(d, r.id, true);
-    else if (y.done) setValue(d, r.id, false);
-    else setValue(d, r.id, undefined);
+    if (!y) {
+      setValue(d, r.id, true);
+      sfx.yes();
+    } else if (y.done) {
+      setValue(d, r.id, false);
+      sfx.no();
+    } else {
+      setValue(d, r.id, undefined);
+      sfx.clear();
+    }
     onSelect(d);
   }
 

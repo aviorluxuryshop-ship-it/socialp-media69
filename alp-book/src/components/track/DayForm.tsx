@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { addDays, longDate, todayKey } from "@/lib/dates";
 import { GROUPS, MEAL_TYPES, ROUTINES } from "@/lib/routines";
 import { asWalk, asYesNoMin, daySummary, pct, sleepOf, validMeals } from "@/lib/stats";
+import { sfx } from "@/lib/sound";
 import { useStore, useUi } from "@/lib/store";
 import { fmtDuration, parseTime } from "@/lib/time";
 import { uid } from "@/lib/uid";
@@ -255,7 +256,10 @@ function MealsField({ date, meals, onChange }: { date: string; meals: Meal[]; on
   const count = validMeals(meals).length;
   const commit = (next: Meal[]) => onChange(next.length ? next : undefined);
   const patch = (id: string, p: Partial<Meal>) => commit(meals.map((m) => (m.id === id ? { ...m, ...p } : m)));
-  const add = () => commit([...meals, { id: uid(), type: MEAL_TYPES[Math.min(meals.length, MEAL_TYPES.length - 1)], items: "" }]);
+  const add = () => {
+    sfx.add();
+    commit([...meals, { id: uid(), type: MEAL_TYPES[Math.min(meals.length, MEAL_TYPES.length - 1)], items: "" }]);
+  };
 
   return (
     <div className="space-y-3">
@@ -267,7 +271,10 @@ function MealsField({ date, meals, onChange }: { date: string; meals: Meal[]; on
                 <option key={t}>{t}</option>
               ))}
             </select>
-            <button type="button" aria-label={`${i + 1}. öğünü sil`} onClick={() => commit(meals.filter((x) => x.id !== m.id))} className="ml-auto grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-rose">
+            <button type="button" aria-label={`${i + 1}. öğünü sil`} onClick={() => {
+                sfx.clear();
+                commit(meals.filter((x) => x.id !== m.id));
+              }} className="ml-auto grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-rose">
               <Trash2 size={15} />
             </button>
           </div>

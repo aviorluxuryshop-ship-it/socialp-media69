@@ -1,11 +1,12 @@
 "use client";
 
-import { Download, Trash2, Upload } from "lucide-react";
+import { Download, Trash2, Upload, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
 import { NumberField } from "@/components/track/fields";
 import { SectionHead } from "@/components/ui";
 import { normalizeData } from "@/lib/normalize";
 import { GROUPS, ROUTINES } from "@/lib/routines";
+import { sfx } from "@/lib/sound";
 import { snapshot, useStore } from "@/lib/store";
 import { todayKey } from "@/lib/dates";
 import type { AppData } from "@/lib/types";
@@ -24,7 +25,7 @@ function merge(cur: AppData, inc: AppData): AppData {
   const entries = { ...cur.entries };
   for (const [day, e] of Object.entries(inc.entries)) entries[day] = { ...(entries[day] ?? {}), ...e };
   const byId = <T extends { id: string }>(a: T[], b: T[]) => [...a, ...b.filter((x) => !a.some((y) => y.id === x.id))];
-  return { ...cur, entries, courses: byId(cur.courses, inc.courses), exams: byId(cur.exams, inc.exams), legacy: cur.legacy ?? inc.legacy };
+  return { ...cur, entries, courses: byId(cur.courses, inc.courses), exams: byId(cur.exams, inc.exams), plans: byId(cur.plans, inc.plans), legacy: cur.legacy ?? inc.legacy };
 }
 
 export default function SettingsPage() {
@@ -70,6 +71,21 @@ export default function SettingsPage() {
         <SectionHead title="Profil" />
         <label className="eyebrow" htmlFor="pname">Adın</label>
         <input id="pname" className="input mt-2 max-w-sm" value={profile.name} maxLength={40} onChange={(e) => setProfile({ name: e.target.value })} onBlur={(e) => !e.target.value.trim() && setProfile({ name: "Efehan" })} />
+      </section>
+
+      <section className="panel p-5 sm:p-6">
+        <SectionHead title="Ses efektleri" />
+        <p className="mb-4 text-[13px] leading-relaxed text-mute">Yumuşak, sakin tınılar: işaretlerken, plan eklerken ve sayfalar arasında geçerken çalar. Telefonda sessiz modundaysa duyulmayabilir.</p>
+        <div className="flex flex-wrap items-center gap-4">
+          <button type="button" role="switch" aria-checked={profile.soundOn} onClick={() => { setProfile({ soundOn: !profile.soundOn }); if (!profile.soundOn) sfx.preview(); }} className="btn btn-quiet">
+            {profile.soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />} {profile.soundOn ? "Sesler açık" : "Sesler kapalı"}
+          </button>
+          <label className="flex min-w-[200px] flex-1 items-center gap-3 text-[13px] text-mute">
+            Seviye
+            <input type="range" min={0.1} max={1} step={0.05} value={profile.volume} disabled={!profile.soundOn} aria-label="Ses seviyesi" onChange={(e) => setProfile({ volume: Number(e.target.value) })} onPointerUp={() => sfx.preview()} onKeyUp={() => sfx.preview()} className="h-1.5 flex-1 cursor-pointer accent-[#00ff66] disabled:opacity-40" />
+          </label>
+          <button type="button" className="btn btn-quiet btn-sm" disabled={!profile.soundOn} onClick={() => sfx.preview()}>Dinle</button>
+        </div>
       </section>
 
       <section className="panel p-5 sm:p-6">
