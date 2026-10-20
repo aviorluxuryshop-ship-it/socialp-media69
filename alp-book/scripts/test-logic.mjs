@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 
 const out = mkdtempSync(join(tmpdir(), "alpbook-test-"));
 execSync(
-  `npx tsc src/lib/time.ts src/lib/dates.ts src/lib/stats.ts src/lib/normalize.ts src/lib/insights.ts src/lib/routines.ts src/lib/types.ts src/lib/plans.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
+  `npx tsc src/lib/time.ts src/lib/dates.ts src/lib/stats.ts src/lib/normalize.ts src/lib/insights.ts src/lib/routines.ts src/lib/types.ts src/lib/plans.ts src/lib/merge.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
   { stdio: "inherit" },
 );
 // Göreli import'lara .js ekle (Node ESM için) ve modülleri yükle.
@@ -131,6 +131,37 @@ t("normalize: eski veride ses varsayılanı açık", () => assert.equal(normaliz
 t("takvim ızgarası tam haftalardan oluşur ve Pazartesi başlar", () => {
   const g = D.monthGrid("2026-10-15");
   assert.equal(g.length % 7, 0); assert.equal(g[0], "2026-09-28"); assert.equal(g[g.length - 1], "2026-11-01");
+});
+
+console.log("Bulut birleştirme");
+const M = await load("merge");
+const base = () => emptyData();
+t("birleştirme hiçbir kaydı silmez, çakışmada yerel kazanır", () => {
+  const cloud = { ...base(), entries: { "2026-10-01": { su: 5, yazilim: true }, "2026-10-02": { su: 7 } } };
+  const local = { ...base(), profile: { ...base().profile, onboarded: true, name: "Ali" }, entries: { "2026-10-01": { su: 9 }, "2026-11-03": { egitim: true } } };
+  const m = M.mergeData(cloud, local);
+  assert.equal(m.entries["2026-10-01"].su, 9); assert.equal(m.entries["2026-10-01"].yazilim, true);
+  assert.equal(m.entries["2026-10-02"].su, 7); assert.equal(m.entries["2026-11-03"].egitim, true);
+  assert.equal(m.profile.name, "Ali");
+});
+t("birleştirme: yeni cihazda (yerel boş) bulut verisi gelir", () => {
+  const cloud = { ...base(), profile: { ...base().profile, onboarded: true, name: "Efe" }, goals: { ...DEFAULT_GOALS, waterGlasses: 10 }, plans: [{ id: "p1", date: "2026-10-20", title: "x", done: false }], entries: { "2026-10-01": { su: 5 } } };
+  const m = M.mergeData(cloud, base());
+  assert.equal(m.profile.onboarded, true); assert.equal(m.profile.name, "Efe"); assert.equal(m.goals.waterGlasses, 10); assert.equal(m.plans.length, 1);
+});
+t("birleştirme: plan ve sınavlar id'ye göre birleşir (kopya olmaz)", () => {
+  const p = (id, title) => ({ id, date: "2026-10-20", title, done: false });
+  const m = M.mergeData({ ...base(), plans: [p("a", "bulut"), p("b", "b")] }, { ...base(), plans: [p("a", "yerel"), p("c", "c")] });
+  assert.deepEqual(m.plans.map((x) => x.id).sort(), ["a", "b", "c"]); assert.equal(m.plans.find((x) => x.id === "a").title, "yerel");
+});
+t("birleştirme: cihaz tercihleri (ses) yerelde kalır", () => {
+  const m = M.mergeData({ ...base(), profile: { ...base().profile, soundOn: true } }, { ...base(), profile: { ...base().profile, soundOn: false, volume: 0.2 } });
+  assert.equal(m.profile.soundOn, false); assert.equal(m.profile.volume, 0.2);
+});
+t("aylara bölme ve meta belgesi cihaz tercihlerini içermez", () => {
+  const sp = M.splitMonths({ "2026-10-01": { su: 1 }, "2026-10-02": { su: 2 }, "2026-11-01": { su: 3 } });
+  assert.deepEqual(Object.keys(sp).sort(), ["2026-10", "2026-11"]); assert.equal(Object.keys(sp["2026-10"]).length, 2);
+  const meta = M.toMeta(base()); assert.equal("soundOn" in meta, false); assert.equal("volume" in meta, false);
 });
 
 console.log(`\n${n} test geçti.`);

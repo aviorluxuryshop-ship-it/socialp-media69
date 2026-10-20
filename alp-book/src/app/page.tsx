@@ -9,6 +9,7 @@ import { ExamPanel } from "@/components/ExamPanel";
 import { ProgressRing } from "@/components/ProgressRing";
 import { Delta, SectionHead } from "@/components/ui";
 import { sortPlans } from "@/lib/plans";
+import { cloudConfigured, useCloud } from "@/lib/cloud";
 import { sfx } from "@/lib/sound";
 import { greeting, lastNDays, longDate, prettyDate, shortDay, todayKey, weekDays } from "@/lib/dates";
 import { buildInsights } from "@/lib/insights";
@@ -19,6 +20,7 @@ import { useStore } from "@/lib/store";
 export default function Dashboard() {
   const { entries, goals, profile, plans } = useStore();
   const togglePlan = useStore((s) => s.togglePlan);
+  const cloudStatus = useCloud((c) => c.status);
   const today = todayKey();
 
   const d = useMemo(() => {
@@ -62,6 +64,13 @@ export default function Dashboard() {
           Bugünü kaydet <ArrowRight size={16} />
         </Link>
       </header>
+
+      {cloudConfigured && cloudStatus === "idle" && (
+        <Link href="/settings" className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 text-[13px] text-mute transition-colors hover:text-text">
+          <span>Verilerin şu an yalnızca bu cihazda. Google ile giriş yapıp hesabına yedekle.</span>
+          <ArrowRight size={15} className="shrink-0" />
+        </Link>
+      )}
 
       <section className="panel grid divide-line md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:divide-x">
         <div className="flex flex-col items-center gap-6 p-5 sm:flex-row sm:p-6 md:flex-col md:items-start lg:flex-row lg:items-center">
