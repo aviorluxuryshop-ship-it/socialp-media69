@@ -37,9 +37,10 @@ XTTS_URL = "https://huggingface.co/coqui/XTTS-v2/resolve/main/"
 XTTS_DIR = CACHE / "xtts-v2"
 
 INTRO = 0.3         # video doğrudan giriş cümlesiyle başlar; başlık kartı yalnızca kapakta
-TAIL = 2.6          # kapanış kartı seslendirmeden sonra ekranda kalır
+TAIL = 1.8          # kapanış kartı seslendirmeden sonra ekranda kalır
 LENGTH_SCALE = 1.16  # 1'den büyük = daha ağır, dramatik okuma
 MAX_SECONDS = 60.0
+SPEEDUP = 1.3       # konuşma ve duraklar bu kadar hızlandırılır (perde değişmez)
 VISUAL_LEAD = 0.15  # görsel, sesten biraz önce gelir
 CROSSFADE = 0.1  # glitch kesmesi geçişi örter; uzun olursa iki sayı üst üste biner
 
@@ -182,6 +183,8 @@ def plan(video, voice, tmp):
     scale = LENGTH_SCALE
     while True:
         deep, timings = audio.build_voice(voice, video["lines"], tmp, INTRO, scale)
+        deep = voiceover.speed_up(deep, SPEEDUP)
+        timings = [(a / SPEEDUP, b / SPEEDUP) for a, b in timings]
         total = timings[-1][1] + TAIL
         if total <= MAX_SECONDS or scale <= 0.9:
             break

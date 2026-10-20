@@ -743,16 +743,16 @@ def v_cta(canvas, v, tl, ctx):
     o2 = ease_out((tl - 0.25) / 0.3)
     draw_text(canvas, "SEN DE PROTESTO ETMEK İSTİYORSAN", INTER_B, 40, W / 2, 700, WHITE, o2,
               tracking=4, glow_gain=0.4)
-    o3 = ease_out((tl - 2.4) / 0.3)
+    o3 = ease_out((tl - 1.85) / 0.3)
     draw_text(canvas, "BİZDEN HABER BEKLE", INTER_XB, 64, W / 2, 780, WHITE, o3, tracking=3,
               glow_gain=0.5)
-    o4 = ease_out((tl - 3.7) / 0.3)
+    o4 = ease_out((tl - 2.85) / 0.3)
     draw_text(canvas, "TAKİPTE KAL", ANTON, fit_size(["TAKİPTE KAL"], ANTON, 900, 200), W / 2, 972,
-              WHITE, o4, glow_gain=0.8, scale=1 + (1 - ease_out((tl - 3.7) / 0.35)) * 0.1)
-    o5 = ease_out((tl - 4.9) / 0.3)
+              WHITE, o4, glow_gain=0.8, scale=1 + (1 - ease_out((tl - 2.85) / 0.35)) * 0.1)
+    o5 = ease_out((tl - 3.8) / 0.3)
     draw_text(canvas, "BU SAYFAYI YAY", ANTON, fit_size(["BU SAYFAYI YAY"], ANTON, 900, 132), W / 2,
-              1182, RED, o5, glow_gain=0.8, scale=1 + (1 - ease_out((tl - 4.9) / 0.35)) * 0.1)
-    o6 = ease_out((tl - 5.6) / 0.4)
+              1182, RED, o5, glow_gain=0.8, scale=1 + (1 - ease_out((tl - 3.8) / 0.35)) * 0.1)
+    o6 = ease_out((tl - 4.3) / 0.4)
     draw_rect(canvas, 110, 1310, 230, 1314, DEEP_RED, o6)
     draw_rect(canvas, W - 230, 1288, W - 110, 1314, DEEP_RED, o6)
     draw_text(canvas, "PROTESTO TÜRKİYE", INTER_B, 38, W / 2, 1312, WHITE, o6, tracking=9, glow_gain=0.3)
