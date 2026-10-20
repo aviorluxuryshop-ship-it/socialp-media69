@@ -79,7 +79,7 @@ export const useStore = create<Store>()(
 
       finishOnboarding: (name, useDefaults = true) =>
         set((s) => ({
-          profile: { ...s.profile, name: name.trim().slice(0, 40) || "Efehan", onboarded: true },
+          profile: { ...s.profile, name: name.trim().slice(0, 40), onboarded: true },
           hidden: useDefaults ? s.hidden : DEFAULT_ROUTINES.map((r) => r.id),
         })),
 

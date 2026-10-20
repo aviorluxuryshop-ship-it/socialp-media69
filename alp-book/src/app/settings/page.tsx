@@ -78,7 +78,7 @@ export default function SettingsPage() {
       <section className="panel p-5 sm:p-6">
         <SectionHead title="Profil" />
         <label className="eyebrow block" htmlFor="pname">Adın</label>
-        <input id="pname" className="input mt-2 max-w-sm" value={profile.name} maxLength={40} onChange={(e) => setProfile({ name: e.target.value })} onBlur={(e) => !e.target.value.trim() && setProfile({ name: "Efehan" })} />
+        <input id="pname" className="input mt-2 max-w-sm" value={profile.name} maxLength={40} onChange={(e) => setProfile({ name: e.target.value })} onBlur={(e) => setProfile({ name: e.target.value.trim() })} />
       </section>
 
       <AccountCard />

@@ -59,7 +59,7 @@ export default function Dashboard() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="eyebrow">{longDate(today)}</p>
-          <h1 className="h-title mt-1 text-[28px] md:text-[34px]">{greeting()}, {profile.name}</h1>
+          <h1 className="h-title mt-1 text-[28px] md:text-[34px]">{greeting()}{profile.name ? `, ${profile.name}` : ""}</h1>
         </div>
         <Link href="/takip" className="btn btn-primary">
           Bugünü kaydet <ArrowRight size={16} />

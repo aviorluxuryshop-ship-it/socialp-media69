@@ -4,7 +4,7 @@ import { parseTime } from "./time";
 import type { AppData, Course, DayEntry, Exam, Goals, Meal, Plan, Profile, Routine, RoutineValue, WalkUnit } from "./types";
 
 export const emptyData = (): AppData => ({
-  profile: { name: "Efehan", onboarded: false, walkUnit: "steps", soundOn: true, volume: 0.6 },
+  profile: { name: "", onboarded: false, walkUnit: "steps", soundOn: true, volume: 0.6 },
   goals: { ...DEFAULT_GOALS },
   entries: {},
   courses: [],

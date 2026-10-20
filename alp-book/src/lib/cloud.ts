@@ -42,6 +42,8 @@ const set = useCloud.setState;
 
 const FLAG = "alpbook:cloud";
 const DEVICE_KEY = "alpbook:device";
+/** Bu cihazdaki yerel verinin hangi Google hesabına ait olduğu (başkasının verisiyle karışmasın diye). */
+const OWNER_KEY = "alpbook:owner";
 
 const lsGet = (k: string) => {
   try {
@@ -143,7 +145,18 @@ export async function signInWithGoogle() {
   }
 }
 
-export async function signOutCloud() {
+/** Cihaz tercihlerini (ses, birim) koruyup geri kalan her şeyi boşaltır. Eşitleme durdurulmuşken çağrılmalı. */
+function wipeLocal() {
+  const { profile } = useStore.getState();
+  useStore.getState().replaceData({ ...emptyData(), profile: { ...emptyData().profile, soundOn: profile.soundOn, volume: profile.volume, walkUnit: profile.walkUnit } });
+  lsSet(OWNER_KEY, null);
+}
+
+/**
+ * Çıkış. wipe=true: bu cihazdaki kopya silinir (veriler hesapta kalır) — ortak kullanılan cihazlar için.
+ * wipe=false: kopya cihazda kalır; başka bir hesapla girilirse birleştirilmez, silinip o hesabın verisi yüklenir.
+ */
+export async function signOutCloud(wipe = false) {
   stopSync?.();
   stopSync = null;
   lsSet(FLAG, null);
@@ -153,6 +166,7 @@ export async function signOutCloud() {
   } catch {
     /* yoksay */
   }
+  if (wipe) wipeLocal();
   set({ status: "idle", user: null, error: null });
 }
 
@@ -274,7 +288,11 @@ async function startSync(user: CloudUser) {
       hasCloud = true;
       Object.assign(cloud.entries, parseMonth(doc.data().entries));
     });
+    // Bu cihazdaki veri başka bir hesaba aitse ona dokunma/birleştirme: temizle, yalnızca bu hesabın verisi gelsin.
+    const owner = lsGet(OWNER_KEY);
+    if (owner && owner !== user.uid) wipeLocal();
     if (hasCloud) applyToStore((local) => mergeData(cloud, local));
+    lsSet(OWNER_KEY, user.uid);
     // Yerel değişiklikleri hemen izlemeye başla; ilk yazma sürerken yapılanlar da kaçmasın.
     unsubs.push(
       useStore.subscribe(() => {
