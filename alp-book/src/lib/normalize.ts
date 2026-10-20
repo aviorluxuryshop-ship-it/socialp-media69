@@ -42,6 +42,7 @@ export function cleanValue(id: string, v: unknown): RoutineValue | undefined {
       return m === null ? undefined : `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
     }
     case "duration":
+    case "nap":
       return isNum(v) && v >= 0 && v <= LIMITS.screenMin ? Math.round(v) : undefined;
     case "walk": {
       if (!isObj(v) || !isNum(v.value) || v.value < 0) return undefined;

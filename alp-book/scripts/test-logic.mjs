@@ -114,6 +114,17 @@ t("v1 verisi taşınır, ham kayıt korunur", () => {
 });
 t("bozuk giriş null döner", () => { assert.equal(normalizeData(null), null); assert.equal(normalizeData({ foo: 1 }), null); });
 
+console.log("Gün içi uyku");
+t("gün içi uyku: kayıt yok → kaydedilmedi, 0 → kaydedildi (başarısızlık değil), süre → kaydedildi", () => {
+  assert.equal(S.statusOf(R.uyku_gunici, {}, G), "unrecorded");
+  assert.equal(S.statusOf(R.uyku_gunici, { uyku_gunici: 0 }, G), "recorded");
+  assert.equal(S.statusOf(R.uyku_gunici, { uyku_gunici: 45 }, G), "recorded");
+});
+t("gün içi uyku yüzdeyi etkilemez", () => { const s = S.daySummary({ yazilim: true, uyku_gunici: 90 }, G); assert.equal(s.done, 1); assert.equal(s.missed, 0); assert.equal(Math.round(s.rate * 100), 100); });
+t("gün içi uyku serisi saat cinsinden, kayıtsız gün null", () => { const r = R.uyku_gunici; assert.equal(S.numericOf(r, { uyku_gunici: 90 }), 1.5); assert.equal(S.numericOf(r, { uyku_gunici: 0 }), 0); assert.equal(S.numericOf(r, {}), null); });
+t("normalize: gün içi uyku sınırları", () => { const r = normalizeData({ entries: { "2026-10-20": { uyku_gunici: 60 }, "2026-10-21": { uyku_gunici: 5000 } } }); assert.equal(r.data.entries["2026-10-20"].uyku_gunici, 60); assert.equal(r.data.entries["2026-10-21"], undefined); });
+t("rutin sırası: gün içi uyku, uyku süresinden hemen sonra", () => { const ids = ROUTINES.map((r) => r.id); assert.equal(ids[ids.indexOf("uyku_sure") + 1], "uyku_gunici"); });
+
 console.log("Planlar");
 const { sortPlans, plansByDate } = await load("plans");
 t("planlar saate göre sıralanır, saatsizler sona", () => {

@@ -53,6 +53,8 @@ export function statusOf(r: Routine, e: DayEntry | undefined, g: Goals): Status 
       const m = sleepOf(e);
       return m === null ? "unrecorded" : m >= g.sleepHours * 60 ? "done" : "missed";
     }
+    case "nap":
+      return typeof v === "number" ? "recorded" : "unrecorded"; // hedefi olmayan bilgi alanı
     case "duration":
       return typeof v === "number" ? (v <= g.screenMaxHours * 60 ? "done" : "missed") : "unrecorded";
     case "walk": {
@@ -221,6 +223,7 @@ export function numericOf(r: Routine, e: DayEntry | undefined, walkUnit: WalkUni
       return m === null ? null : Math.round((m / 60) * 100) / 100;
     }
     case "duration":
+    case "nap":
       return typeof v === "number" ? Math.round((v / 60) * 100) / 100 : null;
     case "walk": {
       const w = asWalk(v);

@@ -47,6 +47,9 @@ function Cell({ r, e, status }: { r: Routine; e: DayEntry | undefined; status: S
     case "duration":
       if (typeof v === "number") main = <span className="num text-[12px] font-semibold">{compactHM(v)}</span>;
       break;
+    case "nap":
+      if (typeof v === "number") main = <span className="num text-[12px] font-semibold">{v === 0 ? "yok" : compactHM(v)}</span>;
+      break;
     case "walk": {
       const w = asWalk(v);
       if (w) {
