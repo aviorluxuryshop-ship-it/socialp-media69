@@ -1,5 +1,5 @@
 /** Rutin gruplarının görünen adı (tablo, analiz ve kategori özetlerinde kullanılır). */
-export type GroupId = "yazilim" | "egitim" | "okul" | "saglik" | "uyku" | "dijital" | "bakim" | "duzen" | "aktivite" | "beslenme";
+export type GroupId = "ozel" | "yazilim" | "egitim" | "okul" | "saglik" | "uyku" | "dijital" | "bakim" | "duzen" | "aktivite" | "beslenme";
 
 export type RoutineKind =
   | "yesno" // Evet / Hayır
@@ -10,7 +10,8 @@ export type RoutineKind =
   | "duration" // Saat + dakika
   | "nap" // Gün içi uyku süresi (0 = uyumadım)
   | "walk" // Adım veya dakika
-  | "meals"; // Öğün listesi
+  | "meals" // Öğün listesi
+  | "number"; // Özel rutin: sayı (birim ve isteğe bağlı hedefle)
 
 export interface Routine {
   id: string;
@@ -21,6 +22,14 @@ export interface Routine {
   /** Günlük girişte sorulan tam soru. */
   question: string;
   kind: RoutineKind;
+  /** Kullanıcının eklediği rutin. */
+  custom?: boolean;
+  /** Özel sayı rutini için birim (bardak, dk, sayfa…). */
+  unit?: string;
+  /** Özel sayı rutini için isteğe bağlı hedef. */
+  goal?: number;
+  /** min: en az hedef kadar (varsayılan), max: en fazla hedef kadar. */
+  goalDir?: "min" | "max";
 }
 
 export interface Meal {
@@ -102,6 +111,10 @@ export interface AppData {
   courses: Course[];
   exams: Exam[];
   plans: Plan[];
+  /** Kullanıcının eklediği rutinler (silinmez, gerekirse `hidden` ile gizlenir). */
+  customRoutines: Routine[];
+  /** Gizlenen rutin id'leri (varsayılan ve özel). Verileri saklanmaya devam eder. */
+  hidden: string[];
   /** Eski sürümden (v1) taşınan ve yeni rutinlerle eşleşmeyen ham kayıtlar — silinmez. */
   legacy?: unknown;
 }

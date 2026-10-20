@@ -10,7 +10,8 @@ import { Strip, StripLegend } from "@/components/charts/Strip";
 import { Delta, EmptyState, Segmented } from "@/components/ui";
 import { dayNum, isValidKey, lastNDays, longDate, monthLabel, prettyDate, rangeDays, shortMonth, todayKey } from "@/lib/dates";
 import { buildInsights } from "@/lib/insights";
-import { GROUPS, ROUTINES, ROUTINE_BY_ID } from "@/lib/routines";
+import { GROUPS, ROUTINES, ROUTINE_BY_ID, isActive } from "@/lib/routines";
+import { useRoutines } from "@/lib/useRoutines";
 import { comparePeriods, dailyRateSeries, groupStats, mean, monthlyBars, numericSeries, pct, present, rangeSummary, routineTally, statusOf, strongestWeakest, validMeals, weeklyBars, type Entries } from "@/lib/stats";
 import { useStore } from "@/lib/store";
 import { fmtDuration, fmtHours, fmtNum, parseTime } from "@/lib/time";
@@ -26,6 +27,7 @@ const clock = (h: number) => {
 
 export default function AnalysisPage() {
   const { entries, goals, profile } = useStore();
+  const activeRoutines = useRoutines();
   const today = todayKey();
   const [preset, setPreset] = useState<Preset>("30");
   const [from, setFrom] = useState(() => lastNDays(30, today)[0]);
@@ -54,7 +56,7 @@ export default function AnalysisPage() {
       months: monthlyBars(end, 6, entries, goals),
       insights: buildInsights(dates, entries, goals, walkUnit),
     };
-  }, [dates, end, entries, goals, walkUnit]);
+  }, [dates, end, entries, goals, walkUnit, activeRoutines]);
 
   const tick = tickFor(dates);
   const hasData = a.total.daysWithData > 0;
@@ -138,9 +140,10 @@ export default function AnalysisPage() {
             <h2 id="h-tutarlilik" className="h-title text-base">Tutarlılık: kodlama, ders çalışma, öğün kaydı</h2>
             <p className="mb-4 mt-0.5 text-[12px] text-mute">Her hücre bir gün. Boş hücreler kaydedilmemiş günleri gösterir; başarısızlık değildir.</p>
             <div className="space-y-4">
-              {(["yazilim", "egitim", "beslenme"] as const).map((id) => (
+              {(["yazilim", "egitim", "beslenme"] as const).filter(isActive).map((id) => (
                 <StripRow key={id} r={ROUTINE_BY_ID[id]} dates={dates} entries={entries} goals={goals} />
               ))}
+              {!(["yazilim", "egitim", "beslenme"] as const).some(isActive) && <p className="text-[13px] text-mute">Bu rutinler gizli. Ayarlar'dan geri getirebilirsin; kayıtların silinmedi.</p>}
             </div>
             <div className="mt-4"><StripLegend /></div>
           </section>
@@ -196,6 +199,7 @@ function Measure({
   goal?: { value: number; label: string }; summary: (v: number[]) => string; walkUnit?: WalkUnit; right?: React.ReactNode; note?: string;
 }) {
   const r = ROUTINE_BY_ID[id];
+  if (!r || !isActive(id)) return null;
   const ys = numericSeries(r, dates, entries, walkUnit);
   const vals = present(ys);
   const points: LinePoint[] = ys.map((y, i) => ({ label: longDate(dates[i]), y }));
@@ -235,11 +239,14 @@ function StripRow({ r, dates, entries, goals }: { r: Routine; dates: string[]; e
 }
 
 function Explorer({ pick, setPick, dates, entries, goals, walkUnit, tick }: { pick: string; setPick: (s: string) => void; dates: string[]; entries: Entries; goals: Goals; walkUnit: WalkUnit; tick: (i: number) => string }) {
-  const [kind, id] = pick.split(":");
+  const [kind, id0] = pick.split(":");
   const isGroup = kind === "g";
+  const id = !isGroup && !isActive(id0) ? ROUTINES[0]?.id : id0;
+  if (!id) return null;
   const routines = isGroup ? ROUTINES.filter((r) => r.group === (id as GroupId)) : [ROUTINE_BY_ID[id]];
   const r = routines[0];
-  const title = isGroup ? GROUPS[id as GroupId].label : `${r.emoji} ${r.label}`;
+  if (!r) return null;
+  const title = isGroup ? GROUPS[id as GroupId]?.label ?? "Kategori" : `${r.emoji} ${r.label}`;
 
   // Kategori: günlük kategori yüzdesi. Rutin: türüne göre değer çizgisi.
   let chart: React.ReactNode = null;
@@ -272,7 +279,7 @@ function Explorer({ pick, setPick, dates, entries, goals, walkUnit, tick }: { pi
     chart = present(pts.map((p) => p.y)).length >= 2 ? <LineChart ariaLabel="Günlük öğün sayısı" points={pts} unit="öğün" fmt={(n) => String(Math.round(n))} tick={tick} height={170} /> : null;
   } else if (r.kind !== "yesno") {
     const ys = numericSeries(r, dates, entries, walkUnit);
-    const unit = r.kind === "count" ? "bardak" : r.kind === "yesno_min" ? "dk" : r.kind === "walk" ? (walkUnit === "steps" ? "adım" : "dk") : "sa";
+    const unit = r.kind === "number" ? r.unit ?? "" : r.kind === "count" ? "bardak" : r.kind === "yesno_min" ? "dk" : r.kind === "walk" ? (walkUnit === "steps" ? "adım" : "dk") : "sa";
     chart = present(ys).length >= 2 ? <LineChart ariaLabel={`${r.label} çizgi grafiği`} points={ys.map((y, i) => ({ label: longDate(dates[i]), y }))} unit={unit} fmt={(n) => String(Math.round(n * 10) / 10)} tick={tick} height={170} /> : <NeedMore />;
   }
 
@@ -289,12 +296,12 @@ function Explorer({ pick, setPick, dates, entries, goals, walkUnit, tick }: { pi
         </div>
         <label className="block">
           <span className="sr-only">Rutin veya kategori seç</span>
-          <select className="input !w-auto min-w-[220px] text-[14px]" value={pick} onChange={(e) => setPick(e.target.value)}>
+          <select className="input !w-auto min-w-[220px] text-[14px]" value={isGroup ? pick : `r:${id}`} onChange={(e) => setPick(e.target.value)}>
             <optgroup label="Rutinler">
               {ROUTINES.map((x) => <option key={x.id} value={`r:${x.id}`}>{x.emoji} {x.label}</option>)}
             </optgroup>
             <optgroup label="Kategoriler">
-              {(Object.keys(GROUPS) as GroupId[]).map((g) => <option key={g} value={`g:${g}`}>{GROUPS[g].label}</option>)}
+              {(Object.keys(GROUPS) as GroupId[]).filter((g) => ROUTINES.some((x) => x.group === g)).map((g) => <option key={g} value={`g:${g}`}>{GROUPS[g].label}</option>)}
             </optgroup>
           </select>
         </label>

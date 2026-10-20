@@ -1,7 +1,7 @@
 import { isValidKey } from "./dates";
 import { DEFAULT_GOALS, ROUTINE_BY_ID } from "./routines";
 import { parseTime } from "./time";
-import type { AppData, Course, DayEntry, Exam, Goals, Meal, Plan, Profile, RoutineValue, WalkUnit } from "./types";
+import type { AppData, Course, DayEntry, Exam, Goals, Meal, Plan, Profile, Routine, RoutineValue, WalkUnit } from "./types";
 
 export const emptyData = (): AppData => ({
   profile: { name: "Efehan", onboarded: false, walkUnit: "steps", soundOn: true, volume: 0.6 },
@@ -10,6 +10,8 @@ export const emptyData = (): AppData => ({
   courses: [],
   exams: [],
   plans: [],
+  customRoutines: [],
+  hidden: [],
 });
 
 const isObj = (x: unknown): x is Record<string, unknown> => !!x && typeof x === "object" && !Array.isArray(x);
@@ -17,12 +19,19 @@ const isNum = (x: unknown): x is number => typeof x === "number" && Number.isFin
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-export const LIMITS = { water: 40, minutes: 1440, steps: 200_000, screenMin: 1440 } as const;
+export const LIMITS = { water: 40, minutes: 1440, steps: 200_000, screenMin: 1440, custom: 1_000_000 } as const;
 
 /** Tek bir rutin değerini doğrular; geçersizse undefined döner. */
 export function cleanValue(id: string, v: unknown): RoutineValue | undefined {
   const r = ROUTINE_BY_ID[id];
-  if (!r) return undefined;
+  if (!r) {
+    // Kullanıcının eklediği rutin (tanımı henüz yüklenmemiş olabilir): yalnızca genel tür doğrulaması.
+    if (!id.startsWith("c_")) return undefined;
+    if (typeof v === "boolean") return v;
+    if (isNum(v) && v >= 0 && v <= LIMITS.custom) return Math.round(v * 100) / 100;
+    const t = parseTime(v);
+    return t === null ? undefined : `${pad(Math.floor(t / 60))}:${pad(t % 60)}`;
+  }
   switch (r.kind) {
     case "yesno":
       return typeof v === "boolean" ? v : undefined;
@@ -61,6 +70,8 @@ export function cleanValue(id: string, v: unknown): RoutineValue | undefined {
       }));
       return meals.length ? meals : undefined;
     }
+    case "number":
+      return isNum(v) && v >= 0 && v <= LIMITS.custom ? Math.round(v * 100) / 100 : undefined;
     case "sleep":
       return undefined; // türetilen alan, saklanmaz
   }
@@ -132,6 +143,36 @@ function cleanPlans(raw: unknown): Plan[] {
     });
 }
 
+const KINDS = ["yesno", "number", "time"] as const;
+
+export function cleanRoutines(raw: unknown): Routine[] {
+  if (!Array.isArray(raw)) return [];
+  const seen = new Set<string>();
+  const out: Routine[] = [];
+  for (const r of raw.filter(isObj)) {
+    if (typeof r.id !== "string" || !r.id.startsWith("c_") || seen.has(r.id)) continue;
+    if (typeof r.label !== "string" || !r.label.trim()) continue;
+    const kind = KINDS.find((k) => k === r.kind);
+    if (!kind) continue;
+    seen.add(r.id);
+    out.push({
+      id: r.id,
+      emoji: typeof r.emoji === "string" && r.emoji ? r.emoji.slice(0, 8) : "📌",
+      group: "ozel",
+      label: r.label.trim().slice(0, 30),
+      question: typeof r.question === "string" && r.question.trim() ? r.question.trim().slice(0, 140) : r.label.trim().slice(0, 30),
+      kind,
+      custom: true,
+      ...(kind === "number" && typeof r.unit === "string" && r.unit.trim() ? { unit: r.unit.trim().slice(0, 12) } : {}),
+      ...(kind === "number" && isNum(r.goal) && r.goal > 0 && r.goal <= LIMITS.custom ? { goal: r.goal, goalDir: r.goalDir === "max" ? ("max" as const) : ("min" as const) } : {}),
+    });
+    if (out.length >= 60) break;
+  }
+  return out;
+}
+
+const cleanHidden = (raw: unknown): string[] => (Array.isArray(raw) ? [...new Set(raw.filter((x): x is string => typeof x === "string").slice(0, 200))] : []);
+
 const score = (x: unknown) => (isNum(x) ? Math.max(0, Math.min(100, x)) : null);
 
 function cleanExams(raw: unknown): Exam[] {
@@ -194,6 +235,8 @@ export function normalizeData(raw: unknown): { data: AppData; dropped: number } 
       courses: cleanCourses(src.courses),
       exams: cleanExams(src.exams),
       plans: cleanPlans(src.plans),
+      customRoutines: cleanRoutines(src.customRoutines),
+      hidden: cleanHidden(src.hidden),
       ...(src.legacy !== undefined ? { legacy: src.legacy } : {}),
     },
   };

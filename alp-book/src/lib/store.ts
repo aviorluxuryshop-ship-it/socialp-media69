@@ -4,15 +4,20 @@ import { create } from "zustand";
 import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
 import { isValidKey, todayKey } from "./dates";
 import { migrateV1, emptyData, normalizeData, cleanValue } from "./normalize";
+import { DEFAULT_ROUTINES, setRoutineRegistry } from "./routines";
 import { uid } from "./uid";
-import type { AppData, Course, Exam, Goals, Plan, Profile, RoutineValue } from "./types";
+import type { AppData, Course, Exam, Goals, Plan, Profile, Routine, RoutineValue } from "./types";
 
 export const STORAGE_KEY = "alpbook:v2";
 const LEGACY_KEY = "alpbook:v1";
 
 interface Actions {
   hydrated: boolean;
-  finishOnboarding: (name: string) => void;
+  /** useDefaults=false: hazır rutinleri gizleyerek boş başlar. */
+  finishOnboarding: (name: string, useDefaults?: boolean) => void;
+  addRoutine: (r: Omit<Routine, "id" | "group" | "custom">) => string | null;
+  hideRoutine: (id: string) => void;
+  showRoutine: (id: string) => void;
   setProfile: (p: Partial<Profile>) => void;
   setGoals: (g: Partial<Goals>) => void;
   /** value === undefined → kaydı siler ("kaydedilmedi"ye döndürür). Geçersiz değerler reddedilir (false döner). */
@@ -72,7 +77,35 @@ export const useStore = create<Store>()(
       ...emptyData(),
       hydrated: false,
 
-      finishOnboarding: (name) => set((s) => ({ profile: { ...s.profile, name: name.trim().slice(0, 40) || "Efehan", onboarded: true } })),
+      finishOnboarding: (name, useDefaults = true) =>
+        set((s) => ({
+          profile: { ...s.profile, name: name.trim().slice(0, 40) || "Efehan", onboarded: true },
+          hidden: useDefaults ? s.hidden : DEFAULT_ROUTINES.map((r) => r.id),
+        })),
+
+      addRoutine: (r) => {
+        const label = r.label.trim().slice(0, 30);
+        if (!label) return null;
+        const id = `c_${uid()}`;
+        const routine: Routine = {
+          ...r,
+          id,
+          label,
+          question: r.question.trim().slice(0, 140) || label,
+          group: "ozel",
+          custom: true,
+          ...(r.kind === "number" ? {} : { unit: undefined, goal: undefined, goalDir: undefined }),
+        };
+        if (routine.kind !== "number") {
+          delete routine.unit;
+          delete routine.goal;
+          delete routine.goalDir;
+        }
+        set((s) => ({ customRoutines: [...s.customRoutines, routine] }));
+        return id;
+      },
+      hideRoutine: (id) => set((s) => (s.hidden.includes(id) ? s : { hidden: [...s.hidden, id] })),
+      showRoutine: (id) => set((s) => ({ hidden: s.hidden.filter((x) => x !== id) })),
       setProfile: (p) => set((s) => ({ profile: { ...s.profile, ...p } })),
       setGoals: (g) => set((s) => ({ goals: { ...s.goals, ...g } })),
 
@@ -123,7 +156,7 @@ export const useStore = create<Store>()(
       name: STORAGE_KEY,
       version: 2,
       storage: createJSONStorage(() => storage),
-      partialize: (s) => ({ profile: s.profile, goals: s.goals, entries: s.entries, courses: s.courses, exams: s.exams, plans: s.plans, legacy: s.legacy }),
+      partialize: (s) => ({ profile: s.profile, goals: s.goals, entries: s.entries, courses: s.courses, exams: s.exams, plans: s.plans, customRoutines: s.customRoutines, hidden: s.hidden, legacy: s.legacy }),
       // Kayıtlı veri bozuk/kısmi olsa bile uygulama açılır; geçerli kısımlar korunur.
       merge: (persisted, current) => {
         const n = normalizeData(persisted);
@@ -134,6 +167,12 @@ export const useStore = create<Store>()(
 );
 
 export const snapshot = (): AppData => {
-  const { profile, goals, entries, courses, exams, plans, legacy } = useStore.getState();
-  return { profile, goals, entries, courses, exams, plans, ...(legacy !== undefined ? { legacy } : {}) };
+  const { profile, goals, entries, courses, exams, plans, customRoutines, hidden, legacy } = useStore.getState();
+  return { profile, goals, entries, courses, exams, plans, customRoutines, hidden, ...(legacy !== undefined ? { legacy } : {}) };
 };
+
+// Etkin rutin listesini store ile senkron tut (hidrasyon, içe aktarma, bulut eşitlemesi dahil).
+setRoutineRegistry(useStore.getState().customRoutines, useStore.getState().hidden);
+useStore.subscribe((s, prev) => {
+  if (s.customRoutines !== prev.customRoutines || s.hidden !== prev.hidden) setRoutineRegistry(s.customRoutines, s.hidden);
+});

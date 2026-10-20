@@ -213,7 +213,7 @@ async function startSync(user: CloudUser) {
   const parseMeta = (raw: unknown): MetaDoc | null => {
     try {
       const m = JSON.parse(String(raw));
-      const n = normalizeData({ profile: { name: m.name, onboarded: m.onboarded }, goals: m.goals, entries: {}, courses: m.courses, exams: m.exams, plans: m.plans, legacy: m.legacy });
+      const n = normalizeData({ profile: { name: m.name, onboarded: m.onboarded }, goals: m.goals, entries: {}, courses: m.courses, exams: m.exams, plans: m.plans, customRoutines: m.customRoutines, hidden: m.hidden, legacy: m.legacy });
       return n ? { ...toMeta(n.data) } : null;
     } catch {
       return null;
@@ -267,7 +267,7 @@ async function startSync(user: CloudUser) {
       if (m) {
         hasCloud = true;
         cloud.profile = { ...cloud.profile, name: m.name, onboarded: m.onboarded };
-        Object.assign(cloud, { goals: m.goals, courses: m.courses, exams: m.exams, plans: m.plans, legacy: m.legacy });
+        Object.assign(cloud, { goals: m.goals, courses: m.courses, exams: m.exams, plans: m.plans, customRoutines: m.customRoutines, hidden: m.hidden, legacy: m.legacy });
       }
     }
     monthsSnap.forEach((doc) => {
@@ -304,7 +304,7 @@ async function startSync(user: CloudUser) {
         if (!snap.exists() || !data || data.device === me) return;
         const m = parseMeta(data.data);
         if (!m) return;
-        applyToStore((cur) => ({ ...cur, profile: { ...cur.profile, name: m.name, onboarded: cur.profile.onboarded || m.onboarded }, goals: m.goals, courses: m.courses, exams: m.exams, plans: m.plans, ...(m.legacy !== undefined ? { legacy: m.legacy } : {}) }));
+        applyToStore((cur) => ({ ...cur, profile: { ...cur.profile, name: m.name, onboarded: cur.profile.onboarded || m.onboarded }, goals: m.goals, courses: m.courses, exams: m.exams, plans: m.plans, customRoutines: m.customRoutines, hidden: m.hidden, ...(m.legacy !== undefined ? { legacy: m.legacy } : {}) }));
         pushed.set("meta", sigOf(toMeta(snapshot())));
         set({ lastSync: Date.now() });
       }, (err) => !stopped && fail(err)),

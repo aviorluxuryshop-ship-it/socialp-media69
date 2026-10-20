@@ -1,12 +1,15 @@
 "use client";
 
-import { Download, Trash2, Upload, Volume2, VolumeX } from "lucide-react";
+import { Download, Eye, EyeOff, Trash2, Upload, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
 import { AccountCard } from "@/components/AccountCard";
 import { NumberField } from "@/components/track/fields";
 import { SectionHead } from "@/components/ui";
 import { normalizeData } from "@/lib/normalize";
-import { GROUPS, ROUTINES } from "@/lib/routines";
+import { ALL_ROUTINES, GROUPS } from "@/lib/routines";
+import { kindLabel } from "@/lib/infer";
+import { useRoutines } from "@/lib/useRoutines";
+import { AddRoutineForm } from "@/components/AddRoutineForm";
 import { useCloud } from "@/lib/cloud";
 import { sfx } from "@/lib/sound";
 import { snapshot, useStore } from "@/lib/store";
@@ -31,7 +34,9 @@ function merge(cur: AppData, inc: AppData): AppData {
 }
 
 export default function SettingsPage() {
-  const { profile, goals, entries, setProfile, setGoals, replaceData, reset } = useStore();
+  const { profile, goals, entries, hidden, setProfile, setGoals, replaceData, reset, hideRoutine, showRoutine } = useStore();
+  const activeList = useRoutines();
+  const hiddenList = ALL_ROUTINES.filter((r) => hidden.includes(r.id));
   const file = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState<Pending | null>(null);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -107,19 +112,43 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      <section className="panel p-5 sm:p-6">
+      <section id="rutinler" className="panel p-5 sm:p-6">
         <SectionHead title="Rutinler" />
-        <p className="mb-3 text-[13px] text-mute">Varsayılan liste ve sıra sabittir.</p>
+        <p className="mb-4 text-[13px] leading-relaxed text-mute">
+          Kendi rutinini yaz; Evet/Hayır, sayı (birimiyle) ya da saat olduğunu sistem algılar. İstemediğin rutini gizleyebilirsin; gizlenen rutinin kayıtları silinmez, istediğin an geri getirebilirsin.
+        </p>
+        <div className="mb-6 rounded-xl border border-line bg-ink/40 p-4"><AddRoutineForm /></div>
+        <p className="eyebrow mb-2">Etkin rutinler ({activeList.length})</p>
         <ol className="divide-hair rounded-xl border border-line">
-          {ROUTINES.map((r, i) => (
+          {activeList.map((r, i) => (
             <li key={r.id} className="flex items-center gap-3 px-3.5 py-2.5 text-[13px]">
               <span className="num w-5 text-faint">{i + 1}</span>
               <span aria-hidden>{r.emoji}</span>
               <span className="min-w-0 flex-1 truncate">{r.question}</span>
-              <span className="hidden text-[11px] text-faint sm:block">{GROUPS[r.group].label}</span>
+              <span className="hidden text-[11px] text-faint sm:block">{r.custom ? kindLabel(r) : GROUPS[r.group].label}</span>
+              <button type="button" aria-label={`${r.label} rutinini gizle`} title="Gizle" className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-mute hover:text-text" onClick={() => hideRoutine(r.id)}>
+                <EyeOff size={15} />
+              </button>
             </li>
           ))}
+          {activeList.length === 0 && <li className="px-3.5 py-3 text-[13px] text-mute">Etkin rutin yok. Yukarıdan ekle ya da gizlediklerini geri getir.</li>}
         </ol>
+        {hiddenList.length > 0 && (
+          <>
+            <p className="eyebrow mb-2 mt-5">Gizlenenler ({hiddenList.length})</p>
+            <ul className="divide-hair rounded-xl border border-line">
+              {hiddenList.map((r) => (
+                <li key={r.id} className="flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-mute">
+                  <span aria-hidden>{r.emoji}</span>
+                  <span className="min-w-0 flex-1 truncate">{r.question}</span>
+                  <button type="button" className="btn btn-quiet btn-sm" onClick={() => showRoutine(r.id)}>
+                    <Eye size={14} /> Geri getir
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </section>
 
       <section className="panel p-5 sm:p-6">

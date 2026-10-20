@@ -4,7 +4,8 @@ import clsx from "clsx";
 import { Check, ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { addDays, longDate, todayKey } from "@/lib/dates";
-import { GROUPS, MEAL_TYPES, ROUTINES } from "@/lib/routines";
+import { GROUPS, MEAL_TYPES } from "@/lib/routines";
+import { useRoutines } from "@/lib/useRoutines";
 import { asWalk, asYesNoMin, daySummary, pct, sleepOf, validMeals } from "@/lib/stats";
 import { sfx } from "@/lib/sound";
 import { useStore, useUi } from "@/lib/store";
@@ -18,7 +19,8 @@ export function DayForm({ date, onDate, focus }: { date: string; onDate: (d: str
   const goals = useStore((s) => s.goals);
   const e = entries[date];
   const today = todayKey();
-  const sum = useMemo(() => daySummary(e, goals), [e, goals]);
+  const ROUTINES = useRoutines();
+  const sum = useMemo(() => daySummary(e, goals), [e, goals, ROUTINES]);
   const [flash, setFlash] = useState<string | null>(null);
   const box = useRef<HTMLDivElement>(null);
 
@@ -184,6 +186,13 @@ function Field({ r, date, highlight }: { r: Routine; date: string; highlight: bo
       return (
         <Row {...base} hint={`Sınır: günde ${goals.screenMaxHours} saat`}>
           <ScreenField key={`${date}-${r.id}`} id={r.id} name="Ekran süresi" value={typeof v === "number" ? v : undefined} onCommit={set} />
+        </Row>
+      );
+
+    case "number":
+      return (
+        <Row {...base} hint={r.goal !== undefined ? `Hedef: ${r.goalDir === "max" ? "en fazla" : "en az"} ${r.goal}${r.unit ? ` ${r.unit}` : ""}` : undefined}>
+          <NumberField key={`${date}-${r.id}`} id={`field-${r.id}`} label={r.label} decimal value={typeof v === "number" ? v : undefined} min={0} max={1000000} width="w-32" suffix={r.unit} onCommit={set} />
         </Row>
       );
 

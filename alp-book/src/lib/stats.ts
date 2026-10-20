@@ -53,6 +53,11 @@ export function statusOf(r: Routine, e: DayEntry | undefined, g: Goals): Status 
       const m = sleepOf(e);
       return m === null ? "unrecorded" : m >= g.sleepHours * 60 ? "done" : "missed";
     }
+    case "number": {
+      if (typeof v !== "number") return "unrecorded";
+      if (r.goal === undefined) return "recorded";
+      return (r.goalDir === "max" ? v <= r.goal : v >= r.goal) ? "done" : "missed";
+    }
     case "nap":
       return typeof v === "number" ? "recorded" : "unrecorded"; // hedefi olmayan bilgi alanı
     case "duration":
@@ -217,6 +222,7 @@ export function numericOf(r: Routine, e: DayEntry | undefined, walkUnit: WalkUni
   const v = e?.[r.id];
   switch (r.kind) {
     case "count":
+    case "number":
       return typeof v === "number" ? v : null;
     case "sleep": {
       const m = sleepOf(e);
