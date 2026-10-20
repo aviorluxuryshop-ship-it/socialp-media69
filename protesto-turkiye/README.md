@@ -1,20 +1,18 @@
 # Protesto Türkiye — kısa videolar
 
-"Protesto Türkiye" kanalı için 13 dikey protesto videosu (1080x1920, 30 fps,
-her biri 1 dakikanın altında). Hepsi barışçıl protesto çağrısıdır ve aynı
-yapıdadır:
+"Protesto Türkiye" kanalı için 14 dikey protesto videosu (1080x1920, 30 fps,
+her biri 1 dakikanın altında). Hepsi barışçıl protesto çağrısıdır:
 
-1. **Giriş (herkese seslenir):** "Sence neden protesto yapılır? Çünkü ortada
-   halkın beğenmediği bir sebep vardır. Peki biz neden yapmıyoruz? Sebep yok
-   diyorsunuz. Oysa sebep çok. İşte biri: …" ve konu açıklanır.
-2. **Nedir?** Konunun ne olduğu bir iki cümleyle anlatılır (ör. enflasyon
-   nedir).
+1. **Giriş:** her videonun kendi konusuna özel, 2–3 kısa ve dikkat çeken cümle;
+   video başlık kartıyla değil doğrudan bu cümlelerle açılır.
+2. **Nedir?** Konunun ne olduğu bir iki cümleyle anlatılır.
 3. **Ne zararı var?** Halka etkisi ve kaynaklı rakamlar.
 4. **Kapanış:** **"Sen de protesto etmek istiyorsan, bizden haber bekle ve
    takipte kal. Bu sayfayı yay."**
 
 | # | Dosya | Konu |
 | --- | --- | --- |
+| 0 | `videolar/00-ocak-protesto-cagrisi.mp4` | Çağrı videosu: Ocak'ta ülkenin dört bir yanında protesto, takipte kal |
 | 1 | `videolar/01-enflasyon.mp4` | Türkiye'deki enflasyon artışı |
 | 2 | `videolar/02-adaletsiz-maas.mp4` | Maaş düzeninin adaletsizliği |
 | 3 | `videolar/03-okullarda-guvenlik.mp4` | Okullarda önlem alınmaması |
@@ -29,7 +27,8 @@ yapıdadır:
 | 12 | `videolar/12-adalet-nerede.mp4` | Adaletin olmadığı bir ülke |
 | 13 | `videolar/13-protestoda-guvenlik.mp4` | Protestoda güvenlik: barışçıl yürüyüş rehberi |
 
-Her videonun kapak karesi `kapaklar/` içinde, paylaşım açıklamaları ve
+Çağrı videosundaki tarih `content.py` içindeki `PROTEST_WHEN` satırından değişir
+(ör. `"15 Ocak'ta"`). Her videonun kapak görseli `kapaklar/` içinde, paylaşım açıklamaları ve
 etiketler `aciklamalar.md` içinde.
 
 ## Görsel dil
@@ -66,7 +65,7 @@ yeniden üretmek yeterli:
 ```bash
 pip install torch torchaudio torchcodec --index-url https://download.pytorch.org/whl/cpu
 pip install coqui-tts faster-whisper opencv-python-headless scipy numpy pillow
-COQUI_TOS_AGREED=1 python3 build.py   # 13 videonun hepsi (XTTS modeli ilk seferde iner, ~1,9 GB)
+COQUI_TOS_AGREED=1 python3 build.py   # 14 videonun hepsi (XTTS modeli ilk seferde iner, ~1,9 GB)
 python3 build.py 03 08                # yalnızca 03 ve 08
 python3 build.py --voice piper        # torch kurmadan, daha robotik Piper sesiyle
 ```

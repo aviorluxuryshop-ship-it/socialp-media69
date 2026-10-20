@@ -14,6 +14,9 @@ gelene kadar ekranda kalır. Bütün rakamların kaynağı README.md'de.
 
 CTA = "Sen de protesto etmek istiyorsan, *bizden haber bekle* ve takipte kal. *Bu sayfayı yay.*"
 
+# Çağrı videosundaki tarih. Kesinleşince buradan değiştirin, ör. "15 Ocak'ta".
+PROTEST_WHEN = "Ocak ayında"
+
 
 def L(show, v=None, say=None, pause=None, pace=1.0):
     return {"show": show, "v": v, "say": say, "pause": pause, "pace": pace}
@@ -72,13 +75,32 @@ WAGE_BARS = [
 
 VIDEOS = [
     {
+        "slug": "00-ocak-protesto-cagrisi",
+        "title": "OCAK'TA PROTESTO",
+        "kicker": "Ülkenin dört bir yanında",
+        "lines": [
+            h("Protesto yapıyoruz.", big("PROTESTO\nYAPIYORUZ", red=True)),
+            h(f"{PROTEST_WHEN}, ülkenin *dört bir yanında.*",
+              big("OCAK", "ÜLKENİN DÖRT BİR YANINDA")),
+            L("Çünkü sebep çok.", big("SEBEP\nÇOK", red=True)),
+            L("Enflasyon. Adaletsiz maaş. Yasaklar. Haksız cezalar.",
+              big("ENFLASYON\nMAAŞ\nYASAKLAR\nCEZALAR")),
+            L("Silahsız. Saldırısız. *Barışçıl.*", big("SİLAHSIZ\nSALDIRISIZ\nBARIŞÇIL")),
+            L("Ama önce, bu sayfanın *yayılması* lazım.", big("ÖNCE\nSAYFA\nYAYILSIN", red=True)),
+            L("Ne kadar çok kişiye ulaşırsak, o kadar güçlü oluruz.",
+              big("DAHA ÇOK KİŞİ\nDAHA GÜÇLÜ")),
+            L("Haberdar olmak için, *takipte kal.*", big("TAKİPTE\nKAL")),
+            L(CTA, CTA_CARD),
+        ],
+    },
+    {
         "slug": "01-enflasyon",
         "title": "ENFLASYON",
         "kicker": "Türkiye'deki enflasyon artışı",
         "lines": [
             h("Maaşın aynı kaldı.", big("MAAŞ\nAYNI")),
             h("Fiyatlar *aynı kalmadı.*", big("FİYATLAR\nUÇTU", red=True)),
-            h("Adı: *enflasyon.*", big("ENFLASYON", red=True)),
+            h("Bunun adı *enflasyon.*", big("ENFLASYON", red=True)),
         ] + [
             L("Enflasyon nedir? Fiyatların *sürekli ve genel olarak* artması.",
               big("FİYATLAR\nHEP ARTIYOR")),
@@ -129,7 +151,7 @@ VIDEOS = [
         ] + [
             L("Önlem almak ne demek? Kapıda görevli, giriş kontrolü, *psikolojik destek.*",
               big("GÖREVLİ\nKONTROL\nDESTEK")),
-            L("Önlem alınmazsa ne olur? *Bu olur:*"),
+            L("Önlem yoksa ne olur? *Bu olur:*"),
             L("2 Mart Çekmeköy. 14 Nisan Siverek. 15 Nisan Kahramanmaraş.",
               listing(SCHOOL_ATTACKS, 3)),
             L("22 Eylül Turgutlu. 6 Ekim Başakşehir.", listing(SCHOOL_ATTACKS, 5)),
@@ -151,13 +173,13 @@ VIDEOS = [
             h("Peki ya çocuklar?", big("PEKİ\nÇOCUKLAR?", red=True)),
         ] + [
             L("Sabah sekiz. Akşam altı. *On saat.*", CLOCK),
-            L("Ders, etüt, kurs, ödev...", big("DERS\nETÜT\nKURS\nÖDEV")),
+            L("Ders, etüt, kurs ve ödev.", big("DERS\nETÜT\nKURS\nÖDEV")),
             L("Haftada 50 saat. *Bir yetişkinin yasal mesaisinden bile fazla.*",
               bars([("YETİŞKİN · YASAL SINIR", 45), ("ÖĞRENCİ · 08–18", 50)], 2,
                    "İŞ KANUNU MD. 63 · HAFTALIK EN ÇOK 45 SAAT", unit="SAAT")),
             L("Zararı ne? Uykusuzluk, stres, *tükenmişlik.*",
               big("UYKUSUZLUK\nSTRES\nTÜKENMİŞLİK", red=True)),
-            L("Oyun yok. Spor yok. Ailene ayıracak vakit yok."),
+            L("Oyun yok. Spor yok. Ailene vakit yok."),
             L("Çocuklarımız robot değil.", big("ROBOT\nDEĞİLİZ")),
             L("Daha kısa, *daha nitelikli* bir eğitim istiyoruz."),
             L(CTA, CTA_CARD),
@@ -168,7 +190,7 @@ VIDEOS = [
         "title": "İÇ SAVAŞA HAYIR",
         "kicker": "Bizi birbirimize düşürmeyin",
         "lines": [
-            h("Komşunla aranda ne fark var?", big("FARK\nVAR MI?")),
+            h("Komşunla senin aranda ne fark var?", big("FARK\nVAR MI?")),
             h("Biri sana *öteki* diyene kadar, hiç.", big("ÖTEKİ", red=True)),
             h("Kutuplaşma işte böyle başlar.", big("KUTUPLAŞMA")),
         ] + [
@@ -261,7 +283,7 @@ VIDEOS = [
         "title": "GEÇİNEMİYORUZ",
         "kicker": "Mali geçim",
         "lines": [
-            h("Ayın kaçında paran bitiyor?", big("PARA\nNE ZAMAN\nBİTİYOR?")),
+            h("Maaşın kaç gün yetiyor?", big("MAAŞ\nKAÇ GÜN\nYETİYOR?")),
             h("Çoğumuz için cevap: *ayın ortasında.*", big("AYIN\nORTASI", red=True)),
         ] + [
             L("Geçinmek nedir? Kirayı, mutfağı, faturayı *ay sonuna kadar* çıkarabilmek.",
@@ -272,7 +294,7 @@ VIDEOS = [
             L("Asgari ücret ise *28.075 lira.*",
               bars([("YAŞAM MALİYETİ · BEKÂR", 48884), ("NET ASGARİ ÜCRET", 28075)], 2,
                    "TÜRK-İŞ · EYLÜL 2026")),
-            L("Geçinemeyince gençler evden çıkamaz, aileler *borçla* yaşar.",
+            L("Geçim zorlaşınca gençler evden çıkamaz, aileler *borçla* yaşar.",
               big("KREDİ KARTIYLA\nYAŞAM")),
             L("Biz lüks istemiyoruz. *İnsanca yaşamak istiyoruz.*", big("İNSANCA\nYAŞAM", red=True)),
             L(CTA, CTA_CARD),
@@ -315,12 +337,13 @@ VIDEOS = [
             L("Ceza neden verilir? Suçu önlemek ve *adaleti sağlamak* için.",
               big("CEZA\nNEDEN VAR?")),
             L("Gazeteci Alican Uludağ, paylaşımları yüzünden *tutuklandı*, üç ay cezaevinde kaldı.",
-              stat("3 AY", "GAZETECİ · CEZAEVİNDE · ŞUBAT–MAYIS 2026")),
+              stat("3 AY", "GAZETECİ · CEZAEVİNDE · ŞUBAT–MAYIS 2026"),
+              say="Gazeteci Ali Can Uludağ, paylaşımları yüzünden tutuklandı, üç ay cezaevinde kaldı."),
             L("Saraçhane'de gözaltına alınan 87 kişi aylarca yargılandı, sonunda *beraat* etti.",
               big("BERAAT", "AMA AYLAR SONRA")),
             L("Ceza bazen hükümle değil, *sürecin kendisiyle* veriliyor.",
               big("SÜREÇ\nCEZASI", red=True)),
-            L("Ceza adalet içindir. *Gözdağı için değil.*", big("GÖZDAĞI\nDEĞİL", red=True)),
+            L("Ceza adalet içindir. *Korkutmak için değil.*", big("GÖZDAĞI\nDEĞİL", red=True)),
             L(CTA, CTA_CARD),
         ],
     },

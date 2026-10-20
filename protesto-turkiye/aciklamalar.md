@@ -9,6 +9,12 @@ Her açıklamanın sonuna şu satırı ekleyin:
 
 ---
 
+### 00 · Çağrı videosu
+Ocak ayında ülkenin dört bir yanında barışçıl, silahsız, saldırısız protesto.
+Önce bu sayfanın yayılması lazım: haberdar olmak için takipte kal, videoyu paylaş.
+
+`#protestotürkiye #protesto #takiptekal #barışçılprotesto #sesinegelsin`
+
 ### 01 · Enflasyon
 TÜİK'e göre %29,73, ENAG'a göre %46,61. Rakam düşse bile fiyatlar düşmüyor.
 Paranın her gün biraz daha eridiği bir ülkede protesto için sebep çok.
