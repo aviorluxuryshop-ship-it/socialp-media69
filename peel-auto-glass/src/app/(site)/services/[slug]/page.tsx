@@ -190,7 +190,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           <ul className="mt-12 grid gap-8 md:grid-cols-2">
             {related.map((r) => (
               <li key={r.slug} className="reveal">
-                <article className="group relative grid grid-cols-[7.5rem_1fr] items-center gap-6 border border-line p-5 transition-colors hover:border-ink sm:grid-cols-[10rem_1fr]">
+                <article className="group relative grid grid-cols-[5.5rem_1fr] items-center gap-4 border border-line p-4 transition-colors hover:border-ink sm:grid-cols-[10rem_1fr] sm:gap-6 sm:p-5">
                   <div className="rake rake-sm relative aspect-square overflow-hidden bg-mist">
                     <Image src={r.image} alt="" fill sizes="160px" placeholder="blur" className="object-cover" />
                   </div>

@@ -81,7 +81,7 @@ export default function GuidePage() {
             </ol>
             <figure className="reveal">
               <div className="grid grid-cols-[1.5fr_1fr] gap-3">
-                <div className="rake rake-sm relative aspect-[3/4] bg-mist">
+                <div className="rake rake-sm relative aspect-[3/4] self-start bg-mist">
                   <Image
                     src={crack}
                     alt="A cracked windshield with a star-shaped impact point and long cracks spreading across the glass"
@@ -91,7 +91,7 @@ export default function GuidePage() {
                     className="object-cover"
                   />
                 </div>
-                <div className="relative mt-10 aspect-[3/4] bg-mist">
+                <div className="relative mt-10 aspect-[3/4] self-start bg-mist">
                   <Image
                     src={chip}
                     alt="Close-up of a small star-shaped chip in glass with fine cracks radiating from the centre"
