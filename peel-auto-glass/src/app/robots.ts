@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { isPlaceholderContact, site } from "@/data/site";
+import { siteUrl } from "@/data/business";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: isPlaceholderContact ? { userAgent: "*", disallow: "/" } : { userAgent: "*", allow: "/" },
-    sitemap: `${site.url}/sitemap.xml`,
+    rules: { userAgent: "*", allow: "/" },
+    ...(siteUrl ? { sitemap: `${siteUrl}/sitemap.xml` } : {}),
   };
 }

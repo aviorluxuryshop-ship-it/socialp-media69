@@ -1,65 +1,204 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. Dark navy + white + light grey, with one restrained blue.
+ * A small red accent echoes the logo and is used only as a hairline detail.
+ */
 @theme {
-  --color-navy-950: #060b1a;
-  --color-navy-900: #0a1228;
-  --color-navy-800: #101c3d;
-  --color-ice: #f3f7ff;
-  --color-brand-blue: #1456ff;
-  --color-brand-red: #f01a28;
-  --color-brand-cyan: #19b4f0;
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #0a1326;
+  --color-navy: #0f1c38;
+  --color-navy-2: #16274a;
+  --color-mist: #f3f5f9;
+  --color-line: #dde2ea;
+  --color-muted: #566176;
+  --color-brand: #1650e6;
+  --color-brand-deep: #0f3fbd;
+  --color-brand-soft: #8fb0ff;
+  --color-signal: #d8232e;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--color-navy-950);
-  color: var(--color-navy-900);
+  background: #fff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
 }
 
-/* Mirrors the blue / red split of the logo badge. */
-.hero-glow {
-  background:
-    radial-gradient(60% 70% at 15% 30%, rgb(20 86 255 / 0.45), transparent 70%),
-    radial-gradient(55% 65% at 90% 35%, rgb(240 26 40 / 0.4), transparent 70%),
-    linear-gradient(180deg, #060b1a 0%, #0a1228 100%);
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
-.glass-grid {
-  background-image:
-    linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 80%);
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: #fff;
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
+::selection {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+/* ---------- motion ---------- */
+
+/* Hero entrance: a short fade and rise, once, on load. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
-  50% {
-    transform: translateY(-10px);
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+/* Gentle section reveal. Pure CSS scroll-driven animation: browsers without
+   support (or with reduced motion) simply show the content. */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-rise {
+    animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .hero-rise-2 {
+    animation-delay: 0.08s;
+  }
+  .hero-rise-3 {
+    animation-delay: 0.16s;
+  }
+  .hero-rise-4 {
+    animation-delay: 0.24s;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+
+  .zoom img {
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .zoom:hover img {
+    transform: scale(1.045);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .animate-float {
-    animation: none;
+  * {
+    transition-duration: 0.01ms !important;
   }
 }
 
-details > summary::-webkit-details-marker {
+/* ---------- FAQ accordion (native <details>, smooth where supported) ---------- */
+
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.faq details::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size 0.3s ease,
+    content-visibility 0.3s allow-discrete;
+}
+.faq details[open]::details-content {
+  block-size: auto;
+}
+.faq summary {
+  list-style: none;
+}
+.faq summary::-webkit-details-marker {
   display: none;
+}
+.faq details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+.faq .faq-icon {
+  transition: transform 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq details::details-content {
+    transition: none;
+  }
+}
+
+/* ---------- long-form legal copy ---------- */
+
+.legal h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin-top: 2.75rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  scroll-margin-top: 6rem;
+}
+.legal h3 {
+  font-size: 1.125rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.legal p {
+  margin-top: 0.9rem;
+  color: #26324a;
+}
+.legal ul {
+  margin-top: 0.9rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+  color: #26324a;
+}
+.legal li {
+  margin-top: 0.4rem;
+  padding-left: 0.25rem;
+}
+.legal a {
+  color: var(--color-brand-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.legal a:hover {
+  color: var(--color-brand);
+}
+.legal strong {
+  font-weight: 650;
+  color: var(--color-ink);
 }

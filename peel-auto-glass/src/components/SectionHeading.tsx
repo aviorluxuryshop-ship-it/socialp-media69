@@ -1,24 +1,42 @@
+import type { ReactNode } from "react";
+
+/** Eyebrow + heading + optional lead. A blue/red hairline echoes the logo. */
 export function SectionHeading({
   eyebrow,
   title,
-  text,
-  tone = "light",
+  children,
+  dark = false,
+  as: Tag = "h2",
+  className = "",
 }: {
   eyebrow: string;
   title: string;
-  text?: string;
-  tone?: "light" | "dark";
+  children?: ReactNode;
+  dark?: boolean;
+  as?: "h1" | "h2";
+  className?: string;
 }) {
-  const dark = tone === "dark";
   return (
-    <div className="mx-auto max-w-2xl text-center">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">{eyebrow}</p>
-      <h2
-        className={`mt-3 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl ${dark ? "text-white" : "text-navy-900"}`}
+    <div className={className}>
+      <p
+        className={`flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] ${dark ? "text-brand-soft" : "text-brand-deep"}`}
+      >
+        <span aria-hidden className="flex h-0.5 w-9">
+          <span className="w-2/3 bg-brand" />
+          <span className="w-1/3 bg-signal" />
+        </span>
+        {eyebrow}
+      </p>
+      <Tag
+        className={`mt-4 text-3xl font-bold leading-[1.1] sm:text-4xl lg:text-[2.75rem] ${dark ? "text-white" : "text-ink"}`}
       >
         {title}
-      </h2>
-      {text && <p className={`mt-4 text-lg leading-relaxed ${dark ? "text-white/70" : "text-navy-900/70"}`}>{text}</p>}
+      </Tag>
+      {children && (
+        <div className={`mt-5 max-w-2xl text-lg leading-relaxed ${dark ? "text-white/75" : "text-muted"}`}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }

@@ -2,28 +2,33 @@
   "name": "peel-auto-glass",
   "version": "1.0.0",
   "private": true,
-  "description": "Peel Auto Glass — windshield repair & replacement website",
+  "description": "Peel Auto Glass \u2014 windshield, side window and rear glass services in Mississauga, Ontario",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test src/experiments/automotive-glass/timeline.test.ts src/lib/experiment-auth.test.ts"
   },
   "dependencies": {
-    "geist": "^1.8.1",
     "lucide-react": "^1.59.0",
     "next": "^16.4.2",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.2",
     "postcss": "^8.5.31",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
-    "typescript": "^7.0.2"
+    "typescript": "^5.9.3"
   }
 }
