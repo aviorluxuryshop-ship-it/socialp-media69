@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #060b1a;
+  --color-navy-900: #0a1228;
+  --color-navy-800: #101c3d;
+  --color-ice: #f3f7ff;
+  --color-brand-blue: #1456ff;
+  --color-brand-red: #f01a28;
+  --color-brand-cyan: #19b4f0;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--color-navy-950);
+  color: var(--color-navy-900);
+}
+
+/* Mirrors the blue / red split of the logo badge. */
+.hero-glow {
+  background:
+    radial-gradient(60% 70% at 15% 30%, rgb(20 86 255 / 0.45), transparent 70%),
+    radial-gradient(55% 65% at 90% 35%, rgb(240 26 40 / 0.4), transparent 70%),
+    linear-gradient(180deg, #060b1a 0%, #0a1228 100%);
+}
+
+.glass-grid {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(70% 60% at 50% 40%, #000 30%, transparent 80%);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-float {
+    animation: none;
+  }
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
