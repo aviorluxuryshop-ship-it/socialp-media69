@@ -1,10 +1,5 @@
-import { CtaBand } from "@/components/CtaBand";
-import { ApproachStrip } from "@/components/home/ApproachStrip";
-import { ContactStrip } from "@/components/home/ContactStrip";
 import { Hero } from "@/components/home/Hero";
-import { ProcessStrip } from "@/components/home/ProcessStrip";
-import { RepairOrReplace } from "@/components/home/RepairOrReplace";
-import { ServicesGrid } from "@/components/home/ServicesGrid";
+import { PageTiles } from "@/components/home/PageTiles";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -18,12 +13,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <ContactStrip />
-      <ServicesGrid />
-      <RepairOrReplace />
-      <ApproachStrip />
-      <ProcessStrip />
-      <CtaBand />
+      <PageTiles />
     </>
   );
 }

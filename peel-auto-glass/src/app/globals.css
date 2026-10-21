@@ -89,8 +89,8 @@ h4 {
 }
 
 /* One slow pass of light across a glass photograph. */
+/* Pair with `relative` or `absolute` on the element: unlayered rules here would otherwise beat Tailwind's. */
 .glint {
-  position: relative;
   overflow: hidden;
 }
 .glint::after {

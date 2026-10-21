@@ -4,7 +4,7 @@ import { business } from "@/data/business";
 /** Phone-sized screens only: call and email stay one tap away while reading. */
 export function MobileCallBar() {
   return (
-    <div className="on-dark fixed inset-x-0 bottom-0 z-40 border-t border-white/15 bg-ink/95 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+    <div id="call-bar" className="on-dark fixed inset-x-0 bottom-0 z-40 border-t border-white/15 bg-ink/95 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
       <div className="mx-auto flex max-w-md gap-2">
         <a
           href={business.phone.href}
