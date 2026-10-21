@@ -5,6 +5,13 @@ import { siteUrl } from "@/data/business";
 // noindex pages (image credits) are deliberately absent.
 const paths = [
   "/",
+  "/services",
+  "/services/windshield-repair",
+  "/services/windshield-replacement",
+  "/services/side-window-replacement",
+  "/services/rear-windshield-replacement",
+  "/how-it-works",
+  "/auto-glass-guide",
   "/about",
   "/faq",
   "/contact",
@@ -19,6 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return paths.map((p) => ({
     url: `${base}${p === "/" ? "" : p}`,
     changeFrequency: p === "/" ? "monthly" : "yearly",
-    priority: p === "/" ? 1 : p === "/contact" ? 0.8 : 0.6,
+    priority: p === "/" ? 1 : p === "/contact" || p.startsWith("/services") ? 0.8 : 0.6,
   }));
 }

@@ -12,6 +12,7 @@ export default function WarrantyPolicyPage() {
   return (
     <LegalLayout
       title="Warranty & Service Policy"
+      path="/warranty-and-service-policy"
       intro="Warranty and service terms are confirmed directly with Peel Auto Glass before work begins. Here is what to ask."
       sections={[
         {

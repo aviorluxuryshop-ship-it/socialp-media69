@@ -15,6 +15,7 @@
   --color-brand-deep: #0f3fbd;
   --color-brand-soft: #8fb0ff;
   --color-signal: #d8232e;
+  --color-glass: #e9eefa;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -59,6 +60,65 @@ h4 {
   color: #fff;
 }
 
+/* ---------- signature details ---------- */
+
+/* Raked frame: two opposite corners are cut at the angle of a windshield pillar. */
+.rake {
+  clip-path: polygon(0 0, calc(100% - var(--rake, 2.75rem)) 0, 100% var(--rake, 2.75rem), 100% 100%, var(--rake, 2.75rem) 100%, 0 calc(100% - var(--rake, 2.75rem)));
+}
+.rake-sm {
+  --rake: 1.5rem;
+}
+
+/* A faint 12-column grid, drawn behind dark bands in the content column. */
+.cols {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  margin-inline: auto;
+  max-width: 72rem;
+  padding-inline: 1.25rem;
+}
+.cols::before {
+  content: "";
+  display: block;
+  height: 100%;
+  background-image: linear-gradient(to right, rgb(255 255 255 / 0.055) 1px, transparent 1px);
+  background-size: calc(100% / 12) 100%;
+  border-right: 1px solid rgb(255 255 255 / 0.055);
+}
+
+/* One slow pass of light across a glass photograph. */
+.glint {
+  position: relative;
+  overflow: hidden;
+}
+.glint::after {
+  content: "";
+  position: absolute;
+  inset: -20% auto -20% -60%;
+  width: 45%;
+  transform: skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.22), transparent);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.link-arrow svg {
+  transition: transform 0.25s ease;
+}
+.link-arrow:hover svg,
+.link-arrow:focus-visible svg {
+  transform: translateX(4px);
+}
+
+/* Stretched link: the whole card is clickable through its heading link. */
+.stretch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
 /* ---------- motion ---------- */
 
 /* Hero entrance: a short fade and rise, once, on load. */
@@ -86,6 +146,20 @@ h4 {
   }
 }
 
+@keyframes glint {
+  0% {
+    opacity: 0;
+    transform: translateX(0) skewX(-18deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(520%) skewX(-18deg);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .hero-rise {
     animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -106,6 +180,10 @@ h4 {
       animation-timeline: view();
       animation-range: entry 0% entry 40%;
     }
+  }
+
+  .glint::after {
+    animation: glint 2.4s 0.9s cubic-bezier(0.3, 0.6, 0.2, 1) both;
   }
 
   .zoom img {

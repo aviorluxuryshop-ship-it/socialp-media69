@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { MobileCallBar } from "./MobileCallBar";
 
 /** Skip link + header + main landmark + footer, shared by every public page. */
 export function SiteChrome({ children }: { children: ReactNode }) {
@@ -17,6 +18,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         {children}
       </main>
       <Footer />
+      <MobileCallBar />
     </>
   );
 }

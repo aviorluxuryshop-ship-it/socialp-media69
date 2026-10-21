@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
 export default function ImageCreditsPage() {
   return (
     <>
-      <PageHero eyebrow="Credits" title="Image credits">
+      <PageHero eyebrow="Credits" title="Image credits" crumbs={[{ label: "Image credits", href: "/image-credits" }]}>
         <p>Sources and licences for the photography on this website.</p>
       </PageHero>
       <div className="legal mx-auto max-w-3xl px-5 py-16 sm:py-20">

@@ -12,6 +12,7 @@ export default function TermsPage() {
   return (
     <LegalLayout
       title="Terms of Service"
+      path="/terms-of-service"
       intro="The terms for using this website, and what to expect when you contact Peel Auto Glass about a repair or replacement."
       sections={[
         {

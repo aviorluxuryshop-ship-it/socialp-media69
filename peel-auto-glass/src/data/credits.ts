@@ -21,7 +21,7 @@ export const credits: Credit[] = [
   },
   {
     file: "service-side-window.jpg",
-    usedFor: "Side window service",
+    usedFor: "Side window service card and page",
     title: "Close-up of car mirror and window (cropped)",
     author: "Anna Keibalo",
     sourceUrl: "https://www.pexels.com/photo/close-up-of-car-mirror-and-window-17706641/",
@@ -29,7 +29,7 @@ export const credits: Credit[] = [
   },
   {
     file: "service-rear-window.jpg",
-    usedFor: "Rear window service",
+    usedFor: "Rear windshield service card and page",
     title: "Luxurious black car at dusk (cropped)",
     author: "Bayram Yalçın",
     sourceUrl: "https://www.pexels.com/photo/luxurious-black-car-at-dusk-15071553/",
@@ -37,7 +37,7 @@ export const credits: Credit[] = [
   },
   {
     file: "glass-sky.jpg",
-    usedFor: "Why choose us and About pages",
+    usedFor: "About Us page and side window replacement page",
     title: "Close-up of a car window (cropped)",
     author: "Mathias Reding",
     sourceUrl: "https://www.pexels.com/photo/close-up-of-a-car-window-9784181/",

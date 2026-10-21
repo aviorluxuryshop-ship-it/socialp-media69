@@ -10,16 +10,18 @@ export type LegalSection = { id: string; title: string; body: ReactNode };
  */
 export function LegalLayout({
   title,
+  path,
   intro,
   sections,
 }: {
   title: string;
+  path: string;
   intro: ReactNode;
   sections: LegalSection[];
 }) {
   return (
     <>
-      <PageHero eyebrow="Legal" title={title}>
+      <PageHero eyebrow="Legal" title={title} crumbs={[{ label: title, href: path }]}>
         <p>{intro}</p>
         <p className="mt-3 text-sm text-white/60">Last updated: {business.policiesUpdated}</p>
       </PageHero>

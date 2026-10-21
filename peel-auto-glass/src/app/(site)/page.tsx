@@ -1,10 +1,10 @@
-import { ContactPanel } from "@/components/ContactPanel";
+import { CtaBand } from "@/components/CtaBand";
+import { ApproachStrip } from "@/components/home/ApproachStrip";
 import { ContactStrip } from "@/components/home/ContactStrip";
-import { FaqPreview } from "@/components/home/FaqPreview";
 import { Hero } from "@/components/home/Hero";
-import { HowItWorks } from "@/components/home/HowItWorks";
-import { Services } from "@/components/home/Services";
-import { WhyChoose } from "@/components/home/WhyChoose";
+import { ProcessStrip } from "@/components/home/ProcessStrip";
+import { RepairOrReplace } from "@/components/home/RepairOrReplace";
+import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -19,11 +19,11 @@ export default function HomePage() {
     <>
       <Hero />
       <ContactStrip />
-      <Services />
-      <WhyChoose />
-      <HowItWorks />
-      <FaqPreview />
-      <ContactPanel />
+      <ServicesGrid />
+      <RepairOrReplace />
+      <ApproachStrip />
+      <ProcessStrip />
+      <CtaBand />
     </>
   );
 }

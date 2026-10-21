@@ -16,11 +16,18 @@ npm test            # zamanlama ve erişim kontrolü birim testleri
 
 | Rota | İçerik |
 | --- | --- |
-| `/` | Hero, hizmetler, neden biz, nasıl çalışır, SSS önizlemesi, iletişim |
+| `/` | Ana sayfa: kısa bir giriş kapısı. Hero, hizmet kartları, onarım/değişim özeti, yaklaşım, süreç özeti, iletişim |
+| `/services` | Hizmetler: dört hizmetin tanıtımı |
+| `/services/windshield-repair`, `/services/windshield-replacement`, `/services/side-window-replacement`, `/services/rear-windshield-replacement` | Her hizmet için ayrı sayfa (tek dinamik rota, içerik `src/data/services.ts` içinde) |
+| `/how-it-works` | Dört adımlı süreç, hazır bulundurulacak bilgiler, doğrudan teyit edilenler |
+| `/auto-glass-guide` | Onarım mı değişim mi? Çip, çatlak ve kırık camlar için sade bir rehber |
 | `/about`, `/faq`, `/contact` | Hakkımızda, gruplanmış SSS (erişilebilir akordeon), iletişim |
 | `/privacy-policy`, `/terms-of-service`, `/cookie-policy`, `/warranty-and-service-policy` | Yasal sayfalar (footer'dan bağlı) |
 | `/image-credits` | Fotoğraf kaynakları ve lisanslar (`noindex`) |
 | `/experiments/automotive-glass` | **Özel**, korumalı deney sayfası (aşağıya bakın). Menüde, footer'da, sitemap'te yok |
+
+Menü (`src/data/navigation.ts`): Services (açılır menü), How It Works, Guide, About Us, FAQ, Contact Us. Telefonda sayfanın altına
+sabit bir "Call / Email" çubuğu yapışır.
 
 ## İş bilgileri
 
@@ -75,8 +82,9 @@ doğrulamalıdır.
 ```
 brand/                      Orijinal logo
 src/app/                    Rotalar, (site) düzeni, sitemap, robots, ikonlar, OG görseli
-src/components/             Header, Footer, ButtonLink, bölümler, SSS, yasal düzen
-src/data/                   business.ts, services.ts, faq.ts, credits.ts
+src/components/             Header (açılır hizmet menüsü), Footer, PageHero, Breadcrumbs, CtaBand, ServiceIcon, SSS, yasal düzen
+src/components/home/        Ana sayfa bölümleri
+src/data/                   business.ts, services.ts, navigation.ts, guidance.ts, process.ts, approach.ts, faq.ts, credits.ts
 src/experiments/            Yalıtılmış üç boyutlu deney
 src/lib/                    metadata, experiment-auth (+ testi)
 src/proxy.ts                /experiments erişim kapısı

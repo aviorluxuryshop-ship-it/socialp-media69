@@ -7,6 +7,7 @@ export function SectionHeading({
   children,
   dark = false,
   as: Tag = "h2",
+  index,
   className = "",
 }: {
   eyebrow: string;
@@ -14,6 +15,8 @@ export function SectionHeading({
   children?: ReactNode;
   dark?: boolean;
   as?: "h1" | "h2";
+  /** Optional section number, shown before the eyebrow (e.g. "01"). */
+  index?: string;
   className?: string;
 }) {
   return (
@@ -25,10 +28,15 @@ export function SectionHeading({
           <span className="w-2/3 bg-brand" />
           <span className="w-1/3 bg-signal" />
         </span>
+        {index && (
+          <span aria-hidden className={`tabular-nums ${dark ? "text-white/45" : "text-muted"}`}>
+            {index}
+          </span>
+        )}
         {eyebrow}
       </p>
       <Tag
-        className={`mt-4 text-3xl font-bold leading-[1.1] sm:text-4xl lg:text-[2.75rem] ${dark ? "text-white" : "text-ink"}`}
+        className={`mt-4 text-3xl font-bold leading-[1.08] sm:text-4xl lg:text-[2.75rem] ${dark ? "text-white" : "text-ink"}`}
       >
         {title}
       </Tag>

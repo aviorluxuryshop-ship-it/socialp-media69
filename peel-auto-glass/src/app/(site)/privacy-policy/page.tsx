@@ -12,6 +12,7 @@ export default function PrivacyPolicyPage() {
   return (
     <LegalLayout
       title="Privacy Policy"
+      path="/privacy-policy"
       intro="How we handle personal information when you visit this website or contact Peel Auto Glass by phone or email."
       sections={[
         {

@@ -19,7 +19,7 @@ const label = "text-xs font-semibold uppercase tracking-[0.16em] text-muted";
 export default function ContactPage() {
   return (
     <>
-      <PageHero eyebrow="Contact Us" title="Talk to Peel Auto Glass">
+      <PageHero eyebrow="Contact Us" title="Talk to Peel Auto Glass" crumbs={[{ label: "Contact Us", href: "/contact" }]}>
         <p>Call or email us with your vehicle details and a description of the damage.</p>
       </PageHero>
 

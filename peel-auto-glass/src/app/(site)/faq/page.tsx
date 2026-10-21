@@ -1,11 +1,9 @@
 import Image from "next/image";
-import { Mail, Phone } from "lucide-react";
 import crack from "@/assets/images/repair-crack.jpg";
 import chip from "@/assets/images/repair-chip.jpg";
-import { ButtonLink } from "@/components/ButtonLink";
+import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { PageHero } from "@/components/PageHero";
-import { business } from "@/data/business";
 import { faqGroups } from "@/data/faq";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -19,7 +17,7 @@ export const metadata = pageMetadata({
 export default function FaqPage() {
   return (
     <>
-      <PageHero eyebrow="FAQ" title="Frequently asked questions">
+      <PageHero eyebrow="FAQ" title="Frequently asked questions" crumbs={[{ label: "FAQ", href: "/faq" }]}>
         <p>
           Straight answers about repair, replacement, pricing and appointments. If your question is not here, call or
           email us.
@@ -88,24 +86,7 @@ export default function FaqPage() {
         </div>
       </div>
 
-      <section className="on-dark bg-ink py-20 text-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold leading-tight">Still have a question?</h2>
-            <p className="mt-3 text-lg text-white/75">Call or email us and we will help.</p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href={business.phone.href}>
-              <Phone aria-hidden />
-              Call Us
-            </ButtonLink>
-            <ButtonLink href={business.emailHref} variant="outline-light">
-              <Mail aria-hidden />
-              Email Us
-            </ButtonLink>
-          </div>
-        </div>
-      </section>
+      <CtaBand title="Still have a question?" text="Call or email us and we will help." />
     </>
   );
 }

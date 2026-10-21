@@ -11,6 +11,7 @@ export default function CookiePolicyPage() {
   return (
     <LegalLayout
       title="Cookie Policy"
+      path="/cookie-policy"
       intro="What cookies and similar technologies this website uses. Short answer: none."
       sections={[
         {
