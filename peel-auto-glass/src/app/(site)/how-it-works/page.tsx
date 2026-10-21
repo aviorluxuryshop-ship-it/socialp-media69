@@ -1,11 +1,9 @@
-import { Check, Mail, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 import { ArrowLink } from "@/components/ArrowLink";
-import { ButtonLink } from "@/components/ButtonLink";
 import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { PageHero } from "@/components/PageHero";
 import { SectionHeading } from "@/components/SectionHeading";
-import { business } from "@/data/business";
 import { allFaqs } from "@/data/faq";
 import { tellUs } from "@/data/guidance";
 import { steps } from "@/data/process";
@@ -34,18 +32,6 @@ export default function HowItWorksPage() {
         eyebrow="How it works"
         title="From first call to finished glass"
         crumbs={[{ label: "How It Works", href: "/how-it-works" }]}
-        actions={
-          <>
-            <ButtonLink href={business.phone.href}>
-              <Phone aria-hidden />
-              Call Us
-            </ButtonLink>
-            <ButtonLink href={business.emailHref} variant="outline-light">
-              <Mail aria-hidden />
-              Email Us
-            </ButtonLink>
-          </>
-        }
       >
         <p>
           Four simple steps. There is no online form to fill in: you talk to us directly, and we explain your options

@@ -24,7 +24,7 @@ export function Header() {
   // While the menu covers the page, keep the page behind it still and out of the tab order.
   useEffect(() => {
     if (!open) return;
-    const behind = [document.getElementById("main"), document.querySelector("footer"), document.getElementById("call-bar")];
+    const behind = [document.getElementById("main"), document.querySelector("footer")];
     behind.forEach((el) => el?.setAttribute("inert", ""));
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -70,14 +70,6 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-2">
-          <a
-            href={business.phone.href}
-            className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-md bg-brand px-3 text-[0.95rem] font-semibold text-white transition-colors hover:bg-brand-deep sm:px-4"
-          >
-            <Phone aria-hidden className="size-4" />
-            <span className="hidden sm:inline">{business.phone.short}</span>
-            <span className="sr-only min-[360px]:not-sr-only sm:hidden">Call Us</span>
-          </a>
           <button
             ref={toggleRef}
             type="button"
@@ -151,22 +143,20 @@ export function Header() {
 
             <div className="lg:pt-2">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-soft">Peel Auto Glass</p>
-              <div className="mt-5 flex flex-col gap-3">
-                <a
-                  href={business.phone.href}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-brand font-semibold hover:bg-brand-deep"
-                >
-                  <Phone aria-hidden className="size-4" />
-                  Call {business.phone.display}
-                </a>
-                <a
-                  href={business.emailHref}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/35 px-4 font-semibold hover:bg-white/10"
-                >
-                  <Mail aria-hidden className="size-4 shrink-0" />
-                  <span className="break-all">{business.email}</span>
-                </a>
-              </div>
+              <ul className="mt-5 space-y-3 text-lg">
+                <li className="flex items-center gap-3">
+                  <Phone aria-hidden className="size-4 shrink-0 text-brand-soft" />
+                  <a href={business.phone.href} className="font-semibold hover:text-brand-soft">
+                    {business.phone.display}
+                  </a>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail aria-hidden className="size-4 shrink-0 text-brand-soft" />
+                  <a href={business.emailHref} className="break-all font-semibold hover:text-brand-soft">
+                    {business.email}
+                  </a>
+                </li>
+              </ul>
               <address className="mt-8 flex gap-3 text-white/75 not-italic">
                 <MapPin aria-hidden className="mt-1 size-4 shrink-0 text-brand-soft" />
                 <span>

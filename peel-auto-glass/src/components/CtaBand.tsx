@@ -1,11 +1,10 @@
-import { Mail, Phone } from "lucide-react";
-import { business } from "@/data/business";
+import { ArrowRight } from "lucide-react";
 import { ButtonLink } from "./ButtonLink";
 
 /** Closing call to action used at the foot of every content page. */
 export function CtaBand({
   title = "Have damaged glass on your vehicle?",
-  text = "Call or email us with your vehicle details and a description of the damage. We will explain your options.",
+  text = "Tell us about your vehicle and the damage. We will explain your options.",
 }: {
   title?: string;
   text?: string;
@@ -25,14 +24,10 @@ export function CtaBand({
           <h2 className="mt-4 text-3xl font-bold leading-[1.08] sm:text-4xl lg:text-[2.75rem]">{title}</h2>
           <p className="mt-4 text-lg leading-relaxed text-white/75">{text}</p>
         </div>
-        <div className="reveal flex shrink-0 flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-          <ButtonLink href={business.phone.href}>
-            <Phone aria-hidden />
-            Call {business.phone.short}
-          </ButtonLink>
-          <ButtonLink href={business.emailHref} variant="outline-light">
-            <Mail aria-hidden />
-            Email Us
+        <div className="reveal shrink-0">
+          <ButtonLink href="/contact">
+            Contact Us
+            <ArrowRight aria-hidden />
           </ButtonLink>
         </div>
       </div>

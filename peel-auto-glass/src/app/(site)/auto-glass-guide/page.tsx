@@ -1,13 +1,11 @@
 import Image from "next/image";
-import { Check, Mail, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 import chip from "@/assets/images/repair-chip.jpg";
 import crack from "@/assets/images/repair-crack.jpg";
 import { ArrowLink } from "@/components/ArrowLink";
-import { ButtonLink } from "@/components/ButtonLink";
 import { CtaBand } from "@/components/CtaBand";
 import { PageHero } from "@/components/PageHero";
 import { SectionHeading } from "@/components/SectionHeading";
-import { business } from "@/data/business";
 import { repairWhen, replaceWhen, tellUs } from "@/data/guidance";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -40,18 +38,6 @@ export default function GuidePage() {
         eyebrow="Guide"
         title="Repair or replace? A plain-language guide to auto glass damage"
         crumbs={[{ label: "Auto Glass Guide", href: "/auto-glass-guide" }]}
-        actions={
-          <>
-            <ButtonLink href={business.phone.href}>
-              <Phone aria-hidden />
-              Call Us
-            </ButtonLink>
-            <ButtonLink href={business.emailHref} variant="outline-light">
-              <Mail aria-hidden />
-              Email Us
-            </ButtonLink>
-          </>
-        }
       >
         <p>
           What the damage on your glass means, and what usually decides between repair and replacement. This is

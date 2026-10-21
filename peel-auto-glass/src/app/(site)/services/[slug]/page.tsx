@@ -3,9 +3,8 @@ import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, Mail, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 import { ArrowLink } from "@/components/ArrowLink";
-import { ButtonLink } from "@/components/ButtonLink";
 import { CtaBand } from "@/components/CtaBand";
 import { FaqList } from "@/components/FaqList";
 import { PageHero } from "@/components/PageHero";
@@ -59,18 +58,6 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           { label: service.title, href: `/services/${service.slug}` },
         ]}
         image={{ src: service.image, alt: service.alt }}
-        actions={
-          <>
-            <ButtonLink href={business.phone.href}>
-              <Phone aria-hidden />
-              Call Us
-            </ButtonLink>
-            <ButtonLink href={business.emailHref} variant="outline-light">
-              <Mail aria-hidden />
-              Email Us
-            </ButtonLink>
-          </>
-        }
       >
         <p>{service.lead}</p>
       </PageHero>
@@ -148,19 +135,14 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
               <p className="mt-2 text-[0.95rem] text-white/70">
                 Call or email with your vehicle details and a description of the damage.
               </p>
-              <a
-                href={business.phone.href}
-                className="mt-5 flex min-h-12 items-center justify-center gap-2 rounded-md bg-brand font-semibold hover:bg-brand-deep"
-              >
-                <Phone aria-hidden className="size-4" />
-                {business.phone.display}
-              </a>
-              <a
-                href={business.emailHref}
-                className="mt-3 block break-all text-center text-[0.9rem] text-brand-soft underline-offset-4 hover:underline"
-              >
-                {business.email}
-              </a>
+              <p className="mt-4 font-semibold">
+                <a href={business.phone.href} className="hover:text-brand-soft">
+                  {business.phone.display}
+                </a>
+              </p>
+              <ArrowLink href="/contact" light className="mt-4">
+                Contact page
+              </ArrowLink>
             </div>
           </aside>
         </div>

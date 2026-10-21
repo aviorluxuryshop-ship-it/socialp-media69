@@ -29,7 +29,7 @@ npm test            # zamanlama ve erişim kontrolü birim testleri
 Menü (`src/data/navigation.ts`): her ekran boyutunda üstteki "Menu" (3 çizgi) düğmesiyle açılan tam ekran menü. İçinde Home,
 Services (dört hizmet alt bağlantısıyla), How It Works, Guide, About Us, FAQ, Contact Us ve telefon/e-posta/adres var.
 Açıkken arkadaki sayfa `inert` olur ve kaydırma kilitlenir; Escape kapatır. "Peel Auto Glass" logosu ana sayfadayken sayfanın
-başına kaydırır, başka sayfadayken ana sayfayı açar. Telefonda sayfanın altına sabit bir "Call / Email" çubuğu yapışır.
+başına kaydırır, başka sayfadayken ana sayfayı açar. Arama düğmesi yalnızca İletişim sayfasında; diğer yerlerde telefon sadece metin bağlantısı (menü, footer, hizmet kenar kartı).
 
 ## İş bilgileri
 

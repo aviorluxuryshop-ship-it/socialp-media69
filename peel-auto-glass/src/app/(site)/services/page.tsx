@@ -1,13 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Mail, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 import { ArrowLink } from "@/components/ArrowLink";
-import { ButtonLink } from "@/components/ButtonLink";
 import { CtaBand } from "@/components/CtaBand";
 import { PageHero } from "@/components/PageHero";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ServiceIcon } from "@/components/ServiceIcon";
-import { business } from "@/data/business";
 import { services } from "@/data/services";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -25,18 +23,6 @@ export default function ServicesPage() {
         eyebrow="Services"
         title="Auto glass services in Mississauga"
         crumbs={[{ label: "Services", href: "/services" }]}
-        actions={
-          <>
-            <ButtonLink href={business.phone.href}>
-              <Phone aria-hidden />
-              Call Us
-            </ButtonLink>
-            <ButtonLink href={business.emailHref} variant="outline-light">
-              <Mail aria-hidden />
-              Email Us
-            </ButtonLink>
-          </>
-        }
       >
         <p>
           Repair when the damage is suitable. Replacement when it is not. Choose a service below, or call us and

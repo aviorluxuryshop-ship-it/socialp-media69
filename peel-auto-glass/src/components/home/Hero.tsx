@@ -1,8 +1,7 @@
 import Image from "next/image";
-import { ArrowDown, Phone } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import hero from "@/assets/images/hero.jpg";
 import { ButtonLink } from "@/components/ButtonLink";
-import { business } from "@/data/business";
 
 /** Full-screen opening: the photograph, the headline and two actions. Nothing else. */
 export function Hero() {
@@ -39,11 +38,7 @@ export function Hero() {
             Reliable windshield, side window and rear glass services in Mississauga, Ontario.
           </p>
           <div className="hero-rise hero-rise-4 mt-10 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href={business.phone.href}>
-              <Phone aria-hidden />
-              Call Us
-            </ButtonLink>
-            <ButtonLink href="/services" variant="outline-light">
+            <ButtonLink href="/services">
               Our Services
             </ButtonLink>
           </div>
