@@ -1,5 +1,5 @@
 // Kaynak getirme: konu eşleme + sayfa seçimi + BM25 ile en ilgili parçalar.
-import { BOOKS, type CatalogBook, getBook, pdfPageUrl, resolveTopic, type ResolvedTopic, bookTopicOptions } from "@/lib/catalog";
+import { type CatalogBook, getBook, pdfPageUrl, resolveTopic, type ResolvedTopic, bookTopicOptions } from "@/lib/catalog";
 import { tokens } from "@/lib/text";
 import type { SourceRef } from "@/lib/types";
 import { getPrintedPageText } from "./pdf-pages";
@@ -183,6 +183,5 @@ export async function retrieve(opts: {
       url: pdfPageUrl(book, page),
     };
   }
-  void BOOKS;
   return { passages, refs, topic, grounded: passages.length > 0, note: null };
 }

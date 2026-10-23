@@ -116,6 +116,23 @@ describe("durum ve koruma", () => {
   });
 });
 
+describe("kaynak erişim sağlık denetimi", () => {
+  it("resmî PDF'ten sayfa metni çıkarılır ama metin yanıtta dönmez", async () => {
+    const r = await fetch(`${app.url}/api/sources/probe`);
+    const j = (await r.json()) as { ok: boolean; passages: number; chars: number; pages: number[]; ms: number; note: string | null; text?: string };
+    console.info(`[bilgi] probe status=${r.status} passages=${j.passages} chars=${j.chars} ms=${j.ms}`);
+    expect(j.text).toBeUndefined();
+    expect(JSON.stringify(j).length).toBeLessThan(600); // kitap metni sızmaz
+    if (r.status === 200) {
+      expect(j.ok).toBe(true);
+      expect(j.chars).toBeGreaterThan(100);
+    } else {
+      expect(j.ok).toBe(false);
+      expect(j.note).toBeTruthy(); // ulaşılamıyorsa dürüstçe bildirir
+    }
+  });
+});
+
 describe("girdi doğrulama", () => {
   it("bozuk JSON ve geçersiz mesaj dizisi 400 döner", async () => {
     expect((await post(app, "/api/ai/tutor", "{bozuk")).status).toBe(400);

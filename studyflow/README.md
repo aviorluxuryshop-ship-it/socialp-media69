@@ -45,7 +45,8 @@ npm run videos:verify    # video kataloğunu oEmbed + meta ile doğrular
 
 ```bash
 npm run typecheck && npm run lint && npm test && npm run build
-npm run test:e2e         # Playwright (önce `npm run build && npm start`)
+npm run test:integration # üretim derlemesi + sahte Anthropic servisi (tesisat testi; önce `npm run build`)
+npm run test:e2e         # Playwright (önce `npm run build`; sunucuyu kendisi başlatır)
 ```
 
 ## Sınırlar
