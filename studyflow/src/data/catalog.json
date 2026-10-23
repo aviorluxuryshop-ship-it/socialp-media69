@@ -1,0 +1,5839 @@
+{
+ "source": "https://tymm.meb.gov.tr",
+ "generatedAt": "2026-10-21",
+ "books": [
+  {
+   "id": 35,
+   "title": "Din Kültürü Ve Ahlak Bilgisi 10.Sınıf Ders Kitabı",
+   "subjectId": "din-kulturu",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Din Kültürü ve Ahlak Bilgisi Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/35/din-kulturu-ve-ahlak-bilgisi-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/din-kulturu-ve-ahlak-bilgisi-9sinif-ders-kitabi_20261003_185826_706.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/din-kulturu-ve-ahlak-bilgisi-10sinif-ders-kitabi_20261003_185839_881.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 17319060,
+   "pageCount": 184,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b35-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "İslam’da varlık ve bilgi",
+     "page": 12,
+     "endPage": 43,
+     "topics": [
+      {
+       "id": "b35-t1.1",
+       "no": "1.1",
+       "title": "İslam’da bilgi ve bilginin kaynakları",
+       "page": 14,
+       "endPage": 23,
+       "sections": [
+        {
+         "id": "b35-t1.1.1",
+         "no": "1.1.1",
+         "title": "İslam’da Bilginin Yeri",
+         "page": 14,
+         "endPage": 18
+        },
+        {
+         "id": "b35-t1.1.2",
+         "no": "1.1.2",
+         "title": "İslam’da Bilgi Kaynakları",
+         "page": 19,
+         "endPage": 23
+        }
+       ]
+      },
+      {
+       "id": "b35-t1.2",
+       "no": "1.2",
+       "title": "Allah-âlem ilişkisi",
+       "page": 24,
+       "endPage": 29,
+       "sections": []
+      },
+      {
+       "id": "b35-t1.3",
+       "no": "1.3",
+       "title": "Kur’an’dan mesajlar",
+       "page": 30,
+       "endPage": 36,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b35-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Allah’ı tanımak",
+     "page": 44,
+     "endPage": 79,
+     "topics": [
+      {
+       "id": "b35-t2.1",
+       "no": "2.1",
+       "title": "Allah’ın varlığının delıllerı",
+       "page": 46,
+       "endPage": 56,
+       "sections": [
+        {
+         "id": "b35-t2.1.1",
+         "no": "2.1.1",
+         "title": "Kozmolojik Delil",
+         "page": 49,
+         "endPage": 50
+        },
+        {
+         "id": "b35-t2.1.2",
+         "no": "2.1.2",
+         "title": "Teleolojik Delil",
+         "page": 51,
+         "endPage": 53
+        },
+        {
+         "id": "b35-t2.1.3",
+         "no": "2.1.3",
+         "title": "Ontolojik Delil",
+         "page": 54,
+         "endPage": 54
+        },
+        {
+         "id": "b35-t2.1.4",
+         "no": "2.1.4",
+         "title": "Dinî Tecrübe Delili",
+         "page": 55,
+         "endPage": 56
+        }
+       ]
+      },
+      {
+       "id": "b35-t2.2",
+       "no": "2.2",
+       "title": "Allah’ı isım ve sıfatlarıyla tanımak",
+       "page": 57,
+       "endPage": 68,
+       "sections": []
+      },
+      {
+       "id": "b35-t2.3",
+       "no": "2.3",
+       "title": "Kur’an’dan mesajlar",
+       "page": 69,
+       "endPage": 73,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b35-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "İslam’ın evrensel mesajları",
+     "page": 80,
+     "endPage": 115,
+     "topics": [
+      {
+       "id": "b35-t3.1",
+       "no": "3.1",
+       "title": "İslam’ın tevhit ilkesi",
+       "page": 82,
+       "endPage": 85,
+       "sections": []
+      },
+      {
+       "id": "b35-t3.2",
+       "no": "3.2",
+       "title": "İslam’da adalet ve eşitlik",
+       "page": 86,
+       "endPage": 94,
+       "sections": []
+      },
+      {
+       "id": "b35-t3.3",
+       "no": "3.3",
+       "title": "İslam ve barış",
+       "page": 95,
+       "endPage": 100,
+       "sections": []
+      },
+      {
+       "id": "b35-t3.4",
+       "no": "3.4",
+       "title": "Kur’an’dan mesajlar",
+       "page": 101,
+       "endPage": 108,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b35-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Din, çevre ve teknoloji",
+     "page": 116,
+     "endPage": 143,
+     "topics": [
+      {
+       "id": "b35-t4.1",
+       "no": "4.1",
+       "title": "İnsan, çevre ve ahlak",
+       "page": 118,
+       "endPage": 124,
+       "sections": []
+      },
+      {
+       "id": "b35-t4.2",
+       "no": "4.2",
+       "title": "Teknoloji ve ahlak",
+       "page": 125,
+       "endPage": 128,
+       "sections": []
+      },
+      {
+       "id": "b35-t4.3",
+       "no": "4.3",
+       "title": "Çevre ve teknoloji",
+       "page": 129,
+       "endPage": 133,
+       "sections": []
+      },
+      {
+       "id": "b35-t4.4",
+       "no": "4.4",
+       "title": "Kur’an’dan mesajlar",
+       "page": 134,
+       "endPage": 137,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b35-u5",
+     "no": 5,
+     "kind": "unite",
+     "title": "İslam düşüncesınde itıkadı-sıyası ve fıkhı yorumlar",
+     "page": 144,
+     "endPage": 164,
+     "topics": [
+      {
+       "id": "b35-t5.1",
+       "no": "5.1",
+       "title": "Dınî yorum farklılıklarının sebeplerı",
+       "page": 146,
+       "endPage": 151,
+       "sections": []
+      },
+      {
+       "id": "b35-t5.2",
+       "no": "5.2",
+       "title": "İslam düşüncesınde itıkadı-sıyası ve fıkhı yorumlar",
+       "page": 152,
+       "endPage": 159,
+       "sections": [
+        {
+         "id": "b35-t5.2.1",
+         "no": "5.2.1",
+         "title": "Ehlisünnet",
+         "page": 154,
+         "endPage": 156
+        },
+        {
+         "id": "b35-t5.2.2",
+         "no": "5.2.2",
+         "title": "Şia",
+         "page": 157,
+         "endPage": 159
+        }
+       ]
+      },
+      {
+       "id": "b35-t5.3",
+       "no": "5.3",
+       "title": "Kur’an’dan mesajlar",
+       "page": 160,
+       "endPage": 164,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 36,
+   "title": "Biyoloji Dersi 9.Sınıf Ders Kitabı",
+   "subjectId": "biyoloji",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Biyoloji Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-06",
+   "fileStamp": "2026-10-06",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/36/biyoloji-dersi-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/biyoloji-dersi-9sinif-ders-kitabi_20261006_220008_456.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/biyoloji-9sinif-ders-kitabi_20260907_200538_016.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 98733656,
+   "pageCount": 184,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b36-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Yaşam",
+     "page": 14,
+     "endPage": 95,
+     "topics": [
+      {
+       "id": "b36-t1.1",
+       "no": "1.1",
+       "title": "Biyolojinin önemi ve biyoloji biliminin gelişmesindeki dönüm noktaları",
+       "page": 16,
+       "endPage": 21,
+       "sections": []
+      },
+      {
+       "id": "b36-t1.2",
+       "no": "1.2",
+       "title": "Bilimin doğası ve bilimsel araştırma süreçleri",
+       "page": 22,
+       "endPage": 29,
+       "sections": []
+      },
+      {
+       "id": "b36-t1.3",
+       "no": "1.3",
+       "title": "Bilim etiği",
+       "page": 30,
+       "endPage": 32,
+       "sections": []
+      },
+      {
+       "id": "b36-t1.4",
+       "no": "1.4",
+       "title": "Canlıların ortak özellikleri",
+       "page": 33,
+       "endPage": 43,
+       "sections": []
+      },
+      {
+       "id": "b36-t1.5",
+       "no": "1.5",
+       "title": "İnorganik moleküller",
+       "page": 44,
+       "endPage": 53,
+       "sections": []
+      },
+      {
+       "id": "b36-t1.6",
+       "no": "1.6",
+       "title": "Organik moleküller",
+       "page": 54,
+       "endPage": 73,
+       "sections": []
+      },
+      {
+       "id": "b36-t1.7",
+       "no": "1.7",
+       "title": "Besinlerin yapısında bulunan karbohidrat, lipit ve proteinlerin belirlenmesi",
+       "page": 74,
+       "endPage": 78,
+       "sections": []
+      },
+      {
+       "id": "b36-t1.8",
+       "no": "1.8",
+       "title": "PH ve sıcaklığın enzim aktivitesine etkisi",
+       "page": 79,
+       "endPage": 83,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b36-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Organizasyon",
+     "page": 96,
+     "endPage": 150,
+     "topics": [
+      {
+       "id": "b36-t2.1",
+       "no": "2.1",
+       "title": "Hücre ve alt birimleri arasındaki ilişkiler",
+       "page": 98,
+       "endPage": 109,
+       "sections": []
+      },
+      {
+       "id": "b36-t2.2",
+       "no": "2.2",
+       "title": "Hücre zarından madde geçişleri",
+       "page": 110,
+       "endPage": 119,
+       "sections": []
+      },
+      {
+       "id": "b36-t2.3",
+       "no": "2.3",
+       "title": "Küçük moleküllerin hücre zarından pasif geçişi",
+       "page": 120,
+       "endPage": 123,
+       "sections": []
+      },
+      {
+       "id": "b36-t2.4",
+       "no": "2.4",
+       "title": "Sınıflandırmada temel yaklaşımlar ve modern sınıflandırma",
+       "page": 124,
+       "endPage": 129,
+       "sections": []
+      },
+      {
+       "id": "b36-t2.5",
+       "no": "2.5",
+       "title": "Üç üst âlem sisteminde yer alan canlılar ve genel özellikleri",
+       "page": 130,
+       "endPage": 145,
+       "sections": []
+      },
+      {
+       "id": "b36-t2.6",
+       "no": "2.6",
+       "title": "Biyoçeşitlilik",
+       "page": 146,
+       "endPage": 150,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "title": "Coğrafya Dersi 9.Sınıf Ders Kitabı",
+   "subjectId": "cografya",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Coğrafya Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-09-07",
+   "fileStamp": "2026-09-07",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/37/cografya-dersi-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/cografya-dersi-9sinif-ders-kitabi_20260907_201524_569.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/cografya-dersi-9sinif-ders-kitabi_20260907_201524_569.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 100594049,
+   "pageCount": 244,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b37-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Coğrafyanın doğası",
+     "page": 12,
+     "endPage": 31,
+     "topics": [
+      {
+       "id": "b37-t1.1",
+       "no": "1.1",
+       "title": "Coğrafya bilimi",
+       "page": 15,
+       "endPage": 28,
+       "sections": [
+        {
+         "id": "b37-t1.1.1",
+         "no": "1.1.1",
+         "title": "Coğrafya Biliminin Konusu ve Bölümleri",
+         "page": 16,
+         "endPage": 20
+        },
+        {
+         "id": "b37-t1.1.2",
+         "no": "1.1.2",
+         "title": "Niçin Coğrafya Öğrenmeliyiz?",
+         "page": 21,
+         "endPage": 23
+        },
+        {
+         "id": "b37-t1.1.3",
+         "no": "1.1.3",
+         "title": "Coğrafya Biliminin Gelişimi",
+         "page": 24,
+         "endPage": 28
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b37-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Mekânsal bilgi teknolojileri",
+     "page": 32,
+     "endPage": 73,
+     "topics": [
+      {
+       "id": "b37-t2.1",
+       "no": "2.1",
+       "title": "Harita okuryazarlığı",
+       "page": 35,
+       "endPage": 70,
+       "sections": [
+        {
+         "id": "b37-t2.1.1",
+         "no": "2.1.1",
+         "title": "Mekânın Sembolik Dili: Harita",
+         "page": 35,
+         "endPage": 58
+        },
+        {
+         "id": "b37-t2.1.2",
+         "no": "2.1.2",
+         "title": "Türkiye’nin Coğrafi Konumu",
+         "page": 59,
+         "endPage": 65
+        },
+        {
+         "id": "b37-t2.1.3",
+         "no": "2.1.3",
+         "title": "Mekânsal Bilgi Teknolojilerinin Bileşenleri",
+         "page": 66,
+         "endPage": 70
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b37-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Doğal sistemler ve süreçler",
+     "page": 74,
+     "endPage": 137,
+     "topics": [
+      {
+       "id": "b37-t3.1",
+       "no": "3.1",
+       "title": "İklim sistemini anlamak",
+       "page": 77,
+       "endPage": 131,
+       "sections": [
+        {
+         "id": "b37-t3.1.1",
+         "no": "3.1.1",
+         "title": "Hava Olayları",
+         "page": 77,
+         "endPage": 88
+        },
+        {
+         "id": "b37-t3.1.2",
+         "no": "3.1.2",
+         "title": "İklim Sistemi",
+         "page": 89,
+         "endPage": 117
+        },
+        {
+         "id": "b37-t3.1.3",
+         "no": "3.1.3",
+         "title": "İklim Türleri",
+         "page": 118,
+         "endPage": 120
+        },
+        {
+         "id": "b37-t3.1.4",
+         "no": "3.1.4",
+         "title": "İklim Sisteminde Yaşanan Değişiklikler",
+         "page": 121,
+         "endPage": 131
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b37-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Beşerî sistemler ve süreçler",
+     "page": 138,
+     "endPage": 169,
+     "topics": [
+      {
+       "id": "b37-t4.1",
+       "no": "4.1",
+       "title": "Nüfus dinamikleri",
+       "page": 141,
+       "endPage": 165,
+       "sections": [
+        {
+         "id": "b37-t4.1.1",
+         "no": "4.1.1",
+         "title": "Nüfusun Tarihsel Değişimi ve Geleceği",
+         "page": 141,
+         "endPage": 145
+        },
+        {
+         "id": "b37-t4.1.2",
+         "no": "4.1.2",
+         "title": "Nüfusun Dağılışı ve Hareketleri",
+         "page": 146,
+         "endPage": 153
+        },
+        {
+         "id": "b37-t4.1.3",
+         "no": "4.1.3",
+         "title": "Demografik Dönüşüm Süreci ve Nüfus Piramitleri",
+         "page": 154,
+         "endPage": 157
+        },
+        {
+         "id": "b37-t4.1.4",
+         "no": "4.1.4",
+         "title": "Nüfus Politikaları",
+         "page": 158,
+         "endPage": 165
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b37-u5",
+     "no": 5,
+     "kind": "unite",
+     "title": "Ekonomik faaliyetler ve etkileri",
+     "page": 170,
+     "endPage": 185,
+     "topics": [
+      {
+       "id": "b37-t5.1",
+       "no": "5.1",
+       "title": "Ekonomik faaliyetleri etkileyen coğrafi faktörler",
+       "page": 173,
+       "endPage": 183,
+       "sections": [
+        {
+         "id": "b37-t5.1.1",
+         "no": "5.1.1",
+         "title": "Ekonomik Faaliyetleri Etkileyen Doğal Faktörler",
+         "page": 174,
+         "endPage": 176
+        },
+        {
+         "id": "b37-t5.1.2",
+         "no": "5.1.2",
+         "title": "Ekonomik Faaliyetleri Etkileyen Beşerî Faktörler",
+         "page": 177,
+         "endPage": 183
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b37-u6",
+     "no": 6,
+     "kind": "unite",
+     "title": "Afetler ve sürdürülebilir çevre",
+     "page": 186,
+     "endPage": 213,
+     "topics": [
+      {
+       "id": "b37-t6.1",
+       "no": "6.1",
+       "title": "Afetler",
+       "page": 189,
+       "endPage": 209,
+       "sections": [
+        {
+         "id": "b37-t6.1.1",
+         "no": "6.1.1",
+         "title": "Tehlike, Risk ve Afet",
+         "page": 190,
+         "endPage": 193
+        },
+        {
+         "id": "b37-t6.1.2",
+         "no": "6.1.2",
+         "title": "Afet Türleri",
+         "page": 194,
+         "endPage": 201
+        },
+        {
+         "id": "b37-t6.1.3",
+         "no": "6.1.3",
+         "title": "Bütüncül Afet Yönetimi",
+         "page": 202,
+         "endPage": 209
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b37-u7",
+     "no": 7,
+     "kind": "unite",
+     "title": "Bölgeler, ülkeler ve küresel bağlantılar",
+     "page": 214,
+     "endPage": 225,
+     "topics": [
+      {
+       "id": "b37-t7.1",
+       "no": "7.1",
+       "title": "Bölge ve bölge sınırı",
+       "page": 217,
+       "endPage": 225,
+       "sections": [
+        {
+         "id": "b37-t7.1.1",
+         "no": "7.1.1",
+         "title": "Bölge Belirleme Kriterleri ve Bölge Türleri",
+         "page": 217,
+         "endPage": 219
+        },
+        {
+         "id": "b37-t7.1.2",
+         "no": "7.1.2",
+         "title": "Kriterlere Göre Bölge Sınırları",
+         "page": 220,
+         "endPage": 222
+        },
+        {
+         "id": "b37-t7.1.3",
+         "no": "7.1.3",
+         "title": "Bölge Sınırlarında Değişim",
+         "page": 223,
+         "endPage": 225
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 38,
+   "title": "Fizik Dersi 9.Sınıf Ders Kitabı",
+   "subjectId": "fizik",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Fizik Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-06",
+   "fileStamp": "2026-10-06",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/38/fizik-dersi-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/fizik-dersi-9sinif-ders-kitabi_20261006_194425_076.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/fizik-dersi-9sinif-ders-kitabi_20260907_204632_669.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 53993588,
+   "pageCount": 272,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b38-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Fizik bilimi ve kariyer keşfi",
+     "page": 12,
+     "endPage": 49,
+     "topics": [
+      {
+       "id": "b38-t1.1",
+       "no": "1.1",
+       "title": "Fizik bilimi",
+       "page": 15,
+       "endPage": 21,
+       "sections": []
+      },
+      {
+       "id": "b38-t1.2",
+       "no": "1.2",
+       "title": "Fizik biliminin alt dalları",
+       "page": 22,
+       "endPage": 28,
+       "sections": []
+      },
+      {
+       "id": "b38-t1.3",
+       "no": "1.3",
+       "title": "Fizik bilimine yön verenler",
+       "page": 29,
+       "endPage": 35,
+       "sections": []
+      },
+      {
+       "id": "b38-t1.4",
+       "no": "1.4",
+       "title": "Fizik bilimi ile ilgili kariyer keşfi",
+       "page": 36,
+       "endPage": 44,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b38-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Kuvvet ve hareket",
+     "page": 50,
+     "endPage": 129,
+     "topics": [
+      {
+       "id": "b38-t2.1",
+       "no": "2.1",
+       "title": "Temel ve türetilmiş nicelikler",
+       "page": 54,
+       "endPage": 58,
+       "sections": []
+      },
+      {
+       "id": "b38-t2.2",
+       "no": "2.2",
+       "title": "Skaler ve vektörel nicelikler",
+       "page": 59,
+       "endPage": 63,
+       "sections": []
+      },
+      {
+       "id": "b38-t2.3",
+       "no": "2.3",
+       "title": "Vektörler",
+       "page": 64,
+       "endPage": 85,
+       "sections": [
+        {
+         "id": "b38-t2.3.1",
+         "no": "2.3.1",
+         "title": "Vektörlerin Özellikleri",
+         "page": 64,
+         "endPage": 71
+        },
+        {
+         "id": "b38-t2.3.2",
+         "no": "2.3.2",
+         "title": "Vektörlerin Toplanması",
+         "page": 72,
+         "endPage": 74
+        },
+        {
+         "id": "b38-t2.3.3",
+         "no": "2.3.3",
+         "title": "Vektörlerin Toplanmasında Kullanılan Yöntemler",
+         "page": 75,
+         "endPage": 85
+        }
+       ]
+      },
+      {
+       "id": "b38-t2.4",
+       "no": "2.4",
+       "title": "Doğadaki temel kuvvetler",
+       "page": 86,
+       "endPage": 91,
+       "sections": []
+      },
+      {
+       "id": "b38-t2.5",
+       "no": "2.5",
+       "title": "Hareket ve hareket türleri",
+       "page": 92,
+       "endPage": 116,
+       "sections": [
+        {
+         "id": "b38-t2.5.1",
+         "no": "2.5.1",
+         "title": "Hareketin Temel Kavramları",
+         "page": 105,
+         "endPage": 110
+        },
+        {
+         "id": "b38-t2.5.2",
+         "no": "2.5.2",
+         "title": "Hareket Türleri",
+         "page": 111,
+         "endPage": 116
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b38-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Akışkanlar",
+     "page": 130,
+     "endPage": 205,
+     "topics": [
+      {
+       "id": "b38-t3.1",
+       "no": "3.1",
+       "title": "Basınç",
+       "page": 133,
+       "endPage": 144,
+       "sections": []
+      },
+      {
+       "id": "b38-t3.2",
+       "no": "3.2",
+       "title": "Sıvılarda basınç",
+       "page": 145,
+       "endPage": 160,
+       "sections": [
+        {
+         "id": "b38-t3.2.1",
+         "no": "3.2.1",
+         "title": "Sıvılarda Basıncın Kullanıldığı Günlük Hayat Örnekleri",
+         "page": 154,
+         "endPage": 160
+        }
+       ]
+      },
+      {
+       "id": "b38-t3.3",
+       "no": "3.3",
+       "title": "Açık hava basıncı",
+       "page": 161,
+       "endPage": 168,
+       "sections": []
+      },
+      {
+       "id": "b38-t3.4",
+       "no": "3.4",
+       "title": "Kaldırma kuvveti",
+       "page": 169,
+       "endPage": 184,
+       "sections": [
+        {
+         "id": "b38-t3.4.1",
+         "no": "3.4.1",
+         "title": "Kaldırma Kuvveti ile Sıvılardaki Basıncı Oluşturan Kuvvet Arasındaki İlişki",
+         "page": 176,
+         "endPage": 184
+        }
+       ]
+      },
+      {
+       "id": "b38-t3.5",
+       "no": "3.5",
+       "title": "Bernoulli ilkesi",
+       "page": 185,
+       "endPage": 195,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b38-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Enerji",
+     "page": 206,
+     "endPage": 254,
+     "topics": [
+      {
+       "id": "b38-t4.1",
+       "no": "4.1",
+       "title": "İç enerji, ısı sıcaklık arasındaki ilişki",
+       "page": 210,
+       "endPage": 214,
+       "sections": []
+      },
+      {
+       "id": "b38-t4.2",
+       "no": "4.2",
+       "title": "Isı, öz ısı, ısı sığası ve sıcaklık farkı arasındaki ilişki",
+       "page": 215,
+       "endPage": 225,
+       "sections": [
+        {
+         "id": "b38-t4.2.1",
+         "no": "4.2.1",
+         "title": "Termometreler",
+         "page": 215,
+         "endPage": 218
+        },
+        {
+         "id": "b38-t4.2.2",
+         "no": "4.2.2",
+         "title": "Öz Isı ve Isı Sığası",
+         "page": 219,
+         "endPage": 225
+        }
+       ]
+      },
+      {
+       "id": "b38-t4.3",
+       "no": "4.3",
+       "title": "Hâl değişimi",
+       "page": 226,
+       "endPage": 235,
+       "sections": []
+      },
+      {
+       "id": "b38-t4.4",
+       "no": "4.4",
+       "title": "Isıl denge",
+       "page": 236,
+       "endPage": 240,
+       "sections": []
+      },
+      {
+       "id": "b38-t4.5",
+       "no": "4.5",
+       "title": "Isı aktarım yolları",
+       "page": 241,
+       "endPage": 246,
+       "sections": []
+      },
+      {
+       "id": "b38-t4.6",
+       "no": "4.6",
+       "title": "Isı iletim hızı",
+       "page": 247,
+       "endPage": 254,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 39,
+   "title": "Kimya 9.Sınıf Ders Kitabı",
+   "subjectId": "kimya",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Kimya Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-09-08",
+   "fileStamp": "2026-09-08",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/39/kimya-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/kimya-9sinif-ders-kitabi_20260908_105401_982.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/kimya-9sinif-ders-kitabi_20260908_105401_981.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 176095562,
+   "pageCount": 287,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b39-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Etkileşim",
+     "page": 16,
+     "endPage": 103,
+     "topics": [
+      {
+       "id": "b39-t1.1",
+       "no": "1.1",
+       "title": "Kimya Hayattır",
+       "page": 18,
+       "endPage": 43,
+       "sections": [
+        {
+         "id": "b39-t1.1.1",
+         "no": "1.1.1",
+         "title": "Günlük Hayatta Kimya",
+         "page": 20,
+         "endPage": 24
+        },
+        {
+         "id": "b39-t1.1.2",
+         "no": "1.1.2",
+         "title": "Kimyanın Alt Disiplinleri",
+         "page": 25,
+         "endPage": 25
+        },
+        {
+         "id": "b39-t1.1.3",
+         "no": "1.1.3",
+         "title": "Kimya Alanında Kariyer Olanakları",
+         "page": 26,
+         "endPage": 34
+        },
+        {
+         "id": "b39-t1.1.4",
+         "no": "1.1.4",
+         "title": "Kimyasal Maddelerin Kullanımı ve Güvenlik",
+         "page": 35,
+         "endPage": 43
+        }
+       ]
+      },
+      {
+       "id": "b39-t1.2",
+       "no": "1.2",
+       "title": "Atomdan Periyodik Tabloya",
+       "page": 44,
+       "endPage": 87,
+       "sections": [
+        {
+         "id": "b39-t1.2.1",
+         "no": "1.2.1",
+         "title": "Atom Teorileri ve Atomun Yapısı",
+         "page": 46,
+         "endPage": 53
+        },
+        {
+         "id": "b39-t1.2.2",
+         "no": "1.2.2",
+         "title": "Atom Orbitalleri ve Elektron Dizilimi",
+         "page": 54,
+         "endPage": 66
+        },
+        {
+         "id": "b39-t1.2.3",
+         "no": "1.2.3",
+         "title": "Periyodik Tabloda Yer Bulma",
+         "page": 67,
+         "endPage": 77
+        },
+        {
+         "id": "b39-t1.2.4",
+         "no": "1.2.4",
+         "title": "Periyodik Özellikler",
+         "page": 78,
+         "endPage": 87
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b39-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Çeşitlilik",
+     "page": 104,
+     "endPage": 233,
+     "topics": [
+      {
+       "id": "b39-t2.1",
+       "no": "2.1",
+       "title": "Etkileşimler",
+       "page": 106,
+       "endPage": 144,
+       "sections": [
+        {
+         "id": "b39-t2.1.1",
+         "no": "2.1.1",
+         "title": "Metalik Bağ",
+         "page": 108,
+         "endPage": 113
+        },
+        {
+         "id": "b39-t2.1.2",
+         "no": "2.1.2",
+         "title": "İyonik Bağ",
+         "page": 114,
+         "endPage": 124
+        },
+        {
+         "id": "b39-t2.1.3",
+         "no": "2.1.3",
+         "title": "Kovalent Bağ",
+         "page": 125,
+         "endPage": 131
+        },
+        {
+         "id": "b39-t2.1.4",
+         "no": "2.1.4",
+         "title": "Lewis Nokta Yapısı",
+         "page": 132,
+         "endPage": 135
+        },
+        {
+         "id": "b39-t2.1.5",
+         "no": "2.1.5",
+         "title": "Molekül Polarlığı ve Apolarlığı",
+         "page": 136,
+         "endPage": 138
+        },
+        {
+         "id": "b39-t2.1.6",
+         "no": "2.1.6",
+         "title": "Bileşiklerin Adlandırılması",
+         "page": 139,
+         "endPage": 144
+        }
+       ]
+      },
+      {
+       "id": "b39-t2.2",
+       "no": "2.2",
+       "title": "Etkileşimden Maddeye",
+       "page": 145,
+       "endPage": 211,
+       "sections": [
+        {
+         "id": "b39-t2.2.1",
+         "no": "2.2.1",
+         "title": "Moleküller Arası Etkileşimler",
+         "page": 147,
+         "endPage": 158
+        },
+        {
+         "id": "b39-t2.2.2",
+         "no": "2.2.2",
+         "title": "Katılar ve Özellikleri",
+         "page": 159,
+         "endPage": 165
+        },
+        {
+         "id": "b39-t2.2.3",
+         "no": "2.2.3",
+         "title": "Sıvılar ve Özellikleri",
+         "page": 166,
+         "endPage": 211
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b39-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Sürdürülebilirlik",
+     "page": 234,
+     "endPage": 264,
+     "topics": [
+      {
+       "id": "b39-t3.1",
+       "no": "3.1",
+       "title": "Nanoparçacıklar ve Ekolojik Sürdürülebilirlik",
+       "page": 236,
+       "endPage": 264,
+       "sections": [
+        {
+         "id": "b39-t3.1.1",
+         "no": "3.1.1",
+         "title": "Metal Nanoparçacıklar",
+         "page": 238,
+         "endPage": 247
+        },
+        {
+         "id": "b39-t3.1.2",
+         "no": "3.1.2",
+         "title": "Yeşil Kimyanın Atık Önleme İlkesi",
+         "page": 248,
+         "endPage": 251
+        },
+        {
+         "id": "b39-t3.1.3",
+         "no": "3.1.3",
+         "title": "Metal, Alaşım ve Metal Nanoparçacıkların Çevresel Etkileri",
+         "page": 252,
+         "endPage": 264
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 41,
+   "title": "Matematik 9.Sınıf Ders Kitabı (1.Kitap)",
+   "subjectId": "matematik",
+   "grade": 9,
+   "kind": "ders",
+   "volume": "1. Kitap",
+   "programLabel": "Matematik Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-06",
+   "fileStamp": "2026-10-06",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/41/matematik-9sinif-ders-kitabi-1kitap",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/matematik-9sinif-ders-kitabi-1kitap_20261006_102913_502.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/matematik-9sinif-ders-kitabi-1kitap_20260908_111051_343.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 29254468,
+   "pageCount": 204,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b41-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Sayılar",
+     "page": 10,
+     "endPage": 87,
+     "topics": [
+      {
+       "id": "b41-t1.1",
+       "no": "1.1",
+       "title": "Gerçek sayıların üslü ve köklü gösterimleri ile yapılan işlemler",
+       "page": 13,
+       "endPage": 36,
+       "sections": []
+      },
+      {
+       "id": "b41-t1.2",
+       "no": "1.2",
+       "title": "Gerçek sayı aralıklarının gösterimi ve aralıklarla ilgili işlemlerde küme sembollerinin kullanımı",
+       "page": 37,
+       "endPage": 56,
+       "sections": []
+      },
+      {
+       "id": "b41-t1.3",
+       "no": "1.3",
+       "title": "Sayı kümeleri ve işlem özellikleri",
+       "page": 57,
+       "endPage": 66,
+       "sections": []
+      },
+      {
+       "id": "b41-t1.4",
+       "no": "1.4",
+       "title": "Gerçek sayıların işlem özelliklerini cebirsel olarak ifade etme",
+       "page": 67,
+       "endPage": 81,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b41-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Nicelikler ve değişimler",
+     "page": 88,
+     "endPage": 169,
+     "topics": [
+      {
+       "id": "b41-t2.1",
+       "no": "2.1",
+       "title": "Doğrusal fonksiyonlar ve nitel özellikleri",
+       "page": 91,
+       "endPage": 119,
+       "sections": []
+      },
+      {
+       "id": "b41-t2.2",
+       "no": "2.2",
+       "title": "Mutlak değer fonksiyonu ve nitel özellikleri",
+       "page": 120,
+       "endPage": 135,
+       "sections": []
+      },
+      {
+       "id": "b41-t2.3",
+       "no": "2.3",
+       "title": "Doğrusal fonksiyonlarla ifade edilebilen denklem ve eşitsizlikler içeren problemler",
+       "page": 136,
+       "endPage": 160,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b41-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Geometrik şekiller",
+     "page": 170,
+     "endPage": 194,
+     "topics": [
+      {
+       "id": "b41-t3.1",
+       "no": "3.1",
+       "title": "Üçgende açı ve kenarla ilgili özellikler ve bu özellikler arasındaki ilişkiler",
+       "page": 174,
+       "endPage": 194,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 42,
+   "title": "Matematik 9.Sınıf Ders Kitabı (2.Kitap)",
+   "subjectId": "matematik",
+   "grade": 9,
+   "kind": "ders",
+   "volume": "2. Kitap",
+   "programLabel": "Matematik Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-06",
+   "fileStamp": "2026-10-06",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/42/matematik-9sinif-ders-kitabi-2kitap",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/matematik-9sinif-ders-kitabi-2kitap_20261006_104711_394.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/matematik-9sinif-ders-kitabi-2kitap_20260908_111224_539.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 19746353,
+   "pageCount": 237,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b42-u4",
+     "no": 4,
+     "kind": "tema",
+     "title": "Eşlik ve benzerlik",
+     "page": 10,
+     "endPage": 95,
+     "topics": [
+      {
+       "id": "b42-t4.1",
+       "no": "4.1",
+       "title": "Geometrik dönüşümler",
+       "page": 13,
+       "endPage": 35,
+       "sections": []
+      },
+      {
+       "id": "b42-t4.2",
+       "no": "4.2",
+       "title": "Eşlik ve benzerlik koşulları",
+       "page": 36,
+       "endPage": 52,
+       "sections": []
+      },
+      {
+       "id": "b42-t4.3",
+       "no": "4.3",
+       "title": "Benzer üçgenler oluşturma",
+       "page": 53,
+       "endPage": 59,
+       "sections": []
+      },
+      {
+       "id": "b42-t4.4",
+       "no": "4.4",
+       "title": "Tales, öklid ve pisagor teoremleri",
+       "page": 60,
+       "endPage": 75,
+       "sections": []
+      },
+      {
+       "id": "b42-t4.5",
+       "no": "4.5",
+       "title": "Eşlik ve benzerlik problemleri",
+       "page": 76,
+       "endPage": 86,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b42-u5",
+     "no": 5,
+     "kind": "tema",
+     "title": "Algoritma ve bilişim",
+     "page": 96,
+     "endPage": 149,
+     "topics": [
+      {
+       "id": "b42-t5.1",
+       "no": "5.1",
+       "title": "Algoritma temelli problemler",
+       "page": 99,
+       "endPage": 126,
+       "sections": []
+      },
+      {
+       "id": "b42-t5.2",
+       "no": "5.2",
+       "title": "Mantık bağlaçları ve niceleyiciler",
+       "page": 127,
+       "endPage": 134,
+       "sections": []
+      },
+      {
+       "id": "b42-t5.3",
+       "no": "5.3",
+       "title": "Mantık bağlaçları ve niceleyicilerin algoritmik problemlerde kullanımı",
+       "page": 135,
+       "endPage": 140,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b42-u6",
+     "no": 6,
+     "kind": "tema",
+     "title": "İstatistiksel araştırma süreci",
+     "page": 150,
+     "endPage": 199,
+     "topics": [
+      {
+       "id": "b42-t6.1",
+       "no": "6.1",
+       "title": "Tek nicel değişkenli veri dağılımları",
+       "page": 154,
+       "endPage": 192,
+       "sections": []
+      },
+      {
+       "id": "b42-t6.2",
+       "no": "6.2",
+       "title": "Başkaları tarafından oluşturulan tek nicel değişkenli veri dağılımlarını inceleme",
+       "page": 193,
+       "endPage": 194,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b42-u7",
+     "no": 7,
+     "kind": "tema",
+     "title": "Veriden olasılığa",
+     "page": 200,
+     "endPage": 228,
+     "topics": [
+      {
+       "id": "b42-t7.1",
+       "no": "7.1",
+       "title": "Deneysel olasılık",
+       "page": 204,
+       "endPage": 213,
+       "sections": []
+      },
+      {
+       "id": "b42-t7.2",
+       "no": "7.2",
+       "title": "Teorik olasılık",
+       "page": 214,
+       "endPage": 228,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 43,
+   "title": "Tarih 9.Sınıf Ders Kitabı",
+   "subjectId": "tarih",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Tarih Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-06",
+   "fileStamp": "2026-10-06",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/43/tarih-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/tarih-9sinif-ders-kitabi_20261006_121514_240.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/tarih-9sinif-ders-kitabi_20260908_184825_403.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 59609548,
+   "pageCount": 263,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b43-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Geçmişin inşa sürecinde tarih",
+     "page": 10,
+     "endPage": 65,
+     "topics": [
+      {
+       "id": "b43-t1.1",
+       "no": "1.1",
+       "title": "Tarih Öğrenmenin Faydaları",
+       "page": 12,
+       "endPage": 19,
+       "sections": []
+      },
+      {
+       "id": "b43-t1.2",
+       "no": "1.2",
+       "title": "Tarihin Doğası",
+       "page": 20,
+       "endPage": 36,
+       "sections": []
+      },
+      {
+       "id": "b43-t1.3",
+       "no": "1.3",
+       "title": "Tarihsel Bilginin Üretim Süreci",
+       "page": 37,
+       "endPage": 49,
+       "sections": []
+      },
+      {
+       "id": "b43-t1.4",
+       "no": "1.4",
+       "title": "Tarih Araştırma ve Yazımında Dijital Dönüşüm",
+       "page": 50,
+       "endPage": 60,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b43-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Eski çağ medeniyetleri",
+     "page": 66,
+     "endPage": 161,
+     "topics": [
+      {
+       "id": "b43-t2.1",
+       "no": "2.1",
+       "title": "Tarım Devrimi’nin Eski Çağ’a Etkileri",
+       "page": 68,
+       "endPage": 84,
+       "sections": []
+      },
+      {
+       "id": "b43-t2.2",
+       "no": "2.2",
+       "title": "Eski Çağ’da Yönetenler ve Savaşanlar",
+       "page": 85,
+       "endPage": 106,
+       "sections": []
+      },
+      {
+       "id": "b43-t2.3",
+       "no": "2.3",
+       "title": "Eski Çağ’da Hukuk",
+       "page": 107,
+       "endPage": 121,
+       "sections": []
+      },
+      {
+       "id": "b43-t2.4",
+       "no": "2.4",
+       "title": "Eski Çağ’da İnanç, Bilim ve Sanat",
+       "page": 122,
+       "endPage": 143,
+       "sections": []
+      },
+      {
+       "id": "b43-t2.5",
+       "no": "2.5",
+       "title": "Türklerde Konargöçer Yaşam",
+       "page": 144,
+       "endPage": 154,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b43-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Orta çağ medeniyetleri",
+     "page": 162,
+     "endPage": 243,
+     "topics": [
+      {
+       "id": "b43-t3.1",
+       "no": "3.1",
+       "title": "Orta Çağ’daki Kitlesel Göçler",
+       "page": 164,
+       "endPage": 183,
+       "sections": []
+      },
+      {
+       "id": "b43-t3.2",
+       "no": "3.2",
+       "title": "Orta Çağ’daki Siyasi ve Askerî Gelişmeler",
+       "page": 184,
+       "endPage": 213,
+       "sections": []
+      },
+      {
+       "id": "b43-t3.3",
+       "no": "3.3",
+       "title": "Orta Çağ’da Ticaret Yolları",
+       "page": 214,
+       "endPage": 227,
+       "sections": []
+      },
+      {
+       "id": "b43-t3.4",
+       "no": "3.4",
+       "title": "Orta Çağ’da Bilim, Kültür ve Sanat",
+       "page": 228,
+       "endPage": 243,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 45,
+   "title": "Türk Dili Ve Edebiyatı 9.Sınıf Ders Kitabı",
+   "subjectId": "turk-dili-ve-edebiyati",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Türk Dili Ve Edebiyatı Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-06",
+   "fileStamp": "2026-10-06",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/45/turk-dili-ve-edebiyati-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/turk-dili-ve-edebiyati-9sinif-ders-kitabi_20261006_100252_162.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/turk-dili-ve-edebiyati-9sinif-ders-kitabi_20260908_185914_237.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 11853752,
+   "pageCount": 317,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b45-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Sözün İnceliği",
+     "page": 12,
+     "endPage": 71,
+     "topics": [
+      {
+       "id": "b45-t1.1",
+       "no": "1.1",
+       "title": "Okuma: Şiir (San’at)",
+       "page": 15,
+       "endPage": 37,
+       "sections": []
+      },
+      {
+       "id": "b45-t1.2",
+       "no": "1.2",
+       "title": "Okuma: Deneme (Picasso’nun Hatları)",
+       "page": 38,
+       "endPage": 50,
+       "sections": []
+      },
+      {
+       "id": "b45-t1.3",
+       "no": "1.3",
+       "title": "Edebiyat atölyesi: Yazma (Duygularımı Betimliyorum)",
+       "page": 51,
+       "endPage": 55,
+       "sections": []
+      },
+      {
+       "id": "b45-t1.4",
+       "no": "1.4",
+       "title": "Dinleme/İzleme: Mülakat",
+       "page": 56,
+       "endPage": 62,
+       "sections": []
+      },
+      {
+       "id": "b45-t1.5",
+       "no": "1.5",
+       "title": "Edebiyat atölyesi: Konuşma (Düşüncelerimi Sunuyorum)",
+       "page": 63,
+       "endPage": 66,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b45-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Anlam Arayışı",
+     "page": 72,
+     "endPage": 149,
+     "topics": [
+      {
+       "id": "b45-t2.1",
+       "no": "2.1",
+       "title": "Okuma: Hikâye (Bir Kavak ve İnsanlar)",
+       "page": 75,
+       "endPage": 97,
+       "sections": []
+      },
+      {
+       "id": "b45-t2.2",
+       "no": "2.2",
+       "title": "Okuma: Anı (Nihayet Beklediğimiz Büyük Gün)",
+       "page": 98,
+       "endPage": 124,
+       "sections": []
+      },
+      {
+       "id": "b45-t2.3",
+       "no": "2.3",
+       "title": "Edebiyat atölyesi: Konuşma (Karakterimin Yolculuğu)",
+       "page": 125,
+       "endPage": 130,
+       "sections": []
+      },
+      {
+       "id": "b45-t2.4",
+       "no": "2.4",
+       "title": "Dinleme/İzleme: Şiir (Mihriban)",
+       "page": 131,
+       "endPage": 138,
+       "sections": []
+      },
+      {
+       "id": "b45-t2.5",
+       "no": "2.5",
+       "title": "Edebiyat atölyesi: Yazma (Genç Şairlerden Mısralar)",
+       "page": 139,
+       "endPage": 142,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b45-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Anlamın Yapı Taşları",
+     "page": 150,
+     "endPage": 211,
+     "topics": [
+      {
+       "id": "b45-t3.1",
+       "no": "3.1",
+       "title": "Okuma: Hikâye (Eskici)",
+       "page": 153,
+       "endPage": 181,
+       "sections": []
+      },
+      {
+       "id": "b45-t3.2",
+       "no": "3.2",
+       "title": "Okuma: Gezi yazısı (Bizim Akdeniz’den)",
+       "page": 182,
+       "endPage": 192,
+       "sections": []
+      },
+      {
+       "id": "b45-t3.3",
+       "no": "3.3",
+       "title": "Edebiyat atölyesi: Konuşma (Benim Mekânım)",
+       "page": 193,
+       "endPage": 197,
+       "sections": []
+      },
+      {
+       "id": "b45-t3.4",
+       "no": "3.4",
+       "title": "Dinleme/İzleme (Nevruz)",
+       "page": 198,
+       "endPage": 202,
+       "sections": []
+      },
+      {
+       "id": "b45-t3.5",
+       "no": "3.5",
+       "title": "Edebiyat atölyesi: Yazma (Bir Belgeselin Bilgi Görseli)",
+       "page": 203,
+       "endPage": 206,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b45-u4",
+     "no": 4,
+     "kind": "tema",
+     "title": "Dilin Zenginliği",
+     "page": 212,
+     "endPage": 295,
+     "topics": [
+      {
+       "id": "b45-t4.1",
+       "no": "4.1",
+       "title": "Okuma: Roman (Çalıkuşu)",
+       "page": 215,
+       "endPage": 257,
+       "sections": []
+      },
+      {
+       "id": "b45-t4.2",
+       "no": "4.2",
+       "title": "Okuma: Eleştiri (Parasız Yatılı)",
+       "page": 258,
+       "endPage": 276,
+       "sections": []
+      },
+      {
+       "id": "b45-t4.3",
+       "no": "4.3",
+       "title": "Edebiyat atölyesi: Konuşma (Dilimizin Zenginlikleri)",
+       "page": 277,
+       "endPage": 280,
+       "sections": []
+      },
+      {
+       "id": "b45-t4.4",
+       "no": "4.4",
+       "title": "Dinleme/İzleme: Otobiyografi (Âşık Veysel)",
+       "page": 281,
+       "endPage": 291,
+       "sections": []
+      },
+      {
+       "id": "b45-t4.5",
+       "no": "4.5",
+       "title": "Edebiyat atölyesi: Yazma (Otobiyografi)",
+       "page": 292,
+       "endPage": 295,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 68,
+   "title": "İngilizce Dersi 9.Sınıf Ders Kitabı",
+   "subjectId": "ingilizce",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "İngilizce Dersi (9-12)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": null,
+   "fileStamp": null,
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/68/ingilizce-dersi-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/ingilizce-dersi-9-sinif-ders-kitabi.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/ingilizce-dersi-9sinif-ders-kitabi_20260907_235903_411.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 151362384,
+   "pageCount": 162,
+   "pageOffset": 1,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b68-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Revision 1",
+     "page": 15,
+     "endPage": 18,
+     "topics": []
+    },
+    {
+     "id": "b68-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Revision 2",
+     "page": 19,
+     "endPage": 22,
+     "topics": []
+    },
+    {
+     "id": "b68-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Theme 1: School Life",
+     "page": 23,
+     "endPage": 36,
+     "topics": []
+    },
+    {
+     "id": "b68-u4",
+     "no": 4,
+     "kind": "tema",
+     "title": "Theme 2: Classroom Life",
+     "page": 37,
+     "endPage": 50,
+     "topics": []
+    },
+    {
+     "id": "b68-u5",
+     "no": 5,
+     "kind": "tema",
+     "title": "Theme 3: Personal Life: Physical Appearance & Personality",
+     "page": 51,
+     "endPage": 64,
+     "topics": []
+    },
+    {
+     "id": "b68-u6",
+     "no": 6,
+     "kind": "tema",
+     "title": "Theme 4: Family Life",
+     "page": 65,
+     "endPage": 78,
+     "topics": []
+    },
+    {
+     "id": "b68-u7",
+     "no": 7,
+     "kind": "tema",
+     "title": "Theme 5: Life in the House & Neighbourhood",
+     "page": 79,
+     "endPage": 92,
+     "topics": []
+    },
+    {
+     "id": "b68-u8",
+     "no": 8,
+     "kind": "tema",
+     "title": "Theme 6: Life in the City & Country",
+     "page": 93,
+     "endPage": 106,
+     "topics": []
+    },
+    {
+     "id": "b68-u9",
+     "no": 9,
+     "kind": "tema",
+     "title": "Theme 7: Life in the World & Nature",
+     "page": 107,
+     "endPage": 120,
+     "topics": []
+    },
+    {
+     "id": "b68-u10",
+     "no": 10,
+     "kind": "tema",
+     "title": "Theme 8: Life in the Universe & Future",
+     "page": 121,
+     "endPage": 134,
+     "topics": []
+    }
+   ]
+  },
+  {
+   "id": 70,
+   "title": "İngilizce Dersi 9.Sınıf Çalışma Kitabı",
+   "subjectId": "ingilizce",
+   "grade": 9,
+   "kind": "calisma",
+   "volume": null,
+   "programLabel": "İngilizce Dersi (9-12)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-13",
+   "fileStamp": "2026-10-13",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/70/ingilizce-dersi-9sinif-calisma-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/ingilizce-dersi-9sinif-calisma-kitabi_20261013_172611_034.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/waymark-year-9-b1.1-calisma-kitabi.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 10162114,
+   "pageCount": 0,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 71,
+   "title": "Biyoloji Dersi 10.Sınıf Ders Kitabı",
+   "subjectId": "biyoloji",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Biyoloji Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-13",
+   "fileStamp": "2026-10-13",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/71/biyoloji-dersi-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/biyoloji-dersi-10sinif-ders-kitabi_20261013_171142_303.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/biyoloji-dersi-10sinif-ders-kitabi_20260907_200859_576.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 41862916,
+   "pageCount": 192,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b71-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Enerji",
+     "page": 14,
+     "endPage": 95,
+     "topics": [
+      {
+       "id": "b71-t1.1",
+       "no": "1.1",
+       "title": "Canlılık İçin Enerjinin Önemi",
+       "page": 16,
+       "endPage": 20,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.2",
+       "no": "1.2",
+       "title": "Işık Enerjisi Kullanılarak Besin Sentezi (Fotosentez)",
+       "page": 21,
+       "endPage": 31,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.3",
+       "no": "1.3",
+       "title": "Fotosentezde Kullanılan ve Üretilen Maddeler",
+       "page": 32,
+       "endPage": 36,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.4",
+       "no": "1.4",
+       "title": "Işık Enerjisi Kullanılmadan Besin Sentezi (Kemosentez)",
+       "page": 37,
+       "endPage": 39,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.5",
+       "no": "1.5",
+       "title": "Sindirim",
+       "page": 40,
+       "endPage": 47,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.6",
+       "no": "1.6",
+       "title": "İnsanda Sindirim",
+       "page": 48,
+       "endPage": 55,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.7",
+       "no": "1.7",
+       "title": "Hücresel Solunum",
+       "page": 56,
+       "endPage": 62,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.8",
+       "no": "1.8",
+       "title": "Besinlerin Solunuma Katılma Yolları",
+       "page": 63,
+       "endPage": 66,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.9",
+       "no": "1.9",
+       "title": "Fermantasyon",
+       "page": 67,
+       "endPage": 70,
+       "sections": []
+      },
+      {
+       "id": "b71-t1.10",
+       "no": "1.10",
+       "title": "Enerji-Metabolizma İlişkisi",
+       "page": 71,
+       "endPage": 75,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b71-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Ekoloji",
+     "page": 96,
+     "endPage": 172,
+     "topics": [
+      {
+       "id": "b71-t2.1",
+       "no": "2.1",
+       "title": "Ekosistemin Bileşenleri",
+       "page": 98,
+       "endPage": 104,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.2",
+       "no": "2.2",
+       "title": "Komünitelerde ve Popülasyonlarda Görülen Etkileşimler ve Değişimler",
+       "page": 105,
+       "endPage": 121,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.3",
+       "no": "2.3",
+       "title": "Ekosistemdeki Madde ve Enerji Akışı",
+       "page": 122,
+       "endPage": 130,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.4",
+       "no": "2.4",
+       "title": "Madde Döngüleri",
+       "page": 131,
+       "endPage": 137,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.5",
+       "no": "2.5",
+       "title": "Ekolojik Sürdürülebilirliğin Önemi",
+       "page": 138,
+       "endPage": 141,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.6",
+       "no": "2.6",
+       "title": "Ekolojik Sürdürülebilirliği Kısıtlayan/Engelleyen Durumlar",
+       "page": 142,
+       "endPage": 152,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.7",
+       "no": "2.7",
+       "title": "Ekolojik Ayak İzinin Küçültülmesi",
+       "page": 153,
+       "endPage": 157,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.8",
+       "no": "2.8",
+       "title": "Doğal Kaynakların ve Biyoçeşitliliğin Korunması",
+       "page": 158,
+       "endPage": 165,
+       "sections": []
+      },
+      {
+       "id": "b71-t2.9",
+       "no": "2.9",
+       "title": "Atık Yönetimi",
+       "page": 166,
+       "endPage": 172,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 72,
+   "title": "Coğrafya Dersi 10.Sınıf Ders Kitabı",
+   "subjectId": "cografya",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Coğrafya Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-04",
+   "fileStamp": "2026-10-04",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/72/cografya-dersi-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/cografya-dersi-10sinif-ders-kitabi_20261004_200628_795.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/cografya-dersi-10sinif-ders-kitabi_20260907_201736_513.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 43823983,
+   "pageCount": 240,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b72-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Coğrafyanın doğası",
+     "page": 14,
+     "endPage": 27,
+     "topics": [
+      {
+       "id": "b72-t1.1",
+       "no": "1.1",
+       "title": "Coğrafi Bakış",
+       "page": 17,
+       "endPage": 24,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b72-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Mekânsal bilgi teknolojileri",
+     "page": 28,
+     "endPage": 45,
+     "topics": [
+      {
+       "id": "b72-t2.1",
+       "no": "2.1",
+       "title": "CBS ve Uzaktan Algılamanın Uygulama Alanları",
+       "page": 31,
+       "endPage": 36,
+       "sections": []
+      },
+      {
+       "id": "b72-t2.2",
+       "no": "2.2",
+       "title": "Mekânsal Verilerin Haritalara Aktarılması",
+       "page": 37,
+       "endPage": 40,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b72-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Doğal sistemler ve süreçler",
+     "page": 46,
+     "endPage": 117,
+     "topics": [
+      {
+       "id": "b72-t3.1",
+       "no": "3.1",
+       "title": "Tektonik Süreçler",
+       "page": 49,
+       "endPage": 69,
+       "sections": []
+      },
+      {
+       "id": "b72-t3.2",
+       "no": "3.2",
+       "title": "İklim ve Kayaç Yapısının Aşınma ve Çözünme Süreçlerine Etkisi",
+       "page": 70,
+       "endPage": 75,
+       "sections": []
+      },
+      {
+       "id": "b72-t3.3",
+       "no": "3.3",
+       "title": "Aşınma, Taşınma ve Biriktirme Süreçlerinin Yeryüzünün Şekillenmesine Etkisi",
+       "page": 76,
+       "endPage": 96,
+       "sections": []
+      },
+      {
+       "id": "b72-t3.4",
+       "no": "3.4",
+       "title": "Yeryüzü Şekilleri ile İlgili Gözlem ve Saha Çalışması",
+       "page": 97,
+       "endPage": 98,
+       "sections": []
+      },
+      {
+       "id": "b72-t3.5",
+       "no": "3.5",
+       "title": "Yeryüzü Şekilleri ile Beşerî Faaliyetler Arasındaki Etkileşim",
+       "page": 99,
+       "endPage": 107,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b72-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Beşerî sistemler ve süreçler",
+     "page": 118,
+     "endPage": 141,
+     "topics": [
+      {
+       "id": "b72-t4.1",
+       "no": "4.1",
+       "title": "Yerleşmelerin Kuruluşu ve Gelişimi",
+       "page": 121,
+       "endPage": 129,
+       "sections": []
+      },
+      {
+       "id": "b72-t4.2",
+       "no": "4.2",
+       "title": "Yerleşmelerin Fonksiyonları",
+       "page": 130,
+       "endPage": 137,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b72-u5",
+     "no": 5,
+     "kind": "unite",
+     "title": "Ekonomik faaliyetler ve etkileri",
+     "page": 142,
+     "endPage": 167,
+     "topics": [
+      {
+       "id": "b72-t5.1",
+       "no": "5.1",
+       "title": "Ekonomik Faaliyetlerin Özellikleri",
+       "page": 145,
+       "endPage": 152,
+       "sections": []
+      },
+      {
+       "id": "b72-t5.2",
+       "no": "5.2",
+       "title": "Ekonomik Sektörler ve Gelişmişlik",
+       "page": 153,
+       "endPage": 156,
+       "sections": []
+      },
+      {
+       "id": "b72-t5.3",
+       "no": "5.3",
+       "title": "Türkiye Ekonomisinin Sektörel Dağılımı",
+       "page": 157,
+       "endPage": 161,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b72-u6",
+     "no": 6,
+     "kind": "unite",
+     "title": "Afetler ve sürdürülebilir çevre",
+     "page": 168,
+     "endPage": 199,
+     "topics": [
+      {
+       "id": "b72-t6.1",
+       "no": "6.1",
+       "title": "Afetlerle Mücadelede İyi Uygulama Örnekleri",
+       "page": 171,
+       "endPage": 179,
+       "sections": []
+      },
+      {
+       "id": "b72-t6.2",
+       "no": "6.2",
+       "title": "Afetlere Karşı Dirençli Yaşam Alanları",
+       "page": 180,
+       "endPage": 184,
+       "sections": []
+      },
+      {
+       "id": "b72-t6.3",
+       "no": "6.3",
+       "title": "Afetlerden Korunma",
+       "page": 185,
+       "endPage": 189,
+       "sections": []
+      },
+      {
+       "id": "b72-t6.4",
+       "no": "6.4",
+       "title": "Afet Bilinci",
+       "page": 190,
+       "endPage": 195,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b72-u7",
+     "no": 7,
+     "kind": "unite",
+     "title": "Bölgeler, ülkeler ve küresel bağlantılar",
+     "page": 200,
+     "endPage": 221,
+     "topics": [
+      {
+       "id": "b72-t7.1",
+       "no": "7.1",
+       "title": "Türk Kültürünün Mekânsal Özellikleri",
+       "page": 203,
+       "endPage": 221,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 73,
+   "title": "Felsefe Dersi 10.Sınıf Ders Kitabı",
+   "subjectId": "felsefe",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Felsefe Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-13",
+   "fileStamp": "2026-10-13",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/73/felsefe-dersi-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/felsefe-dersi-10sinif-ders-kitabi_20261013_140018_786.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/felsefe-10.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 29904604,
+   "pageCount": 212,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b73-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Felsefenin doğası",
+     "page": 12,
+     "endPage": 43,
+     "topics": [
+      {
+       "id": "b73-t1.1",
+       "no": "1.1",
+       "title": "Felsefenin Anlamı",
+       "page": 16,
+       "endPage": 19,
+       "sections": []
+      },
+      {
+       "id": "b73-t1.2",
+       "no": "1.2",
+       "title": "Felsefi Düşüncenin Gelişimi",
+       "page": 20,
+       "endPage": 23,
+       "sections": []
+      },
+      {
+       "id": "b73-t1.3",
+       "no": "1.3",
+       "title": "Felsefi Düşüncenin Özellikleri",
+       "page": 24,
+       "endPage": 28,
+       "sections": []
+      },
+      {
+       "id": "b73-t1.4",
+       "no": "1.4",
+       "title": "Felsefi Soruların Temel Özellikleri",
+       "page": 29,
+       "endPage": 33,
+       "sections": []
+      },
+      {
+       "id": "b73-t1.5",
+       "no": "1.5",
+       "title": "Felsefenin Diğer Alanlarla İlişkisi",
+       "page": 34,
+       "endPage": 36,
+       "sections": []
+      },
+      {
+       "id": "b73-t1.6",
+       "no": "1.6",
+       "title": "Felsefenin Bireysel ve Toplumsal İşlevi",
+       "page": 37,
+       "endPage": 39,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Felsefe, mantık ve argümantasyon",
+     "page": 44,
+     "endPage": 69,
+     "topics": [
+      {
+       "id": "b73-t2.1",
+       "no": "2.1",
+       "title": "Düşünme ve Dil İlişkisi",
+       "page": 48,
+       "endPage": 51,
+       "sections": []
+      },
+      {
+       "id": "b73-t2.2",
+       "no": "2.2",
+       "title": "Mantık ve Argümantasyonun Temel Kavramları",
+       "page": 52,
+       "endPage": 58,
+       "sections": []
+      },
+      {
+       "id": "b73-t2.3",
+       "no": "2.3",
+       "title": "Argümantasyonun Yapısı",
+       "page": 59,
+       "endPage": 66,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Varlık felsefesi",
+     "page": 70,
+     "endPage": 89,
+     "topics": [
+      {
+       "id": "b73-t3.1",
+       "no": "3.1",
+       "title": "Varlık Felsefesinin Konusu ve Temel Kavramları",
+       "page": 73,
+       "endPage": 75,
+       "sections": []
+      },
+      {
+       "id": "b73-t3.2",
+       "no": "3.2",
+       "title": "Varlık Temel Problemleri (Varlığın Var Olup Olmadığı, Varlığın Ne Olduğu)",
+       "page": 76,
+       "endPage": 86,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Bilgi felsefesi",
+     "page": 90,
+     "endPage": 109,
+     "topics": [
+      {
+       "id": "b73-t4.1",
+       "no": "4.1",
+       "title": "Bilgi Felsefesinin Konusu ve Temel Kavramları",
+       "page": 93,
+       "endPage": 96,
+       "sections": []
+      },
+      {
+       "id": "b73-t4.2",
+       "no": "4.2",
+       "title": "Bilgi Felsefesinin Temel Problemleri (Bilginin İmkânı, Kaynağı ve Doğruluk Ölçütleri)",
+       "page": 97,
+       "endPage": 106,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u5",
+     "no": 5,
+     "kind": "unite",
+     "title": "Ahlak felsefesi",
+     "page": 110,
+     "endPage": 131,
+     "topics": [
+      {
+       "id": "b73-t5.1",
+       "no": "5.1",
+       "title": "Ahlak Felsefesinin Konusu ve Temel Kavramları",
+       "page": 114,
+       "endPage": 116,
+       "sections": []
+      },
+      {
+       "id": "b73-t5.2",
+       "no": "5.2",
+       "title": "Ahlak Felsefesinin Temel Problemleri (Evrensel Ahlak Yasasının İmkânı, Özgürlük-Sorumluluk İlişkisi)",
+       "page": 117,
+       "endPage": 128,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u6",
+     "no": 6,
+     "kind": "unite",
+     "title": "Estetik ve sanat felsefesi",
+     "page": 132,
+     "endPage": 149,
+     "topics": [
+      {
+       "id": "b73-t6.1",
+       "no": "6.1",
+       "title": "Estetik ve Sanat Felsefesinin Konusu ve Temel Kavramları",
+       "page": 135,
+       "endPage": 137,
+       "sections": []
+      },
+      {
+       "id": "b73-t6.2",
+       "no": "6.2",
+       "title": "Estetik ve Sanat Felsefesinin Temel Problemleri (Güzellik ve Ortak Estetik Yargıların İmkânı)",
+       "page": 138,
+       "endPage": 146,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u7",
+     "no": 7,
+     "kind": "unite",
+     "title": "Siyaset felsefesi",
+     "page": 150,
+     "endPage": 167,
+     "topics": [
+      {
+       "id": "b73-t7.1",
+       "no": "7.1",
+       "title": "Siyaset Felsefesinin Konusu ve Temel Kavramları",
+       "page": 153,
+       "endPage": 155,
+       "sections": []
+      },
+      {
+       "id": "b73-t7.2",
+       "no": "7.2",
+       "title": "Siyaset Felsefesinin Temel Problemleri (Devletin Kökeni, İktidarın Kaynağı ve Meşruiyeti, İdeal Düzen ve Ütopyalar)",
+       "page": 156,
+       "endPage": 165,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u8",
+     "no": 8,
+     "kind": "unite",
+     "title": "Din felsefesi",
+     "page": 168,
+     "endPage": 185,
+     "topics": [
+      {
+       "id": "b73-t8.1",
+       "no": "8.1",
+       "title": "Din Felsefesinin Konusu ve Temel Kavramları",
+       "page": 171,
+       "endPage": 173,
+       "sections": []
+      },
+      {
+       "id": "b73-t8.2",
+       "no": "8.2",
+       "title": "Din Felsefesinin Temel Problemleri (Tanrı’nın Varlığına İlişkin Görüşler, Tanrı’nın Varlığına Yönelik Kanıtlamalar, Evrenin Sonluluğu ve Sonsuzluğu, Ruhun Ölümsüzlüğü)",
+       "page": 174,
+       "endPage": 182,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b73-u9",
+     "no": 9,
+     "kind": "unite",
+     "title": "Bilim felsefesi",
+     "page": 186,
+     "endPage": 199,
+     "topics": [
+      {
+       "id": "b73-t9.1",
+       "no": "9.1",
+       "title": "Bilim Felsefesinin Konusu ve Temel Kavramları",
+       "page": 189,
+       "endPage": 192,
+       "sections": []
+      },
+      {
+       "id": "b73-t9.2",
+       "no": "9.2",
+       "title": "Bilim Felsefesinin Temel Problemleri (Bilimin Ne Olduğu, Bilimin Yöntemi)",
+       "page": 193,
+       "endPage": 199,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 74,
+   "title": "Fizik Dersi 10.Sınıf Ders Kitabı",
+   "subjectId": "fizik",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Fizik Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-12",
+   "fileStamp": "2026-10-12",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/74/fizik-dersi-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/fizik-dersi-10sinif-ders-kitabi_20261012_224944_785.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/fizik-dersi-10sinif-ders-kitabi_20260907_205657_162.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 56385196,
+   "pageCount": 320,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b74-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Kuvvet ve Hareket",
+     "page": 12,
+     "endPage": 71,
+     "topics": [
+      {
+       "id": "b74-t1.1",
+       "no": "1.1",
+       "title": "Sabit Hızlı Hareket",
+       "page": 16,
+       "endPage": 32,
+       "sections": []
+      },
+      {
+       "id": "b74-t1.2",
+       "no": "1.2",
+       "title": "Bir Boyutta Sabit İvmeli Hareket",
+       "page": 33,
+       "endPage": 59,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b74-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Enerji",
+     "page": 72,
+     "endPage": 161,
+     "topics": [
+      {
+       "id": "b74-t2.1",
+       "no": "2.1",
+       "title": "İş, Enerji ve Güç",
+       "page": 76,
+       "endPage": 108,
+       "sections": []
+      },
+      {
+       "id": "b74-t2.2",
+       "no": "2.2",
+       "title": "Enerji Biçimleri",
+       "page": 109,
+       "endPage": 119,
+       "sections": []
+      },
+      {
+       "id": "b74-t2.3",
+       "no": "2.3",
+       "title": "Mekanik Enerji",
+       "page": 120,
+       "endPage": 136,
+       "sections": []
+      },
+      {
+       "id": "b74-t2.4",
+       "no": "2.4",
+       "title": "Enerji Kaynakları",
+       "page": 137,
+       "endPage": 152,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b74-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Elektrik",
+     "page": 162,
+     "endPage": 235,
+     "topics": [
+      {
+       "id": "b74-t3.1",
+       "no": "3.1",
+       "title": "Basit Elektrik Devreleri",
+       "page": 166,
+       "endPage": 174,
+       "sections": []
+      },
+      {
+       "id": "b74-t3.2",
+       "no": "3.2",
+       "title": "Elektrik Akımı",
+       "page": 175,
+       "endPage": 180,
+       "sections": []
+      },
+      {
+       "id": "b74-t3.3",
+       "no": "3.3",
+       "title": "Ohm Yasası",
+       "page": 181,
+       "endPage": 188,
+       "sections": []
+      },
+      {
+       "id": "b74-t3.4",
+       "no": "3.4",
+       "title": "Dirençlerin Bağlanması",
+       "page": 189,
+       "endPage": 207,
+       "sections": []
+      },
+      {
+       "id": "b74-t3.5",
+       "no": "3.5",
+       "title": "Üreteçlerin Bağlanması",
+       "page": 208,
+       "endPage": 215,
+       "sections": []
+      },
+      {
+       "id": "b74-t3.6",
+       "no": "3.6",
+       "title": "Elektrik Akımının Oluşturabileceği Tehlikelere Karşı Alınması Gereken Önlemler",
+       "page": 216,
+       "endPage": 219,
+       "sections": []
+      },
+      {
+       "id": "b74-t3.7",
+       "no": "3.7",
+       "title": "Topraklamanın Önemi",
+       "page": 220,
+       "endPage": 224,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b74-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Dalgalar",
+     "page": 236,
+     "endPage": 305,
+     "topics": [
+      {
+       "id": "b74-t4.1",
+       "no": "4.1",
+       "title": "Periyodik Hareketler",
+       "page": 240,
+       "endPage": 248,
+       "sections": []
+      },
+      {
+       "id": "b74-t4.2",
+       "no": "4.2",
+       "title": "Dalgaların Temel Kavramları",
+       "page": 249,
+       "endPage": 257,
+       "sections": []
+      },
+      {
+       "id": "b74-t4.3",
+       "no": "4.3",
+       "title": "Dalgaların Sınıflandırılması",
+       "page": 258,
+       "endPage": 265,
+       "sections": []
+      },
+      {
+       "id": "b74-t4.4",
+       "no": "4.4",
+       "title": "Dalgaların Yayılma Süratini Etkileyen Etmenler",
+       "page": 266,
+       "endPage": 274,
+       "sections": []
+      },
+      {
+       "id": "b74-t4.5",
+       "no": "4.5",
+       "title": "Su Dalgalarında Yansıma ve Kırılma",
+       "page": 275,
+       "endPage": 289,
+       "sections": []
+      },
+      {
+       "id": "b74-t4.6",
+       "no": "4.6",
+       "title": "Rezonans ve Deprem",
+       "page": 290,
+       "endPage": 305,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 75,
+   "title": "Kimya 10.Sınıf Ders Kitabı",
+   "subjectId": "kimya",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Kimya Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-04",
+   "fileStamp": "2026-10-04",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/75/kimya-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/kimya-10sinif-ders-kitabi_20261004_173619_390.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/kimya-10sinif-ders-kitabi_20260908_105608_516.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 209838892,
+   "pageCount": 288,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b75-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Etkileşim",
+     "page": 18,
+     "endPage": 143,
+     "topics": [
+      {
+       "id": "b75-t1.1",
+       "no": "1.1",
+       "title": "Kimyasal Tepkimeler",
+       "page": 21,
+       "endPage": 76,
+       "sections": [
+        {
+         "id": "b75-t1.1.1",
+         "no": "1.1.1",
+         "title": "Kimyasal Değişimin Göstergeleri",
+         "page": 21,
+         "endPage": 34
+        },
+        {
+         "id": "b75-t1.1.2",
+         "no": "1.1.2",
+         "title": "Kimyasal Tepkime Türleri",
+         "page": 35,
+         "endPage": 46
+        },
+        {
+         "id": "b75-t1.1.3",
+         "no": "1.1.3",
+         "title": "Mol Kavramı",
+         "page": 47,
+         "endPage": 60
+        },
+        {
+         "id": "b75-t1.1.4",
+         "no": "1.1.4",
+         "title": "Kimyasal Tepkime Denklemlerinin Denkleştirilmesi",
+         "page": 61,
+         "endPage": 67
+        },
+        {
+         "id": "b75-t1.1.5",
+         "no": "1.1.5",
+         "title": "Kimyasal (Stokiyometrik) Hesaplamalar",
+         "page": 68,
+         "endPage": 76
+        }
+       ]
+      },
+      {
+       "id": "b75-t1.2",
+       "no": "1.2",
+       "title": "Gazlar",
+       "page": 77,
+       "endPage": 111,
+       "sections": [
+        {
+         "id": "b75-t1.2.1",
+         "no": "1.2.1",
+         "title": "Gazların Özellikleri ve Kinetik Moleküler Teori",
+         "page": 77,
+         "endPage": 87
+        },
+        {
+         "id": "b75-t1.2.2",
+         "no": "1.2.2",
+         "title": "Gaz Yasaları",
+         "page": 88,
+         "endPage": 95
+        },
+        {
+         "id": "b75-t1.2.3",
+         "no": "1.2.3",
+         "title": "İdeal Gaz Yasası",
+         "page": 96,
+         "endPage": 101
+        },
+        {
+         "id": "b75-t1.2.4",
+         "no": "1.2.4",
+         "title": "Graham Difüzyon ve Efüzyon Yasası",
+         "page": 102,
+         "endPage": 111
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b75-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Çeşitlilik",
+     "page": 144,
+     "endPage": 229,
+     "topics": [
+      {
+       "id": "b75-t2.1",
+       "no": "2.1",
+       "title": "Çözeltiler",
+       "page": 147,
+       "endPage": 206,
+       "sections": [
+        {
+         "id": "b75-t2.1.1",
+         "no": "2.1.1",
+         "title": "Çözünme Süreci",
+         "page": 147,
+         "endPage": 151
+        },
+        {
+         "id": "b75-t2.1.2",
+         "no": "2.1.2",
+         "title": "Maddelerin Birbiri İçindeki Çözünebilirliği",
+         "page": 152,
+         "endPage": 159
+        },
+        {
+         "id": "b75-t2.1.3",
+         "no": "2.1.3",
+         "title": "Çözünme Olayının Sınıflandırılması",
+         "page": 160,
+         "endPage": 166
+        },
+        {
+         "id": "b75-t2.1.4",
+         "no": "2.1.4",
+         "title": "Çözünürlük",
+         "page": 167,
+         "endPage": 171
+        },
+        {
+         "id": "b75-t2.1.5",
+         "no": "2.1.5",
+         "title": "Çözünürlüğe Etki Eden Faktörler (Sıcaklık, Basınç ve Madde Cinsi)",
+         "page": 172,
+         "endPage": 179
+        },
+        {
+         "id": "b75-t2.1.6",
+         "no": "2.1.6",
+         "title": "Çözeltilerin Sınıflandırılması",
+         "page": 180,
+         "endPage": 190
+        },
+        {
+         "id": "b75-t2.1.7",
+         "no": "2.1.7",
+         "title": "Derişim Birimleri (Molarite, ppm)",
+         "page": 191,
+         "endPage": 197
+        },
+        {
+         "id": "b75-t2.1.8",
+         "no": "2.1.8",
+         "title": "Koligatif Özellikler (Kaynama Noktası Yükselmesi, Donma Noktası Düşmesi)",
+         "page": 198,
+         "endPage": 206
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b75-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Sürdürülebilirlik",
+     "page": 230,
+     "endPage": 251,
+     "topics": [
+      {
+       "id": "b75-t3.1",
+       "no": "3.1",
+       "title": "Yeşil Kimya, Çevresel ve Ekolojik Sürdürülebilirlik",
+       "page": 233,
+       "endPage": 251,
+       "sections": [
+        {
+         "id": "b75-t3.1.1",
+         "no": "3.1.1",
+         "title": "Makro ve Mikro Ölçekli Deneyler",
+         "page": 234,
+         "endPage": 242
+        },
+        {
+         "id": "b75-t3.1.2",
+         "no": "3.1.2",
+         "title": "Atmosferdeki Tepkimeler ve Küresel Sorunlar",
+         "page": 243,
+         "endPage": 251
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 76,
+   "title": "Matematik 10.Sınıf Ders Kitabı",
+   "subjectId": "matematik",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Matematik Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-08",
+   "fileStamp": "2026-10-08",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/76/matematik-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/matematik-10sinif-ders-kitabi_20261008_124008_508.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/matematik-10sinif-ders-kitabi_20260908_111459_880.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 57521717,
+   "pageCount": 416,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b76-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Geometrik şekiller",
+     "page": 12,
+     "endPage": 93,
+     "topics": [
+      {
+       "id": "b76-t1.1",
+       "no": "1.1",
+       "title": "Dik üçgende trigonometrik oranlar ve trigonometrik özdeşlikler",
+       "page": 15,
+       "endPage": 31,
+       "sections": []
+      },
+      {
+       "id": "b76-t1.2",
+       "no": "1.2",
+       "title": "Üçgende yardımcı elemanlar",
+       "page": 32,
+       "endPage": 58,
+       "sections": []
+      },
+      {
+       "id": "b76-t1.3",
+       "no": "1.3",
+       "title": "Üçgenin alanı",
+       "page": 59,
+       "endPage": 75,
+       "sections": []
+      },
+      {
+       "id": "b76-t1.4",
+       "no": "1.4",
+       "title": "Sinüs ve kosinüs teoremleri",
+       "page": 76,
+       "endPage": 88,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b76-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "İstatistiksel araştırma süreci",
+     "page": 94,
+     "endPage": 139,
+     "topics": [
+      {
+       "id": "b76-t2.1",
+       "no": "2.1",
+       "title": "İki kategorik değişkenli veriler",
+       "page": 98,
+       "endPage": 127,
+       "sections": []
+      },
+      {
+       "id": "b76-t2.2",
+       "no": "2.2",
+       "title": "Başkaları tarafından oluşturulan iki kategorik değişkenli verileri inceleme",
+       "page": 128,
+       "endPage": 132,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b76-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Sayılar",
+     "page": 140,
+     "endPage": 177,
+     "topics": [
+      {
+       "id": "b76-t3.1",
+       "no": "3.1",
+       "title": "Bir doğal sayının asal çarpanları-bölenleri",
+       "page": 143,
+       "endPage": 148,
+       "sections": []
+      },
+      {
+       "id": "b76-t3.2",
+       "no": "3.2",
+       "title": "En büyük ortak bölen-en küçük ortak kat",
+       "page": 149,
+       "endPage": 160,
+       "sections": []
+      },
+      {
+       "id": "b76-t3.3",
+       "no": "3.3",
+       "title": "Bölünebilme",
+       "page": 161,
+       "endPage": 173,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b76-u4",
+     "no": 4,
+     "kind": "tema",
+     "title": "Nicelikler ve değişimler",
+     "page": 178,
+     "endPage": 309,
+     "topics": [
+      {
+       "id": "b76-t4.1",
+       "no": "4.1",
+       "title": "Gerçek sayılarda fonksiyon olma şartları",
+       "page": 182,
+       "endPage": 196,
+       "sections": []
+      },
+      {
+       "id": "b76-t4.2",
+       "no": "4.2",
+       "title": "Karesel fonksiyon ve nitel özellikleri",
+       "page": 197,
+       "endPage": 223,
+       "sections": []
+      },
+      {
+       "id": "b76-t4.3",
+       "no": "4.3",
+       "title": "Karekök fonksiyonu ve nitel özellikleri",
+       "page": 224,
+       "endPage": 242,
+       "sections": []
+      },
+      {
+       "id": "b76-t4.4",
+       "no": "4.4",
+       "title": "Rasyonel fonksiyon ve nitel özellikleri",
+       "page": 243,
+       "endPage": 263,
+       "sections": []
+      },
+      {
+       "id": "b76-t4.5",
+       "no": "4.5",
+       "title": "Doğrusal, karesel, karekök ve rasyonel fonksiyonların ters fonksiyonları",
+       "page": 264,
+       "endPage": 283,
+       "sections": []
+      },
+      {
+       "id": "b76-t4.6",
+       "no": "4.6",
+       "title": "Gerçek sayılarda tanımlı fonksiyonlarla ifade edilebilen denklem ve eşitsizlikler içeren problemler",
+       "page": 284,
+       "endPage": 305,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b76-u5",
+     "no": 5,
+     "kind": "tema",
+     "title": "Sayma, algoritma ve bilişim",
+     "page": 310,
+     "endPage": 355,
+     "topics": [
+      {
+       "id": "b76-t5.1",
+       "no": "5.1",
+       "title": "Sayma stratejileri",
+       "page": 313,
+       "endPage": 338,
+       "sections": []
+      },
+      {
+       "id": "b76-t5.2",
+       "no": "5.2",
+       "title": "Cebirsel ve fonksiyonel işlemlerin algoritmik yapısı",
+       "page": 339,
+       "endPage": 351,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b76-u6",
+     "no": 6,
+     "kind": "tema",
+     "title": "Analitik inceleme",
+     "page": 356,
+     "endPage": 389,
+     "topics": [
+      {
+       "id": "b76-t6.1",
+       "no": "6.1",
+       "title": "Dik koordinat sisteminde noktanın analitik incelenmesi",
+       "page": 359,
+       "endPage": 371,
+       "sections": []
+      },
+      {
+       "id": "b76-t6.2",
+       "no": "6.2",
+       "title": "Dik koordinat sisteminde doğrunun analitik incelenmesi",
+       "page": 372,
+       "endPage": 385,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b76-u7",
+     "no": 7,
+     "kind": "tema",
+     "title": "Veriden olasılığa",
+     "page": 390,
+     "endPage": 409,
+     "topics": [
+      {
+       "id": "b76-t7.1",
+       "no": "7.1",
+       "title": "Koşullu olasılık",
+       "page": 393,
+       "endPage": 403,
+       "sections": []
+      },
+      {
+       "id": "b76-t7.2",
+       "no": "7.2",
+       "title": "Bayes teoremi",
+       "page": 404,
+       "endPage": 409,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 77,
+   "title": "Tarih 10.Sınıf Ders Kitabı",
+   "subjectId": "tarih",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Tarih Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-13",
+   "fileStamp": "2026-10-13",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/77/tarih-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/tarih-10sinif-ders-kitabi_20261013_153142_277.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/tarih-10sinif-ders-kitabi_20260908_185021_146.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 54456185,
+   "pageCount": 318,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b77-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Türkistan’dan türkiye’ye (1040-1299)",
+     "page": 10,
+     "endPage": 107,
+     "topics": [
+      {
+       "id": "b77-t1.1",
+       "no": "1.1",
+       "title": "Türkistan’dan Türkiye’ye Uzanan Süreçte Meydana Gelen Önemli Askerî Mücadeleler",
+       "page": 12,
+       "endPage": 33,
+       "sections": []
+      },
+      {
+       "id": "b77-t1.2",
+       "no": "1.2",
+       "title": "Türkistan’dan Türkiye’ye Uzanan Süreçte Türk Devlet ve Ordu Teşkilatında Meydana Gelen Değişim",
+       "page": 34,
+       "endPage": 49,
+       "sections": []
+      },
+      {
+       "id": "b77-t1.3",
+       "no": "1.3",
+       "title": "Türkistan’dan Türkiye’ye Uzanan Süreçte Türklerin Sosyal Yaşamları ve Ekonomik Faaliyetleri",
+       "page": 50,
+       "endPage": 65,
+       "sections": []
+      },
+      {
+       "id": "b77-t1.4",
+       "no": "1.4",
+       "title": "Türk-İslam Medeniyetinin Bilim, Kültür, Eğitim ve Sanat Alanlarında Ortaya Çıkardığı Etkiler",
+       "page": 66,
+       "endPage": 99,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b77-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Beylikten devlete osmanlı (1299-1453)",
+     "page": 108,
+     "endPage": 205,
+     "topics": [
+      {
+       "id": "b77-t2.1",
+       "no": "2.1",
+       "title": "Osmanlı Devleti’nin Kuruluşuna Dair Görüşler",
+       "page": 110,
+       "endPage": 121,
+       "sections": []
+      },
+      {
+       "id": "b77-t2.2",
+       "no": "2.2",
+       "title": "Beylikten Devlete Siyasi ve Askerî Gelişmeler",
+       "page": 122,
+       "endPage": 139,
+       "sections": []
+      },
+      {
+       "id": "b77-t2.3",
+       "no": "2.3",
+       "title": "Osmanlı Devleti’nde Ordu, Hukuk ve Toprak Sistemi",
+       "page": 140,
+       "endPage": 155,
+       "sections": []
+      },
+      {
+       "id": "b77-t2.4",
+       "no": "2.4",
+       "title": "Osmanlı Devleti’nin İskân ve İstimalet Politikası",
+       "page": 156,
+       "endPage": 171,
+       "sections": []
+      },
+      {
+       "id": "b77-t2.5",
+       "no": "2.5",
+       "title": "Osmanlı Devleti’nin İlim ve İrfan Geleneği",
+       "page": 172,
+       "endPage": 196,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b77-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Cihan devleti osmanlı (1453-1683)",
+     "page": 206,
+     "endPage": 304,
+     "topics": [
+      {
+       "id": "b77-t3.1",
+       "no": "3.1",
+       "title": "Osmanlı Devleti’nin Cihan Devleti Hâline Gelmesi",
+       "page": 208,
+       "endPage": 234,
+       "sections": []
+      },
+      {
+       "id": "b77-t3.2",
+       "no": "3.2",
+       "title": "Osmanlı Devleti’nin Yönetim ve Ordu Yapısında Değişim",
+       "page": 235,
+       "endPage": 256,
+       "sections": []
+      },
+      {
+       "id": "b77-t3.3",
+       "no": "3.3",
+       "title": "Avrupalıların Sömürgeci Politikaları",
+       "page": 257,
+       "endPage": 269,
+       "sections": []
+      },
+      {
+       "id": "b77-t3.4",
+       "no": "3.4",
+       "title": "Osmanlı Devleti’nde İsyanlar",
+       "page": 270,
+       "endPage": 283,
+       "sections": []
+      },
+      {
+       "id": "b77-t3.5",
+       "no": "3.5",
+       "title": "Osmanlı Devleti’nde Bilim, Kültür, Eğitim ve Sanat",
+       "page": 284,
+       "endPage": 304,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 78,
+   "title": "Türk Dili Ve Edebiyatı 10.Sınıf Ders Kitabı",
+   "subjectId": "turk-dili-ve-edebiyati",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Türk Dili Ve Edebiyatı Dersi",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-13",
+   "fileStamp": "2026-10-13",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/78/turk-dili-ve-edebiyati-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/turk-dili-ve-edebiyati-10sinif-ders-kitabi_20261013_143136_171.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/turk-dili-ve-edebiyati-10sinif-ders-kitabi_20260908_190036_827.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 34099362,
+   "pageCount": 318,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b78-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Sözün Ezgisi",
+     "page": 10,
+     "endPage": 83,
+     "topics": [
+      {
+       "id": "b78-t1.1",
+       "no": "1.1",
+       "title": "Koşuk",
+       "page": 13,
+       "endPage": 38,
+       "sections": []
+      },
+      {
+       "id": "b78-t1.2",
+       "no": "1.2",
+       "title": "Türkü (Turnalar)",
+       "page": 39,
+       "endPage": 53,
+       "sections": []
+      },
+      {
+       "id": "b78-t1.3",
+       "no": "1.3",
+       "title": "Şiir dinletisi hazırlama",
+       "page": 54,
+       "endPage": 57,
+       "sections": []
+      },
+      {
+       "id": "b78-t1.4",
+       "no": "1.4",
+       "title": "Masal (Mercan Kız)",
+       "page": 58,
+       "endPage": 74,
+       "sections": []
+      },
+      {
+       "id": "b78-t1.5",
+       "no": "1.5",
+       "title": "Masalı film şeridi hâline getirme",
+       "page": 75,
+       "endPage": 79,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b78-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Kelimelerin Ritmi",
+     "page": 84,
+     "endPage": 153,
+     "topics": [
+      {
+       "id": "b78-t2.1",
+       "no": "2.1",
+       "title": "Gazel",
+       "page": 87,
+       "endPage": 111,
+       "sections": []
+      },
+      {
+       "id": "b78-t2.2",
+       "no": "2.2",
+       "title": "Saf şiir (Kaldırımlar)",
+       "page": 112,
+       "endPage": 123,
+       "sections": []
+      },
+      {
+       "id": "b78-t2.3",
+       "no": "2.3",
+       "title": "Öğretici metni edebî metne dönüştürme",
+       "page": 124,
+       "endPage": 128,
+       "sections": []
+      },
+      {
+       "id": "b78-t2.4",
+       "no": "2.4",
+       "title": "Söyleşi (edebî)",
+       "page": 129,
+       "endPage": 145,
+       "sections": []
+      },
+      {
+       "id": "b78-t2.5",
+       "no": "2.5",
+       "title": "Podcast (sesli blog) hazırlama",
+       "page": 146,
+       "endPage": 149,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b78-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Dünden Bugüne",
+     "page": 154,
+     "endPage": 233,
+     "topics": [
+      {
+       "id": "b78-t3.1",
+       "no": "3.1",
+       "title": "Destan (Oğuz Kağan Destanı)",
+       "page": 157,
+       "endPage": 183,
+       "sections": []
+      },
+      {
+       "id": "b78-t3.2",
+       "no": "3.2",
+       "title": "Mesnevi (Harnâme)",
+       "page": 184,
+       "endPage": 203,
+       "sections": []
+      },
+      {
+       "id": "b78-t3.3",
+       "no": "3.3",
+       "title": "Türk destanlarıyla ilgili bir sunum yapma",
+       "page": 204,
+       "endPage": 208,
+       "sections": []
+      },
+      {
+       "id": "b78-t3.4",
+       "no": "3.4",
+       "title": "Fabl (Aslan ve Av Hayvanları)",
+       "page": 209,
+       "endPage": 223,
+       "sections": []
+      },
+      {
+       "id": "b78-t3.5",
+       "no": "3.5",
+       "title": "Bir fabl yazma",
+       "page": 224,
+       "endPage": 229,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b78-u4",
+     "no": 4,
+     "kind": "tema",
+     "title": "Nesillerin Mirası",
+     "page": 234,
+     "endPage": 306,
+     "topics": [
+      {
+       "id": "b78-t4.1",
+       "no": "4.1",
+       "title": "Dede Korkut Hikâyeleri (Salur Kazan’ın Yedi Başlı Ejderhayı Öldürdüğü Boy)",
+       "page": 237,
+       "endPage": 263,
+       "sections": []
+      },
+      {
+       "id": "b78-t4.2",
+       "no": "4.2",
+       "title": "Tanzimat şiiri (Hürriyet Kasîdesi)",
+       "page": 264,
+       "endPage": 279,
+       "sections": []
+      },
+      {
+       "id": "b78-t4.3",
+       "no": "4.3",
+       "title": "Dede Korkut hikâyelerinden birini canlandırma",
+       "page": 280,
+       "endPage": 282,
+       "sections": []
+      },
+      {
+       "id": "b78-t4.4",
+       "no": "4.4",
+       "title": "Millî Edebiyat Dönemi’nde hikâye (Kaç Yerinden)",
+       "page": 283,
+       "endPage": 301,
+       "sections": []
+      },
+      {
+       "id": "b78-t4.5",
+       "no": "4.5",
+       "title": "Kaç Yerinden adlı hikâyeyi şiir hâline getirme",
+       "page": 302,
+       "endPage": 306,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 408,
+   "title": "İngilizce Dersi 9.Sınıf Ders Kitabı",
+   "subjectId": "ingilizce",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "İngilizce Dersi (Hazırlık-12)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-01",
+   "fileStamp": "2026-10-01",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/408/ingilizce-dersi-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/ingilizce-dersi-9sinif-ders-kitabi_20261001_182308_053.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/ingilizce-dersi-9sinif-ders-kitabi_20260907_212105_549.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 21463488,
+   "pageCount": 184,
+   "pageOffset": 1,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b408-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Revision 1",
+     "page": 17,
+     "endPage": 24,
+     "topics": []
+    },
+    {
+     "id": "b408-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Revision 2",
+     "page": 25,
+     "endPage": 32,
+     "topics": []
+    },
+    {
+     "id": "b408-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Theme 1: School Life & Education",
+     "page": 33,
+     "endPage": 46,
+     "topics": []
+    },
+    {
+     "id": "b408-u4",
+     "no": 4,
+     "kind": "tema",
+     "title": "Theme 2: Classroom Life & Learning",
+     "page": 47,
+     "endPage": 60,
+     "topics": []
+    },
+    {
+     "id": "b408-u5",
+     "no": 5,
+     "kind": "tema",
+     "title": "Theme 3: Personal Life & Well-being",
+     "page": 61,
+     "endPage": 74,
+     "topics": []
+    },
+    {
+     "id": "b408-u6",
+     "no": 6,
+     "kind": "tema",
+     "title": "Theme 4: Family Life & Home",
+     "page": 75,
+     "endPage": 88,
+     "topics": []
+    },
+    {
+     "id": "b408-u7",
+     "no": 7,
+     "kind": "tema",
+     "title": "Theme 5: Life in the Neighbourhood, City & Social Life",
+     "page": 89,
+     "endPage": 102,
+     "topics": []
+    },
+    {
+     "id": "b408-u8",
+     "no": 8,
+     "kind": "tema",
+     "title": "Theme 6: Life in the World & Culture",
+     "page": 103,
+     "endPage": 116,
+     "topics": []
+    },
+    {
+     "id": "b408-u9",
+     "no": 9,
+     "kind": "tema",
+     "title": "Theme 7: Life in Nature & Global Problems",
+     "page": 117,
+     "endPage": 130,
+     "topics": []
+    },
+    {
+     "id": "b408-u10",
+     "no": 10,
+     "kind": "tema",
+     "title": "Theme 8: Life in the Universe & the Future",
+     "page": 131,
+     "endPage": 144,
+     "topics": []
+    }
+   ]
+  },
+  {
+   "id": 409,
+   "title": "İngilizce Dersi 9.Sınıf Çalışma Kitabı",
+   "subjectId": "ingilizce",
+   "grade": 9,
+   "kind": "calisma",
+   "volume": null,
+   "programLabel": "İngilizce Dersi (Hazırlık-12)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-01",
+   "fileStamp": "2026-10-01",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/409/ingilizce-dersi-9sinif-calisma-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/ingilizce-dersi-9sinif-calisma-kitabi_20261001_175917_443.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/ingilizce-dersi-9sinif-calisma-kitabi_20260907_212213_547.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 5322924,
+   "pageCount": 0,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 412,
+   "title": "İngilizce Dersi 10.Sınıf Ders Kitabı",
+   "subjectId": "ingilizce",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "İngilizce Dersi (9-12)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-01",
+   "fileStamp": "2026-10-01",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/412/ingilizce-dersi-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/ingilizce-dersi-10sinif-ders-kitabi_20261001_100339_692.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/ingilizce-dersi-10sinif-ders-kitabi_20260908_001009_015.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 38896546,
+   "pageCount": 164,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b412-u1",
+     "no": 1,
+     "kind": "tema",
+     "title": "Revision 1",
+     "page": 17,
+     "endPage": 20,
+     "topics": []
+    },
+    {
+     "id": "b412-u2",
+     "no": 2,
+     "kind": "tema",
+     "title": "Revision 2",
+     "page": 21,
+     "endPage": 24,
+     "topics": []
+    },
+    {
+     "id": "b412-u3",
+     "no": 3,
+     "kind": "tema",
+     "title": "Theme 1: School Life & Education",
+     "page": 25,
+     "endPage": 38,
+     "topics": []
+    },
+    {
+     "id": "b412-u4",
+     "no": 4,
+     "kind": "tema",
+     "title": "Theme 2: Classroom Life & Learning",
+     "page": 39,
+     "endPage": 52,
+     "topics": []
+    },
+    {
+     "id": "b412-u5",
+     "no": 5,
+     "kind": "tema",
+     "title": "Theme 3: Personal Life & Well-being",
+     "page": 53,
+     "endPage": 66,
+     "topics": []
+    },
+    {
+     "id": "b412-u6",
+     "no": 6,
+     "kind": "tema",
+     "title": "Theme 4: Family Life & Home",
+     "page": 67,
+     "endPage": 80,
+     "topics": []
+    },
+    {
+     "id": "b412-u7",
+     "no": 7,
+     "kind": "tema",
+     "title": "Theme 5: Life in the Neighbourhood, City & Social Life",
+     "page": 81,
+     "endPage": 94,
+     "topics": []
+    },
+    {
+     "id": "b412-u8",
+     "no": 8,
+     "kind": "tema",
+     "title": "Theme 6: Life in the World & Culture",
+     "page": 95,
+     "endPage": 108,
+     "topics": []
+    },
+    {
+     "id": "b412-u9",
+     "no": 9,
+     "kind": "tema",
+     "title": "Theme 7: Life in Nature & Global Problems",
+     "page": 109,
+     "endPage": 122,
+     "topics": []
+    },
+    {
+     "id": "b412-u10",
+     "no": 10,
+     "kind": "tema",
+     "title": "Theme 8: Life in the Universe & the Future",
+     "page": 123,
+     "endPage": 136,
+     "topics": []
+    }
+   ]
+  },
+  {
+   "id": 414,
+   "title": "İngilizce Dersi 10.Sınıf Çalışma Kitabı",
+   "subjectId": "ingilizce",
+   "grade": 10,
+   "kind": "calisma",
+   "volume": null,
+   "programLabel": "İngilizce Dersi (9-12)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-01",
+   "fileStamp": "2026-10-01",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/414/ingilizce-dersi-10sinif-calisma-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/ingilizce-dersi-10sinif-calisma-kitabi_20261001_062822_651.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/ingilizce-dersi-10sinif-calisma-kitabi_20260908_001356_428.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 22611405,
+   "pageCount": 0,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 471,
+   "title": "Arapça 9.Sınıf Ders Kitabı",
+   "subjectId": "arapca",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Arapça Dersi (AİHL)",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-02",
+   "fileStamp": "2026-10-02",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/471/arapca-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/arapca-9sinif-ders-kitabi_20261002_103307_944.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/arapca-9sinif-ders-kitabi_20261002_103313_496.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 36986436,
+   "pageCount": 217,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 472,
+   "title": "Arapça 10.Sınıf Ders Kitabı",
+   "subjectId": "arapca",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Arapça Dersi (AİHL)",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-02",
+   "fileStamp": "2026-10-02",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/472/arapca-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/arapca-10sinif-ders-kitabi_20261002_110949_721.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/arapca-10sinif-ders-kitabi_20261002_111015_944.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 41037283,
+   "pageCount": 215,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 477,
+   "title": "Fıkıh 10.Sınıf Ders Kitabı",
+   "subjectId": "fikih",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Fıkıh Dersi",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-02",
+   "fileStamp": "2026-10-02",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/477/fikih-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/fikih-ders-kitabi_20261002_120141_315.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/fikih-ders-kitabi_20261002_120149_064.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 14879200,
+   "pageCount": 184,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b477-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Ünıte fıkıh ilmi ve tarihi",
+     "page": 12,
+     "endPage": 45,
+     "topics": [
+      {
+       "id": "b477-t1.1",
+       "no": "1.1",
+       "title": "Fıkıh ve fıkıh usulü",
+       "page": 14,
+       "endPage": 17,
+       "sections": []
+      },
+      {
+       "id": "b477-t1.2",
+       "no": "1.2",
+       "title": "Fıkıh ilmının temel ilkelerı",
+       "page": 18,
+       "endPage": 21,
+       "sections": []
+      },
+      {
+       "id": "b477-t1.3",
+       "no": "1.3",
+       "title": "Fıkıh tarıhı",
+       "page": 22,
+       "endPage": 45,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b477-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Ünıte fıkhi hükümler ve delilleri",
+     "page": 46,
+     "endPage": 73,
+     "topics": [
+      {
+       "id": "b477-t2.1",
+       "no": "2.1",
+       "title": "Fıkhı hükümler",
+       "page": 48,
+       "endPage": 55,
+       "sections": []
+      },
+      {
+       "id": "b477-t2.2",
+       "no": "2.2",
+       "title": "Fıkhı hükümlerın delıllerı ve yöntemlerı",
+       "page": 56,
+       "endPage": 73,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b477-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Ünıte ibadetler",
+     "page": 74,
+     "endPage": 123,
+     "topics": [
+      {
+       "id": "b477-t3.1",
+       "no": "3.1",
+       "title": "Namaz",
+       "page": 76,
+       "endPage": 87,
+       "sections": []
+      },
+      {
+       "id": "b477-t3.2",
+       "no": "3.2",
+       "title": "Oruç",
+       "page": 88,
+       "endPage": 95,
+       "sections": []
+      },
+      {
+       "id": "b477-t3.3",
+       "no": "3.3",
+       "title": "Zekât",
+       "page": 96,
+       "endPage": 100,
+       "sections": []
+      },
+      {
+       "id": "b477-t3.4",
+       "no": "3.4",
+       "title": "Hac",
+       "page": 101,
+       "endPage": 107,
+       "sections": []
+      },
+      {
+       "id": "b477-t3.5",
+       "no": "3.5",
+       "title": "Cihat",
+       "page": 108,
+       "endPage": 123,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b477-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Ünıte sosyal ve ekonomik hayat",
+     "page": 124,
+     "endPage": 173,
+     "topics": [
+      {
+       "id": "b477-t4.1",
+       "no": "4.1",
+       "title": "Aile hayatı",
+       "page": 126,
+       "endPage": 132,
+       "sections": []
+      },
+      {
+       "id": "b477-t4.2",
+       "no": "4.2",
+       "title": "Ekonomik hayat",
+       "page": 133,
+       "endPage": 143,
+       "sections": []
+      },
+      {
+       "id": "b477-t4.3",
+       "no": "4.3",
+       "title": "Helaller ve haramlar",
+       "page": 144,
+       "endPage": 159,
+       "sections": []
+      },
+      {
+       "id": "b477-t4.4",
+       "no": "4.4",
+       "title": "İslam ceza hukuku (ukubat)",
+       "page": 160,
+       "endPage": 173,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 480,
+   "title": "Hadis 10.Sınıf Ders Kitabı",
+   "subjectId": "hadis",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Hadis Dersi",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-02",
+   "fileStamp": "2026-10-02",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/480/hadis-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/hadis-10sinif-ders-kitabi_20261002_122002_014.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/hadis-10sinif-ders-kitabi_20261002_122027_392.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 26823366,
+   "pageCount": 159,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b480-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Ünıte: hadis ilmine giriş",
+     "page": 10,
+     "endPage": 43,
+     "topics": [
+      {
+       "id": "b480-t1.1",
+       "no": "1.1",
+       "title": "Hadis ilminin konusu ve önemi",
+       "page": 12,
+       "endPage": 14,
+       "sections": []
+      },
+      {
+       "id": "b480-t1.2",
+       "no": "1.2",
+       "title": "Hadıs ilmı ıle ilgılı kavramlar",
+       "page": 15,
+       "endPage": 21,
+       "sections": []
+      },
+      {
+       "id": "b480-t1.3",
+       "no": "1.3",
+       "title": "Sünnetın dındekı yerı ve bağlayıcılığı",
+       "page": 22,
+       "endPage": 25,
+       "sections": []
+      },
+      {
+       "id": "b480-t1.4",
+       "no": "1.4",
+       "title": "Sünnetın evrensellığı",
+       "page": 26,
+       "endPage": 27,
+       "sections": []
+      },
+      {
+       "id": "b480-t1.5",
+       "no": "1.5",
+       "title": "Hadıslerden mesajlar: kur’an ve sünnete bağlılık",
+       "page": 28,
+       "endPage": 35,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b480-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Ünıte: hadis tarihi",
+     "page": 44,
+     "endPage": 79,
+     "topics": [
+      {
+       "id": "b480-t2.1",
+       "no": "2.1",
+       "title": "Hadıslerın sözlü ve yazılı aktarımı",
+       "page": 46,
+       "endPage": 52,
+       "sections": []
+      },
+      {
+       "id": "b480-t2.2",
+       "no": "2.2",
+       "title": "Hadislerin tedvin ve tasnifi",
+       "page": 53,
+       "endPage": 59,
+       "sections": []
+      },
+      {
+       "id": "b480-t2.3",
+       "no": "2.3",
+       "title": "Tedvin ve tasnif sonrası hadis çalışmaları",
+       "page": 60,
+       "endPage": 62,
+       "sections": []
+      },
+      {
+       "id": "b480-t2.4",
+       "no": "2.4",
+       "title": "Hadıs kaynaklarında ıman",
+       "page": 63,
+       "endPage": 65,
+       "sections": []
+      },
+      {
+       "id": "b480-t2.5",
+       "no": "2.5",
+       "title": "Hadislerden mesajlar: iman",
+       "page": 66,
+       "endPage": 73,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b480-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Ünıte: hadis çeşitleri",
+     "page": 80,
+     "endPage": 109,
+     "topics": [
+      {
+       "id": "b480-t3.1",
+       "no": "3.1",
+       "title": "Kaynağına göre hadıs çeşıtlerı",
+       "page": 82,
+       "endPage": 85,
+       "sections": []
+      },
+      {
+       "id": "b480-t3.2",
+       "no": "3.2",
+       "title": "Ravı sayısına göre hadıs çeşıtlerı",
+       "page": 86,
+       "endPage": 88,
+       "sections": []
+      },
+      {
+       "id": "b480-t3.3",
+       "no": "3.3",
+       "title": "Sıhhat derecesıne göre hadıs çeşıtlerı",
+       "page": 89,
+       "endPage": 94,
+       "sections": []
+      },
+      {
+       "id": "b480-t3.4",
+       "no": "3.4",
+       "title": "Hadıs kaynaklarında ahlak",
+       "page": 95,
+       "endPage": 97,
+       "sections": []
+      },
+      {
+       "id": "b480-t3.5",
+       "no": "3.5",
+       "title": "Hadıslerden mesajlar: ahlak",
+       "page": 98,
+       "endPage": 103,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b480-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Ünıte: hadis ve sünnetin anlaşılması",
+     "page": 110,
+     "endPage": 127,
+     "topics": [
+      {
+       "id": "b480-t4.1",
+       "no": "4.1",
+       "title": "Hadıs ve sünnetın anlaşılmasını konu edınen ilımler",
+       "page": 112,
+       "endPage": 115,
+       "sections": []
+      },
+      {
+       "id": "b480-t4.2",
+       "no": "4.2",
+       "title": "Hadıs ve sünnetın anlaşılmasında dıkkat edılmesı gereken esaslar",
+       "page": 116,
+       "endPage": 119,
+       "sections": []
+      },
+      {
+       "id": "b480-t4.3",
+       "no": "4.3",
+       "title": "Hadıs kaynaklarında ilım",
+       "page": 120,
+       "endPage": 121,
+       "sections": []
+      },
+      {
+       "id": "b480-t4.4",
+       "no": "4.4",
+       "title": "Hadıslerden mesajlar: ilım",
+       "page": 122,
+       "endPage": 127,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 489,
+   "title": "Kur'an-ı Kerim 9.Sınıf Ders Kitabı",
+   "subjectId": "kuran",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Kur'an-ı Kerim Dersi (AİHL)",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/489/kuran-i-kerim-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/kuran-i-kerim-9sinif-ders-kitabi_20261003_084522_474.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/kuran-i-kerim-9sinif-ders-kitabi_20261003_084531_006.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 25242319,
+   "pageCount": 250,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 491,
+   "title": "Kur'an-ı Kerim 10.Sınıf Ders Kitabı",
+   "subjectId": "kuran",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Kur'an-ı Kerim Dersi (AİHL)",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/491/kuran-i-kerim-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/kuran-i-kerim-10sinif-ders-kitabi_20261003_085703_158.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/kuran-i-kerim-10sinif-ders-kitabi_20261003_085733_531.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 40511211,
+   "pageCount": 217,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 497,
+   "title": "Siyer 10.Sınıf Ders Kitabı",
+   "subjectId": "siyer",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Siyer Dersi",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/497/siyer-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/siyer-10sinif-ders-kitabi_20261003_103232_646.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/siyer-10sinif-ders-kitabi_20261003_103234_623.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 19148515,
+   "pageCount": 175,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b497-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "İslam öncesi dönem: hicaz ve hz. muhammed",
+     "page": 14,
+     "endPage": 43,
+     "topics": [
+      {
+       "id": "b497-t1.1",
+       "no": "1.1",
+       "title": "Hz. muhammed’in doğduğu ortam",
+       "page": 16,
+       "endPage": 28,
+       "sections": [
+        {
+         "id": "b497-t1.1.1",
+         "no": "1.1.1",
+         "title": "Tarihî Yapı",
+         "page": 17,
+         "endPage": 22
+        },
+        {
+         "id": "b497-t1.1.2",
+         "no": "1.1.2",
+         "title": "Sosyal ve Kültürel Yapı",
+         "page": 23,
+         "endPage": 28
+        }
+       ]
+      },
+      {
+       "id": "b497-t1.2",
+       "no": "1.2",
+       "title": "Risalet öncesi hz. muhammed",
+       "page": 29,
+       "endPage": 37,
+       "sections": [
+        {
+         "id": "b497-t1.2.1",
+         "no": "1.2.1",
+         "title": "Soyu ve Ailesi",
+         "page": 29,
+         "endPage": 29
+        },
+        {
+         "id": "b497-t1.2.2",
+         "no": "1.2.2",
+         "title": "Doğumu ve Çocukluk Dönemi",
+         "page": 30,
+         "endPage": 31
+        },
+        {
+         "id": "b497-t1.2.3",
+         "no": "1.2.3",
+         "title": "Gençlik Yılları",
+         "page": 32,
+         "endPage": 32
+        },
+        {
+         "id": "b497-t1.2.4",
+         "no": "1.2.4",
+         "title": "Evliliği ve Çocukları",
+         "page": 33,
+         "endPage": 34
+        },
+        {
+         "id": "b497-t1.2.5",
+         "no": "1.2.5",
+         "title": "Risalete Doğru",
+         "page": 35,
+         "endPage": 37
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b497-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "İslam’ın doğuşu: mekke yılları",
+     "page": 44,
+     "endPage": 77,
+     "topics": [
+      {
+       "id": "b497-t2.1",
+       "no": "2.1",
+       "title": "Hz. muhammed’in risaleti",
+       "page": 46,
+       "endPage": 52,
+       "sections": [
+        {
+         "id": "b497-t2.1.1",
+         "no": "2.1.1",
+         "title": "İlk Vahiy",
+         "page": 46,
+         "endPage": 47
+        },
+        {
+         "id": "b497-t2.1.2",
+         "no": "2.1.2",
+         "title": "İslam’a Davet",
+         "page": 48,
+         "endPage": 52
+        }
+       ]
+      },
+      {
+       "id": "b497-t2.2",
+       "no": "2.2",
+       "title": "Müşriklerin risalete tepkileri",
+       "page": 53,
+       "endPage": 59,
+       "sections": [
+        {
+         "id": "b497-t2.2.1",
+         "no": "2.2.1",
+         "title": "Tepkilerin Sebepleri",
+         "page": 53,
+         "endPage": 55
+        },
+        {
+         "id": "b497-t2.2.2",
+         "no": "2.2.2",
+         "title": "Tepkilerin Çeşitleri",
+         "page": 56,
+         "endPage": 59
+        }
+       ]
+      },
+      {
+       "id": "b497-t2.3",
+       "no": "2.3",
+       "title": "Hz. peygamber’in davet sürecinde izlediği yol",
+       "page": 60,
+       "endPage": 71,
+       "sections": [
+        {
+         "id": "b497-t2.3.1",
+         "no": "2.3.1",
+         "title": "Habeşistan’a Hicret",
+         "page": 60,
+         "endPage": 61
+        },
+        {
+         "id": "b497-t2.3.2",
+         "no": "2.3.2",
+         "title": "Taif Yolculuğu",
+         "page": 62,
+         "endPage": 63
+        },
+        {
+         "id": "b497-t2.3.3",
+         "no": "2.3.3",
+         "title": "Akabe Biatleri",
+         "page": 64,
+         "endPage": 65
+        },
+        {
+         "id": "b497-t2.3.4",
+         "no": "2.3.4",
+         "title": "Hicret Yolculuğu",
+         "page": 66,
+         "endPage": 71
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b497-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "İslam’ın yayılışı: medine yılları",
+     "page": 78,
+     "endPage": 127,
+     "topics": [
+      {
+       "id": "b497-t3.1",
+       "no": "3.1",
+       "title": "İslam toplumunun oluşumu",
+       "page": 80,
+       "endPage": 85,
+       "sections": [
+        {
+         "id": "b497-t3.1.1",
+         "no": "3.1.1",
+         "title": "Mescid-i Nebevi’nin İnşası",
+         "page": 81,
+         "endPage": 81
+        },
+        {
+         "id": "b497-t3.1.2",
+         "no": "3.1.2",
+         "title": "Muhacir-Ensar Kardeşliği",
+         "page": 81,
+         "endPage": 81
+        },
+        {
+         "id": "b497-t3.1.3",
+         "no": "3.1.3",
+         "title": "Medine Sözleşmesi",
+         "page": 82,
+         "endPage": 83
+        },
+        {
+         "id": "b497-t3.1.4",
+         "no": "3.1.4",
+         "title": "Medine Pazarı’nın Kurulması",
+         "page": 84,
+         "endPage": 84
+        },
+        {
+         "id": "b497-t3.1.5",
+         "no": "3.1.5",
+         "title": "Namaza Davet: Ezan",
+         "page": 84,
+         "endPage": 84
+        },
+        {
+         "id": "b497-t3.1.6",
+         "no": "3.1.6",
+         "title": "Dinî Hükümlerin Teşrii",
+         "page": 85,
+         "endPage": 85
+        }
+       ]
+      },
+      {
+       "id": "b497-t3.2",
+       "no": "3.2",
+       "title": "Farklı inanç grupları ile ilişkiler",
+       "page": 86,
+       "endPage": 102,
+       "sections": [
+        {
+         "id": "b497-t3.2.1",
+         "no": "3.2.1",
+         "title": "Müşriklerle İlişkiler",
+         "page": 87,
+         "endPage": 95
+        },
+        {
+         "id": "b497-t3.2.2",
+         "no": "3.2.2",
+         "title": "Münafıklarla İlişkiler",
+         "page": 96,
+         "endPage": 96
+        },
+        {
+         "id": "b497-t3.2.3",
+         "no": "3.2.3",
+         "title": "Yahudilerle İlişkiler",
+         "page": 97,
+         "endPage": 98
+        },
+        {
+         "id": "b497-t3.2.4",
+         "no": "3.2.4",
+         "title": "Hristiyanlarla İlişkiler",
+         "page": 99,
+         "endPage": 102
+        }
+       ]
+      },
+      {
+       "id": "b497-t3.3",
+       "no": "3.3",
+       "title": "İslam’ın yayılışı",
+       "page": 103,
+       "endPage": 106,
+       "sections": [
+        {
+         "id": "b497-t3.3.1",
+         "no": "3.3.1",
+         "title": "İslam’a Davet Mektupları",
+         "page": 103,
+         "endPage": 104
+        },
+        {
+         "id": "b497-t3.3.2",
+         "no": "3.3.2",
+         "title": "Heyetler Yılı",
+         "page": 105,
+         "endPage": 106
+        }
+       ]
+      },
+      {
+       "id": "b497-t3.4",
+       "no": "3.4",
+       "title": "En yüce dost’a",
+       "page": 107,
+       "endPage": 116,
+       "sections": [
+        {
+         "id": "b497-t3.4.1",
+         "no": "3.4.1",
+         "title": "Veda Haccı ve Veda Hutbesi",
+         "page": 107,
+         "endPage": 111
+        },
+        {
+         "id": "b497-t3.4.2",
+         "no": "3.4.2",
+         "title": "Hz. Peygamber’in Hastalık Süreci ve Vefatı",
+         "page": 112,
+         "endPage": 116
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "b497-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Peygamberimizin ahlakı: insanlığa miras",
+     "page": 128,
+     "endPage": 151,
+     "topics": [
+      {
+       "id": "b497-t4.1",
+       "no": "4.1",
+       "title": "Hz. peygamber’in örnek oluşu",
+       "page": 130,
+       "endPage": 139,
+       "sections": [
+        {
+         "id": "b497-t4.1.1",
+         "no": "4.1.1",
+         "title": "İbadet Hayatında En Güzel Örnek",
+         "page": 130,
+         "endPage": 131
+        },
+        {
+         "id": "b497-t4.1.2",
+         "no": "4.1.2",
+         "title": "Sosyal Hayatta En Güzel Örnek",
+         "page": 132,
+         "endPage": 134
+        },
+        {
+         "id": "b497-t4.1.3",
+         "no": "4.1.3",
+         "title": "Çalışma Hayatında En Güzel Örnek",
+         "page": 135,
+         "endPage": 135
+        },
+        {
+         "id": "b497-t4.1.4",
+         "no": "4.1.4",
+         "title": "Siyasi ve Askerî Alanda En Güzel Örnek",
+         "page": 135,
+         "endPage": 136
+        },
+        {
+         "id": "b497-t4.1.5",
+         "no": "4.1.5",
+         "title": "Eğitim Konusunda En Güzel Örnek",
+         "page": 137,
+         "endPage": 139
+        }
+       ]
+      },
+      {
+       "id": "b497-t4.2",
+       "no": "4.2",
+       "title": "Kültürümüzde peygamber sevgisi",
+       "page": 140,
+       "endPage": 151,
+       "sections": [
+        {
+         "id": "b497-t4.2.1",
+         "no": "4.2.1",
+         "title": "Edebiyatta Peygamber Sevgisi",
+         "page": 142,
+         "endPage": 143
+        },
+        {
+         "id": "b497-t4.2.2",
+         "no": "4.2.2",
+         "title": "Musikide Peygamber Sevgisi",
+         "page": 144,
+         "endPage": 145
+        },
+        {
+         "id": "b497-t4.2.3",
+         "no": "4.2.3",
+         "title": "Hat Sanatında Peygamber Sevgisi",
+         "page": 146,
+         "endPage": 151
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 499,
+   "title": "Temel Dinî Bilgiler 9.Sınıf Ders Kitabı",
+   "subjectId": "temel-dini-bilgiler",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Temel Dinî Bilgiler Dersi (AİHL)",
+   "kademe": "aihl",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/499/temel-dini-bilgiler-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/temel-dini-bilgiler-9sinif-ders-kitabi_20261003_104515_093.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/temel-dini-bilgiler-9sinif-ders-kitabi_20261003_104640_155.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 20093751,
+   "pageCount": 157,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b499-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Kendimi, kâinatı ve allah’ı tanıyorum",
+     "page": 12,
+     "endPage": 37,
+     "topics": [
+      {
+       "id": "b499-t1.1",
+       "no": "1.1",
+       "title": "İnsan ve kâinatın yaratılışı",
+       "page": 14,
+       "endPage": 19,
+       "sections": []
+      },
+      {
+       "id": "b499-t1.2",
+       "no": "1.2",
+       "title": "Allah, insan ve kâinat ilişkisi",
+       "page": 20,
+       "endPage": 29,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b499-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Yaratılışın gayesi: allah a iman",
+     "page": 38,
+     "endPage": 69,
+     "topics": [
+      {
+       "id": "b499-t2.1",
+       "no": "2.1",
+       "title": "İmanla ilgili kavramlar",
+       "page": 40,
+       "endPage": 47,
+       "sections": []
+      },
+      {
+       "id": "b499-t2.2",
+       "no": "2.2",
+       "title": "İman esasları",
+       "page": 48,
+       "endPage": 61,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b499-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "İmanın meyvesi: ibadetler",
+     "page": 70,
+     "endPage": 111,
+     "topics": [
+      {
+       "id": "b499-t3.1",
+       "no": "3.1",
+       "title": "İbadet ve ibadetin kabul şartları",
+       "page": 72,
+       "endPage": 75,
+       "sections": []
+      },
+      {
+       "id": "b499-t3.2",
+       "no": "3.2",
+       "title": "İbadet ve temizlik ilişkisi",
+       "page": 76,
+       "endPage": 80,
+       "sections": []
+      },
+      {
+       "id": "b499-t3.3",
+       "no": "3.3",
+       "title": "İslam da temel ibadetler",
+       "page": 81,
+       "endPage": 104,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b499-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "İslam’ın özü: güzel ahlak",
+     "page": 112,
+     "endPage": 139,
+     "topics": [
+      {
+       "id": "b499-t4.1",
+       "no": "4.1",
+       "title": "İslam ahlakının konusu, amacı ve kaynakları",
+       "page": 114,
+       "endPage": 116,
+       "sections": []
+      },
+      {
+       "id": "b499-t4.2",
+       "no": "4.2",
+       "title": "İslam ahlakına göre tutum ve davranışlar",
+       "page": 117,
+       "endPage": 130,
+       "sections": []
+      },
+      {
+       "id": "b499-t4.3",
+       "no": "4.3",
+       "title": "Kötü alışkanlıklar",
+       "page": 131,
+       "endPage": 139,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 510,
+   "title": "Arapça 9.Sınıf Ders Kitabı",
+   "subjectId": "arapca",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Arapça Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/510/arapca-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/arapca-9sinif-ders-kitabi_20261003_180523_786.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/arapca-9sinif-ders-kitabi_20261003_180535_224.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 82516370,
+   "pageCount": 192,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 511,
+   "title": "Arapça 10.Sınıf Ders Kitabı",
+   "subjectId": "arapca",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Arapça Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/511/arapca-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/arapca-10sinif-ders-kitabi_20261003_181023_622.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/arapca-10sinif-ders-kitabi_20261003_182057_493.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 50276247,
+   "pageCount": 184,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 518,
+   "title": "Din Kültürü Ve Ahlak Bilgisi 9.Sınıf Ders Kitabı",
+   "subjectId": "din-kulturu",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Din Kültürü ve Ahlak Bilgisi Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/518/din-kulturu-ve-ahlak-bilgisi-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/din-kulturu-ve-ahlak-bilgisi-9sinif-ders-kitabi_20261003_185509_939.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/din-kulturu-ve-ahlak-bilgisi-9sinif-ders-kitabi_20261003_185528_092.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 12884428,
+   "pageCount": 187,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b518-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Allah-İnsan İlişkisi",
+     "page": 10,
+     "endPage": 43,
+     "topics": [
+      {
+       "id": "b518-t1.1",
+       "no": "1.1",
+       "title": "İnsan ve İnsanın Yaratılışı",
+       "page": 12,
+       "endPage": 15,
+       "sections": []
+      },
+      {
+       "id": "b518-t1.2",
+       "no": "1.2",
+       "title": "Doğruyu Arayan Bir Varlık Olarak İnsan",
+       "page": 16,
+       "endPage": 20,
+       "sections": []
+      },
+      {
+       "id": "b518-t1.3",
+       "no": "1.3",
+       "title": "İbadet ve Dua Eden Bir Varlık Olarak İnsan",
+       "page": 21,
+       "endPage": 30,
+       "sections": []
+      },
+      {
+       "id": "b518-t1.4",
+       "no": "1.4",
+       "title": "Kur’an’dan Mesajlar",
+       "page": 31,
+       "endPage": 36,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b518-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "İslam’da İnanç Esasları",
+     "page": 44,
+     "endPage": 79,
+     "topics": [
+      {
+       "id": "b518-t2.1",
+       "no": "2.1",
+       "title": "İman ve İmanın Mahiyeti",
+       "page": 46,
+       "endPage": 49,
+       "sections": []
+      },
+      {
+       "id": "b518-t2.2",
+       "no": "2.2",
+       "title": "İslam’da İman Esasları",
+       "page": 50,
+       "endPage": 60,
+       "sections": []
+      },
+      {
+       "id": "b518-t2.3",
+       "no": "2.3",
+       "title": "İmanın Bireye ve Topluma Kazandırdıkları",
+       "page": 61,
+       "endPage": 66,
+       "sections": []
+      },
+      {
+       "id": "b518-t2.4",
+       "no": "2.4",
+       "title": "Kur’an’dan Mesajlar",
+       "page": 67,
+       "endPage": 70,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b518-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "İslam’da İbadetler",
+     "page": 80,
+     "endPage": 113,
+     "topics": [
+      {
+       "id": "b518-t3.1",
+       "no": "3.1",
+       "title": "İslam’da İbadetin Kapsamı",
+       "page": 82,
+       "endPage": 86,
+       "sections": []
+      },
+      {
+       "id": "b518-t3.2",
+       "no": "3.2",
+       "title": "İslam’da Temel İbadetler",
+       "page": 87,
+       "endPage": 94,
+       "sections": []
+      },
+      {
+       "id": "b518-t3.3",
+       "no": "3.3",
+       "title": "İnsan ve İbadet",
+       "page": 95,
+       "endPage": 102,
+       "sections": []
+      },
+      {
+       "id": "b518-t3.4",
+       "no": "3.4",
+       "title": "Kur’an’dan Mesajlar",
+       "page": 103,
+       "endPage": 105,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b518-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "İslam’da Ahlak İlkeleri",
+     "page": 114,
+     "endPage": 147,
+     "topics": [
+      {
+       "id": "b518-t4.1",
+       "no": "4.1",
+       "title": "İslam’da Ahlakın Mahiyeti",
+       "page": 116,
+       "endPage": 122,
+       "sections": []
+      },
+      {
+       "id": "b518-t4.2",
+       "no": "4.2",
+       "title": "Ahlakın Temel Unsurları",
+       "page": 123,
+       "endPage": 127,
+       "sections": []
+      },
+      {
+       "id": "b518-t4.3",
+       "no": "4.3",
+       "title": "Ahlaki Tutum ve Davranışlar",
+       "page": 128,
+       "endPage": 138,
+       "sections": []
+      },
+      {
+       "id": "b518-t4.4",
+       "no": "4.4",
+       "title": "Kur’an’dan Mesajlar",
+       "page": 139,
+       "endPage": 142,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b518-u5",
+     "no": 5,
+     "kind": "unite",
+     "title": "Kur’an’a Göre Hz. Muhammed",
+     "page": 148,
+     "endPage": 170,
+     "topics": [
+      {
+       "id": "b518-t5.1",
+       "no": "5.1",
+       "title": "Hz. Muhammed’in Beşerî ve Peygamberlik Yönü",
+       "page": 150,
+       "endPage": 156,
+       "sections": []
+      },
+      {
+       "id": "b518-t5.2",
+       "no": "5.2",
+       "title": "Hz. Muhammed’in Örnekliği",
+       "page": 157,
+       "endPage": 162,
+       "sections": []
+      },
+      {
+       "id": "b518-t5.3",
+       "no": "5.3",
+       "title": "Kültürümüzde Hz. Muhammed ve Ehlibeyt Sevgisi",
+       "page": 163,
+       "endPage": 167,
+       "sections": []
+      },
+      {
+       "id": "b518-t5.4",
+       "no": "5.4",
+       "title": "Kur’an’dan Mesajlar",
+       "page": 168,
+       "endPage": 170,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 525,
+   "title": "Kur'an-ı Kerim 9.Sınıf Ders Kitabı",
+   "subjectId": "kuran",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Kur'an-ı Kerim Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/525/kuran-i-kerim-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/kuran-i-kerim-9sinif-ders-kitabi_20261003_192716_339.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/kuran-i-kerim-9sinif-ders-kitabi_20261003_192727_188.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 16187167,
+   "pageCount": 171,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 526,
+   "title": "Kur'an-ı Kerim 10.Sınıf Ders Kitabı",
+   "subjectId": "kuran",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Kur'an-ı Kerim Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/526/kuran-i-kerim-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/kuran-i-kerim-10sinif-ders-kitabi_20261003_193404_636.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/kuran-i-kerim-10sinif-ders-kitabi_20261003_204527_167.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 55366524,
+   "pageCount": 171,
+   "pageOffset": null,
+   "tocVerified": false,
+   "units": []
+  },
+  {
+   "id": 539,
+   "title": "Peygamberimizin Hayatı 9.Sınıf Ders Kitabı",
+   "subjectId": "peygamberimizin-hayati",
+   "grade": 9,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Peygamberimizin Hayatı Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/539/peygamberimizin-hayati-9sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/peygamberimizin-hayati-9sinif-ders-kitabi_20261003_215114_083.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/peygamberimizin-hayati-9sinif-ders-kitabi_20261003_215156_835.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 17456632,
+   "pageCount": 146,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b539-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Ünıte peygamberımızın hayatında önemlı bır şehır: mekke",
+     "page": 14,
+     "endPage": 51,
+     "topics": [
+      {
+       "id": "b539-t1.1",
+       "no": "1.1",
+       "title": "İslam’dan önce mekke",
+       "page": 16,
+       "endPage": 19,
+       "sections": []
+      },
+      {
+       "id": "b539-t1.2",
+       "no": "1.2",
+       "title": "İslam öncesınde mekke’nın toplumsal yapısı",
+       "page": 20,
+       "endPage": 25,
+       "sections": []
+      },
+      {
+       "id": "b539-t1.3",
+       "no": "1.3",
+       "title": "Peygamberimizın mekke’de geçen çocukluk yılları",
+       "page": 26,
+       "endPage": 28,
+       "sections": []
+      },
+      {
+       "id": "b539-t1.4",
+       "no": "1.4",
+       "title": "Risaletten sonra mekkelilerle ilişkiler",
+       "page": 29,
+       "endPage": 51,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b539-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Ünıte peygamberımızın hayatında önemlı bır şahsıyet: hz. hatıce",
+     "page": 52,
+     "endPage": 81,
+     "topics": [
+      {
+       "id": "b539-t2.1",
+       "no": "2.1",
+       "title": "Hz. hatıce’nın hayatı, şahsıyetı ve peygamberimizle evlenmesi",
+       "page": 54,
+       "endPage": 63,
+       "sections": []
+      },
+      {
+       "id": "b539-t2.2",
+       "no": "2.2",
+       "title": "Hz. hatıce’nın rısalet sürecındekı rolü",
+       "page": 64,
+       "endPage": 81,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b539-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Ünıte peygamberımızın hayatında önemlı bır hadıse: hıcret",
+     "page": 82,
+     "endPage": 115,
+     "topics": [
+      {
+       "id": "b539-t3.1",
+       "no": "3.1",
+       "title": "Hıcret’ı hazırlayan sebepler",
+       "page": 84,
+       "endPage": 86,
+       "sections": []
+      },
+      {
+       "id": "b539-t3.2",
+       "no": "3.2",
+       "title": "Akabe bıatlerı",
+       "page": 87,
+       "endPage": 88,
+       "sections": []
+      },
+      {
+       "id": "b539-t3.3",
+       "no": "3.3",
+       "title": "Hıcret yolculuğu",
+       "page": 89,
+       "endPage": 95,
+       "sections": []
+      },
+      {
+       "id": "b539-t3.4",
+       "no": "3.4",
+       "title": "İslam toplumunun teşekkülü",
+       "page": 96,
+       "endPage": 115,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b539-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "Ünıte en yüce dosta",
+     "page": 116,
+     "endPage": 134,
+     "topics": [
+      {
+       "id": "b539-t4.1",
+       "no": "4.1",
+       "title": "Hz. peygamber’ın hastalık sürecı ve vefatı",
+       "page": 118,
+       "endPage": 134,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 540,
+   "title": "Peygamberimizin Hayatı 10.Sınıf Ders Kitabı",
+   "subjectId": "peygamberimizin-hayati",
+   "grade": 10,
+   "kind": "ders",
+   "volume": null,
+   "programLabel": "Peygamberimizin Hayatı Dersi (Ortaöğretim)",
+   "kademe": "ortaogretim",
+   "publisher": "T.C. Millî Eğitim Bakanlığı",
+   "updatedOn": "2026-10-03",
+   "fileStamp": "2026-10-03",
+   "detailUrl": "https://tymm.meb.gov.tr/kitap/540/peygamberimizin-hayati-10sinif-ders-kitabi",
+   "pdfUrl": "https://tymm.meb.gov.tr/assets/pdf/peygamberimizin-hayati-10sinif-ders-kitabi_20261003_220034_917.pdf",
+   "coverUrl": "https://tymm.meb.gov.tr/assets/img/peygamberimizin-hayati-10sinif-ders-kitabi_20261003_220120_552.webp",
+   "pdfVerified": true,
+   "coverVerified": true,
+   "pdfBytes": 12571782,
+   "pageCount": 143,
+   "pageOffset": 0,
+   "tocVerified": true,
+   "units": [
+    {
+     "id": "b540-u1",
+     "no": 1,
+     "kind": "unite",
+     "title": "Peygamberimizin hayatında önemli bir şehir: taif",
+     "page": 14,
+     "endPage": 43,
+     "topics": [
+      {
+       "id": "b540-t1.1",
+       "no": "1.1",
+       "title": "Taif yolculuğu",
+       "page": 16,
+       "endPage": 23,
+       "sections": []
+      },
+      {
+       "id": "b540-t1.2",
+       "no": "1.2",
+       "title": "İslam davetine taiflilerin tepkisi",
+       "page": 24,
+       "endPage": 27,
+       "sections": []
+      },
+      {
+       "id": "b540-t1.3",
+       "no": "1.3",
+       "title": "Taif’te islam’ın yayılma süreci",
+       "page": 28,
+       "endPage": 34,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b540-u2",
+     "no": 2,
+     "kind": "unite",
+     "title": "Erimizin hayatında önemli bir şahsiyet: hz. ebu bekir",
+     "page": 44,
+     "endPage": 73,
+     "topics": [
+      {
+       "id": "b540-t2.1",
+       "no": "2.1",
+       "title": "Hz. ebu bekir’in hayatı ve şahsiyeti",
+       "page": 46,
+       "endPage": 52,
+       "sections": []
+      },
+      {
+       "id": "b540-t2.2",
+       "no": "2.2",
+       "title": "Hz. ebu bekir’in tebliğ̆ sürecindeki rolü",
+       "page": 53,
+       "endPage": 56,
+       "sections": []
+      },
+      {
+       "id": "b540-t2.3",
+       "no": "2.3",
+       "title": "Hz. ebu bekir’in hicrette yol arkadaşlığı",
+       "page": 57,
+       "endPage": 65,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b540-u3",
+     "no": 3,
+     "kind": "unite",
+     "title": "Erimizin hayatında önemli bir hadise: bedir savaşı",
+     "page": 74,
+     "endPage": 107,
+     "topics": [
+      {
+       "id": "b540-t3.1",
+       "no": "3.1",
+       "title": "Savaşa izin verilmesi",
+       "page": 76,
+       "endPage": 83,
+       "sections": []
+      },
+      {
+       "id": "b540-t3.2",
+       "no": "3.2",
+       "title": "İlk askerî karşılaşma: bedir savaşı",
+       "page": 84,
+       "endPage": 97,
+       "sections": []
+      }
+     ]
+    },
+    {
+     "id": "b540-u4",
+     "no": 4,
+     "kind": "unite",
+     "title": "İlahi mesaj",
+     "page": 108,
+     "endPage": 117,
+     "topics": [
+      {
+       "id": "b540-t4.1",
+       "no": "4.1",
+       "title": "İlk vahiy",
+       "page": 110,
+       "endPage": 115,
+       "sections": []
+      },
+      {
+       "id": "b540-t4.2",
+       "no": "4.2",
+       "title": "Hz. peygamber’in ilk vahye tepkisi",
+       "page": 116,
+       "endPage": 117,
+       "sections": []
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
