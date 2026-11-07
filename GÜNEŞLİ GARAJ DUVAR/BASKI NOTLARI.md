@@ -30,8 +30,11 @@
 
 ## Yerleşim notları
 
-- Logo duvarın üst-orta bölümünde. "GÜNEŞLİ GARAJ" yazısı yerden yaklaşık 2,1–3,1 m yükseklikte.
-  Alt 1 metrede önemli bir öğe yok, dolayısıyla duvar önüne mobilya ya da araç gelse de logo görünür kalır.
+- Logo duvarın üst-orta bölümünde. Yerden yükseklikler:
+  - Ana dosya (ABS Plast'lı): "GÜNEŞLİ GARAJ" yazısı 2,27–2,75 m, amblemin üstü 3,14 m, ABS Plast 1,38–1,73 m.
+    Logo genişliği 350 cm, ABS Plast genişliği 190 cm.
+  - Alternatif (sadece Güneşli Garaj): yazı 1,97–2,48 m, amblemin üstü 2,89 m. Logo genişliği 370 cm.
+- Alt 1,3 metrede önemli bir öğe yok, dolayısıyla duvar önüne mobilya ya da araç gelse de logo görünür kalır.
 - Köşelerdeki kırmızı çizgiler ve karbon fiber paneller bilerek kenardan taşacak şekilde tasarlandı.
 - Duvar şeritler halinde (ör. 1,26 / 1,37 / 1,52 m'lik rulolar) basılacaksa bindirme payını
   baskıcı kendi RIP programında ekler. Dosyada ayrıca bindirme payı yok.
