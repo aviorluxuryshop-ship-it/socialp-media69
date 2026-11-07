@@ -80,7 +80,7 @@ export default function ServicesPage() {
 
 function ServiceForm({ service, onClose }: { service: Service | null; onClose: () => void }) {
   const save = useStore((s) => s.saveService);
-  const [s, setS] = useState<Omit<Service, "id"> & { id?: string }>(service ?? { name: "", category: "Manikür", durationMin: 60, price: 0, active: true });
+  const [s, setS] = useState<Omit<Service, "id"> & { id?: string }>(service ?? { name: "", category: "Tırnak", durationMin: 60, price: 0, active: true });
   const [tried, setTried] = useState(false);
   const nameErr = !s.name.trim() ? "Hizmet adı gerekli." : null;
   return (
@@ -138,7 +138,7 @@ function ServiceForm({ service, onClose }: { service: Service | null; onClose: (
           {(id) => <input id={id} className="input num" type="number" min={0} step={50} value={s.price} onChange={(e) => setS({ ...s, price: Math.max(0, Number(e.target.value) || 0) })} />}
         </Field>
         <label className="flex cursor-pointer items-center gap-2.5 self-end pb-2.5 text-[14px] font-semibold">
-          <input type="checkbox" className="size-[18px] accent-[#a3486a]" checked={s.active} onChange={(e) => setS({ ...s, active: e.target.checked })} />
+          <input type="checkbox" className="size-[18px] accent-[#b84c36]" checked={s.active} onChange={(e) => setS({ ...s, active: e.target.checked })} />
           Randevuda seçilebilir
         </label>
       </div>

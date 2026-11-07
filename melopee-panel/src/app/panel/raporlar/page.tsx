@@ -71,7 +71,7 @@ export default function ReportsPage() {
       ["Gider kategorisi", "Kayıt", "Tutar"],
       ...r.expenses.map((x) => [x.label, x.count, x.value]),
     ];
-    download(`rapor-${period.kind}-${period.start}.csv`, toCsv(["Melopée Panel", studio], rows));
+    download(`rapor-${period.kind}-${period.start}.csv`, toCsv(["Melopee Panel", studio], rows));
   }
 
   return (

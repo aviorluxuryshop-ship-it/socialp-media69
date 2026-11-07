@@ -171,7 +171,7 @@ export default function CustomersPage() {
                       <tr key={c.id} className="row-link" onClick={() => openCustomer(c.id)}>
                         <td>
                           <div className="flex items-center gap-3">
-                            <Avatar name={c.name} size={32} color="#a3486a" />
+                            <Avatar name={c.name} size={32} color="#b84c36" />
                             <div className="min-w-0">
                               <button type="button" className="cursor-pointer truncate font-semibold hover:text-rose-700 hover:underline" onClick={(e) => { e.stopPropagation(); openCustomer(c.id); }}>
                                 {c.name}

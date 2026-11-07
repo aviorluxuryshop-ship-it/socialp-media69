@@ -184,7 +184,7 @@ t("aylık dilimler gün sayısı kadar, toplamları özetle eşit", () => {
 t("günlük dilimler saat saat", () => {
   const b = S.buckets(data, D.periodOf("day", "2026-10-15"), "b1");
   assert.equal(b[0].label, "10:00");
-  assert.equal(b.length, 10);
+  assert.equal(b.length, 11); // Ataşehir 10:00–21:00
 });
 t("çakışma tespiti", () => {
   const appts = [{ id: "x", staffId: "p1", date: today, start: "10:00", durationMin: 60, status: "confirmed" }];

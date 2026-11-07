@@ -91,16 +91,16 @@ export default function LoginPage() {
   }
 
   const showPin = mode === "owner" || !!person;
-  const studioName = info?.studioName ?? "Melopée Nail Studio";
+  const studioName = info?.studioName ?? "Melopee Nail Art Studio";
 
   return (
     <main className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
       {/* Marka yüzü */}
-      <section className="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between lg:p-14" style={{ background: "linear-gradient(160deg,#f6e9ec 0%,#efe2d8 55%,#e8d9cc 100%)" }}>
+      <section className="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between lg:p-14" style={{ background: "linear-gradient(160deg,#f6e4db 0%,#f2eae3 55%,#ebe0d7 100%)" }}>
         <Brand size="lg" />
         <svg aria-hidden viewBox="0 0 400 400" className="pointer-events-none absolute -right-24 top-1/2 h-[560px] w-[560px] -translate-y-1/2 opacity-[0.5]">
           {[0, 1, 2, 3, 4].map((i) => (
-            <ellipse key={i} cx="200" cy="200" rx={70 + i * 26} ry={120 + i * 30} fill="none" stroke="#a3486a" strokeOpacity={0.22 - i * 0.03} strokeWidth="1.2" />
+            <ellipse key={i} cx="200" cy="200" rx={70 + i * 26} ry={120 + i * 30} fill="none" stroke="#b84c36" strokeOpacity={0.22 - i * 0.03} strokeWidth="1.2" />
           ))}
         </svg>
         <div className="relative max-w-md">

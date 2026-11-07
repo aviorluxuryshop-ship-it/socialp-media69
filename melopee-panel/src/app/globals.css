@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
-/* Melopée kurumsal paleti: sıcak fildişi zemin, mürekkep tonlu metin, gül kurusu vurgu. */
+/* Melopee kurumsal paleti (web sitesiyle aynı): kum tonlu zemin, koyu mürekkep metin, terrakota vurgu. */
 @theme {
-  --color-paper: #faf7f4;
+  --color-paper: #fbf9f7;
   --color-surface: #ffffff;
-  --color-sunk: #f5f0eb;
-  --color-line: #ebe3dc;
-  --color-line-2: #dcd1c7;
-  --color-ink: #2a2024;
-  --color-ink-2: #5e5257;
-  --color-ink-3: #756870;
-  --color-rose: #a3486a;
-  --color-rose-700: #8a3858;
-  --color-rose-50: #f9eff2;
-  --color-rose-100: #f2dde4;
-  --color-gold: #b08d57;
+  --color-sunk: #f5efea;
+  --color-line: #ece3dc;
+  --color-line-2: #ddd1c8;
+  --color-ink: #1b1210;
+  --color-ink-2: #3a2b27;
+  --color-ink-3: #6b5a54;
+  --color-rose: #b84c36;
+  --color-rose-700: #93382a;
+  --color-rose-50: #fbefeb;
+  --color-rose-100: #f6dcd3;
+  --color-gold: #b84c36;
   --color-ok: #2f7a4d;
   --color-ok-50: #eaf4ee;
   --color-warn: #a86a12;
@@ -24,8 +24,9 @@
   --color-info: #3c6fb4;
   --color-info-50: #edf2fa;
 
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-cormorant), "Times New Roman", serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), "Segoe UI", system-ui, sans-serif;
+  --font-mark: var(--font-marcellus), Georgia, serif;
 
   --shadow-soft: 0 1px 2px rgb(42 32 36 / 0.04), 0 4px 16px -6px rgb(42 32 36 / 0.08);
   --shadow-pop: 0 2px 6px rgb(42 32 36 / 0.06), 0 18px 48px -12px rgb(42 32 36 / 0.22);
@@ -80,7 +81,7 @@ body {
   .display {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.025em;
     line-height: 1.1;
   }
 
@@ -112,7 +113,7 @@ body {
   .input:focus-visible {
     outline: none;
     border-color: var(--color-rose);
-    box-shadow: 0 0 0 3px rgb(163 72 106 / 0.14);
+    box-shadow: 0 0 0 3px rgb(184 76 54 / 0.16);
   }
   .input::placeholder {
     color: #a3979c;

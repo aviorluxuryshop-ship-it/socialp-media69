@@ -203,7 +203,7 @@ export function BarChart({
 }
 
 /** Sıralı yatay çubuk listesi: değerler doğrudan yazılır, renk tek seri. */
-export function RankBars({ rows, color = "#a3486a", format, sub, limit = 8 }: { rows: { id: string; label: string; value: number; count?: number }[]; color?: string; format: (n: number) => string; sub?: (r: { count?: number }) => string; limit?: number }) {
+export function RankBars({ rows, color = "#b84c36", format, sub, limit = 8 }: { rows: { id: string; label: string; value: number; count?: number }[]; color?: string; format: (n: number) => string; sub?: (r: { count?: number }) => string; limit?: number }) {
   const max = Math.max(1, ...rows.map((r) => r.value));
   const shown = rows.slice(0, limit);
   const rest = rows.slice(limit);
@@ -230,7 +230,7 @@ export function RankBars({ rows, color = "#a3486a", format, sub, limit = 8 }: { 
 }
 
 /** Tek değerli ilerleme göstergesi (doluluk vb.). */
-export function Meter({ value, color = "#a3486a", label }: { value: number; color?: string; label: string }) {
+export function Meter({ value, color = "#b84c36", label }: { value: number; color?: string; label: string }) {
   const pct = Math.round(Math.min(1, Math.max(0, value)) * 100);
   return (
     <div role="meter" aria-label={label} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} className="h-2 overflow-hidden rounded-full bg-sunk">

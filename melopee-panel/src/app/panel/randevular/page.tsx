@@ -140,7 +140,7 @@ export default function AppointmentsPage() {
           </select>
           {view !== "list" && (
             <label className="ml-1 flex cursor-pointer items-center gap-2 text-[13.5px] font-semibold text-ink-2">
-              <input type="checkbox" className="size-4 accent-[#a3486a]" checked={showCancelled} onChange={(e) => setShowCancelled(e.target.checked)} />
+              <input type="checkbox" className="size-4 accent-[#b84c36]" checked={showCancelled} onChange={(e) => setShowCancelled(e.target.checked)} />
               İptalleri göster
             </label>
           )}

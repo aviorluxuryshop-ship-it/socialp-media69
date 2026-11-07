@@ -1,33 +1,30 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Bricolage_Grotesque, Figtree, Marcellus } from "next/font/google";
 import { Boot } from "@/components/Boot";
 import "./globals.css";
 
-const manrope = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-manrope", display: "swap" });
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin", "latin-ext"],
-  weight: ["500", "600", "700"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
+// Web sitesiyle aynı aile: başlıklar Bricolage Grotesque, metin Figtree, logo yazısı Marcellus.
+const figtree = Figtree({ subsets: ["latin", "latin-ext"], variable: "--font-figtree", display: "swap" });
+const bricolage = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], variable: "--font-bricolage", display: "swap" });
+const marcellus = Marcellus({ subsets: ["latin", "latin-ext"], weight: "400", variable: "--font-marcellus", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Melopée Panel",
-  description: "Melopée Nail Studio — randevu, müşteri, personel, gelir-gider ve raporlama paneli.",
-  applicationName: "Melopée Panel",
+  title: "Melopee Panel",
+  description: "Melopee Nail Art Studio — randevu, müşteri, personel, gelir-gider ve raporlama paneli.",
+  applicationName: "Melopee Panel",
   robots: { index: false, follow: false },
   formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#faf7f4",
+  themeColor: "#fbf9f7",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={`${manrope.variable} ${cormorant.variable}`}>
+    <html lang="tr" className={`${figtree.variable} ${bricolage.variable} ${marcellus.variable}`}>
       <body>
         <Boot>{children}</Boot>
       </body>

@@ -90,7 +90,7 @@ export function AppointmentDetail() {
           {c && (
             <div className="rounded-2xl border border-line p-4">
               <div className="flex items-center gap-3">
-                <Avatar name={c.name} size={40} color="#a3486a" />
+                <Avatar name={c.name} size={40} color="#b84c36" />
                 <div className="min-w-0 flex-1">
                   <button type="button" className="cursor-pointer truncate text-left text-[16px] font-bold hover:text-rose-700 hover:underline" onClick={() => openCustomer(c.id)}>
                     {c.name}

@@ -1,30 +1,30 @@
 import clsx from "clsx";
 
-/** Melopée kelime markası: serif logotip + aralıklı alt başlık. */
-export function Brand({ size = "md", sub = "Nail Studio", className }: { size?: "sm" | "md" | "lg"; sub?: string; className?: string }) {
+/** Melopee logosu: web sitesindeki işaret + Marcellus ile MELOPEE yazısı ve alt başlık. */
+export function Brand({ size = "md", sub = "Nail Art Studio", className }: { size?: "sm" | "md" | "lg"; sub?: string; className?: string }) {
+  const mark = size === "lg" ? 52 : size === "md" ? 38 : 30;
   return (
-    <div className={clsx("flex select-none flex-col leading-none", className)}>
-      <span
-        className={clsx(
-          "display text-ink",
-          size === "sm" && "text-[22px]",
-          size === "md" && "text-[28px]",
-          size === "lg" && "text-[44px]",
-        )}
-      >
-        Melopée
-      </span>
-      {sub && (
+    <div className={clsx("flex select-none items-center", size === "lg" ? "gap-3.5" : "gap-2.5", className)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/mark-ink.png" alt="" width={mark} height={Math.round((mark * 484) / 520)} className="shrink-0" />
+      <div className="flex flex-col leading-none">
         <span
           lang="en"
           className={clsx(
-            "mt-1 font-semibold uppercase text-gold",
-            size === "lg" ? "text-[11px] tracking-[0.42em]" : "text-[9.5px] tracking-[0.36em]",
+            "font-[family-name:var(--font-mark)] uppercase text-ink",
+            size === "sm" && "text-[18px] tracking-[0.2em]",
+            size === "md" && "text-[22px] tracking-[0.22em]",
+            size === "lg" && "text-[32px] tracking-[0.24em]",
           )}
         >
-          {sub}
+          Melopee
         </span>
-      )}
+        {sub && (
+          <span lang="en" className={clsx("mt-1.5 font-semibold text-rose", size === "lg" ? "text-[13px] tracking-[0.08em]" : "text-[11px] tracking-[0.06em]")}>
+            {sub}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

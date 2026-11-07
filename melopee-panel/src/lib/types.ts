@@ -1,4 +1,4 @@
-// Melopée Panel veri modeli. Tarihler yerel "YYYY-AA-GG", saatler "SS:DD" metni olarak tutulur.
+// Melopee Panel veri modeli. Tarihler yerel "YYYY-AA-GG", saatler "SS:DD" metni olarak tutulur.
 
 export type BranchId = string;
 
@@ -35,7 +35,7 @@ export interface Staff {
   startDate: string;
 }
 
-export type ServiceCategory = "Manikür" | "Pedikür" | "Kalıcı Oje" | "Protez Tırnak" | "Nail Art" | "Bakım";
+export type ServiceCategory = "Tırnak" | "Ayak" | "Kirpik & Kaş";
 
 export interface Service {
   id: string;

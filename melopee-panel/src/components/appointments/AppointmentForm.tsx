@@ -178,7 +178,7 @@ function FormInner({ onClose }: { onClose: () => void }) {
           </p>
           {customer ? (
             <div className="flex items-center gap-3 rounded-xl border border-line bg-sunk px-3 py-2.5">
-              <Avatar name={customer.name} size={34} color="#a3486a" />
+              <Avatar name={customer.name} size={34} color="#b84c36" />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold">{customer.name}</p>
                 <p className="num text-[13px] text-ink-3">{customer.phone}</p>
@@ -229,7 +229,7 @@ function FormInner({ onClose }: { onClose: () => void }) {
                   {matches.map((c) => (
                     <li key={c.id}>
                       <button type="button" role="option" aria-selected={false} className="flex w-full cursor-pointer items-center gap-3 px-3 py-2 text-left hover:bg-sunk" onClick={() => setCustomerId(c.id)}>
-                        <Avatar name={c.name} size={28} color="#a3486a" />
+                        <Avatar name={c.name} size={28} color="#b84c36" />
                         <span className="flex-1 truncate font-semibold">{c.name}</span>
                         <span className="num text-[13px] text-ink-3">{c.phone}</span>
                       </button>

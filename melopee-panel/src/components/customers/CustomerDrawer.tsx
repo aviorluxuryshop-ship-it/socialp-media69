@@ -52,7 +52,7 @@ export function CustomerDrawer() {
         width={560}
         title={
           <div className="flex items-center gap-3">
-            <Avatar name={customer.name} size={46} color="#a3486a" />
+            <Avatar name={customer.name} size={46} color="#b84c36" />
             <div className="min-w-0">
               <p className="display truncate text-[26px]">{customer.name}</p>
               <div className="mt-1 flex flex-wrap items-center gap-1.5">

@@ -4,7 +4,7 @@ import type { AppointmentStatus, PaymentMethod, ServiceCategory, StaffRole, Cust
  * Kategorik renk sırası (grafik serileri, personel ve şube kimliği). Sıra renk körlüğü
  * ayrımı için doğrulandı; döngüyle tekrar edilmez, sırayla atanır.
  */
-export const SERIES = ["#A3486A", "#3C6FB4", "#B97F2E", "#00968A", "#7A5BC4", "#D9705A"] as const;
+export const SERIES = ["#B84C36", "#3C6FB4", "#B98A2E", "#00968A", "#7A5BC4", "#C2507E"] as const;
 
 export const STATUS_LABEL: Record<AppointmentStatus, string> = {
   planned: "Planlandı",
@@ -22,7 +22,7 @@ export const PAYMENT_LABEL: Record<PaymentMethod, string> = {
   havale: "Havale / EFT",
 };
 
-export const SERVICE_CATEGORIES: ServiceCategory[] = ["Manikür", "Pedikür", "Kalıcı Oje", "Protez Tırnak", "Nail Art", "Bakım"];
+export const SERVICE_CATEGORIES: ServiceCategory[] = ["Tırnak", "Ayak", "Kirpik & Kaş"];
 
 export const STAFF_ROLES: StaffRole[] = ["Kıdemli Nail Artist", "Nail Artist", "Manikür & Pedikür Uzmanı", "Stajyer"];
 

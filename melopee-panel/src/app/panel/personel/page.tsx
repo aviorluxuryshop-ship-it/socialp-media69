@@ -339,7 +339,7 @@ function StaffForm({ staff, onClose }: { staff: Staff | null; onClose: () => voi
         </fieldset>
         {staff && (
           <label className="flex cursor-pointer items-center gap-2.5 text-[14px] font-semibold sm:col-span-2">
-            <input type="checkbox" className="size-[18px] accent-[#a3486a]" checked={s.active} onChange={(e) => set("active", e.target.checked)} />
+            <input type="checkbox" className="size-[18px] accent-[#b84c36]" checked={s.active} onChange={(e) => set("active", e.target.checked)} />
             Aktif (pasif personel takvimde ve girişte görünmez, geçmiş kayıtları korunur)
           </label>
         )}

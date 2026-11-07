@@ -1,6 +1,6 @@
-# Melopée Panel
+# Melopee Panel
 
-Melopée Nail Studio için CRM ve yönetim paneli (Next.js). İki şubeli yapıya göre tasarlandı: her ekranda
+Melopee Nail Art Studio için CRM ve yönetim paneli (Next.js). İki şubeli yapıya göre tasarlandı: her ekranda
 **Tüm şubeler** ya da tek bir şube seçilerek çalışılır.
 
 ## Neler var
@@ -26,7 +26,7 @@ boşluklar; haftalık görünüm ve bu ayki prim tahmini. Finans ve diğer perso
 
 ## Tanıtım modu
 
-İlk açılışta örnek veri yüklenir (2 şube, 6 personel, ~500 müşteri, 4 aylık randevu ve gelir-gider).
+İlk açılışta örnek veri yüklenir: Ataşehir ve Emaar şubeleri, sitedeki 9 hizmet (fiyatlar örnektir), 6 örnek personel, ~500 örnek müşteri, 4 aylık randevu ve gelir-gider.
 
 - Yönetici PIN: `0000`
 - Personel PIN'leri: Ece `1111`, Selin `2222`, Derya `3333`, Buse `4444`, İrem `5555`, Naz `6666`
@@ -89,5 +89,5 @@ src/app/panel/  yönetici sayfaları
 src/app/personel/ personel paneli
 ```
 
-Marka: sıcak fildişi zemin, gül kurusu vurgu (`#A3486A`), Cormorant Garamond başlıklar ve Manrope metin.
+Marka: web sitesiyle aynı kimlik; kum tonlu zemin, terrakota vurgu (`#B84C36`), Bricolage Grotesque başlıklar, Figtree metin ve Marcellus logo yazısı.
 Grafik renkleri renk körlüğüne karşı doğrulanmış sabit bir sırayla atanır (`src/lib/constants.ts`).

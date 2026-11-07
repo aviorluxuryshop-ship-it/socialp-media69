@@ -27,36 +27,49 @@ function mulberry32(seed: number) {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  studioName: "Melopée Nail Studio",
+  studioName: "Melopee Nail Art Studio",
   ownerName: "İşletme Sahibi",
   ownerPin: "0000",
   slotMinutes: 15,
 };
 
 export const DEFAULT_BRANCHES: Branch[] = [
-  { id: "b1", name: "Merkez Şube", address: "", phone: "", color: SERIES[0], openHour: 10, closeHour: 20 },
-  { id: "b2", name: "2. Şube", address: "", phone: "", color: SERIES[1], openHour: 10, closeHour: 21 },
+  {
+    id: "b1",
+    name: "Ataşehir Şube",
+    address: "Atatürk Mah., Ertuğrul Gazi Sk., Metropol İstanbul AVM, 34758 Ataşehir/İstanbul",
+    phone: "0544 849 94 34",
+    color: SERIES[0],
+    openHour: 10,
+    closeHour: 21,
+  },
+  {
+    id: "b2",
+    name: "Emaar Şube",
+    address: "Emaar Rezidansları, Ünalan, Libadiye Cd. D:82/E, E/Heights Blok, Kat 8 No 804, 34700 Üsküdar/İstanbul",
+    phone: "0544 881 94 34",
+    color: SERIES[1],
+    openHour: 10,
+    closeHour: 20,
+  },
 ];
 
+/** Hizmetler ve süreler web sitesindeki listeden; fiyatlar örnektir, Hizmetler sayfasından güncellenir. */
 export const DEFAULT_SERVICES: Service[] = [
-  { id: "s01", name: "Klasik Manikür", category: "Manikür", durationMin: 45, price: 650, active: true },
-  { id: "s02", name: "Spa Manikür", category: "Manikür", durationMin: 60, price: 850, active: true },
-  { id: "s03", name: "Klasik Pedikür", category: "Pedikür", durationMin: 60, price: 900, active: true },
-  { id: "s04", name: "Spa Pedikür", category: "Pedikür", durationMin: 75, price: 1150, active: true },
-  { id: "s05", name: "Kalıcı Oje — El", category: "Kalıcı Oje", durationMin: 60, price: 950, active: true },
-  { id: "s06", name: "Kalıcı Oje — Ayak", category: "Kalıcı Oje", durationMin: 45, price: 800, active: true },
-  { id: "s07", name: "Protez Tırnak (Jel)", category: "Protez Tırnak", durationMin: 120, price: 2200, active: true },
-  { id: "s08", name: "Protez Tırnak Dolgu", category: "Protez Tırnak", durationMin: 90, price: 1600, active: true },
-  { id: "s09", name: "Protez Tırnak Çıkarma", category: "Protez Tırnak", durationMin: 30, price: 400, active: true },
-  { id: "s10", name: "Nail Art (10 tırnak)", category: "Nail Art", durationMin: 45, price: 700, active: true },
-  { id: "s11", name: "French Tasarım", category: "Nail Art", durationMin: 30, price: 450, active: true },
-  { id: "s12", name: "Tırnak Güçlendirme Bakımı", category: "Bakım", durationMin: 45, price: 750, active: true },
-  { id: "s13", name: "Parafin Bakımı", category: "Bakım", durationMin: 30, price: 500, active: true },
+  { id: "s01", name: "Protez Tırnak", category: "Tırnak", durationMin: 120, price: 2200, active: true },
+  { id: "s02", name: "Jel Güçlendirme", category: "Tırnak", durationMin: 90, price: 1500, active: true },
+  { id: "s03", name: "Manikür", category: "Tırnak", durationMin: 45, price: 650, active: true },
+  { id: "s04", name: "Kalıcı Oje", category: "Tırnak", durationMin: 60, price: 950, active: true },
+  { id: "s05", name: "Nail Art", category: "Tırnak", durationMin: 90, price: 1400, active: true },
+  { id: "s06", name: "Pedikür", category: "Ayak", durationMin: 75, price: 1000, active: true },
+  { id: "s07", name: "Pedikür & Kalıcı Oje", category: "Ayak", durationMin: 105, price: 1600, active: true },
+  { id: "s08", name: "Kirpik Lifting", category: "Kirpik & Kaş", durationMin: 60, price: 1200, active: true },
+  { id: "s09", name: "Kaş Laminasyonu", category: "Kirpik & Kaş", durationMin: 60, price: 1100, active: true },
 ];
 
 /** Hizmetlerin talep ağırlığı (tanıtım verisi için). */
 const SERVICE_WEIGHT: Record<string, number> = {
-  s01: 8, s02: 5, s03: 5, s04: 3, s05: 16, s06: 6, s07: 7, s08: 9, s09: 2, s10: 4, s11: 4, s12: 3, s13: 2,
+  s01: 9, s02: 7, s03: 10, s04: 16, s05: 5, s06: 5, s07: 6, s08: 4, s09: 3,
 };
 
 const STAFF_SEED: Omit<Staff, "id" | "color" | "startDate">[] = [
@@ -196,7 +209,7 @@ export function buildDemoData(today: string, nowMin: number): AppData {
           seenToday.add(cust.id);
           let price = svc.price;
           const extra = rnd();
-          if (extra < 0.14 && svc.category !== "Nail Art") price += pick([200, 300, 400]);
+          if (extra < 0.14 && svc.category === "Tırnak" && svc.id !== "s05") price += pick([200, 300, 400]);
           else if (extra > 0.95) price = Math.round((price * 0.9) / 10) * 10;
           const endMin = t + svc.durationMin;
           let status: AppointmentStatus;

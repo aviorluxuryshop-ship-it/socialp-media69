@@ -138,7 +138,7 @@ export function CustomerForm({ customer, onClose, onSaved }: { customer?: Custom
           {(id) => <textarea id={id} className="input min-h-[80px]" value={f.notes} onChange={(e) => set("notes", e.target.value)} placeholder="Tırnak şekli, renk tercihleri, özel istekler…" />}
         </Field>
         <label className="flex cursor-pointer items-center gap-2.5 text-[14px] font-semibold sm:col-span-2">
-          <input type="checkbox" className="size-[18px] accent-[#a3486a]" checked={f.vip} onChange={(e) => set("vip", e.target.checked)} />
+          <input type="checkbox" className="size-[18px] accent-[#b84c36]" checked={f.vip} onChange={(e) => set("vip", e.target.checked)} />
           VIP müşteri
         </label>
       </form>
