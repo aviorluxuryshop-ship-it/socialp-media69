@@ -142,7 +142,7 @@ export default function FinancePage() {
               { value: "expense", label: "Giderler" },
             ]}
           />
-          <button type="button" className="btn btn-secondary btn-sm" onClick={exportCsv} disabled={!lines.length}>
+          <button type="button" data-export className="btn btn-secondary btn-sm" onClick={exportCsv} disabled={!lines.length}>
             <Download size={14} aria-hidden /> CSV
           </button>
         </div>

@@ -225,7 +225,7 @@ export default function AppointmentsPage() {
                 </option>
               ))}
             </select>
-            <button type="button" className="btn btn-secondary" onClick={exportCsv} disabled={!listRows.length}>
+            <button type="button" data-export className="btn btn-secondary" onClick={exportCsv} disabled={!listRows.length}>
               <Download size={16} aria-hidden /> CSV
             </button>
           </div>

@@ -151,7 +151,12 @@ export const useStore = create<Store>()(
 /** Yerel depodan yükler; ilk açılışta tanıtım verisini kurar. Boot bileşeni bir kez çağırır. */
 export async function hydrateStore() {
   if (useStore.getState().hydrated) return;
-  await useStore.persist.rehydrate();
+  try {
+    // Tarayıcı depolaması kapalıysa (gizli pencere vb.) persist API'si olmayabilir; veri bu oturumda bellekte kalır.
+    await useStore.persist?.rehydrate();
+  } catch {
+    /* depolama okunamadı: tanıtım verisiyle devam */
+  }
   if (!useStore.getState().initialized) useStore.getState().loadDemo();
   useStore.setState({ hydrated: true });
 }

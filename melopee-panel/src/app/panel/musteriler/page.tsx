@@ -97,7 +97,7 @@ export default function CustomersPage() {
         sub={f === "all" ? "Tüm şubelerin müşterileri" : `${L.branches.get(f)?.name} şubesine gelmiş müşteriler`}
         actions={
           <>
-            <button type="button" className="btn btn-secondary" onClick={exportCsv} disabled={!rows.length}>
+            <button type="button" data-export className="btn btn-secondary" onClick={exportCsv} disabled={!rows.length}>
               <Download size={16} aria-hidden /> CSV
             </button>
             <button type="button" className="btn btn-primary" onClick={() => setCreating(true)}>

@@ -141,7 +141,7 @@ export default function StaffPage() {
         title="Prim ve hakediş"
         sub={`${r.label} · prim = tamamlanan randevu cirosu × prim oranı`}
         action={
-          <button type="button" className="btn btn-secondary btn-sm" onClick={exportCsv} disabled={!perf.length}>
+          <button type="button" data-export className="btn btn-secondary btn-sm" onClick={exportCsv} disabled={!perf.length}>
             <Download size={14} aria-hidden /> CSV
           </button>
         }

@@ -107,6 +107,7 @@ export default function SettingsPage() {
           </p>
           <div className="flex flex-wrap gap-2">
             <button
+              data-export
               type="button"
               className="btn btn-secondary"
               onClick={() => {

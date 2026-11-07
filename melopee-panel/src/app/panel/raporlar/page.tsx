@@ -82,10 +82,10 @@ export default function ReportsPage() {
         sub="Günlük, haftalık ve aylık performans — önceki döneme göre karşılaştırmalı"
         actions={
           <>
-            <button type="button" className="btn btn-secondary" onClick={exportCsv}>
+            <button type="button" data-export className="btn btn-secondary" onClick={exportCsv}>
               <Download size={16} aria-hidden /> CSV / Excel
             </button>
-            <button type="button" className="btn btn-primary" onClick={() => window.print()}>
+            <button type="button" data-export className="btn btn-primary" onClick={() => window.print()}>
               <Printer size={16} aria-hidden /> Yazdır / PDF
             </button>
           </>
