@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 
 const out = mkdtempSync(join(tmpdir(), "melopee-test-"));
 execSync(
-  `npx tsc src/lib/dates.ts src/lib/format.ts src/lib/constants.ts src/lib/types.ts src/lib/seed.ts src/lib/stats.ts src/lib/csv.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
+  `npx tsc src/lib/dates.ts src/lib/format.ts src/lib/constants.ts src/lib/types.ts src/lib/seed.ts src/lib/stats.ts src/lib/csv.ts src/lib/ops.ts src/lib/validate.ts --outDir ${out} --module esnext --target es2022 --moduleResolution bundler --skipLibCheck --strict --ignoreConfig --types node`,
   { stdio: "inherit" },
 );
 writeFileSync(join(out, "package.json"), '{"type":"module"}');
@@ -21,6 +21,8 @@ const F = await load("format");
 const S = await load("stats");
 const { buildDemoData, emptyData } = await load("seed");
 const { toCsv } = await load("csv");
+const { applyOp, isValidOp } = await load("ops");
+const { isAppData } = await load("validate");
 
 let n = 0;
 const t = (name, fn) => {
@@ -206,6 +208,46 @@ t("noktalı virgül ayraç, tırnak kaçışı ve BOM", () => {
   const csv = toCsv(["Ad", "Not"], [["Ayşe", 'Dedi ki "merhaba"; sonra gitti']]);
   assert.ok(csv.startsWith("﻿"));
   assert.ok(csv.includes('"Dedi ki ""merhaba""; sonra gitti"'));
+});
+
+console.log("İşlemler (cihazlar arası eşitleme)");
+t("randevu tamamlanınca ödeme yazılır, geri açılınca silinir", () => {
+  const a = data.appointments.find((x) => x.status === "confirmed");
+  let d = applyOp(data, { t: "appt.status", id: a.id, status: "completed", payment: "nakit" });
+  assert.equal(d.appointments.find((x) => x.id === a.id).payment, "nakit");
+  d = applyOp(d, { t: "appt.status", id: a.id, status: "confirmed", payment: null });
+  assert.equal(d.appointments.find((x) => x.id === a.id).payment, null);
+  assert.equal(data.appointments.find((x) => x.id === a.id).status, "confirmed", "orijinal veri değişmemeli");
+});
+t("müşteri silinince randevuları da silinir", () => {
+  const c = data.customers[20];
+  const d = applyOp(data, { t: "customer.delete", id: c.id });
+  assert.equal(d.customers.some((x) => x.id === c.id), false);
+  assert.equal(d.appointments.some((x) => x.customerId === c.id), false);
+});
+t("ayar işlemi yönetici PIN'ine dokunmaz", () => {
+  const d = applyOp(data, { t: "settings.save", p: { studioName: "Yeni Ad", ownerPin: "9999" } });
+  assert.equal(d.settings.studioName, "Yeni Ad");
+  assert.equal(d.settings.ownerPin, data.settings.ownerPin);
+});
+t("kayıt ekleme ve güncelleme", () => {
+  const tx = { id: "tx-yeni", branchId: "b1", type: "expense", category: "Malzeme", amount: 500, date: today, note: "", payment: "kart" };
+  let d = applyOp(data, { t: "tx.save", tx });
+  assert.equal(d.transactions.length, data.transactions.length + 1);
+  d = applyOp(d, { t: "tx.save", tx: { ...tx, amount: 750 } });
+  assert.equal(d.transactions.length, data.transactions.length + 1);
+  assert.equal(d.transactions.find((x) => x.id === "tx-yeni").amount, 750);
+});
+t("sunucu bozuk işlemleri reddeder", () => {
+  assert.equal(isValidOp({ t: "appt.status", id: "a1", status: "silindi", payment: null }), false);
+  assert.equal(isValidOp({ t: "drop.table" }), false);
+  assert.equal(isValidOp({ t: "appt.save", a: { id: "x" } }), false);
+  assert.equal(isValidOp({ t: "appt.status", id: "a1", status: "noshow", payment: null }), true);
+  assert.equal(isValidOp({ t: "appt.save", a: data.appointments[0] }), true);
+});
+t("yedek dosyası doğrulaması", () => {
+  assert.equal(isAppData(data), true);
+  assert.equal(isAppData({ branches: [] }), false);
 });
 
 console.log(`\n${n} test geçti.`);

@@ -7,6 +7,7 @@ import { Card, Confirm, Field, PageHeader, toast } from "@/components/ui";
 import { download } from "@/lib/csv";
 import { exportData, isAppData, useStore } from "@/lib/store";
 import { useNow } from "@/lib/hooks";
+import { api, ApiError, REMOTE } from "@/lib/remote";
 
 export default function SettingsPage() {
   const { today } = useNow();
@@ -34,10 +35,10 @@ export default function SettingsPage() {
       const json = JSON.parse(await file.text());
       const d = json?.data ?? json;
       if (!isAppData(d)) throw new Error("format");
-      importData(d);
+      await importData(d);
       toast("Yedek geri yüklendi");
-    } catch {
-      setImportErr("Dosya okunamadı. Bu panelden alınmış bir .json yedeği seçin.");
+    } catch (e) {
+      setImportErr(e instanceof ApiError ? e.message : "Dosya okunamadı. Bu panelden alınmış bir .json yedeği seçin.");
     }
   }
 
@@ -76,6 +77,9 @@ export default function SettingsPage() {
           <p className="mt-4 text-[13px] text-ink-3">Şube adresleri, telefonları ve çalışma saatleri Şubeler sayfasından; personel PIN&apos;leri Personel sayfasından düzenlenir.</p>
         </Card>
 
+        {REMOTE ? (
+          <OwnerPasswordCard />
+        ) : (
         <Card title="Yönetici PIN" sub="Panele giriş için kullanılır">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Yeni PIN" error={pinErr}>
@@ -100,8 +104,9 @@ export default function SettingsPage() {
           </button>
           {settings.ownerPin === "0000" && <p className="mt-3 text-[13px] font-semibold text-warn">Varsayılan PIN (0000) kullanılıyor — gerçek kullanımdan önce değiştirin.</p>}
         </Card>
+        )}
 
-        <Card title="Yedekleme" sub="Veriler bu tarayıcıda saklanır. Düzenli yedek alın.">
+        <Card title="Yedekleme" sub={REMOTE ? "Veriler sunucudaki veritabanında saklanır. Yine de düzenli yedek alın." : "Veriler bu tarayıcıda saklanır. Düzenli yedek alın."}>
           <p className="num mb-4 text-[14px] text-ink-2">
             {counts.a} randevu · {counts.c} müşteri · {counts.t} gelir/gider kaydı
           </p>
@@ -168,13 +173,20 @@ export default function SettingsPage() {
         title={confirm === "empty" ? "Tüm veriler silinsin mi?" : "Tanıtım verisi yüklensin mi?"}
         confirmLabel={confirm === "empty" ? "Sil ve boş başla" : "Yükle"}
         onConfirm={() => {
-          if (confirm === "empty") {
-            startEmpty();
-            toast("Panel sıfırlandı — Personel sayfasından ekibinizi ekleyin");
-          } else {
-            loadDemo();
-            toast("Tanıtım verisi yüklendi");
-          }
+          const mode = confirm;
+          void (async () => {
+            try {
+              if (mode === "empty") {
+                await startEmpty();
+                toast("Panel sıfırlandı — Personel sayfasından ekibinizi ekleyin");
+              } else {
+                await loadDemo();
+                toast("Tanıtım verisi yüklendi");
+              }
+            } catch (e) {
+              toast(e instanceof ApiError ? e.message : "İşlem tamamlanamadı");
+            }
+          })();
         }}
       >
         {confirm === "empty"
@@ -182,5 +194,52 @@ export default function SettingsPage() {
           : "Mevcut tüm veriler tanıtım verisiyle değiştirilir. Gerçek kayıtlarınız varsa önce yedek alın."}
       </Confirm>
     </>
+  );
+}
+
+function OwnerPasswordCard() {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [next2, setNext2] = useState("");
+  const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const mismatch = next && next2 && next !== next2 ? "Şifreler eşleşmiyor." : null;
+  return (
+    <Card title="Yönetici şifresi" sub="Panele yönetici olarak giriş için kullanılır">
+      <form
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setErr(null);
+          setBusy(true);
+          try {
+            await api("auth/password", { current, next });
+            setCurrent("");
+            setNext("");
+            setNext2("");
+            toast("Yönetici şifresi değiştirildi");
+          } catch (e) {
+            setErr(e instanceof ApiError ? e.message : "Şifre değiştirilemedi.");
+          } finally {
+            setBusy(false);
+          }
+        }}
+      >
+        <Field label="Mevcut şifre" className="sm:col-span-2" error={err}>
+          {(id, d) => <input id={id} aria-describedby={d} className="input" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />}
+        </Field>
+        <Field label="Yeni şifre" hint="En az 6 karakter.">
+          {(id, d) => <input id={id} aria-describedby={d} className="input" type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />}
+        </Field>
+        <Field label="Yeni şifre (tekrar)" error={mismatch}>
+          {(id, d) => <input id={id} aria-describedby={d} className="input" type="password" autoComplete="new-password" value={next2} onChange={(e) => setNext2(e.target.value)} />}
+        </Field>
+        <div className="sm:col-span-2">
+          <button type="submit" className="btn btn-primary" disabled={busy || !current || next.length < 6 || next !== next2}>
+            <KeyRound size={16} aria-hidden /> {busy ? "Kaydediliyor…" : "Şifreyi değiştir"}
+          </button>
+        </div>
+      </form>
+    </Card>
   );
 }

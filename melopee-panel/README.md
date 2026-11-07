@@ -34,24 +34,42 @@ boşluklar; haftalık görünüm ve bu ayki prim tahmini. Finans ve diğer perso
 Gerçek kullanıma geçerken: **Ayarlar → Boş başla** (şubeler ve hizmet listesi kalır), ardından şube
 bilgilerini, personeli ve PIN'leri girin; yönetici PIN'ini değiştirin.
 
-## Önemli: veri nerede saklanıyor?
+## Veri nerede saklanıyor? İki çalışma modu
 
-Bu sürümde veriler **tarayıcının yerel deposunda** (localStorage) tutulur. Yani:
+**Sunucu modu (yayındaki sürüm, `NEXT_PUBLIC_BACKEND=1`)**
 
-- Veriler yalnızca kullanılan cihazda/tarayıcıda durur; personelin kendi telefonundan gördüğü program,
-  yöneticinin bilgisayarındaki kayıtlarla **otomatik eşitlenmez**.
-- PIN girişi cihaz üzerinde yapılan basit bir ayrımdır, sunucu tarafı güvenlik değildir.
-- Düzenli olarak **Ayarlar → Yedek indir** ile yedek alın.
+- Veriler Neon Postgres veritabanında tutulur; yönetici, resepsiyon ve personel hangi cihazdan girerse
+  girsin aynı veriyi görür. Açık ekranlar 30 saniyede bir (ve sekmeye dönünce) diğer cihazlardaki
+  değişiklikleri çeker; aynı saate iki cihazdan randevu verilirse ikincisi reddedilir.
+- Giriş sunucuda doğrulanır: yönetici **şifreyle**, personel kendi **PIN'iyle** girer. Oturum 30 gün
+  geçerli, imzalı ve `httpOnly` bir çerezdir. Aynı hesapta 15 dakikada 8 hatalı denemeden sonra giriş
+  15 dakika kilitlenir.
+- Personel sunucudan yalnızca kendi randevularını ve o randevuların müşteri bilgisini alır; ciro,
+  gider, maaş ve diğer personelin verisi tarayıcısına hiç gönderilmez. Personel yalnızca kendi
+  randevusunu "Tamamlandı" ya da "Gelmedi" yapabilir.
+- Müşteri verisi cihazda saklanmaz.
 
-Çok cihazlı gerçek kullanım için sonraki adım bir sunucu/veritabanı (ör. Firebase veya Supabase) ile
-kimlik doğrulama ve rol tabanlı erişim eklemektir. Uygulamadaki tüm veri işlemleri `src/lib/store.ts`
-içinde toplandığı için bu geçiş arayüzü değiştirmeden yapılabilir.
+Gerekli ortam değişkenleri (Vercel → proje → Settings → Environment Variables):
+
+| Değişken | Açıklama |
+| --- | --- |
+| `NEXT_PUBLIC_BACKEND` | `1` |
+| `DATABASE_URL` | Neon bağlantısı; Vercel → Storage → Neon bağlanınca otomatik eklenir |
+| `SESSION_SECRET` | En az 16 karakterlik rastgele metin |
+| `OWNER_PASSWORD` | İlk yönetici şifresi; panelden değiştirilince veritabanındaki şifre geçerli olur |
+
+Tablolar ilk istekte kendiliğinden oluşturulur ve tanıtım verisi yüklenir. Gerçek kullanıma geçerken
+**Ayarlar → Boş başla**.
+
+**Yerel mod (değişken yoksa)** — veriler yalnızca tarayıcıda tutulur; tek cihazlı deneme ve
+önizleme içindir.
 
 ## Geliştirme
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev        # http://localhost:3000 (yerel mod)
+NEXT_PUBLIC_BACKEND=1 OWNER_PASSWORD=deneme123 npm run dev   # sunucu modu; DATABASE_URL yoksa .data/ altında geçici depo
 npm test           # hesaplama ve tanıtım verisi testleri
 npm run typecheck
 npm run build
@@ -62,7 +80,10 @@ Vercel'de yayınlamak için yeni bir proje oluşturup **Root Directory** olarak 
 ## Yapı
 
 ```
-src/lib/        types, tarih/para biçimleri, istatistik hesapları (stats.ts), tanıtım verisi (seed.ts), store
+src/lib/        types, tarih/para biçimleri, istatistik hesapları (stats.ts), tanıtım verisi (seed.ts), store + eşitleme
+src/lib/ops.ts  tüm veri değişiklikleri (tarayıcı ve sunucu aynı işlemleri uygular)
+src/server/     veritabanı (Neon / geliştirme deposu), oturum ve şifre, yetki kontrollü işlem uygulama
+src/app/api/    giriş, veri, değişiklikler, işlemler, sıfırlama ve yedek uçları
 src/components/ kabuk (menü, şube seçici), takvim, randevu formu, müşteri kartı, grafikler, ortak arayüz
 src/app/panel/  yönetici sayfaları
 src/app/personel/ personel paneli
