@@ -269,9 +269,26 @@ class MemDb implements Db {
 
 let instance: Db | null = null;
 
+/**
+ * Bağlantı adresi. Vercel'de Neon bağlanırken özel ön ek verilirse değişken adı
+ * `<ÖNEK>_DATABASE_URL` ya da `<ÖNEK>_POSTGRES_URL` olur; onları da kabul eder.
+ */
+function databaseUrl(): string | undefined {
+  const env = process.env;
+  if (env.DATABASE_URL) return env.DATABASE_URL;
+  if (env.POSTGRES_URL) return env.POSTGRES_URL;
+  for (const suffix of ["_DATABASE_URL", "_POSTGRES_URL"]) {
+    const key = Object.keys(env)
+      .filter((k) => k.endsWith(suffix) && env[k])
+      .sort()[0];
+    if (key) return env[key];
+  }
+  return undefined;
+}
+
 export function getDb(): Db {
   if (instance) return instance;
-  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  const url = databaseUrl();
   if (url) instance = new PgDb(url);
   else if (process.env.VERCEL) throw new DbNotConfigured();
   else instance = new MemDb();
