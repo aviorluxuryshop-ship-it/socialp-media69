@@ -77,6 +77,28 @@ npm run build
 
 Vercel'de yayınlamak için yeni bir proje oluşturup **Root Directory** olarak `melopee-panel` seçin.
 
+## Devir notları (projeyi devralan geliştirici için)
+
+- **Kod:** GitHub `aviorluxuryshop-ship-it/socialp-media69` deposunda, `melopee-panel/` klasörü. Depoda
+  başka projeler de var (`alp-book`, `bayburt-store`, `web`); bu panel yalnızca bu klasördür, dışarıya
+  bağımlılığı yoktur.
+- **Dal:** Panel `claude/admiring-tesla-lgqphd` dalında; henüz `main`'e birleştirilmedi. Çalışmaya
+  devam etmeden önce bu dalı `main`'e birleştirin.
+- **Yayın:** Vercel projesi `melopee-panel` (Root Directory `melopee-panel`, bölge `fra1`), adres
+  https://melopee-panel.vercel.app. Proje GitHub'a bağlı: `main`'e gönderilen her değişiklik canlıya,
+  diğer dallar önizleme adresine çıkar (önizlemeler Vercel girişi ister). Birleştirme yapılmadan
+  `main`'e gönderilen değişiklikler bu klasörü içermediği için derlenmez; canlı sürüm son başarılı
+  yayında kalır.
+- **Gizli değerler:** `SESSION_SECRET` ve `OWNER_PASSWORD` yalnızca Vercel ortam değişkenlerindedir,
+  depoda yoktur. `SESSION_SECRET` değiştirilirse herkesin oturumu kapanır.
+- **Veritabanı:** Vercel → proje → Storage → Neon (Frankfurt) bağlanınca `DATABASE_URL` eklenir; ardından
+  yeniden yayınlamak gerekir. Şema `src/server/db.ts` içindedir ve ilk istekte kendiliğinden kurulur:
+  `mp_records` (tür, kimlik, `jsonb` veri, sürüm numarası) ve `mp_auth` (yönetici şifre özeti, hatalı
+  giriş sayaçları).
+- **Veri değişikliği eklerken:** yeni bir işlem `src/lib/ops.ts` içine (`Op` türü, `applyOp`, `isValidOp`)
+  ve yetki kuralı `src/server/apply.ts` içine eklenir; tarayıcı ve sunucu aynı `applyOp`'u çalıştırır.
+- **Kontroller:** `npm test`, `npm run typecheck` ve `npm run build` değişiklik göndermeden önce geçmeli.
+
 ## Yapı
 
 ```
