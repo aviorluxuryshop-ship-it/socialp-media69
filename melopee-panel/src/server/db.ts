@@ -277,13 +277,16 @@ function databaseUrl(): string | undefined {
   const env = process.env;
   if (env.DATABASE_URL) return env.DATABASE_URL;
   if (env.POSTGRES_URL) return env.POSTGRES_URL;
+  const keys = Object.keys(env).sort();
   for (const suffix of ["_DATABASE_URL", "_POSTGRES_URL"]) {
-    const key = Object.keys(env)
-      .filter((k) => k.endsWith(suffix) && env[k])
-      .sort()[0];
+    const key = keys.find((k) => k.endsWith(suffix) && env[k]);
     if (key) return env[key];
   }
-  return undefined;
+  // Son çare: `<ÖNEK>_URL` gibi adlar; havuzlu (pooled) Postgres adresi olan ilk değişken.
+  const key = keys.find(
+    (k) => k.endsWith("_URL") && !/UNPOOLED|NON_POOLING|PRISMA/.test(k) && /^postgres(ql)?:\/\//.test(env[k] ?? ""),
+  );
+  return key ? env[key] : undefined;
 }
 
 export function getDb(): Db {
