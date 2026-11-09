@@ -300,12 +300,13 @@ export function buildDemoData(today: string, nowMin: number): AppData {
   };
 }
 
-/** Gerçek kullanıma başlamak için: şubeler ve hizmetler kalır, diğer her şey boşalır. */
+/** Gerçek kullanıma başlamak için: şubeler ve hizmet adları kalır (fiyatlar 0), diğer her şey boşalır. */
 export function emptyData(): AppData {
   return {
     branches: DEFAULT_BRANCHES.map((b) => ({ ...b })),
     staff: [],
-    services: DEFAULT_SERVICES.map((s) => ({ ...s })),
+    // Fiyatlar tanıtım için uyduruldu; gerçek kullanımda işletme kendi fiyatını girer.
+    services: DEFAULT_SERVICES.map((s) => ({ ...s, price: 0 })),
     customers: [],
     appointments: [],
     transactions: [],

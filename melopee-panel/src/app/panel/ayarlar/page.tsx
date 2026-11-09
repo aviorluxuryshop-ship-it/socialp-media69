@@ -148,7 +148,7 @@ export default function SettingsPage() {
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line p-4">
               <div className="max-w-md">
                 <p className="font-semibold">Gerçek kullanıma başla</p>
-                <p className="text-[13px] text-ink-3">Tanıtım randevuları, müşterileri, personeli ve kayıtları silinir. Şubeler ve hizmet listesi kalır.</p>
+                <p className="text-[13px] text-ink-3">Tanıtım randevuları, müşterileri, personeli ve kayıtları silinir. {demo ? "Şubeler ve hizmet adları kalır; örnek fiyatlar sıfırlanır." : "Şubeler ve hizmet listesi kalır."}</p>
               </div>
               <button type="button" className="btn btn-danger" onClick={() => setConfirm("empty")}>
                 <Database size={16} aria-hidden /> Boş başla

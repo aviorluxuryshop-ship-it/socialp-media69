@@ -150,9 +150,12 @@ export function BarChart({
                 {ticks.map((t) => (
                   <g key={t} transform={`translate(0,${y(t)})`}>
                     <line x1={0} x2={innerW} stroke={t === 0 ? "#dcd1c7" : "#efe8e2"} strokeWidth={1} />
-                    <text x={-8} dy="0.32em" textAnchor="end" className="num fill-ink-3 text-[11px]">
-                      {format(t)}
-                    </text>
+                    {/* Veri yokken ölçek anlamsız (0–1); yalnızca taban etiketi kalır. */}
+                    {(!empty || t === 0) && (
+                      <text x={-8} dy="0.32em" textAnchor="end" className="num fill-ink-3 text-[11px]">
+                        {format(t)}
+                      </text>
+                    )}
                   </g>
                 ))}
                 {data.map((d, i) => {

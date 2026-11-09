@@ -165,6 +165,13 @@ export default function ReportsPage() {
               </tr>
             </thead>
             <tbody>
+              {r.staff.length === 0 && (
+                <tr>
+                  <td colSpan={f === "all" ? 9 : 8} className="py-6 text-center text-[13.5px] text-ink-3">
+                    Henüz personel yok. Personel sayfasından ekleyebilirsiniz.
+                  </td>
+                </tr>
+              )}
               {r.staff.map((p) => {
                 const b = L.branches.get(p.staff.branchId);
                 return (
