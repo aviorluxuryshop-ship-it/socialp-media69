@@ -1,8 +1,10 @@
 # Melopee Panel: kurulum ve düzenleme rehberi
 
 Bu rehber paneli **kendi hesaplarınızda** yayınlamak ve Claude ile düzenlemek içindir. Kod bilgisi
-gerekmez. Kurulum bir kez yapılır, yaklaşık 20 dakika sürer. **Bilgisayardan** yapın; dosya yükleme
-adımı telefondan zor.
+gerekmez. Kurulum bir kez yapılır, yaklaşık 20 dakika sürer. **Bilgisayardan** ve **Google Chrome**
+ile yapın; dosya yükleme adımı telefondan zor, bazı tarayıcılar klasör sürüklemeyi desteklemez.
+
+Bir adımda takılırsanız en alttaki **Sorun çıkarsa** bölümüne bakın.
 
 ## Gerekenler (hepsi ücretsiz, Claude hariç)
 
@@ -14,14 +16,20 @@ adımı telefondan zor.
 
 ## 1. Kodu GitHub'a yükleyin
 
-1. Size gelen `melopee-panel.zip` dosyasını bilgisayarda açın (çift tıklayın). `melopee-panel` adlı bir
-   klasör çıkar.
+1. Size gelen `melopee-panel.zip` dosyasını bilgisayara indirip **ayıklayın** (zip'i olduğu gibi
+   yüklemeyin, çalışmaz):
+   - **Windows:** zip'e sağ tıklayın → **Tümünü ayıkla** → **Ayıkla**.
+   - **Mac:** zip'e çift tıklayın.
+
+   `melopee-panel` adlı bir klasör çıkar. Windows bazen iç içe iki `melopee-panel` klasörü oluşturur:
+   içinde `package.json`, `src`, `public` gördüğünüz klasör doğru klasördür.
 2. github.com'da hesap açın ya da giriş yapın. Sağ üstteki **+** → **New repository**.
 3. Ad: `melopee-panel`. **Private** seçin. Başka hiçbir kutuyu işaretlemeyin (README eklemeyin).
    **Create repository**.
 4. Açılan boş sayfada **uploading an existing file** bağlantısına tıklayın.
-5. `melopee-panel` klasörünü açın, **içindeki her şeyi** seçip (klasörün kendisini değil) sayfaya
-   sürükleyin. Mac'te gizli `.gitignore` dosyasını görmek için klasördeyken `Cmd + Shift + .` basın.
+5. Doğru klasörü açın, **içindeki her şeyi** seçip (`Ctrl + A`, Mac'te `Cmd + A`; klasörün kendisini
+   değil) sayfaya sürükleyin. Mac'te gizli `.gitignore` dosyasını görmek için klasördeyken
+   `Cmd + Shift + .` basın. Yaklaşık 70 dosya yüklenir, bir dakika sürebilir.
 6. Yükleme bitince alttaki **Commit changes**.
 7. Kontrol: deponun ana sayfasında `package.json`, `src`, `public`, `README.md` doğrudan görünmeli
    (bir `melopee-panel` klasörünün içinde değil).
@@ -97,3 +105,29 @@ Bunları panelin içinden kendiniz yapabilirsiniz, Claude'a gerek yok:
 **Ayarlar → Tanıtım verisi** paneli örnek kayıtlarla doldurur (nasıl göründüğünü denemek için).
 **Ayarlar → Boş başla** örnek kayıtları siler. Gerçek kayıt girdikten sonra bu iki düğmeye basmayın:
 ikisi de mevcut kayıtları siler. Ayarlar'daki **Yedek indir** ile düzenli olarak yedek alın.
+
+## Sorun çıkarsa
+
+**Önce şunu deneyin:** claude.ai'de yeni bir sohbet açın, bu `KURULUM.md` dosyasını ve takıldığınız
+ekranın ekran görüntüsünü ekleyip "Bu rehberin şu adımında takıldım, ne yapmalıyım?" yazın. Kurulum
+bittikten sonra çıkan sorunları claude.ai/code'daki oturumunuzda da sorabilirsiniz.
+
+Sık karşılaşılan durumlar:
+
+| Ne oluyor | Ne yapmalı |
+| --- | --- |
+| GitHub'da **uploading an existing file** bağlantısı yok | Depoyu oluştururken README eklenmiş. Sorun değil: **Add file → Upload files** ile aynı şekilde yükleyin. |
+| Depoda her şey bir `melopee-panel` klasörünün içinde duruyor | Klasörün kendisi sürüklenmiş. Depoyu silin (**Settings** → en alttaki **Delete this repository**), yeniden oluşturup klasörün **içindekileri** yükleyin. Ya da Vercel'de 2. adımda **Root Directory** olarak `melopee-panel` seçin. |
+| Depoda `.zip` dosyası duruyor | Zip ayıklanmadan yüklenmiş. Zip'i silip ayıklanmış dosyaları yükleyin. |
+| Vercel'deki listede depo görünmüyor | **Adjust GitHub App Permissions** (ya da **Configure GitHub App**) → `melopee-panel` deposuna erişim verin → listeyi yenileyin. |
+| Vercel'de yayın kırmızı (**Error**) | **Deployments** → kırmızı yayına tıklayın → **Build Logs** bölümünün ekran görüntüsünü Claude'a gösterin. Çoğunlukla 1. adımda dosyalar eksik ya da yanlış klasörde yüklenmiştir. |
+| Girişte "Veritabanı bağlı değil" | 3. adımdaki **Redeploy** yapılmamış ya da Neon bağlanmamış. **Storage** sekmesinde Neon görünüyorsa sadece Redeploy yapın. |
+| Neon bağlarken "already has an existing environment variable" | Bağlantı zaten yapılmış. Pencereyi kapatıp Redeploy yapın. |
+| Ortam değişkenlerinden birini unuttum ya da yanlış yazdım | **Settings → Environment Variables** → ekleyin ya da düzeltin → ardından **Redeploy**. Değişiklik ancak Redeploy'dan sonra geçerli olur. |
+| "Şifre hatalı" | Şifre `OWNER_PASSWORD`'a girdiğiniz değerdir (büyük-küçük harf önemli). Hatırlamıyorsanız Settings → Environment Variables'tan yeni bir değer verip Redeploy yapın. Panelden şifreyi bir kez değiştirdiyseniz artık o yeni şifre geçerlidir. |
+| "Çok fazla hatalı deneme" | Aynı hesapta 8 hatalı denemeden sonra giriş 15 dakika kilitlenir. 15 dakika bekleyin. |
+| Önizleme linki Vercel girişi istiyor | Normal. Önizlemeler yalnızca sizin içindir; Vercel hesabınızla girin. Canlı adres herkese açıktır. |
+| Claude depoyu göremiyor | claude.ai/code'da GitHub bağlantısını yeniden yapın ve erişim verirken `melopee-panel` deposunu seçin. |
+| Merge ettim ama site değişmedi | 2–3 dakika bekleyip sayfayı yenileyin (`Ctrl + Shift + R`, Mac'te `Cmd + Shift + R`). Vercel'de **Deployments** sekmesinde en üstteki yayın **Ready** olmalı; kırmızıysa yukarıdaki "Error" satırına bakın. |
+| Bir değişiklik siteyi bozdu | Vercel → **Deployments** → önceki çalışan yayının **⋯** menüsü → **Promote to Production** (ya da **Instant Rollback**). Site anında eski haline döner; sonra Claude'a sorunu anlatın. |
+
