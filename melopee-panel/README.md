@@ -10,29 +10,30 @@ Melopee Nail Art Studio için CRM ve yönetim paneli (Next.js). İki şubeli yap
 | Bölüm | İçerik |
 | --- | --- |
 | Genel Bakış | Bugünkü randevular ve akış, bugün tahsil edilen / beklenen ciro, bu ay ciro ve net kâr, şube karşılaştırması, son 14 gün ciro, popüler hizmetler, yaklaşan doğum günleri, geri kazanılacak müşteriler |
-| Randevular | Şube seçenekli takvim (Tüm şubeler / Merkez / 2. Şube). **Gün** görünümünde personel sütunları, **Hafta** görünümünde gün sütunları, **Liste** görünümünde arama + durum filtresi + CSV. Boş aralığa tıklayınca o personel ve saat için randevu açılır; çakışan randevuya izin verilmez |
+| Randevular | Şube seçenekli takvim (Tüm şubeler / Ataşehir / Emaar). **Gün** görünümünde personel sütunları, **Hafta** görünümünde gün sütunları, **Liste** görünümünde arama + durum filtresi + CSV. Boş aralığa tıklayınca o personel ve saat için randevu açılır; çakışan randevuya izin verilmez |
 | Şubeler | Menüdeki **Şubeler** altından şube seçilir; seçilen şubenin bugünkü randevuları, personel doluluğu, aylık ciro/gider grafiği ve bilgileri. "Tüm şubeler"de iki şube yan yana kıyaslanır |
 | Müşteriler | Arama, VIP / yeni / geri kazanım / doğum günü grupları, ziyaret ve harcama geçmişi, alerji ve notlar, WhatsApp'tan hatırlatma ve kutlama mesajı, CSV |
 | Personel | Personel bazında randevu, ciro, prim, doluluk; prim ve hakediş tablosu (CSV); çalışma günleri, prim oranı, maaş ve giriş PIN'i |
 | Gelir & Gider | Günlük / haftalık / aylık dönem; randevu gelirleri otomatik, ürün satışı ve giderler elle girilir; kategori ve ödeme yöntemi kırılımı |
 | Raporlar | Günlük / haftalık / aylık rapor, önceki döneme göre değişim (devam eden dönemde önceki dönemin aynı günleriyle), personel ve hizmet performansı, şube kırılımı; **Yazdır / PDF** ve **CSV / Excel** |
 | Hizmetler | Hizmet listesi, süre ve fiyat; son 30 günde kaç kez yapıldığı |
-| Ayarlar | Stüdyo adı, yönetici PIN'i, takvim adımı, JSON yedek alma / geri yükleme, tanıtım verisini silip gerçek kullanıma başlama |
+| Ayarlar | Stüdyo adı, yönetici şifresi, takvim adımı, JSON yedek alma / geri yükleme, tanıtım verisini silip gerçek kullanıma başlama |
 
 **Personel paneli** (`/personel`) — her personel kendi PIN'iyle girer ve yalnızca kendi programını görür:
 hangi gün, hangi saatte, hangi müşteri, hangi hizmet; müşteri notu ve alerji uyarısı; arama ve WhatsApp
 düğmeleri; randevuyu "Tamamlandı" (ödeme yöntemiyle) ya da "Gelmedi" olarak işaretleme; randevular arası
 boşluklar; haftalık görünüm ve bu ayki prim tahmini. Finans ve diğer personelin verisi görünmez.
 
-## Tanıtım modu
+## İlk açılış ve tanıtım verisi
 
-İlk açılışta örnek veri yüklenir: Ataşehir ve Emaar şubeleri, sitedeki 9 hizmet (fiyatlar örnektir), 6 örnek personel, ~500 örnek müşteri, 4 aylık randevu ve gelir-gider.
+Yayındaki (sunucu modu) yeni bir kurulum **boş** açılır: yalnızca Ataşehir ve Emaar şubeleri ile sitedeki
+9 hizmetin adı ve süresi vardır; fiyatlar 0'dır, personel, müşteri, randevu ve gelir-gider yoktur.
 
-- Yönetici PIN: `0000`
-- Personel PIN'leri: Ece `1111`, Selin `2222`, Derya `3333`, Buse `4444`, İrem `5555`, Naz `6666`
+Paneli dolu haliyle görmek için **Ayarlar → Tanıtım verisi** örnek veri yükler: 6 örnek personel,
+~500 örnek müşteri, 4 aylık randevu ve gelir-gider (personel PIN'leri: Ece `1111`, Selin `2222`,
+Derya `3333`, Buse `4444`, İrem `5555`, Naz `6666`). Silmek için **Ayarlar → Boş başla**.
 
-Gerçek kullanıma geçerken: **Ayarlar → Boş başla** (şubeler ve hizmet listesi kalır), ardından şube
-bilgilerini, personeli ve PIN'leri girin; yönetici PIN'ini değiştirin.
+Yerel modda (sunucusuz) ilk açılışta tanıtım verisi yüklenir; yönetici PIN'i `0000`.
 
 ## Veri nerede saklanıyor? İki çalışma modu
 
@@ -58,8 +59,7 @@ Gerekli ortam değişkenleri (Vercel → proje → Settings → Environment Vari
 | `SESSION_SECRET` | En az 16 karakterlik rastgele metin |
 | `OWNER_PASSWORD` | İlk yönetici şifresi; panelden değiştirilince veritabanındaki şifre geçerli olur |
 
-Tablolar ilk istekte kendiliğinden oluşturulur ve tanıtım verisi yüklenir. Gerçek kullanıma geçerken
-**Ayarlar → Boş başla**.
+Tablolar ilk istekte kendiliğinden oluşturulur; panel boş başlar. Adım adım kurulum: [KURULUM.md](KURULUM.md).
 
 **Yerel mod (değişken yoksa)** — veriler yalnızca tarayıcıda tutulur; tek cihazlı deneme ve
 önizleme içindir.
@@ -75,28 +75,22 @@ npm run typecheck
 npm run build
 ```
 
-Vercel'de yayınlamak için yeni bir proje oluşturup **Root Directory** olarak `melopee-panel` seçin.
+Vercel'de yayınlama ve Claude ile düzenleme adımları için [KURULUM.md](KURULUM.md).
 
-## Devir notları (projeyi devralan geliştirici için)
+## Geliştirici notları
 
-- **Kod:** GitHub `aviorluxuryshop-ship-it/socialp-media69` deposunda, `melopee-panel/` klasörü. Depoda
-  başka projeler de var (`alp-book`, `bayburt-store`, `web`); bu panel yalnızca bu klasördür, dışarıya
-  bağımlılığı yoktur.
-- **Dal:** Panel `claude/admiring-tesla-lgqphd` dalında; henüz `main`'e birleştirilmedi. Çalışmaya
-  devam etmeden önce bu dalı `main`'e birleştirin.
-- **Yayın:** Vercel projesi `melopee-panel` (Root Directory `melopee-panel`, bölge `fra1`), adres
-  https://melopee-panel.vercel.app. Proje GitHub'a bağlı: `main`'e gönderilen her değişiklik canlıya,
-  diğer dallar önizleme adresine çıkar (önizlemeler Vercel girişi ister). Birleştirme yapılmadan
-  `main`'e gönderilen değişiklikler bu klasörü içermediği için derlenmez; canlı sürüm son başarılı
-  yayında kalır.
+- **Yayın:** Vercel projesi GitHub deposuna bağlıdır: `main`'e gelen her değişiklik canlıya, diğer dallar
+  önizleme adresine çıkar (önizlemeler Vercel girişi ister). Fonksiyon bölgesi `vercel.json` içinde
+  Frankfurt (`fra1`), veritabanıyla aynı yer.
 - **Gizli değerler:** `SESSION_SECRET` ve `OWNER_PASSWORD` yalnızca Vercel ortam değişkenlerindedir,
   depoda yoktur. `SESSION_SECRET` değiştirilirse herkesin oturumu kapanır.
-- **Veritabanı:** Vercel → proje → Storage → Neon (Frankfurt) bağlanınca `DATABASE_URL` eklenir; ardından
-  yeniden yayınlamak gerekir. Şema `src/server/db.ts` içindedir ve ilk istekte kendiliğinden kurulur:
-  `mp_records` (tür, kimlik, `jsonb` veri, sürüm numarası) ve `mp_auth` (yönetici şifre özeti, hatalı
-  giriş sayaçları).
+- **Veritabanı:** Şema `src/server/db.ts` içindedir ve ilk istekte kendiliğinden kurulur: `mp_records`
+  (tür, kimlik, `jsonb` veri, sürüm numarası) ve `mp_auth` (yönetici şifre özeti, hatalı giriş sayaçları).
+  Bağlantı adresi `DATABASE_URL`, `POSTGRES_URL` ya da ön ekli benzerlerinden okunur.
 - **Veri değişikliği eklerken:** yeni bir işlem `src/lib/ops.ts` içine (`Op` türü, `applyOp`, `isValidOp`)
   ve yetki kuralı `src/server/apply.ts` içine eklenir; tarayıcı ve sunucu aynı `applyOp`'u çalıştırır.
+- **Görünüm:** renkler ve yazı tipleri `src/app/globals.css` (`@theme`), logo `public/mark-ink.png` ve
+  `src/components/Brand.tsx`, giriş ekranı `src/app/page.tsx`.
 - **Kontroller:** `npm test`, `npm run typecheck` ve `npm run build` değişiklik göndermeden önce geçmeli.
 
 ## Yapı

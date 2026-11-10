@@ -2,7 +2,7 @@
 import { neon } from "@neondatabase/serverless";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { buildDemoData } from "@/lib/seed";
+import { buildDemoData, emptyData } from "@/lib/seed";
 import type { Appointment, Customer } from "@/lib/types";
 import { istanbulNow, toRows, type RecordKind, type Row } from "./records";
 
@@ -31,6 +31,11 @@ export class DbNotConfigured extends Error {
 
 export function newEpoch() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+}
+
+/** Yeni veritabanının ilk hali: şubeler ve hizmet adları (fiyat 0), başka kayıt yok. */
+export function emptyRows(): Row[] {
+  return toRows(emptyData(), { demo: false, epoch: newEpoch() });
 }
 
 export function demoRows(): Row[] {
@@ -63,7 +68,8 @@ class PgDb implements Db {
         await s.query(`create sequence if not exists mp_rev_seq`);
         await s.query(`create table if not exists mp_auth (key text primary key, value jsonb not null, updated_at timestamptz not null default now())`);
         const has = (await s.query(`select 1 from mp_records where kind = 'meta' limit 1`)) as unknown[];
-        if (!has.length) await this.writeAll(demoRows());
+        // Yayındaki yeni kurulum boş başlar; tanıtım verisi Ayarlar'dan istenirse yüklenir.
+        if (!has.length) await this.writeAll(emptyRows());
       })().catch((e) => {
         this.ready = null;
         throw e;
