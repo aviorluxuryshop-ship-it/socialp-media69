@@ -45,7 +45,7 @@ export default function Header() {
       </a>
       {!checkout && (
         <p className="bg-ink px-4 py-2 text-center text-[12.5px] font-medium tracking-wide text-cream">
-          {fmt(site.shipping.freeThreshold)} ve üzeri siparişlerde kargo ücretsiz · {site.shipping.returnDays} gün içinde iade
+          {fmt(site.shipping.freeThreshold)} ve üzeri siparişlerde kargo ücretsiz<span className="hidden sm:inline"> · {site.shipping.returnDays} gün içinde iade</span>
         </p>
       )}
       <header className="sticky top-0 z-40 border-b border-line bg-cream/95 backdrop-blur-sm">

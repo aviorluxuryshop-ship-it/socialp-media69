@@ -16,8 +16,8 @@ export default function Footer() {
 
   return (
     <footer className="on-dark mt-24 bg-ink text-cream">
-      <div className="container-x grid gap-x-8 gap-y-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_0.8fr_1.1fr_1.3fr]">
-        <div className="sm:col-span-2 lg:col-span-1">
+      <div className="container-x grid grid-cols-2 gap-x-8 gap-y-10 py-14 lg:grid-cols-[1.3fr_0.8fr_0.8fr_1.1fr_1.3fr]">
+        <div className="col-span-2 lg:col-span-1">
           <Logo white height={52} />
           <p className="mt-5 max-w-xs text-[14.5px] leading-relaxed text-cream/70">
             2–14 yaş için üstü altı uyumlu, rahat ve şık takımlar. Aynı ürünleri Trendyol mağazamızda da bulabilirsiniz.
@@ -46,7 +46,7 @@ export default function Footer() {
           </ul>
         </nav>
 
-        <nav aria-label="Yardım ve yasal">
+        <nav aria-label="Yardım ve yasal" className="col-span-2 sm:col-span-1">
           <h2 className={h}>Yardım ve Yasal</h2>
           <ul className="mt-3">
             {legal.map((d) => (
@@ -55,7 +55,7 @@ export default function Footer() {
           </ul>
         </nav>
 
-        <div>
+        <div className="col-span-2 sm:col-span-1">
           <h2 className={h}>İletişim</h2>
           <ul className="mt-3 text-[14.5px] text-cream/85">
             <li><a className={`${a} gap-2.5`} href={telLink}><Icon name="phone" size={18} /> {contact.phoneDisplay}</a></li>

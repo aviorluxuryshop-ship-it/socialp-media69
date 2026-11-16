@@ -151,7 +151,7 @@ export default function Home() {
               </div>
               <Link href={`/urun/${legend.slug}`} className="btn-outline">Takımı incele</Link>
             </div>
-            <ul className="hide-scrollbar -mx-4 mt-7 flex snap-x gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-5 sm:overflow-visible sm:px-0">
+            <ul className="hide-scrollbar -mx-4 mt-7 flex snap-x scroll-px-4 gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-5 sm:overflow-visible sm:px-0">
               {legend.colors.map((c) => (
                 <li key={c.id} className="w-[46%] shrink-0 snap-start sm:w-auto">
                   <Link href={`/urun/${legend.slug}?renk=${c.id}`} className="group block">
@@ -202,7 +202,7 @@ export default function Home() {
             <p className="eyebrow">Galeri</p>
             <h2 id="galeri-onizleme" className="h-display mt-2 text-[26px] sm:text-4xl">Takımlar üzerinde nasıl duruyor?</h2>
           </div>
-          <Link href="/galeri" className="link text-[15px]">Galeriyi gör</Link>
+          <Link href="/galeri" className="link inline-flex min-h-[44px] items-center text-[15px]">Galeriyi gör</Link>
         </div>
         <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {teaser.map((t) => (

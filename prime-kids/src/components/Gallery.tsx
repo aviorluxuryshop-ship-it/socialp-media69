@@ -49,7 +49,7 @@ export default function Gallery({ groups }: { groups: GalleryGroup[] }) {
             </div>
             <div className="container-x">
             <ul
-              className={`hide-scrollbar -mx-4 mt-6 flex snap-x gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:gap-4 sm:overflow-visible sm:px-0 ${
+              className={`hide-scrollbar -mx-4 mt-6 flex snap-x scroll-px-4 gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:gap-4 sm:overflow-visible sm:px-0 ${
                 g.shots.length >= 5 ? "sm:grid-cols-5" : "sm:grid-cols-4"
               }`}
             >

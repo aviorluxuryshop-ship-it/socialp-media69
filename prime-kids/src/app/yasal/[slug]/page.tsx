@@ -100,7 +100,7 @@ function Toc({ items, className }: { items: { id: string; heading?: string }[]; 
     <ol className={`space-y-0.5 text-[14px] ${className ?? ""}`}>
       {items.map((s) => (
         <li key={s.id}>
-          <a href={`#${s.id}`} className="inline-block py-1.5 text-mute underline-offset-4 hover:text-ink hover:underline lg:py-1">{s.heading}</a>
+          <a href={`#${s.id}`} className="inline-flex min-h-[44px] items-center text-mute underline-offset-4 hover:text-ink hover:underline lg:min-h-0 lg:py-1">{s.heading}</a>
         </li>
       ))}
     </ol>
