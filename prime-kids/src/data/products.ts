@@ -105,6 +105,7 @@ export const products: Product[] = [
     sizes: S(6, 14),
     colors: [
       { id: "yesil", name: "Zümrüt Yeşili", hex: "#145A3A", image: "/products/vintage-yesil.webp" },
+      { id: "fusya", name: "Fuşya", hex: "#D4175F", image: "/products/vintage-fusya.webp" },
       { id: "siyah", name: "Siyah", hex: "#1B1B1B", image: "/products/vintage-siyah.webp" },
       { id: "kahve", name: "Kahve", hex: "#4B2A24", image: "/products/vintage-kahve.webp" },
     ],
@@ -115,7 +116,6 @@ export const products: Product[] = [
     category: "kiz",
     price: 1390,
     badge: "Yeni",
-    featured: true,
     short: "Denim bloklu ceket + kargo cepli denim pantolon",
     description:
       "Peluş harf işlemeli, püskül kenarlı denim bloklu ceket ve geniş kesim kargo cepli denim pantolon. Okul koridorlarından ilham alan bir takım.",
@@ -130,6 +130,29 @@ export const products: Product[] = [
     colors: [
       { id: "ekru-mavi", name: "Ekru / Mavi", hex: "#8DB7E6", image: "/products/varsity-mavi.webp" },
       { id: "siyah", name: "Siyah / Denim", hex: "#1B1B1B", image: "/products/varsity-siyah.webp" },
+    ],
+  },
+  {
+    slug: "puskullu-denim-takim",
+    name: "Püsküllü Denim Takım",
+    category: "kiz",
+    price: 1290,
+    badge: "Yeni",
+    featured: true,
+    short: "Kısa denim ceket + püsküllü geniş paça pantolon",
+    description:
+      "Yıkamalı denim kısa ceket ve yanlarında püskül detaylı geniş paça pantolon. Beyaz tişörtle sade, tek başına bile iddialı bir denim takım.",
+    includes: ["Çıtçıtlı kısa denim ceket", "Yüksek bel geniş paça denim pantolon"],
+    features: [
+      "Yıkamalı, soluk denim görünümü",
+      "Pantolon yanlarında püskül detay",
+      "Cepli ceket, metal çıtçıt kapama",
+    ],
+    care: ["30° ters çevirip yıkayın", "İlk yıkamada ayrı yıkayın", "Düşük ısıda ütüleyin"],
+    sizes: S(6, 14),
+    colors: [
+      { id: "mavi", name: "Mavi", hex: "#4F85BD", image: "/products/denim-mavi.webp" },
+      { id: "fume", name: "Füme", hex: "#55565A", image: "/products/denim-fume.webp" },
     ],
   },
   {

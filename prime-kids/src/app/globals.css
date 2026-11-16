@@ -45,7 +45,7 @@ body {
     @apply text-[12px] font-semibold uppercase tracking-[0.22em] text-cobalt;
   }
   .h-display {
-    @apply font-display font-extrabold leading-[1.02] tracking-tight;
+    @apply font-display font-extrabold leading-[1.05] tracking-[-0.025em];
   }
   .input {
     @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-[15px] outline-none transition placeholder:text-mute/60 focus:border-cobalt;

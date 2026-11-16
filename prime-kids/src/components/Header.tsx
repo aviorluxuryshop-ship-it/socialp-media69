@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { site } from "@/data/site";
@@ -12,11 +13,16 @@ const nav = [
   { href: "/urunler", label: "Tüm Ürünler" },
 ];
 
-export function Wordmark({ className = "" }: { className?: string }) {
+export function Wordmark({ white = false, height = 40 }: { white?: boolean; height?: number }) {
   return (
-    <span className={`font-display font-extrabold uppercase tracking-wordmark ${className}`}>
-      Prime<span className="text-cobalt">.</span>Kids
-    </span>
+    <Image
+      src={white ? "/brand/logo-white.png" : "/brand/logo.png"}
+      alt="Prime Kids"
+      width={Math.round(height * 2.511)}
+      height={height}
+      priority
+      style={{ height, width: "auto" }}
+    />
   );
 }
 
@@ -32,8 +38,8 @@ export default function Header() {
       </div>
       <header className="sticky top-0 z-40 border-b border-line bg-cream/90 backdrop-blur">
         <div className="container-x flex h-16 items-center justify-between gap-4">
-          <Link href="/" aria-label="Prime Kids ana sayfa" className="text-[17px] sm:text-xl">
-            <Wordmark />
+          <Link href="/" aria-label="Prime Kids ana sayfa" className="flex items-center">
+            <Wordmark height={38} />
           </Link>
 
           <nav aria-label="Ana menü" className="hidden items-center gap-8 md:flex">

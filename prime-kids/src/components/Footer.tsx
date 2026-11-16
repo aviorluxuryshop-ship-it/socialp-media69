@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="mt-24 bg-ink text-cream">
       <div className="container-x grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Wordmark className="text-2xl" />
+          <Wordmark white height={64} />
           <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-cream/70">
             {site.tagline}. Çocuğunuz için rahat, modern ve iddialı takımlar.
           </p>
