@@ -65,6 +65,7 @@ export default function Gallery({ groups }: { groups: GalleryGroup[] }) {
                       src={s.image}
                       alt={s.alt}
                       fill
+                      priority={gi === 0 && si < 2}
                       sizes="(min-width:1280px) 290px, (min-width:640px) 24vw, 62vw"
                       className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                     />

@@ -124,11 +124,11 @@ export default function Checkout({ failed }: { failed: boolean }) {
     }
   }
 
-  if (!ready) return <div className="container-x py-24 text-center text-mute" role="status">Yükleniyor…</div>;
+  if (!ready) return <div className="container-x grid min-h-[70vh] place-items-center text-center text-mute" role="status">Yükleniyor…</div>;
 
   if (!totals.items.length)
     return (
-      <div className="container-x py-20 text-center sm:py-28">
+      <div className="container-x flex min-h-[70vh] flex-col items-center justify-center py-16 text-center">
         <h1 className="h-display text-[32px] sm:text-5xl">Sepetiniz boş</h1>
         <p className="mx-auto mt-3 max-w-sm text-mute">Ödemeye geçmek için önce sepetinize ürün ekleyin.</p>
         <Link href="/urunler" className="btn-primary mt-8">Ürünlere Git <Icon name="arrow" size={18} /></Link>
@@ -204,6 +204,26 @@ export default function Checkout({ failed }: { failed: boolean }) {
               <p className="mb-6 rounded-xl border border-alert/30 bg-alert/5 px-4 py-3.5 text-[14.5px] font-medium text-alert">{alert}</p>
             )}
           </div>
+
+          {isTestPayment && (
+            <div className="mb-7 rounded-2xl border border-pine/30 bg-pine-soft p-5 text-[14.5px] leading-relaxed" role="note">
+              <p className="font-semibold text-pine-dark">Deneme modu: şu anda gerçek ödeme alınmıyor</p>
+              <p className="mt-1.5 text-ink/80">
+                Online ödeme altyapımız hazırlık aşamasında. “Ödemeye geç” düğmesi sizi bir deneme ödeme sayfasına götürür;
+                kart bilgisi istenmez, tutar çekilmez ve sipariş oluşturulmaz. Gerçek sipariş vermek için{" "}
+                <a
+                  href={waLink(
+                    `Merhaba, sipariş vermek istiyorum:\n${totals.items.map((i) => `• ${i.name} — ${i.colorName}, ${i.size} × ${i.qty}`).join("\n")}\nToplam: ${fmt(totals.total)}`,
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link"
+                >
+                  WhatsApp’tan yazabilirsiniz
+                </a>.
+              </p>
+            </div>
+          )}
 
           <fieldset>
             <legend className="font-display text-[19px] font-bold">İletişim</legend>
@@ -310,32 +330,14 @@ export default function Checkout({ failed }: { failed: boolean }) {
             </p>
           </fieldset>
 
-          {isTestPayment && (
-            <div className="mt-6 rounded-2xl border border-pine/30 bg-pine-soft p-5 text-[14.5px] leading-relaxed" role="note">
-              <p className="font-semibold text-pine-dark">Deneme modu: şu anda gerçek ödeme alınmıyor</p>
-              <p className="mt-1.5 text-ink/80">
-                Online ödeme altyapımız hazırlık aşamasında. “Ödemeye geç” düğmesi sizi bir deneme ödeme sayfasına götürür;
-                kart bilgisi istenmez, tutar çekilmez ve sipariş oluşturulmaz. Gerçek sipariş vermek için{" "}
-                <a
-                  href={waLink(
-                    `Merhaba, sipariş vermek istiyorum:\n${totals.items.map((i) => `• ${i.name} — ${i.colorName}, ${i.size} × ${i.qty}`).join("\n")}\nToplam: ${fmt(totals.total)}`,
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link"
-                >
-                  WhatsApp’tan yazabilirsiniz
-                </a>.
-              </p>
-            </div>
-          )}
-
           <button type="submit" disabled={busy} className="btn-primary mt-6 w-full py-4 text-base">
             <Icon name="lock" size={18} />
             {busy ? "Ödeme sayfası açılıyor…" : `Ödemeye geç · ${fmt(totals.total)}`}
           </button>
           <p className="mt-3 text-center text-[13px] leading-relaxed text-mute">
-            Ödeme bir sonraki adımda, ödeme kuruluşunun güvenli sayfasında kartla yapılır. Kart bilgileriniz {site.name} tarafından görülmez ve saklanmaz.
+            {isTestPayment
+              ? "Deneme modu: bir sonraki adımda kart bilgisi istenmez, tutar çekilmez ve sipariş oluşturulmaz."
+              : `Ödeme bir sonraki adımda, ödeme kuruluşunun güvenli sayfasında kartla yapılır. Kart bilgileriniz ${site.name} tarafından görülmez ve saklanmaz.`}
           </p>
         </form>
       </div>

@@ -4,18 +4,18 @@ import Link from "next/link";
 import { CartLine, FreeShippingBar, TotalsRows } from "@/components/CartParts";
 import CheckoutSteps from "@/components/CheckoutSteps";
 import Icon from "@/components/Icon";
-import { site } from "@/data/site";
+import { isTestPayment, site } from "@/data/site";
 import { useCart } from "@/lib/cart";
-import { fmt } from "@/lib/site-helpers";
+import { fmt, waLink } from "@/lib/site-helpers";
 
 export default function CartPage() {
   const { totals, ready } = useCart();
 
-  if (!ready) return <div className="container-x py-24 text-center text-mute" role="status">Sepetiniz yükleniyor…</div>;
+  if (!ready) return <div className="container-x grid min-h-[70vh] place-items-center text-center text-mute" role="status">Sepetiniz yükleniyor…</div>;
 
   if (!totals.items.length)
     return (
-      <div className="container-x py-20 text-center sm:py-28">
+      <div className="container-x flex min-h-[70vh] flex-col items-center justify-center py-16 text-center">
         <h1 className="h-display text-[32px] sm:text-5xl">Sepetiniz boş</h1>
         <p className="mx-auto mt-3 max-w-sm text-mute">Beğendiğiniz takımın rengini ve bedenini seçip sepete ekleyebilirsiniz.</p>
         <Link href="/urunler" className="btn-primary mt-8">Ürünlere Git <Icon name="arrow" size={18} /></Link>
@@ -43,6 +43,12 @@ export default function CartPage() {
             <div className="mt-4"><FreeShippingBar totals={totals} /></div>
             <div className="mt-5"><TotalsRows totals={totals} /></div>
             <Link href="/odeme" className="btn-primary mt-6 hidden w-full py-4 text-base lg:inline-flex">Ödemeye geç</Link>
+            {isTestPayment && (
+              <p className="mt-5 rounded-xl border border-pine/30 bg-pine-soft px-4 py-3 text-[13.5px] leading-relaxed text-ink/85" role="note">
+                <strong className="font-semibold text-pine-dark">Deneme modu:</strong> online ödeme hazırlık aşamasında, şu anda gerçek ödeme alınmıyor. Sipariş için{" "}
+                <a href={waLink("Merhaba, sipariş vermek istiyorum.")} target="_blank" rel="noopener noreferrer" className="link">WhatsApp’tan yazabilirsiniz</a>.
+              </p>
+            )}
             <ul className="mt-5 space-y-2.5 text-[13.5px] text-mute">
               <li className="flex gap-2.5"><Icon name="lock" size={17} className="mt-0.5 shrink-0 text-pine" /> Kart bilgileriniz ödeme kuruluşunun güvenli sayfasında işlenir.</li>
               <li className="flex gap-2.5"><Icon name="truck" size={17} className="mt-0.5 shrink-0 text-pine" /> {site.shipping.dispatchDays} içinde {site.shipping.carrier} ile kargoda.</li>

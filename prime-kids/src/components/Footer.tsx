@@ -4,7 +4,7 @@ import Logo from "./Logo";
 import SocialLinks from "./SocialLinks";
 import { getLegalDocs } from "@/content/legal";
 import { categories } from "@/data/products";
-import { mainNav, site } from "@/data/site";
+import { isTestPayment, mainNav, site } from "@/data/site";
 import { legalCompany, mailLink, telLink, waLink } from "@/lib/site-helpers";
 
 const h = "text-[11.5px] font-semibold uppercase tracking-[0.2em] text-cream/55";
@@ -72,7 +72,9 @@ export default function Footer() {
             <p className="flex items-start gap-2.5 text-cream/80">
               <Icon name="lock" size={18} className="mt-0.5 shrink-0" />
               <span>
-                Ödemeler, ödeme kuruluşunun güvenli sayfasında kredi veya banka kartıyla yapılır. Kart bilgileriniz {site.name} tarafından görülmez ve saklanmaz.{" "}
+                {isTestPayment
+                  ? "Online ödeme hazırlık aşamasındadır; şu anda sitede gerçek ödeme alınmaz. Sipariş için WhatsApp’tan yazabilirsiniz."
+                  : `Ödemeler, ödeme kuruluşunun güvenli sayfasında kredi veya banka kartıyla yapılır. Kart bilgileriniz ${site.name} tarafından görülmez ve saklanmaz.`}{" "}
                 <Link href="/yasal/guvenli-alisveris" className="underline underline-offset-4 hover:text-white">Ayrıntılar</Link>
               </span>
             </p>

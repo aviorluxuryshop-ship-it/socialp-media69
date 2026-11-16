@@ -59,6 +59,11 @@ export default function ProductBuy({ product }: { product: Product }) {
 
   return (
     <div className="grid gap-7 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14">
+      {/* Mobil: ürün adı fotoğraftan önce görünür (masaüstünde sağ sütundaki başlık kullanılır) */}
+      <div className="-mb-3 lg:hidden">
+        <h1 className="h-display text-[25px]">{product.name}</h1>
+        <p className="mt-1.5 text-[14.5px] text-mute">{product.short}</p>
+      </div>
       {/* Fotoğraf */}
       <div className="lg:sticky lg:top-24 lg:self-start">
         <div className="grid gap-3 sm:grid-cols-[76px_1fr]">
@@ -102,9 +107,9 @@ export default function ProductBuy({ product }: { product: Product }) {
 
       {/* Bilgi ve satın alma */}
       <div>
-        <h1 className="h-display text-[28px] sm:text-4xl">{product.name}</h1>
-        <p className="mt-2 text-[15px] text-mute">{product.short}</p>
-        <p className="mt-4 flex items-baseline gap-2.5">
+        <h1 className="h-display hidden text-4xl lg:block">{product.name}</h1>
+        <p className="mt-2 hidden text-[15px] text-mute lg:block">{product.short}</p>
+        <p className="flex items-baseline gap-2.5 lg:mt-4">
           <span className="text-[26px] font-bold tabular-nums">{fmt(product.price)}</span>
           <span className="text-[13px] text-mute">KDV dahil</span>
         </p>
@@ -230,16 +235,17 @@ export default function ProductBuy({ product }: { product: Product }) {
         <div className="mt-8 divide-y divide-line border-y border-line">
           <Acc title="Takım içeriği ve özellikler" open>
             <p>{product.description}</p>
-            <h3 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Takımda neler var?</h3>
+            <h2 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Takımda neler var?</h2>
             <ul className="mt-2 list-disc space-y-1 pl-5">{product.includes.map((x) => <li key={x}>{x}</li>)}</ul>
-            <h3 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Özellikler</h3>
+            <h2 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Özellikler</h2>
             <ul className="mt-2 list-disc space-y-1 pl-5">{product.features.map((x) => <li key={x}>{x}</li>)}</ul>
           </Acc>
-          <Acc title="Kumaş ve bakım">
+          <Acc title="Kumaş ve bakım" open>
             <p><strong className="font-semibold text-ink">Kumaş:</strong> {product.fabric.composition}</p>
             <p className="mt-1.5">{product.fabric.note}</p>
-            <h3 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Bakım</h3>
+            <h2 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Bakım</h2>
             <ul className="mt-2 list-disc space-y-1 pl-5">{product.care.map((x) => <li key={x}>{x}</li>)}</ul>
+            <p className="mt-3 text-[13.5px]">Renk tonları ekran ayarlarına göre küçük farklılıklar gösterebilir.</p>
           </Acc>
           <Acc title="Beden rehberi" id="beden-rehberi" detailsRef={guideRef}>
             <p>Ölçüler yaklaşıktır; çocuğunuzun boyunu esas alın. İki beden arasında kaldıysanız büyük bedeni öneririz.</p>

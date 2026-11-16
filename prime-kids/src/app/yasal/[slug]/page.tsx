@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getLegalDocs } from "@/content/legal";
+import { getLegalDocs, legalNotice } from "@/content/legal";
 import { legalCompany } from "@/lib/site-helpers";
 
 type Params = Promise<{ slug: string }>;
@@ -68,7 +68,7 @@ export default async function LegalDocPage({ params }: { params: Params }) {
           <h1 className="h-display text-[30px] sm:text-[42px]">{doc.title}</h1>
           <p className="mt-3 text-[13.5px] text-mute">Son güncelleme: {doc.updated}</p>
           <p className="mt-5 rounded-xl border border-line bg-sand/60 px-4 py-3.5 text-[14px] leading-relaxed" role="note">
-            <strong className="font-semibold">Not:</strong> Bu metin bir şablondur, hukuki danışmanlık yerine geçmez.
+            <strong className="font-semibold">Not:</strong> {legalNotice}
           </p>
 
           <div className="mt-8 space-y-8 text-[16px] leading-[1.75] text-ink/85">
@@ -77,7 +77,7 @@ export default async function LegalDocPage({ params }: { params: Params }) {
                 {s.heading && <h2 id={`${s.id}-baslik`} className="font-display text-[20px] font-bold leading-snug text-ink sm:text-[22px]">{s.heading}</h2>}
                 {s.paragraphs?.map((p, i) => <p key={i} className="mt-3 break-words">{p}</p>)}
                 {s.list && (
-                  <ul className="mt-3 list-disc space-y-2 pl-5 marker:text-mute">
+                  <ul className={`mt-3 space-y-2 ${/^\d+\./.test(s.list[0]) ? "list-none" : "list-disc pl-5 marker:text-mute"}`}>
                     {s.list.map((li, i) => <li key={i} className="break-words">{li}</li>)}
                   </ul>
                 )}

@@ -53,11 +53,12 @@ export default function Header() {
           <button
             type="button"
             onClick={() => menu.current?.showModal()}
-            className="-ml-2.5 grid h-11 w-11 place-items-center rounded-full lg:hidden"
+            className="-ml-2.5 mr-1 inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[13.5px] font-semibold lg:hidden"
             aria-label="Menüyü aç"
             aria-haspopup="dialog"
           >
             <Icon name="menu" size={24} />
+            <span className="hidden min-[375px]:inline" aria-hidden>Menü</span>
           </button>
 
           <Link href="/" aria-label="Prime Kids ana sayfa" className="flex shrink-0 items-center py-2">

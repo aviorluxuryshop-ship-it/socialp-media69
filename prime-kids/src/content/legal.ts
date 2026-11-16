@@ -15,7 +15,8 @@ export type LegalCompany = {
   dispatchDays: string; // örn. "1-2 iş günü" kargoya verme süresi
   deliveryDays: string; // örn. "2-4 iş günü" teslim süresi
   carrier: string; // örn. "Yurtiçi Kargo"
-  paymentProvider: string; // örn. "iyzico" — ödeme kuruluşu adı
+  paymentProvider: string; // örn. "iyzico" — ödeme kuruluşu adı; boşsa (deneme modu) ad verilmeden "anlaşmalı ödeme kuruluşu" yazılır
+  testPayment?: boolean; // true ise online ödeme henüz deneme modundadır; ilgili metinlerde açıkça belirtilir
   returnAddress: string;
   returnShippingPolicy: string; // cayma hakkı iadesinde iade kargosunu kimin ödediği (tam cümle)
 };
@@ -32,16 +33,9 @@ const UPDATED = "16 Kasım 2026";
 
 const tl = (n: number): string => new Intl.NumberFormat("tr-TR").format(n) + " TL";
 
-/** Her belgenin ilk bölümü: şablon uyarısı. */
-function importantNote(): LegalSection {
-  return {
-    heading: "Önemli not",
-    paragraphs: [
-      "Bu metin bir şablon ve yer tutucudur. Gerçek hukuki danışmanlık yerine geçmez.",
-      "Yayına almadan önce bir avukat veya alanında uzman bir danışman tarafından gözden geçirilmeli ve şirket bilgileriyle doldurulmalıdır.",
-    ],
-  };
-}
+/** Her yasal sayfanın başında görünen şablon uyarısı (sayfa bileşeni gösterir). */
+export const legalNotice =
+  "Bu metin bir şablondur; hukuki danışmanlık yerine geçmez. Hukuki inceleme tamamlandığında güncellenecektir.";
 
 /** Şirket kimlik bilgileri listesi. */
 function companyList(c: LegalCompany): string[] {
@@ -75,6 +69,9 @@ function contactSection(c: LegalCompany, heading = "İletişim"): LegalSection {
 export function getLegalDocs(c: LegalCompany): LegalDoc[] {
   const free = tl(c.freeShippingThreshold);
   const fee = tl(c.shippingFee);
+  // Ödeme kuruluşu kesinleşmeden (deneme modu) metinlerde belirli bir şirket adı geçmez.
+  const pp = c.paymentProvider || "anlaşmalı ödeme kuruluşu";
+  const ppParen = c.paymentProvider ? ` (${c.paymentProvider})` : "";
 
   // 1 ----------------------------------------------------------------
   const kvkk: LegalDoc = {
@@ -83,7 +80,6 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
     summary: `${c.brand} olarak kişisel verilerinizi nasıl işlediğimizi ve KVKK kapsamındaki haklarınızı anlatan aydınlatma metni.`,
     updated: UPDATED,
     sections: [
-      importantNote(),
       {
         heading: "Giriş",
         paragraphs: [
@@ -136,7 +132,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
         ],
         list: [
           `Kargo ve lojistik firmaları (ör. ${c.carrier})`,
-          `Ödeme kuruluşu (${c.paymentProvider}) ve bankalar`,
+          `Ödeme kuruluşu${ppParen} ve bankalar`,
           "E-posta, SMS ve barındırma gibi hizmet aldığımız iş ortakları",
           "Muhasebe, hukuk ve denetim alanındaki danışmanlarımız",
           "Yetkili kamu kurum ve kuruluşları ile yargı mercileri",
@@ -203,7 +199,6 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
     summary: `${c.brand} olarak bilgilerinizi neden topladığımızı, nasıl kullandığımızı ve nasıl koruduğumuzu açıklayan gizlilik politikamız.`,
     updated: UPDATED,
     sections: [
-      importantNote(),
       {
         heading: "Genel bakış",
         paragraphs: [
@@ -239,7 +234,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
         ],
         list: [
           `Kargo firması (${c.carrier})`,
-          `Ödeme kuruluşu (${c.paymentProvider})`,
+          `Ödeme kuruluşu${ppParen}`,
           "E-posta, SMS, barındırma ve analiz gibi hizmet sağlayıcılar",
           "Yasal zorunluluk halinde yetkili kurum ve mercilerle",
         ],
@@ -247,7 +242,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
       {
         heading: "Ödeme bilgileriniz",
         paragraphs: [
-          `Kart bilgileriniz ${c.paymentProvider} tarafından güvenli şekilde işlenir. ${c.brand} kart numaranızı, son kullanma tarihinizi veya güvenlik kodunuzu kaydetmez ve saklamaz.`,
+          `Kart bilgileriniz ${pp} tarafından güvenli şekilde işlenir. ${c.brand} kart numaranızı, son kullanma tarihinizi veya güvenlik kodunuzu kaydetmez ve saklamaz.`,
         ],
       },
       {
@@ -299,7 +294,6 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
     summary: `${c.brand} sitesinde çerezlerin ve yerel depolamanın nasıl kullanıldığını ve tercihlerinizi nasıl yönetebileceğinizi açıklar.`,
     updated: UPDATED,
     sections: [
-      importantNote(),
       {
         heading: "Çerez nedir",
         paragraphs: [
@@ -346,7 +340,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
       {
         heading: "Üçüncü taraf çerezleri",
         paragraphs: [
-          `Ödeme sayfasında ${c.paymentProvider} gibi ödeme kuruluşları ve analiz ya da reklam hizmeti sağlayıcıları kendi çerezlerini kullanabilir. Bu çerezler ilgili tarafların politikalarına tabidir.`,
+          `Ödeme sayfasında ${c.paymentProvider ? `${c.paymentProvider} gibi ödeme kuruluşları` : "ödeme kuruluşu"} ve analiz ya da reklam hizmeti sağlayıcıları kendi çerezlerini kullanabilir. Bu çerezler ilgili tarafların politikalarına tabidir.`,
         ],
       },
       {
@@ -385,7 +379,6 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
     summary: `${c.siteUrl} üzerinden verdiğiniz siparişe ilişkin, satıcı ve alıcının hak ve yükümlülüklerini düzenleyen mesafeli satış sözleşmesi.`,
     updated: UPDATED,
     sections: [
-      importantNote(),
       {
         heading: "Madde 1 - Taraflar",
         paragraphs: ["SATICI:"],
@@ -414,7 +407,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
         list: [
           "Ürün fiyatları, aksi belirtilmedikçe KDV dahil Türk Lirası cinsindendir.",
           `Sepet tutarı ${free} ve üzerindeyse kargo ücretsizdir. Bu tutarın altındaki siparişlerde kargo ücreti ${fee} olup ödeme adımında ayrıca gösterilir.`,
-          `Ödeme, kredi/banka kartı ile ${c.paymentProvider} altyapısı üzerinden yapılır. Kart bilgileri SATICI tarafından saklanmaz.`,
+          `Ödeme, kredi/banka kartı ile ${pp} altyapısı üzerinden yapılır. Kart bilgileri SATICI tarafından saklanmaz.`,
           "Taksit imkanı, varsa, ödeme adımında gösterilir. Taksit ve olası komisyon ya da faiz bilgisi kartı veren bankaya ve ödeme kuruluşuna göre değişebilir.",
           "Ödeme tamamlanmadan sipariş kesinleşmez. Ödeme doğrulanamazsa sipariş iptal edilebilir.",
         ],
@@ -482,7 +475,6 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
     summary: "Sipariş vermeden önce bilmeniz gereken satıcı, ürün, fiyat, teslimat ve cayma hakkı bilgilerini içeren ön bilgilendirme formu.",
     updated: UPDATED,
     sections: [
-      importantNote(),
       {
         heading: "Bu form neden var",
         paragraphs: [
@@ -505,7 +497,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
         list: [
           "Toplam fiyat, vergiler (KDV) dahil olarak sipariş özetinde gösterilir.",
           `Sepet tutarı ${free} ve üzerindeyse kargo ücretsizdir. Altındaki siparişlerde kargo ücreti ${fee} olarak toplam tutara eklenir.`,
-          `Ödeme, kredi veya banka kartı ile ${c.paymentProvider} üzerinden yapılır.`,
+          `Ödeme, kredi veya banka kartı ile ${pp} üzerinden yapılır.`,
           "Peşin ya da taksitli ödeme seçenekleri ödeme adımında gösterilir. Taksit ve olası ek maliyet bilgisi kartı veren bankaya göre değişebilir.",
         ],
       },
@@ -562,7 +554,6 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
     summary: `Ürünü teslim aldıktan sonra ${c.returnDays} gün içinde nasıl iade veya değişim yapabileceğinizi adım adım anlatır.`,
     updated: UPDATED,
     sections: [
-      importantNote(),
       {
         heading: "Cayma süresi",
         paragraphs: [
@@ -668,7 +659,6 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
     summary: `Siparişinizin ne zaman kargoya verileceğini, ${c.deliveryDays} içinde nasıl teslim edileceğini ve kargo ücretini açıklar.`,
     updated: UPDATED,
     sections: [
-      importantNote(),
       {
         heading: "Kargo firması",
         paragraphs: [`Siparişleriniz ${c.carrier} ile gönderilir.`],
@@ -740,20 +730,28 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
   const guvenli: LegalDoc = {
     slug: "guvenli-alisveris",
     title: "Ödeme ve Güvenli Alışveriş",
-    summary: `Ödemelerinizin ${c.paymentProvider} üzerinden 3D Secure ile nasıl güvenle alındığını ve kart bilgilerinizin saklanmadığını anlatır.`,
+    summary: `Ödemelerinizin ${pp} üzerinden 3D Secure ile nasıl güvenle alındığını ve kart bilgilerinizin saklanmadığını anlatır.`,
     updated: UPDATED,
     sections: [
-      importantNote(),
+      ...(c.testPayment
+        ? [{
+            heading: "Şu anki durum: deneme modu",
+            paragraphs: [
+              "Online ödeme altyapımız hazırlık aşamasındadır. Şu anda sitede gerçek ödeme alınmaz; ödeme adımı yalnızca deneme amaçlıdır, kart bilgisi istenmez ve tutar çekilmez.",
+              "Aşağıdaki bilgiler, online ödeme açıldığında geçerli olacak işleyişi anlatır. Bu süre içinde sipariş vermek için bize WhatsApp veya telefonla ulaşabilirsiniz.",
+            ],
+          }]
+        : []),
       {
         heading: "Ödeme yöntemi",
         paragraphs: [
-          `Siparişlerinizi kredi kartı veya banka kartı ile ödeyebilirsiniz. Ödemeler, lisanslı ödeme kuruluşu ${c.paymentProvider} altyapısı üzerinden alınır.`,
+          `Siparişlerinizi kredi kartı veya banka kartı ile ödeyebilirsiniz. Ödemeler, ${c.paymentProvider ? `lisanslı ödeme kuruluşu ${c.paymentProvider}` : "lisanslı bir ödeme kuruluşunun"} altyapısı üzerinden alınır.`,
         ],
       },
       {
         heading: "Kart bilgileriniz saklanmaz",
         paragraphs: [
-          `${c.brand} kart numaranızı, son kullanma tarihinizi veya güvenlik kodunuzu (CVV) kaydetmez ve saklamaz. Bu bilgiler ödeme sırasında doğrudan ${c.paymentProvider} tarafından işlenir.`,
+          `${c.brand} kart numaranızı, son kullanma tarihinizi veya güvenlik kodunuzu (CVV) kaydetmez ve saklamaz. Bu bilgiler ödeme sırasında doğrudan ${pp} tarafından işlenir.`,
         ],
       },
       {

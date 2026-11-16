@@ -50,7 +50,7 @@ export default async function Shop({ searchParams }: { searchParams: Search }) {
       />
       <div className="container-x">
         <div className="flex flex-col gap-3 border-y border-line py-3 sm:flex-row sm:items-center sm:justify-between">
-          <nav aria-label="Kategori" className="hide-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <nav aria-label="Kategori" className="hide-scrollbar -mx-4 flex gap-1.5 overflow-x-auto px-4 sm:mx-0 sm:gap-2 sm:px-0">
             <Chip active={!cat} href={href(undefined, sirala)}>Tümü</Chip>
             {categories.map((c) => (
               <Chip key={c.id} active={cat?.id === c.id} href={href(c.id, sirala)}>{c.label}</Chip>
@@ -74,6 +74,7 @@ export default async function Shop({ searchParams }: { searchParams: Search }) {
 
         <p className="mt-5 text-[13.5px] text-mute" role="status">{list.length} ürün</p>
 
+        <h2 className="sr-only">Ürün listesi</h2>
         <div className="mt-4 grid grid-cols-2 gap-x-3.5 gap-y-9 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-4">
           {list.map((p, i) => (
             <ProductCard key={p.slug} product={p} priority={i < 4} />
@@ -90,7 +91,7 @@ function Chip({ active, href, children }: { active: boolean; href: string; child
       href={href}
       scroll={false}
       aria-current={active ? "true" : undefined}
-      className={`inline-flex min-h-[44px] shrink-0 items-center rounded-full border px-4 text-[14px] font-semibold transition-colors ${
+      className={`inline-flex min-h-[44px] shrink-0 items-center rounded-full border px-3.5 text-[14px] font-semibold sm:px-4 transition-colors ${
         active ? "border-ink bg-ink text-cream" : "border-line bg-white/60 hover:border-ink"
       }`}
     >

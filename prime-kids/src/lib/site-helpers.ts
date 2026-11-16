@@ -1,5 +1,5 @@
 import type { LegalCompany } from "@/content/legal";
-import { site } from "@/data/site";
+import { isTestPayment, site } from "@/data/site";
 
 export const fmt = (n: number) =>
   new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 }).format(n) + " ₺";
@@ -28,7 +28,9 @@ export const legalCompany: LegalCompany = {
   dispatchDays: site.shipping.dispatchDays,
   deliveryDays: site.shipping.deliveryDays,
   carrier: site.shipping.carrier,
-  paymentProvider: site.payment.legalName,
+  // Deneme (mock) sağlayıcıda gerçek bir ödeme kuruluşu adı verilmez.
+  paymentProvider: site.payment.provider === "mock" ? "" : site.payment.legalName,
+  testPayment: isTestPayment,
   returnAddress: site.shipping.returnAddress,
   returnShippingPolicy: site.shipping.returnShippingPolicy,
 };
