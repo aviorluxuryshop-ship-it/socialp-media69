@@ -17,6 +17,7 @@ export type LegalCompany = {
   carrier: string; // örn. "Yurtiçi Kargo"
   paymentProvider: string; // örn. "iyzico" — ödeme kuruluşu adı
   returnAddress: string;
+  returnShippingPolicy: string; // cayma hakkı iadesinde iade kargosunu kimin ödediği (tam cümle)
 };
 export type LegalSection = { heading?: string; paragraphs?: string[]; list?: string[] };
 export type LegalDoc = {
@@ -307,7 +308,14 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
         ],
       },
       {
-        heading: "Kullandığımız çerez türleri",
+        heading: "Şu anki durum",
+        paragraphs: [
+          `${c.brand} sitesi şu anda analitik veya pazarlama çerezi kullanmamaktadır; bu nedenle sitede bir çerez onay penceresi gösterilmez. Yalnızca sepetinizin ve ödeme formu taslağınızın çalışması için tarayıcınızın kendi depolama alanı kullanılır.`,
+          "İleride analitik veya pazarlama çerezleri kullanılmaya başlanırsa bu politika güncellenir ve bu çerezler yalnızca onayınız alındıktan sonra etkinleştirilir.",
+        ],
+      },
+      {
+        heading: "Çerez türleri",
       },
       {
         heading: "1. Zorunlu çerezler",
@@ -318,19 +326,20 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
       {
         heading: "2. Analitik çerezler",
         paragraphs: [
-          "Ziyaretçilerin siteyi nasıl kullandığını anlamamıza yardımcı olur. Örneğin hangi sayfaların ziyaret edildiğini ve sitede ne kadar kalındığını ölçeriz. Bu bilgiler toplu ve istatistiksel olarak değerlendirilir. Bu çerezler yalnızca tercihinize göre, onayınızla kullanılır.",
+          "Şu anda kullanılmamaktadır. Ziyaretçilerin siteyi nasıl kullandığını anlamaya yardımcı olan çerezlerdir; örneğin hangi sayfaların ziyaret edildiği ve sitede ne kadar kalındığı ölçülür. Bu bilgiler toplu ve istatistiksel olarak değerlendirilir. Bu çerezler yalnızca tercihinize göre, onayınızla kullanılır.",
         ],
       },
       {
         heading: "3. Pazarlama çerezleri",
         paragraphs: [
-          "İlgi alanlarınıza uygun ürün ve kampanyaları göstermek ve reklam performansını ölçmek için kullanılır. Bu çerezler yalnızca onayınızla etkinleştirilir.",
+          "Şu anda kullanılmamaktadır. İlgi alanlarınıza uygun ürün ve kampanyaları göstermek ve reklam performansını ölçmek için kullanılır. Bu çerezler yalnızca onayınızla etkinleştirilir.",
         ],
       },
       {
         heading: "Sepetiniz ve yerel depolama",
         paragraphs: [
           "Sepetiniz, tarayıcınızın yerel depolama alanında (localStorage) tutulur. Bu sayede sayfayı yenilediğinizde veya siteyi kapatıp tekrar açtığınızda sepetinizdeki ürünler kaybolmaz.",
+          "Ödeme sayfasında yazdığınız teslimat bilgileri, ödeme adımından geri döndüğünüzde yeniden yazmanız gerekmesin diye tarayıcınızın oturum deposunda (sessionStorage) geçici olarak tutulur ve sekmeyi kapattığınızda silinir.",
           "Bu veri cihazınızda durur. Tarayıcı verilerini temizlerseniz veya başka bir cihaz ya da tarayıcı kullanırsanız sepetiniz boşalır.",
         ],
       },
@@ -343,8 +352,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
       {
         heading: "Çerez tercihlerinizi nasıl yönetirsiniz",
         list: [
-          "Sitede görüntülenen çerez bildirimi veya tercih ayarları üzerinden zorunlu olmayan çerezleri kabul edebilir ya da reddedebilirsiniz.",
-          "Verdiğiniz onayı dilediğiniz zaman geri çekebilirsiniz.",
+          "Analitik veya pazarlama çerezleri kullanılmaya başlandığında, sitede görüntülenecek çerez bildirimi üzerinden bunları kabul edebilir ya da reddedebilir, verdiğiniz onayı dilediğiniz zaman geri çekebilirsiniz.",
           "Tarayıcınızın ayarlarından çerezleri engelleyebilir, silebilir veya çerez kullanılmadan önce uyarı alacak şekilde yapılandırabilirsiniz.",
           "Tarayıcı verilerinizi temizlediğinizde çerezlerle birlikte sepetiniz de silinir.",
         ],
@@ -610,7 +618,7 @@ export function getLegalDocs(c: LegalCompany): LegalDoc[] {
         heading: "Kargo ücreti",
         paragraphs: [
           "Hatalı, eksik veya hasarlı gönderilen ürünlerde iade kargo ücreti tarafımızca karşılanır. Bu durumda lütfen göndermeden önce bizimle iletişime geçin.",
-          `Cayma hakkı kapsamındaki iadelerde gönderim, ${c.carrier} veya dilediğiniz bir kargo firması ile yapılabilir. İade kargo ücretinin kime ait olacağı konusundaki şirket uygulaması şablonda yazılmamıştır; yayına almadan önce şirket politikasına göre bu satıra eklenmelidir.`,
+          c.returnShippingPolicy,
         ],
       },
       {

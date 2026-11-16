@@ -4,19 +4,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cream: "#FAF6EF",
-        sand: "#F1EADD",
-        ink: "#16130F",
-        mute: "#6B645A",
-        line: "#E4DCCB",
-        cobalt: { DEFAULT: "#2447D6", dark: "#1A35A8", soft: "#E6EBFB" },
-        blush: "#F3C9D3",
+        // Logo monokrom olduğu için palet de sakin: sıcak kâğıt zemin + mürekkep siyahı.
+        // Tek vurgu rengi koyu çam yeşili; yalnızca bağlantı, onay ve küçük ayrıntılarda kullanılır.
+        cream: "#F7F4EE",
+        sand: "#EDE8DE",
+        ink: "#171512",
+        mute: "#655F56",
+        line: "#DED7C9",
+        pine: { DEFAULT: "#1F4A3D", dark: "#163529", soft: "#E4ECE7" },
+        alert: "#A3341F",
       },
       fontFamily: {
         display: ["var(--font-display)", "system-ui", "sans-serif"],
         sans: ["var(--font-body)", "system-ui", "sans-serif"],
       },
-      letterSpacing: { wordmark: "0.18em" },
     },
   },
   plugins: [],

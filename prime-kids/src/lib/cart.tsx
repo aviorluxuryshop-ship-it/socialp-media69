@@ -1,44 +1,40 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getProduct } from "@/data/products";
-import { site } from "@/data/site";
-
-export type Line = { slug: string; colorId: string; size: string; qty: number };
+import { getProduct, MAX_QTY_PER_LINE, stockOf } from "@/data/products";
+import { parseLines, priceCart, sameLine, type CartTotals, type Line, type LineKey } from "./pricing";
 
 type CartCtx = {
   lines: Line[];
-  ready: boolean;
-  count: number;
-  add: (l: Omit<Line, "qty">) => void;
-  setQty: (l: Omit<Line, "qty">, qty: number) => void;
-  remove: (l: Omit<Line, "qty">) => void;
+  totals: CartTotals;
+  ready: boolean; // localStorage okundu mu (SSR/ilk boyamada false)
+  add: (l: LineKey) => void;
+  setQty: (l: LineKey, qty: number) => void;
+  remove: (l: LineKey) => void;
   clear: () => void;
+  /** Sepete son eklenen satır — mini sepet çekmecesi bununla açılır. */
+  justAdded: LineKey | null;
+  dismissAdded: () => void;
 };
 
 const Ctx = createContext<CartCtx | null>(null);
 const KEY = "primekids.cart.v1";
 
-const same = (a: Omit<Line, "qty">, b: Omit<Line, "qty">) =>
-  a.slug === b.slug && a.colorId === b.colorId && a.size === b.size;
+const maxFor = (l: LineKey) => {
+  const p = getProduct(l.slug);
+  return p ? Math.min(MAX_QTY_PER_LINE, stockOf(p, l.colorId, l.size)) : 0;
+};
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLines] = useState<Line[]>([]);
   const [ready, setReady] = useState(false);
+  const [justAdded, setJustAdded] = useState<LineKey | null>(null);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as Line[];
-        // Ürün veya renk artık yoksa satırı ele
-        setLines(
-          parsed.filter((l) => {
-            const p = getProduct(l.slug);
-            return p && p.colors.some((c) => c.id === l.colorId) && p.sizes.includes(l.size) && l.qty > 0;
-          }),
-        );
-      }
+      // Ürün, renk veya beden artık yoksa / tükendiyse satır elenir.
+      if (raw) setLines(parseLines(JSON.parse(raw)));
     } catch {}
     setReady(true);
   }, []);
@@ -50,29 +46,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   }, [lines, ready]);
 
-  const add = useCallback((l: Omit<Line, "qty">) => {
-    setLines((cur) => {
-      const hit = cur.find((x) => same(x, l));
-      if (hit) return cur.map((x) => (same(x, l) ? { ...x, qty: Math.min(x.qty + 1, 9) } : x));
-      return [...cur, { ...l, qty: 1 }];
-    });
+  const add = useCallback((l: LineKey) => {
+    const max = maxFor(l);
+    if (max < 1) return;
+    setLines((cur) =>
+      cur.some((x) => sameLine(x, l))
+        ? cur.map((x) => (sameLine(x, l) ? { ...x, qty: Math.min(x.qty + 1, max) } : x))
+        : [...cur, { ...l, qty: 1 }],
+    );
+    setJustAdded(l);
   }, []);
 
-  const setQty = useCallback((l: Omit<Line, "qty">, qty: number) => {
+  const setQty = useCallback((l: LineKey, qty: number) => {
     setLines((cur) =>
-      cur.flatMap((x) => (same(x, l) ? (qty <= 0 ? [] : [{ ...x, qty: Math.min(qty, 9) }]) : [x])),
+      cur.flatMap((x) => (sameLine(x, l) ? (qty <= 0 ? [] : [{ ...x, qty: Math.min(qty, maxFor(l)) }]) : [x])),
     );
   }, []);
 
-  const remove = useCallback((l: Omit<Line, "qty">) => {
-    setLines((cur) => cur.filter((x) => !same(x, l)));
-  }, []);
-
+  const remove = useCallback((l: LineKey) => setLines((cur) => cur.filter((x) => !sameLine(x, l))), []);
   const clear = useCallback(() => setLines([]), []);
+  const dismissAdded = useCallback(() => setJustAdded(null), []);
 
   const value = useMemo(
-    () => ({ lines, ready, count: lines.reduce((s, l) => s + l.qty, 0), add, setQty, remove, clear }),
-    [lines, ready, add, setQty, remove, clear],
+    () => ({ lines, totals: priceCart(lines), ready, add, setQty, remove, clear, justAdded, dismissAdded }),
+    [lines, ready, add, setQty, remove, clear, justAdded, dismissAdded],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
@@ -82,10 +79,4 @@ export function useCart() {
   const c = useContext(Ctx);
   if (!c) throw new Error("useCart must be used inside CartProvider");
   return c;
-}
-
-export function totals(lines: Line[]) {
-  const subtotal = lines.reduce((s, l) => s + (getProduct(l.slug)?.price ?? 0) * l.qty, 0);
-  const shipping = subtotal === 0 || subtotal >= site.freeShippingThreshold ? 0 : site.shippingFee;
-  return { subtotal, shipping, total: subtotal + shipping };
 }

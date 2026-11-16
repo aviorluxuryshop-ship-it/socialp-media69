@@ -3,236 +3,322 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import Icon from "./Icon";
+import { LOW_STOCK, stockOf, type Product } from "@/data/products";
+import { site, sizeGuide } from "@/data/site";
 import { useCart } from "@/lib/cart";
-import { fmt, type Product } from "@/data/products";
-import { sizeGuide, site } from "@/data/site";
+import { fmt, waLink } from "@/lib/site-helpers";
 
 export default function ProductBuy({ product }: { product: Product }) {
   const { add } = useCart();
   const [colorId, setColorId] = useState(product.colors[0].id);
   const [size, setSize] = useState<string | null>(null);
   const [error, setError] = useState(false);
-  const [added, setAdded] = useState(false);
-  const sizesRef = useRef<HTMLDivElement>(null);
+  const sizesRef = useRef<HTMLFieldSetElement>(null);
+  const guideRef = useRef<HTMLDetailsElement>(null);
 
   const color = product.colors.find((c) => c.id === colorId)!;
   const guide = sizeGuide.filter((g) => product.sizes.includes(g.age));
+  const stock = size ? stockOf(product, colorId, size) : null;
+  const { shipping } = site;
 
+  // Galeri ve sepetten gelen ?renk= bağlantıları ilgili rengi açar.
   useEffect(() => {
-    try {
-      const r = new URLSearchParams(window.location.search).get("renk");
-      if (r && product.colors.some((c) => c.id === r)) setColorId(r);
-    } catch {}
+    const r = new URLSearchParams(window.location.search).get("renk");
+    if (r && product.colors.some((c) => c.id === r)) setColorId(r);
   }, [product.colors]);
 
-  useEffect(() => {
-    if (!added) return;
-    const t = setTimeout(() => setAdded(false), 4000);
-    return () => clearTimeout(t);
-  }, [added]);
+  function pickColor(id: string) {
+    setColorId(id);
+    if (size && stockOf(product, id, size) === 0) setSize(null);
+  }
 
   function addToCart() {
     if (!size) {
       setError(true);
-      sizesRef.current?.classList.remove("shake");
-      void sizesRef.current?.offsetWidth;
-      sizesRef.current?.classList.add("shake");
-      sizesRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+      const el = sizesRef.current;
+      if (el) {
+        el.classList.remove("nudge");
+        void el.offsetWidth;
+        el.classList.add("nudge");
+        el.scrollIntoView({ block: "center", behavior: "smooth" });
+        el.querySelector<HTMLInputElement>("input:not(:disabled)")?.focus({ preventScroll: true });
+      }
       return;
     }
     add({ slug: product.slug, colorId, size });
-    setAdded(true);
+  }
+
+  function openGuide(e: React.MouseEvent) {
+    e.preventDefault();
+    const d = guideRef.current;
+    if (!d) return;
+    d.open = true;
+    d.scrollIntoView({ block: "start", behavior: "smooth" });
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-      {/* Galeri */}
-      <div className="grid gap-3 sm:grid-cols-[84px_1fr] lg:sticky lg:top-28 lg:self-start">
-        <div className="order-2 flex gap-2.5 sm:order-1 sm:flex-col">
-          {product.colors.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => setColorId(c.id)}
-              aria-label={`${c.name} görseli`}
-              aria-pressed={c.id === colorId}
-              className={`relative aspect-[3/4] w-16 overflow-hidden rounded-xl border-2 transition sm:w-full ${
-                c.id === colorId ? "border-ink" : "border-transparent opacity-70 hover:opacity-100"
-              }`}
-            >
-              <Image src={c.image} alt="" fill sizes="84px" className="object-cover object-top" />
-            </button>
-          ))}
-        </div>
-        <div className="relative order-1 aspect-[3/4] overflow-hidden rounded-3xl bg-sand sm:order-2">
-          <Image
-            key={color.image}
-            src={color.image}
-            alt={`${product.name} — ${color.name}`}
-            fill
-            priority
-            sizes="(min-width:1024px) 45vw, 100vw"
-            className="object-cover object-top"
-          />
-          {product.badge && (
-            <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3.5 py-1.5 text-[12px] font-bold uppercase tracking-wide">
-              {product.badge}
-            </span>
+    <div className="grid gap-7 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14">
+      {/* Fotoğraf */}
+      <div className="lg:sticky lg:top-24 lg:self-start">
+        <div className="grid gap-3 sm:grid-cols-[76px_1fr]">
+          <div className="relative aspect-[2/3] overflow-hidden rounded-2xl bg-sand sm:order-2">
+            <Image
+              key={color.image}
+              src={color.image}
+              alt={color.alt}
+              fill
+              priority
+              sizes="(min-width:1024px) 44vw, (min-width:640px) 80vw, 100vw"
+              className="fade-in object-cover object-top"
+            />
+            {product.badge && (
+              <span className="absolute left-3 top-3 rounded-full bg-cream/95 px-3 py-1 text-[11.5px] font-semibold uppercase tracking-[0.08em]">
+                {product.badge}
+              </span>
+            )}
+          </div>
+          {product.colors.length > 1 && (
+            <ul className="hide-scrollbar flex gap-2.5 overflow-x-auto sm:order-1 sm:flex-col sm:overflow-visible" aria-label="Renk fotoğrafları">
+              {product.colors.map((c) => (
+                <li key={c.id} className="shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => pickColor(c.id)}
+                    aria-label={`${c.name} fotoğrafını göster`}
+                    aria-pressed={c.id === colorId}
+                    className={`relative block aspect-[2/3] w-[60px] overflow-hidden rounded-lg border-2 transition sm:w-full ${
+                      c.id === colorId ? "border-ink" : "border-transparent opacity-75 hover:opacity-100"
+                    }`}
+                  >
+                    <Image src={c.image} alt="" fill sizes="76px" className="object-cover object-top" />
+                  </button>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>
 
-      {/* Bilgi */}
+      {/* Bilgi ve satın alma */}
       <div>
-        <h1 className="h-display text-3xl sm:text-4xl">{product.name}</h1>
+        <h1 className="h-display text-[28px] sm:text-4xl">{product.name}</h1>
         <p className="mt-2 text-[15px] text-mute">{product.short}</p>
-        <p className="mt-5 flex items-baseline gap-3">
-          <span className="text-3xl font-extrabold">{fmt(product.price)}</span>
-          {product.oldPrice && (
-            <span className="text-lg text-mute line-through">{fmt(product.oldPrice)}</span>
-          )}
+        <p className="mt-4 flex items-baseline gap-2.5">
+          <span className="text-[26px] font-bold tabular-nums">{fmt(product.price)}</span>
+          <span className="text-[13px] text-mute">KDV dahil</span>
         </p>
 
-        <p className="mt-7 text-[14px]">
-          <span className="font-semibold">Renk:</span> <span className="text-mute">{color.name}</span>
-        </p>
-        <div className="mt-3 flex flex-wrap gap-3" role="radiogroup" aria-label="Renk">
-          {product.colors.map((c) => (
-            <button
-              key={c.id}
-              role="radio"
-              aria-checked={c.id === colorId}
-              aria-label={c.name}
-              onClick={() => setColorId(c.id)}
-              className={`h-10 w-10 rounded-full border-2 p-0.5 transition ${
-                c.id === colorId ? "border-ink" : "border-transparent hover:border-ink/30"
-              }`}
-            >
-              <span className="block h-full w-full rounded-full border border-black/10" style={{ background: c.hex }} />
-            </button>
-          ))}
-        </div>
+        <fieldset className="mt-7">
+          <legend className="text-[14px]">
+            <span className="font-semibold">Renk:</span> <span className="text-mute">{color.name}</span>
+          </legend>
+          <div className="mt-2.5 flex flex-wrap gap-2">
+            {product.colors.map((c) => (
+              <label key={c.id} className="relative cursor-pointer" title={c.name}>
+                <input
+                  type="radio"
+                  name="renk"
+                  value={c.id}
+                  checked={c.id === colorId}
+                  onChange={() => pickColor(c.id)}
+                  className="peer sr-only"
+                />
+                <span className="grid h-11 w-11 place-items-center rounded-full border-2 border-transparent transition peer-checked:border-ink peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink hover:border-ink/30">
+                  <span className="block h-8 w-8 rounded-full border border-black/15" style={{ background: c.hex }} />
+                </span>
+                <span className="sr-only">{c.name}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
-        <div className="mt-7 flex items-center justify-between text-[14px]">
-          <p className="font-semibold">
-            Beden <span className={`ml-1 font-normal ${error ? "text-red-600" : "text-mute"}`}>
-              {error && !size ? "Lütfen bir beden seçin" : size ?? ""}
-            </span>
+        <fieldset ref={sizesRef} className="mt-6 scroll-mt-28" aria-describedby="beden-durum">
+          <legend className="sr-only">Beden</legend>
+          <div className="flex items-center justify-between text-[14px]">
+            <span className="font-semibold" aria-hidden>Beden (yaş)</span>
+            <a href="#beden-rehberi" onClick={openGuide} className="link inline-flex min-h-[44px] items-center gap-1.5 text-[13.5px]">
+              <Icon name="ruler" size={17} /> Beden rehberi
+            </a>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+            {product.sizes.map((s) => {
+              const left = stockOf(product, colorId, s);
+              const out = left === 0;
+              const g = sizeGuide.find((x) => x.age === s);
+              return (
+                <label key={s} className={`relative ${out ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                  <input
+                    type="radio"
+                    name="beden"
+                    value={s}
+                    disabled={out}
+                    checked={size === s}
+                    onChange={() => {
+                      setSize(s);
+                      setError(false);
+                    }}
+                    className="peer sr-only"
+                  />
+                  <span
+                    className={`flex min-h-[54px] flex-col items-center justify-center rounded-xl border bg-white px-1 py-1.5 text-center transition peer-checked:border-ink peer-checked:bg-ink peer-checked:text-cream peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink peer-disabled:bg-transparent peer-disabled:text-mute/70 ${
+                      error ? "border-alert/60" : "border-line"
+                    } ${out ? "" : "hover:border-ink"}`}
+                  >
+                    <span className={`text-[14.5px] font-semibold ${out ? "line-through" : ""}`}>{s}</span>
+                    <span className="text-[11.5px] opacity-70">{out ? "Tükendi" : g?.height}</span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          <p id="beden-durum" aria-live="polite" className="mt-2.5 min-h-[22px] text-[13.5px]">
+            {error && !size ? (
+              <span className="font-semibold text-alert">Lütfen bir beden seçin.</span>
+            ) : stock !== null && stock <= LOW_STOCK ? (
+              <span className="font-semibold text-alert">Bu renk ve bedende son {stock} adet.</span>
+            ) : stock !== null ? (
+              <span className="text-pine">Stokta · {shipping.dispatchDays} içinde kargoda</span>
+            ) : (
+              <span className="text-mute">İki beden arasında kaldıysanız büyük bedeni öneririz.</span>
+            )}
           </p>
-          <a href="#beden-rehberi" className="font-semibold text-cobalt underline-offset-4 hover:underline">
-            Beden rehberi
-          </a>
-        </div>
-        <div ref={sizesRef} className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label="Beden">
-          {product.sizes.map((s) => (
-            <button
-              key={s}
-              role="radio"
-              aria-checked={size === s}
-              onClick={() => {
-                setSize(s);
-                setError(false);
-              }}
-              className={`min-w-[74px] rounded-xl border px-3 py-2.5 text-[14px] font-semibold transition ${
-                size === s
-                  ? "border-ink bg-ink text-cream"
-                  : error
-                    ? "border-red-300 bg-white hover:border-ink"
-                    : "border-line bg-white hover:border-ink"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
+        </fieldset>
 
-        <button onClick={addToCart} className="btn-cobalt mt-8 w-full py-4 text-base">
-          Sepete ekle
+        <button type="button" onClick={addToCart} className="btn-primary mt-4 w-full py-4 text-base">
+          <Icon name="bag" size={20} /> Sepete ekle
         </button>
-        <div aria-live="polite" className="mt-3 min-h-[24px] text-[14px]">
-          {added && (
-            <p className="font-semibold text-green-700">
-              Sepete eklendi.{" "}
-              <Link href="/sepet" className="underline underline-offset-4">
-                Sepete git →
-              </Link>
-            </p>
-          )}
-        </div>
 
-        <ul className="mt-4 space-y-2 rounded-2xl bg-sand/70 p-5 text-[14px]">
-          <li>✓ {fmt(site.freeShippingThreshold)} ve üzeri siparişlerde ücretsiz kargo</li>
-          <li>✓ {site.returnDays} gün içinde iade hakkı</li>
-          <li>✓ Sipariş ve beden desteği için WhatsApp hattı</li>
+        {/* Satın almadan önce bilinmesi gerekenler */}
+        <ul className="mt-5 divide-y divide-line rounded-2xl border border-line bg-white/60 text-[14px]">
+          <li className="flex gap-3 p-4">
+            <Icon name="truck" className="mt-0.5 shrink-0 text-pine" />
+            <span>
+              <strong className="font-semibold">{shipping.dispatchDays} içinde kargoda</strong>, teslimat {shipping.deliveryDays}.{" "}
+              {product.price >= shipping.freeThreshold
+                ? "Bu ürünle kargonuz ücretsiz."
+                : `Kargo ${fmt(shipping.fee)}; ${fmt(shipping.freeThreshold)} ve üzeri ücretsiz.`}
+            </span>
+          </li>
+          <li className="flex gap-3 p-4">
+            <Icon name="return" className="mt-0.5 shrink-0 text-pine" />
+            <span>
+              <strong className="font-semibold">{shipping.returnDays} gün içinde iade ve beden değişimi.</strong> Kullanılmamış, etiketi üzerinde ürünlerde geçerlidir.{" "}
+              <Link href="/yasal/iade-degisim" className="link">Koşullar</Link>
+            </span>
+          </li>
+          <li className="flex gap-3 p-4">
+            <Icon name="lock" className="mt-0.5 shrink-0 text-pine" />
+            <span>
+              <strong className="font-semibold">Güvenli ödeme.</strong> Kart bilgileriniz ödeme kuruluşunun sayfasında işlenir, bizde saklanmaz.
+            </span>
+          </li>
         </ul>
 
+        <p className="mt-4 text-[14px] text-mute">
+          Bedenden emin değil misiniz?{" "}
+          <a
+            href={waLink(`Merhaba, "${product.name}" için beden konusunda yardım almak istiyorum.`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link"
+          >
+            WhatsApp’tan sorun
+          </a>
+        </p>
+
         <div className="mt-8 divide-y divide-line border-y border-line">
-          <Acc title="Takım içeriği" open>
-            <ul className="list-disc space-y-1 pl-5">{product.includes.map((x) => <li key={x}>{x}</li>)}</ul>
+          <Acc title="Takım içeriği ve özellikler" open>
+            <p>{product.description}</p>
+            <h3 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Takımda neler var?</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5">{product.includes.map((x) => <li key={x}>{x}</li>)}</ul>
+            <h3 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Özellikler</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5">{product.features.map((x) => <li key={x}>{x}</li>)}</ul>
           </Acc>
-          <Acc title="Ürün özellikleri">
-            <p className="mb-3">{product.description}</p>
-            <ul className="list-disc space-y-1 pl-5">{product.features.map((x) => <li key={x}>{x}</li>)}</ul>
+          <Acc title="Kumaş ve bakım">
+            <p><strong className="font-semibold text-ink">Kumaş:</strong> {product.fabric.composition}</p>
+            <p className="mt-1.5">{product.fabric.note}</p>
+            <h3 className="mt-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink">Bakım</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5">{product.care.map((x) => <li key={x}>{x}</li>)}</ul>
           </Acc>
-          <Acc title="Bakım önerileri">
-            <ul className="list-disc space-y-1 pl-5">{product.care.map((x) => <li key={x}>{x}</li>)}</ul>
+          <Acc title="Beden rehberi" id="beden-rehberi" detailsRef={guideRef}>
+            <p>Ölçüler yaklaşıktır; çocuğunuzun boyunu esas alın. İki beden arasında kaldıysanız büyük bedeni öneririz.</p>
+            <table className="mt-3 w-full text-left text-[14px]">
+              <caption className="sr-only">{product.name} beden tablosu</caption>
+              <thead>
+                <tr className="border-b border-line text-ink">
+                  <th scope="col" className="py-2 font-semibold">Beden</th>
+                  <th scope="col" className="py-2 font-semibold">Boy</th>
+                  <th scope="col" className="py-2 font-semibold">Kilo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {guide.map((g) => (
+                  <tr key={g.age} className="border-b border-line/60 last:border-0">
+                    <th scope="row" className="py-2 font-medium text-ink">{g.age}</th>
+                    <td className="py-2">{g.height}</td>
+                    <td className="py-2">{g.weight}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </Acc>
           <Acc title="Teslimat ve iade">
-            <p>
-              Siparişler hazırlanıp kargoya verilir. Teslim aldıktan sonra {site.returnDays} gün içinde,
-              kullanılmamış ve etiketi üzerinde olan ürünleri iade edebilirsiniz.{" "}
-              <Link href="/teslimat-iade" className="font-semibold text-cobalt underline underline-offset-4">
-                Detaylar
-              </Link>
+            <ul className="list-disc space-y-1.5 pl-5">
+              <li>Siparişler {shipping.dispatchDays} içinde {shipping.carrier} ile gönderilir; takip numarası e-posta ile iletilir.</li>
+              <li>Kargo ücreti {fmt(shipping.fee)}; {fmt(shipping.freeThreshold)} ve üzeri siparişlerde ücretsizdir.</li>
+              <li>Teslim aldıktan sonra {shipping.returnDays} gün içinde cayma hakkınızı kullanabilirsiniz.</li>
+            </ul>
+            <p className="mt-3">
+              <Link href="/yasal/teslimat-kargo" className="link">Teslimat ve kargo</Link>
+              {" · "}
+              <Link href="/yasal/iade-degisim" className="link">İade ve değişim</Link>
             </p>
           </Acc>
         </div>
 
-        <div id="beden-rehberi" className="mt-10 scroll-mt-28">
-          <h2 className="text-lg font-bold">Beden rehberi</h2>
-          <p className="mt-1 text-[13.5px] text-mute">
-            Ölçüler yaklaşıktır. İki beden arasında kalırsanız büyük bedeni öneririz.
-          </p>
-          <table className="mt-4 w-full text-left text-[14px]">
-            <thead>
-              <tr className="border-b border-line text-mute">
-                <th className="py-2 font-semibold">Yaş</th>
-                <th className="py-2 font-semibold">Boy</th>
-              </tr>
-            </thead>
-            <tbody>
-              {guide.map((g) => (
-                <tr key={g.age} className="border-b border-line/60">
-                  <td className="py-2">{g.age}</td>
-                  <td className="py-2">{g.height}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <p className="mt-5 flex items-start gap-2.5 text-[13.5px] text-mute">
+          <Icon name="store" size={18} className="mt-0.5 shrink-0" />
+          <span>
+            Alışverişinizi Trendyol üzerinden yapmayı tercih ederseniz{" "}
+            <a href={site.social.trendyol.url} target="_blank" rel="noopener noreferrer" className="link">Trendyol mağazamızda</a>{" "}
+            da bulabilirsiniz.
+          </span>
+        </p>
       </div>
 
-      {/* Mobil sabit çubuk */}
-      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-4 border-t border-line bg-cream/95 px-4 py-3 backdrop-blur lg:hidden">
-        <div className="shrink-0">
-          <p className="text-[12px] text-mute">{color.name}</p>
-          <p className="text-lg font-extrabold leading-none">{fmt(product.price)}</p>
+      {/* Mobil: sabit satın alma çubuğu */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-cream/95 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 backdrop-blur-sm lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-4">
+          <div className="min-w-0 shrink-0">
+            <p className="truncate text-[12px] text-mute">{color.name}{size ? ` · ${size}` : ""}</p>
+            <p className="text-[18px] font-bold leading-tight tabular-nums">{fmt(product.price)}</p>
+          </div>
+          <button type="button" onClick={addToCart} className="btn-primary flex-1">
+            {size ? "Sepete ekle" : "Beden seçin"}
+          </button>
         </div>
-        <button onClick={addToCart} className="btn-cobalt flex-1 py-3.5">
-          {size ? "Sepete ekle" : "Beden seç"}
-        </button>
       </div>
     </div>
   );
 }
 
-function Acc({ title, children, open }: { title: string; children: React.ReactNode; open?: boolean }) {
+function Acc({
+  title, children, open, id, detailsRef,
+}: {
+  title: string;
+  children: React.ReactNode;
+  open?: boolean;
+  id?: string;
+  detailsRef?: React.Ref<HTMLDetailsElement>;
+}) {
   return (
-    <details open={open} className="group py-4">
-      <summary className="flex cursor-pointer items-center justify-between text-[15px] font-semibold">
+    <details ref={detailsRef} id={id} open={open} className="group scroll-mt-24">
+      <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-semibold [&::-webkit-details-marker]:hidden">
         {title}
-        <span className="text-xl leading-none transition group-open:rotate-45" aria-hidden>+</span>
+        <Icon name="plus" size={18} className="shrink-0 transition-transform duration-200 group-open:rotate-45" />
       </summary>
-      <div className="mt-3 text-[14.5px] leading-relaxed text-mute">{children}</div>
+      <div className="pb-5 text-[14.5px] leading-relaxed text-mute">{children}</div>
     </details>
   );
 }

@@ -8,6 +8,12 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Bir pencere (menü, mini sepet, galeri) açıkken arka plan kaymasın */
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 body {
@@ -16,53 +22,128 @@ body {
 }
 
 ::selection {
-  @apply bg-cobalt text-white;
+  @apply bg-ink text-cream;
 }
 
 :focus-visible {
-  outline: 2px solid #2447d6;
+  outline: 2px solid #171512;
   outline-offset: 2px;
   border-radius: 4px;
+}
+.on-dark :focus-visible {
+  outline-color: #f7f4ee;
 }
 
 @layer components {
   .container-x {
-    @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[1240px] px-4 sm:px-6 lg:px-8;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-semibold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full px-7 py-3 text-center text-[15px] font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-ink text-cream hover:bg-cobalt;
-  }
-  .btn-cobalt {
-    @apply btn bg-cobalt text-white hover:bg-cobalt-dark;
+    @apply btn bg-ink text-cream hover:bg-pine;
   }
   .btn-outline {
-    @apply btn border border-ink/20 bg-transparent text-ink hover:border-ink;
+    @apply btn border border-ink/25 bg-transparent text-ink hover:border-ink hover:bg-white/60;
+  }
+  .btn-light {
+    @apply btn bg-cream text-ink hover:bg-white;
+  }
+  .link {
+    @apply font-semibold text-pine underline decoration-pine/30 underline-offset-4 transition-colors hover:decoration-pine;
   }
   .eyebrow {
-    @apply text-[12px] font-semibold uppercase tracking-[0.22em] text-cobalt;
+    @apply text-[11.5px] font-semibold uppercase tracking-[0.2em] text-mute;
   }
   .h-display {
-    @apply font-display font-extrabold leading-[1.05] tracking-[-0.025em];
+    @apply font-display font-bold leading-[1.08] tracking-[-0.02em];
+  }
+  .label {
+    @apply mb-1.5 block text-[13.5px] font-semibold;
   }
   .input {
-    @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-[15px] outline-none transition placeholder:text-mute/60 focus:border-cobalt;
+    @apply min-h-[48px] w-full rounded-xl border border-line bg-white px-4 py-3 text-[16px] text-ink outline-none transition-colors placeholder:text-mute/60 focus:border-ink aria-[invalid=true]:border-alert;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-white/70;
+  }
+  .hide-scrollbar {
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
+/* —— Pencereler (dialog) —— */
+dialog {
+  color: inherit;
 }
-.shake { animation: shake 0.3s ease-in-out; }
+dialog::backdrop {
+  background: rgb(23 21 18 / 0.45);
+}
+dialog[open]::backdrop {
+  animation: fade-in 0.2s ease-out;
+}
+dialog.sheet-right[open] {
+  animation: slide-left 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+dialog.sheet-left[open] {
+  animation: slide-right 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+dialog.lightbox[open] {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* —— İnce hareketler —— */
+.fade-in {
+  animation: fade-in 0.35s ease-out;
+}
+.rise-in {
+  animation: rise-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.nudge {
+  animation: nudge 0.3s ease-in-out;
+}
+.pop {
+  animation: pop 0.35s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slide-left {
+  from { transform: translateX(100%); }
+  to { transform: none; }
+}
+@keyframes slide-right {
+  from { transform: translateX(-100%); }
+  to { transform: none; }
+}
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  30% { transform: translateX(-5px); }
+  70% { transform: translateX(5px); }
+}
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .shake { animation: none; }
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
-
-details > summary { list-style: none; }
-details > summary::-webkit-details-marker { display: none; }
