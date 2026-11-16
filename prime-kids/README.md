@@ -59,7 +59,7 @@ Kodda `ÖRNEK` yorumuyla işaretlidir (`grep -rn "ÖRNEK" src`). Sitede "örnek"
 - `shipping.*` — ücretsiz kargo limiti (1.500 ₺), kargo ücreti (79 ₺), kargo firması, kargoya verme ve teslim süreleri, iade adresi
 - `shipping.returnShippingPolicy` — cayma iadesinde iade kargosunu kimin ödediği (İade ve Değişim metnine aynen girer)
 - `shipping.giftWrap` — ücretsiz hediye paketi sunuluyor mu
-- `payment.legalName` — yasal metinlerde geçen ödeme kuruluşu adı
+- `payment.legalName` — yasal metinlerde geçen ödeme kuruluşu adı (deneme/`mock` modunda metinlerde ad geçmez, "anlaşmalı ödeme kuruluşu" yazılır)
 - `sizeGuide` — yaş / boy / kilo tablosu
 
 `src/data/products.ts`

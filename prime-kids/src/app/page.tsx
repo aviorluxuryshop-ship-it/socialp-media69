@@ -101,11 +101,11 @@ export default function Home() {
               <Link href={`/urunler?kategori=${c.id}`} className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-line bg-white/70 p-3 sm:block sm:border-0 sm:bg-sand sm:p-0">
                 <div className="relative aspect-[2/3] w-[92px] shrink-0 overflow-hidden rounded-xl bg-sand sm:aspect-[4/5] sm:w-auto sm:rounded-2xl">
                   <Image src={c.image} alt="" fill sizes="(min-width:640px) 33vw, 92px" className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
-                  <div className="absolute inset-0 hidden bg-gradient-to-t from-black/60 via-transparent to-transparent sm:block" />
+                  <div className="absolute inset-0 hidden bg-gradient-to-t from-black/40 via-transparent to-transparent sm:block" />
                 </div>
-                <div className="min-w-0 sm:absolute sm:inset-x-0 sm:bottom-0 sm:p-5 sm:text-white">
+                <div className="min-w-0 sm:absolute sm:inset-x-0 sm:bottom-0 sm:bg-gradient-to-t sm:from-black/85 sm:via-black/65 sm:to-transparent sm:p-5 sm:pt-14 sm:text-white">
                   <h3 className="font-display text-[19px] font-bold sm:text-2xl">{c.label}</h3>
-                  <p className="mt-1 text-[13.5px] text-mute sm:text-white/85">{c.blurb}</p>
+                  <p className="mt-1 text-[13.5px] text-mute sm:text-white/95">{c.blurb}</p>
                   <span className="mt-2 inline-flex items-center gap-1.5 text-[14px] font-semibold">
                     Ürünleri gör <Icon name="arrow" size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
                   </span>
