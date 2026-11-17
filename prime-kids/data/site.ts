@@ -78,11 +78,9 @@ export const site = {
     cardEnabled: false,
   },
 
-  /** Primo & Pia — sağ kenardan ara sıra çıkıp selam veren çizgi film karakterleri. */
+  /** Kenardan bakıp el sallayan küçük çocuklar (components/Peekers.tsx). Kapatmak için false yapın. */
   mascot: {
     enabled: true,
-    firstDelayMs: 6000,
-    maxPerSession: 4,
   },
 } as const
 
@@ -98,7 +96,6 @@ export const nav = [
   { href: '/urunler', label: 'Ürünler' },
   { href: '/hizmetler', label: 'Hizmetler' },
   { href: '/galeri', label: 'Galeri' },
-  { href: '/beden-rehberi', label: 'Beden Rehberi' },
   { href: '/iletisim', label: 'İletişim' },
 ] as const
 

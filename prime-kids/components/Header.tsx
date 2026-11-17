@@ -16,7 +16,7 @@ const isActive = (pathname: string, href: string) =>
 
 export function AnnouncementBar() {
   return (
-    <div className="bg-ink text-white">
+    <div className="bg-brand text-white">
       <p className="container flex min-h-[36px] items-center justify-center gap-x-4 whitespace-nowrap text-center font-display text-[12.5px] font-medium tracking-wide sm:gap-x-6">
         <span>{formatPrice(site.shipping.freeOver).replace(',00', '')} üzeri ücretsiz kargo</span>
         <span className="opacity-40 max-[359px]:hidden" aria-hidden="true">•</span>
@@ -99,8 +99,8 @@ export function Header() {
     <>
       <AnnouncementBar />
       <header
-        className={`sticky top-0 z-40 border-b transition-colors duration-300 ${
-          scrolled ? 'border-line bg-white/90 backdrop-blur-md' : 'border-transparent bg-cream'
+        className={`sticky top-0 z-40 border-b bg-white/95 backdrop-blur-md transition-colors duration-300 ${
+          scrolled ? 'border-line' : 'border-transparent'
         }`}
       >
         <div className="container grid h-16 grid-cols-[1fr_auto_1fr] items-center md:flex md:justify-between">
@@ -116,7 +116,7 @@ export function Header() {
           </button>
 
           <Link href="/" aria-label="PRIME KIDS ana sayfa" className="justify-self-center py-2">
-            <Logo className="h-9 w-auto md:h-10" />
+            <Logo className="h-9 w-auto text-ink md:h-10" />
           </Link>
 
           <nav aria-label="Ana menü" className="hidden md:block">
@@ -128,12 +128,11 @@ export function Header() {
                     <Link
                       href={item.href}
                       aria-current={active ? 'page' : undefined}
-                      className={`relative rounded-full px-3 py-2 font-display text-[14px] font-semibold transition-colors lg:px-4 ${
-                        active ? 'text-ink' : 'text-ink-muted hover:text-ink'
+                      className={`relative rounded-full px-4 py-2 font-display text-[16.5px] font-medium transition-colors lg:px-5 ${
+                        active ? 'bg-brand-soft text-brand' : 'text-ink-soft hover:bg-sand hover:text-ink'
                       }`}
                     >
                       {item.label}
-                      {active && <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-ink lg:inset-x-4" aria-hidden="true" />}
                     </Link>
                   </li>
                 )
@@ -146,7 +145,7 @@ export function Header() {
               href={whatsappLink('Merhaba, bir sorum var.')}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden h-12 items-center gap-2 rounded-full px-3 font-display text-[13px] font-semibold text-ink-soft hover:bg-ink/5 lg:flex"
+              className="hidden h-12 items-center gap-2 rounded-full px-3 font-display text-[15px] font-medium text-ink-soft hover:bg-sand lg:flex"
             >
               <WhatsAppIcon className="h-5 w-5 text-[#1f8f4e]" /> Destek
             </a>
@@ -162,7 +161,7 @@ export function Header() {
           <div
             ref={panelRef}
             onClick={(e) => (e.target as HTMLElement).closest('a') && setOpen(false)}
-            className="absolute inset-y-0 left-0 flex w-[86%] max-w-[360px] animate-slide-left flex-col bg-cream shadow-lift"
+            className="absolute inset-y-0 left-0 flex w-[86%] max-w-[360px] animate-slide-left flex-col bg-white shadow-lift"
           >
             <div className="flex h-16 items-center justify-between border-b border-line px-4">
               <Logo className="h-8 w-auto" />
@@ -177,7 +176,7 @@ export function Header() {
                     <Link
                       href={item.href}
                       aria-current={isActive(pathname, item.href) ? 'page' : undefined}
-                      className="flex min-h-[54px] items-center justify-between rounded-2xl px-4 font-display text-[17px] font-semibold aria-[current=page]:bg-white"
+                      className="flex min-h-[54px] items-center justify-between rounded-2xl px-4 font-display text-[18px] font-medium aria-[current=page]:bg-brand-soft aria-[current=page]:text-brand"
                     >
                       {item.label}
                       <ChevronRight className="h-5 w-5 text-ink-muted" aria-hidden="true" />
@@ -185,22 +184,20 @@ export function Header() {
                   </li>
                 ))}
                 <li>
-                  <Link href="/sepet" className="flex min-h-[54px] items-center justify-between rounded-2xl px-4 font-display text-[17px] font-semibold">
+                  <Link href="/sepet" className="flex min-h-[54px] items-center justify-between rounded-2xl px-4 font-display text-[18px] font-medium">
                     Sepetim
                     <ChevronRight className="h-5 w-5 text-ink-muted" aria-hidden="true" />
                   </Link>
                 </li>
               </ul>
-              <p className="mt-5 px-4 eyebrow">Kategoriler</p>
-              <ul className="mt-2 grid grid-cols-2 gap-2 px-2">
+              <ul className="mt-4 grid grid-cols-3 gap-2 px-2">
                 {[
-                  ['Kız Çocuk', '/urunler?kategori=kiz'],
-                  ['Erkek Çocuk', '/urunler?kategori=erkek'],
-                  ['Mini 1-5 Yaş', '/urunler?kategori=mini'],
-                  ['Kışlık Şardonlu', '/urunler?ozellik=sardonlu'],
-                ].map(([label, href]) => (
+                  ['Kız', '/urunler?kategori=kiz', 'bg-pink-soft text-pink'],
+                  ['Erkek', '/urunler?kategori=erkek', 'bg-sky text-brand'],
+                  ['Bebek', '/urunler?kategori=mini', 'bg-sun-soft text-[#a15c00]'],
+                ].map(([label, href, cls]) => (
                   <li key={href}>
-                    <Link href={href} className="flex min-h-[48px] items-center justify-center rounded-2xl border border-line bg-white px-3 text-center text-[14px] font-bold">
+                    <Link href={href} className={`flex min-h-[52px] items-center justify-center rounded-2xl px-2 text-center font-display text-[16px] font-semibold ${cls}`}>
                       {label}
                     </Link>
                   </li>
@@ -208,6 +205,7 @@ export function Header() {
               </ul>
               <ul className="mt-5 space-y-1 px-2 text-[15px] text-ink-soft">
                 {[
+                  ['Beden Rehberi', '/beden-rehberi'],
                   ['Sıkça Sorulan Sorular', '/sss'],
                   ['İade ve Değişim', '/yasal/iade-ve-degisim'],
                   ['Kargo ve Teslimat', '/yasal/kargo-ve-teslimat'],

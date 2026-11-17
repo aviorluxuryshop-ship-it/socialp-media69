@@ -5,7 +5,7 @@ import { Footer } from '@/components/Footer'
 import { FooterGate } from '@/components/FooterGate'
 import { BottomNav } from '@/components/BottomNav'
 import { CookieNotice } from '@/components/CookieNotice'
-import { Mascot } from '@/components/Mascot'
+import { Peekers } from '@/components/Peekers'
 import { UIProvider } from '@/components/UIProvider'
 import { SITE_URL, isPreview, site } from '@/data/site'
 
@@ -31,7 +31,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#faf7f2',
+  themeColor: '#ffffff',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -48,8 +48,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr">
       <head>
-        <link rel="preload" href="/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/nunito-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/fredoka-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
       </head>
       <body>
@@ -69,7 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </FooterGate>
           <BottomNav />
           <CookieNotice />
-          <Mascot />
+          <Peekers />
         </UIProvider>
       </body>
     </html>

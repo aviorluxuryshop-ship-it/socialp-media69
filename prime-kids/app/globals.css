@@ -4,38 +4,38 @@
 
 /* ---------- Yazı tipleri (kendi sunucumuzdan; Türkçe karakterler latin-ext içinde) ---------- */
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Fredoka';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 800;
-  src: url('/fonts/montserrat-latin-ext-wght-normal.woff2') format('woff2-variations');
+  font-weight: 300 700;
+  src: url('/fonts/fredoka-latin-ext-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
     U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Fredoka';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 800;
-  src: url('/fonts/montserrat-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 300 700;
+  src: url('/fonts/fredoka-latin-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Nunito Sans';
+  font-family: 'Nunito';
   font-style: normal;
   font-display: swap;
   font-weight: 300 900;
-  src: url('/fonts/nunito-sans-latin-ext-wght-normal.woff2') format('woff2-variations');
+  src: url('/fonts/nunito-latin-ext-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
     U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Nunito Sans';
+  font-family: 'Nunito';
   font-style: normal;
   font-display: swap;
   font-weight: 300 900;
-  src: url('/fonts/nunito-sans-latin-wght-normal.woff2') format('woff2-variations');
+  src: url('/fonts/nunito-latin-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
@@ -70,7 +70,7 @@
   h2,
   h3,
   h4 {
-    @apply font-display font-semibold tracking-tight text-ink;
+    @apply font-display font-semibold text-ink;
     text-wrap: balance;
   }
   p {
@@ -86,12 +86,12 @@
     -webkit-tap-highlight-color: transparent;
   }
   :focus-visible {
-    outline: 3px solid #151311;
+    outline: 3px solid #2563eb;
     outline-offset: 3px;
     border-radius: 8px;
   }
   ::selection {
-    background: #f8e5ea;
+    background: #ffe08a;
   }
   img {
     -webkit-user-drag: none;
@@ -100,13 +100,13 @@
 
 @layer components {
   .btn {
-    @apply inline-flex min-h-[48px] cursor-pointer select-none items-center justify-center gap-2 rounded-full px-6 font-display text-[15px] font-semibold transition duration-200 ease-soft active:scale-[.97] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-[48px] cursor-pointer select-none items-center justify-center gap-2 rounded-full px-6 font-display text-[16px] font-semibold transition duration-200 ease-soft active:scale-[.97] disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-ink text-white hover:bg-ink-soft;
+    @apply btn bg-brand text-white shadow-btn hover:bg-brand-dark;
   }
   .btn-secondary {
-    @apply btn border border-ink/15 bg-white text-ink hover:border-ink/40;
+    @apply btn border-2 border-line bg-white text-ink hover:border-brand hover:text-brand;
   }
   .btn-ghost {
     @apply btn bg-transparent text-ink hover:bg-ink/5;
@@ -115,27 +115,27 @@
     @apply btn bg-[#157a3f] text-white hover:bg-[#106533];
   }
   .eyebrow {
-    @apply font-display text-[12px] font-semibold uppercase tracking-[0.18em] text-ink-muted;
+    @apply inline-flex items-center gap-1.5 rounded-full bg-sun-soft px-3 py-1 font-display text-[14px] font-semibold text-ink;
   }
   .section {
     @apply py-14 md:py-20;
   }
   .card {
-    @apply rounded-3xl border border-line bg-white;
+    @apply rounded-3xl border-2 border-line bg-white;
   }
   .chip {
-    @apply inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-white px-4 text-[14px] font-semibold text-ink-soft transition hover:border-ink/40;
+    @apply inline-flex min-h-[42px] cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border-2 border-line bg-white px-4 font-display text-[15px] font-medium text-ink-soft transition hover:border-brand hover:text-brand;
   }
   .chip[aria-pressed='true'],
   .chip[aria-current='page'],
   .chip.is-active {
-    @apply border-ink bg-ink text-white;
+    @apply border-brand bg-brand text-white hover:text-white;
   }
   .field-label {
     @apply mb-1.5 block text-[14px] font-bold text-ink-soft;
   }
   .field {
-    @apply block min-h-[50px] w-full rounded-2xl border border-line bg-white px-4 text-[16px] text-ink shadow-[inset_0_1px_2px_rgba(0,0,0,.03)] transition placeholder:text-ink-muted/70 focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/10;
+    @apply block min-h-[50px] w-full rounded-2xl border border-line bg-white px-4 text-[16px] text-ink shadow-[inset_0_1px_2px_rgba(0,0,0,.03)] transition placeholder:text-ink-muted/70 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/15;
   }
   .field[aria-invalid='true'] {
     @apply border-danger ring-4 ring-danger/10;
@@ -165,7 +165,7 @@
     @apply text-ink;
   }
   .prose-legal a {
-    @apply font-semibold text-ink underline underline-offset-4;
+    @apply font-semibold text-brand underline underline-offset-4;
   }
   .prose-legal table {
     @apply my-4 w-full border-collapse text-[15px];
@@ -193,6 +193,20 @@
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
+}
+
+/* Kenardan bakan çocukların el sallaması */
+@keyframes peek-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(-22deg);
+  }
+}
+.peek-wave {
+  animation: peek-wave 0.55s ease-in-out 0.7s 5;
 }
 
 /* Karakterlerin el sallaması — çıkıştan hemen sonra 3 kez, sonra durur */

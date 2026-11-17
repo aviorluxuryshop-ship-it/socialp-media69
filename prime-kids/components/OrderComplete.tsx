@@ -9,7 +9,6 @@ import { readLastOrder, orderWhatsappText, type StoredOrder } from '@/lib/order'
 import { formatPrice } from '@/lib/format'
 import { isPreview, site, whatsappLink } from '@/data/site'
 import { WhatsAppIcon } from '@/components/BrandIcons'
-import { Kid } from '@/components/Kids'
 
 export function OrderComplete() {
   const hydrated = useHydrated()
@@ -40,12 +39,9 @@ export function OrderComplete() {
   return (
     <div className="container max-w-3xl pb-12 pt-8">
       <div className="text-center">
-        <div className="relative mx-auto h-36 w-[150px]">
-          <Kid kid="pia" className="h-36 w-auto animate-peek" />
-          <span className="absolute bottom-2 right-0 grid h-10 w-10 place-items-center rounded-full bg-success text-white ring-4 ring-cream">
-            <Check className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
-          </span>
-        </div>
+        <span className="mx-auto grid h-20 w-20 animate-pop place-items-center rounded-full bg-success text-white ring-8 ring-success-soft">
+          <Check className="h-10 w-10" strokeWidth={3} aria-hidden="true" />
+        </span>
         <h1 className="mt-5 text-[28px] md:text-[36px]">Teşekkürler {order.details.firstName}, siparişiniz oluşturuldu!</h1>
         <p className="mt-2 text-[16px] text-ink-soft">
           Sipariş numaranız <strong className="tabular text-ink">{order.no}</strong>. Lütfen ödeme ve onay için aşağıdaki iki adımı tamamlayın.

@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AlertCircle, ChevronLeft, ChevronRight, Clock, Maximize2, Minus, Plus, RotateCcw, Ruler, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
 import type { Product } from '@/data/products'
-import { BADGE_LABEL, CATEGORY_LABEL, SIZE_CHART, getVariant, sizeLabel } from '@/data/products'
+import { CATEGORY_LABEL, SIZE_CHART, getVariant, sizeLabel } from '@/data/products'
 import { site, whatsappLink } from '@/data/site'
 import { cartActions, MAX_QTY } from '@/lib/cart'
 import { deliveryEstimate, formatPrice } from '@/lib/format'
@@ -120,23 +120,20 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
                 <Maximize2 className="h-5 w-5" />
               </span>
             </button>
-            <div className="pointer-events-none absolute left-3 top-3 flex flex-col items-start gap-1.5">
-              {product.badges.map((b) => (
-                <span key={b} className="rounded-full bg-white/95 px-3 py-1 font-display text-[11px] font-bold uppercase tracking-wide shadow-sm">
-                  {BADGE_LABEL[b]}
-                </span>
-              ))}
-            </div>
+            {product.badges.includes('sardonlu') && (
+              <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-sun px-3 py-1 font-display text-[14px] font-semibold text-ink">
+                Kışlık · İçi yumuşak şardonlu
+              </span>
+            )}
           </div>
         </div>
 
         {/* ---------- Bilgi ---------- */}
         <div>
-          <p className="eyebrow">{CATEGORY_LABEL[product.category]}</p>
-          <h1 className="mt-1.5 text-[28px] leading-tight md:text-[36px]">{product.name}</h1>
-          <p className="mt-1.5 text-[16px] text-ink-soft">{product.short}</p>
-          <p className="mt-4 flex items-baseline gap-2">
-            <span className="tabular font-display text-[28px] font-bold">{formatPrice(product.price)}</span>
+          <h1 className="text-[30px] font-bold leading-tight md:text-[38px]">{product.name}</h1>
+          <p className="mt-1.5 text-[16.5px] text-ink-soft">{product.short}</p>
+          <p className="mt-3 flex items-baseline gap-2">
+            <span className="tabular font-display text-[30px] font-semibold text-brand">{formatPrice(product.price)}</span>
             <span className="text-[13.5px] font-semibold text-ink-muted">KDV dahil · takım fiyatı</span>
           </p>
 
@@ -156,7 +153,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
                     aria-label={c.name}
                     title={c.name}
                     className={`relative h-[74px] w-[56px] overflow-hidden rounded-2xl bg-sand ring-offset-2 ring-offset-cream transition md:h-[84px] md:w-[64px] ${
-                      c.id === variant.id ? 'ring-2 ring-ink' : 'ring-1 ring-line hover:ring-ink/40'
+                      c.id === variant.id ? 'ring-[3px] ring-brand' : 'ring-1 ring-line hover:ring-brand/50'
                     }`}
                   >
                     <Image src={c.image} alt="" fill sizes="64px" className="object-cover object-top" />
@@ -186,11 +183,11 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
                     type="button"
                     onClick={() => chooseSize(s)}
                     aria-pressed={size === s}
-                    className={`flex min-h-[58px] flex-col items-center justify-center rounded-2xl border text-center transition ${
-                      size === s ? 'border-ink bg-ink text-white' : sizeError ? 'border-danger bg-white' : 'border-line bg-white hover:border-ink/50'
+                    className={`flex min-h-[58px] flex-col items-center justify-center rounded-2xl border-2 text-center transition ${
+                      size === s ? 'border-brand bg-brand text-white' : sizeError ? 'border-danger bg-white' : 'border-line bg-white hover:border-brand'
                     }`}
                   >
-                    <span className="font-display text-[15px] font-bold tabular">{s} yaş</span>
+                    <span className="font-display text-[16px] font-semibold tabular">{s} yaş</span>
                     {row && <span className={`text-[12px] ${size === s ? 'text-white/75' : 'text-ink-muted'}`}>{row.height[0]}-{row.height[1]} cm</span>}
                   </button>
                 )
@@ -205,7 +202,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
 
           {/* Adet + Sepete ekle */}
           <div ref={ctaRef} className="mt-6 flex gap-3">
-            <div className="flex h-14 items-center rounded-full border border-line bg-white" role="group" aria-label="Adet">
+            <div className="flex h-14 items-center rounded-full border-2 border-line bg-white" role="group" aria-label="Adet">
               <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} className="grid h-14 w-12 place-items-center rounded-l-full disabled:opacity-35" aria-label="Adedi azalt">
                 <Minus className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -221,112 +218,65 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
             </button>
           </div>
           <a href={whatsappLink(askText)} target="_blank" rel="noopener noreferrer" className="btn-secondary mt-3 w-full">
-            <WhatsAppIcon className="h-5 w-5 text-[#1f8f4e]" /> Bu ürünü WhatsApp’tan sor
+            <WhatsAppIcon className="h-5 w-5 text-[#157a3f]" /> WhatsApp’tan sor
           </a>
 
-          {/* Teslimat */}
-          <div className="mt-6 rounded-3xl bg-white p-4 ring-1 ring-line">
-            <p className="flex items-start gap-3 text-[15px]">
-              <Clock className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+          {/* Kısa güvenceler */}
+          <ul className="mt-5 flex flex-wrap gap-2 text-[14px] font-semibold">
+            <li className="flex items-center gap-1.5 rounded-full bg-sky px-3 py-1.5 text-brand">
+              <Truck className="h-4 w-4" aria-hidden="true" /> {formatPrice(site.shipping.freeOver).replace(',00', '')} üzeri kargo bedava
+            </li>
+            <li className="flex items-center gap-1.5 rounded-full bg-mint-soft px-3 py-1.5 text-success">
+              <RotateCcw className="h-4 w-4" aria-hidden="true" /> {site.returns.days} gün kolay iade
+            </li>
+            <li className="flex items-center gap-1.5 rounded-full bg-pink-soft px-3 py-1.5 text-pink">
+              <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Güvenli ödeme
+            </li>
+          </ul>
+          <p className="mt-3 flex items-center gap-2 text-[15px] text-ink-soft">
+            <Clock className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+            {delivery ? (
               <span>
-                {delivery ? (
-                  <>
-                    {delivery.sameDay ? (
-                      <>
-                        Saat <strong>{site.shipping.cutoffHour}:00</strong>’e kadar sipariş verirseniz <strong>bugün kargoda</strong>.
-                      </>
-                    ) : (
-                      <>
-                        Siparişiniz <strong>{delivery.shipLabel}</strong> kargoya verilir.
-                      </>
-                    )}{' '}
-                    Tahmini teslim: <strong>{delivery.range}</strong>
-                  </>
-                ) : (
-                  <>Hafta içi {site.shipping.cutoffHour}:00’e kadar verilen siparişler aynı gün kargoda.</>
-                )}
+                Tahmini teslim: <strong className="text-ink">{delivery.range}</strong>
               </span>
-            </p>
-            <ul className="mt-3 grid gap-2 border-t border-line pt-3 text-[14px] text-ink-soft sm:grid-cols-3">
-              <li className="flex items-center gap-2">
-                <Truck className="h-[18px] w-[18px] shrink-0" aria-hidden="true" /> {formatPrice(site.shipping.freeOver).replace(',00', '')} üzeri kargo bedava
-              </li>
-              <li className="flex items-center gap-2">
-                <RotateCcw className="h-[18px] w-[18px] shrink-0" aria-hidden="true" /> {site.returns.days} gün kolay iade
-              </li>
-              <li className="flex items-center gap-2">
-                <ShieldCheck className="h-[18px] w-[18px] shrink-0" aria-hidden="true" /> Güvenli ödeme
-              </li>
-            </ul>
-          </div>
-
+            ) : (
+              <span>Hafta içi {site.shipping.cutoffHour}:00’e kadar verilen siparişler aynı gün kargoda.</span>
+            )}
+          </p>
           {site.social.trendyol && (
-            <a
-              href={site.social.trendyol}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 flex items-center gap-3 rounded-3xl bg-white p-4 ring-1 ring-line transition hover:ring-ink/30"
-            >
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#fff1e6] text-[#c2410c]">
-                <StoreIcon className="h-5 w-5" />
-              </span>
-              <span className="min-w-0 flex-1 text-[14.5px] leading-snug">
-                <strong className="block font-display text-[15px]">Müşteri yorumlarımızı okuyun</strong>
-                <span className="text-ink-muted">Trendyol mağazamızdaki gerçek alışveriş değerlendirmeleri</span>
-              </span>
-              <ChevronRight className="h-5 w-5 shrink-0 text-ink-muted" aria-hidden="true" />
+            <a href={site.social.trendyol} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-[40px] items-center gap-1.5 text-[15px] font-semibold text-brand">
+              <StoreIcon className="h-[18px] w-[18px]" /> Müşteri yorumlarımız Trendyol’da <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </a>
           )}
 
           {/* Detaylar */}
           <div className="mt-6">
             <Accordion
-              defaultOpen={0}
               items={[
                 {
-                  q: 'Takımda neler var?',
-                  a: (
-                    <ul className="space-y-1.5">
-                      {product.pieces.map((p) => (
-                        <li key={p} className="flex gap-2">
-                          <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true" /> {p}
-                        </li>
-                      ))}
-                    </ul>
-                  ),
-                },
-                {
-                  q: 'Ürün özellikleri',
+                  q: 'Ürün detayları',
                   a: (
                     <>
-                      <p>{product.description}</p>
+                      <p className="font-semibold text-ink">Takımda: {product.pieces.join(' · ')}</p>
+                      <p className="mt-2">{product.description}</p>
                       <ul className="mt-3 space-y-1.5">
                         {product.highlights.map((h) => (
                           <li key={h} className="flex gap-2">
-                            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true" /> {h}
+                            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" aria-hidden="true" /> {h}
                           </li>
                         ))}
                       </ul>
+                      <p className="mt-3">
+                        <strong className="text-ink">Kumaş:</strong> {product.fabric}
+                      </p>
+                      <p className="mt-1">
+                        <strong className="text-ink">Bakım:</strong> {product.care.join(' · ')}
+                      </p>
                     </>
                   ),
                 },
                 {
-                  q: 'Kumaş ve bakım',
-                  a: (
-                    <>
-                      <p>{product.fabric}</p>
-                      <ul className="mt-3 space-y-1.5">
-                        {product.care.map((h) => (
-                          <li key={h} className="flex gap-2">
-                            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true" /> {h}
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  ),
-                },
-                {
-                  q: 'Kargo, iade ve değişim',
+                  q: 'Kargo ve iade',
                   a: (
                     <p>
                       {formatPrice(site.shipping.freeOver)} ve üzeri siparişlerde kargo ücretsiz, altında {formatPrice(site.shipping.fee)}. Beden olmazsa teslimattan itibaren{' '}

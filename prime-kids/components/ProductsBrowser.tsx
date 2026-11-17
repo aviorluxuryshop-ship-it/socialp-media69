@@ -2,16 +2,16 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
-import { Search, SlidersHorizontal, X, SearchX } from 'lucide-react'
+import { ChevronDown, X, SearchX } from 'lucide-react'
 import { products, AGE_FILTERS, CATEGORY_LABEL, type Category } from '@/data/products'
 import { ProductCard } from '@/components/ProductCard'
 import { WhatsAppIcon } from '@/components/BrandIcons'
 import { whatsappLink } from '@/data/site'
 
 const SORTS = [
-  { id: 'onerilen', label: 'Önerilen' },
-  { id: 'fiyat-artan', label: 'En düşük fiyat' },
-  { id: 'fiyat-azalan', label: 'En yüksek fiyat' },
+  { id: 'onerilen', label: 'Sırala: Önerilen' },
+  { id: 'fiyat-artan', label: 'Fiyat: Artan' },
+  { id: 'fiyat-azalan', label: 'Fiyat: Azalan' },
 ]
 
 const norm = (s: string) => s.toLocaleLowerCase('tr-TR')
@@ -58,69 +58,54 @@ export function ProductsBrowser() {
     { id: null, label: 'Tümü' },
     { id: 'kiz', label: 'Kız Çocuk' },
     { id: 'erkek', label: 'Erkek Çocuk' },
-    { id: 'mini', label: 'Mini 1-5 Yaş' },
+    { id: 'mini', label: 'Bebek & Mini' },
   ]
 
   return (
-    <div className="container pb-8 pt-6 md:pt-8">
-      <div className="sticky top-16 z-30 -mx-4 border-b border-line bg-cream/95 px-4 pb-3 pt-3 backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:p-0">
-        <div className="flex gap-2">
-          <label className="relative flex-1">
-            <span className="sr-only">Ürünlerde ara</span>
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-muted" aria-hidden="true" />
-            <input
-              type="search"
-              defaultValue={ara}
-              key={ara}
-              placeholder="Ürün ara…"
-              enterKeyHint="search"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  set('ara', (e.target as HTMLInputElement).value.trim() || null)
-                  ;(e.target as HTMLInputElement).blur()
-                }
-              }}
-              onBlur={(e) => e.target.value.trim() !== ara && set('ara', e.target.value.trim() || null)}
-              className="field min-h-[48px] pl-12"
-            />
-          </label>
-          <label className="relative">
-            <span className="sr-only">Sıralama</span>
-            <SlidersHorizontal className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-ink-muted" aria-hidden="true" />
-            <select
-              value={sirala}
-              onChange={(e) => set('sirala', e.target.value === 'onerilen' ? null : e.target.value)}
-              className="field min-h-[48px] w-[150px] cursor-pointer appearance-none pl-10 pr-3 text-[14.5px] font-semibold sm:w-auto sm:pr-5"
-              aria-label="Sıralama"
-            >
-              {SORTS.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0" role="group" aria-label="Kategori">
-          {cats.map((c) => (
-            <button key={c.label} type="button" className="chip" aria-pressed={kategori === c.id} onClick={() => set('kategori', c.id)}>
-              {c.label}
-            </button>
-          ))}
-          <button type="button" className="chip" aria-pressed={ozellik === 'sardonlu'} onClick={() => set('ozellik', ozellik === 'sardonlu' ? null : 'sardonlu')}>
-            Kışlık Şardonlu
+    <div className="container pb-8 pt-4 md:pt-6">
+      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0" role="group" aria-label="Kategori">
+        {cats.map((c) => (
+          <button key={c.label} type="button" className="chip" aria-pressed={kategori === c.id} onClick={() => set('kategori', c.id)}>
+            {c.label}
           </button>
-        </div>
+        ))}
+        <button type="button" className="chip" aria-pressed={ozellik === 'sardonlu'} onClick={() => set('ozellik', ozellik === 'sardonlu' ? null : 'sardonlu')}>
+          Kışlık
+        </button>
+      </div>
 
-        <div className="no-scrollbar -mx-4 mt-2 flex items-center gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0" role="group" aria-label="Yaş">
-          <span className="shrink-0 pr-1 text-[13px] font-bold uppercase tracking-wide text-ink-muted">Yaş</span>
-          {AGE_FILTERS.map((a) => (
-            <button key={a} type="button" className="chip min-h-[40px] px-3.5 tabular" aria-pressed={yas === a} onClick={() => set('yas', yas === a ? null : a)}>
-              {a}
-            </button>
-          ))}
-        </div>
+      <div className="mt-3 grid grid-cols-2 gap-3 sm:flex">
+        <label className="relative block">
+          <span className="sr-only">Yaş</span>
+          <select
+            value={yas ?? ''}
+            onChange={(e) => set('yas', e.target.value || null)}
+            className="field min-h-[48px] w-full cursor-pointer appearance-none pr-10 font-display text-[16px] font-medium sm:w-[190px]"
+          >
+            <option value="">Tüm yaşlar</option>
+            {AGE_FILTERS.map((a) => (
+              <option key={a} value={a}>
+                {a} yaş
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-muted" aria-hidden="true" />
+        </label>
+        <label className="relative block">
+          <span className="sr-only">Sıralama</span>
+          <select
+            value={sirala}
+            onChange={(e) => set('sirala', e.target.value === 'onerilen' ? null : e.target.value)}
+            className="field min-h-[48px] w-full cursor-pointer appearance-none pr-10 font-display text-[16px] font-medium sm:w-[210px]"
+          >
+            {SORTS.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-muted" aria-hidden="true" />
+        </label>
       </div>
 
       <div className="mt-5 flex min-h-[40px] flex-wrap items-center justify-between gap-2" aria-live="polite">

@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { PageHeader } from '@/components/Common'
 import { ProductsBrowser } from '@/components/ProductsBrowser'
-import { products } from '@/data/products'
 
 export const metadata: Metadata = {
   title: 'Tüm Ürünler — Kız, Erkek ve Mini Çocuk Takımları',
@@ -16,7 +15,7 @@ export default function ProductsPage() {
       <PageHeader
         crumbs={[{ label: 'Ürünler' }]}
         title="Tüm Ürünler"
-        lead={`${products.length} model, ${products.reduce((n, p) => n + p.colors.length, 0)} renk seçeneği. Yaş seçerek sadece uyan bedenleri görebilirsiniz.`}
+        lead="Kız, erkek ve bebek takımları. Yaşı seçin, uyan ürünleri görün."
       />
       <Suspense fallback={<div className="container py-20 text-center text-ink-muted">Ürünler yükleniyor…</div>}>
         <ProductsBrowser />

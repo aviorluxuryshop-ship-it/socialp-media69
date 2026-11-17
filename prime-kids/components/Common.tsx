@@ -40,11 +40,11 @@ export function PageHeader({
   children?: React.ReactNode
 }) {
   return (
-    <section className="border-b border-line bg-gradient-to-b from-sand/70 to-cream">
-      <div className="container pb-8 pt-5 md:pb-12 md:pt-8">
+    <section className="bg-gradient-to-b from-sky to-white">
+      <div className="container pb-6 pt-4 md:pb-10 md:pt-6">
         {crumbs && <Breadcrumbs items={[{ label: 'Ana Sayfa', href: '/' }, ...crumbs]} />}
-        {eyebrow && <p className="eyebrow mt-5">{eyebrow}</p>}
-        <h1 className="mt-2 text-[30px] leading-[1.15] md:text-[44px]">{title}</h1>
+        {eyebrow && <p className="eyebrow mt-4">{eyebrow}</p>}
+        <h1 className="mt-2 text-[32px] font-bold leading-[1.12] md:text-[46px]">{title}</h1>
         {lead && <p className="mt-3 max-w-2xl text-[16.5px] text-ink-soft md:text-[18px]">{lead}</p>}
         {children}
       </div>
@@ -59,17 +59,17 @@ export function TrustStrip({ compact = false }: { compact?: boolean }) {
     { icon: ShieldCheck, title: 'Güvenli Ödeme', text: '3D Secure · Kart bilgisi saklanmaz' },
     { icon: MessageCircleHeart, title: 'WhatsApp Destek', text: 'Beden & sipariş sorularınıza yanıt' },
   ]
-  const tints = ['bg-sky', 'bg-blush', 'bg-sage', 'bg-butter']
+  const tints = ['bg-sky text-brand', 'bg-pink-soft text-pink', 'bg-mint-soft text-mint', 'bg-sun-soft text-[#a15c00]']
   return (
     <ul className={`grid grid-cols-2 gap-3 ${compact ? '' : 'md:grid-cols-4 md:gap-4'}`}>
       {items.map(({ icon: Icon, title, text }, i) => (
-        <li key={title} className="flex flex-col items-start gap-2.5 rounded-2xl bg-white p-3.5 ring-1 ring-line sm:flex-row sm:gap-3 md:p-4">
-          <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${tints[i % 4]}`}>
-            <Icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+        <li key={title} className="flex flex-col items-start gap-2.5 rounded-3xl border-2 border-line bg-white p-4 sm:flex-row sm:gap-3 md:p-5">
+          <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl ${tints[i % 4]}`}>
+            <Icon className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
           </span>
           <span className="min-w-0">
-            <span className="block font-display text-[13.5px] font-bold leading-tight md:text-[14.5px]">{title}</span>
-            <span className="mt-0.5 block text-[12.5px] leading-snug text-ink-muted md:text-[13.5px]">{text}</span>
+            <span className="block font-display text-[16px] font-semibold leading-tight md:text-[17px]">{title}</span>
+            <span className="mt-1 block text-[13.5px] leading-snug text-ink-muted md:text-[14.5px]">{text}</span>
           </span>
         </li>
       ))}
@@ -82,7 +82,7 @@ export function SectionHeading({ eyebrow, title, lead, action }: { eyebrow?: Rea
     <div className="mb-6 flex flex-col gap-3 md:mb-9 md:flex-row md:items-end md:justify-between">
       <div>
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h2 className="mt-1.5 text-[26px] leading-tight md:text-[36px]">{title}</h2>
+        <h2 className="mt-2 text-[26px] leading-tight md:text-[36px]">{title}</h2>
         {lead && <p className="mt-2 max-w-xl text-[16px] text-ink-soft">{lead}</p>}
       </div>
       {action}
@@ -93,10 +93,10 @@ export function SectionHeading({ eyebrow, title, lead, action }: { eyebrow?: Rea
 /** Yerel <details> tabanlı akordeon — JavaScript gerektirmez, klavye ve ekran okuyucu dostudur. */
 export function Accordion({ items, defaultOpen }: { items: Array<{ q: string; a: React.ReactNode }>; defaultOpen?: number }) {
   return (
-    <div className="divide-y divide-line overflow-hidden rounded-3xl border border-line bg-white">
+    <div className="divide-y-2 divide-line overflow-hidden rounded-3xl border-2 border-line bg-white">
       {items.map((item, i) => (
         <details key={item.q} className="group" open={defaultOpen === i}>
-          <summary className="flex min-h-[60px] cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-display text-[15.5px] font-semibold marker:hidden hover:bg-sand/40 [&::-webkit-details-marker]:hidden">
+          <summary className="flex min-h-[60px] cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-display text-[17px] font-medium marker:hidden hover:bg-sand [&::-webkit-details-marker]:hidden">
             {item.q}
             <ChevronDown className="h-5 w-5 shrink-0 text-ink-muted transition-transform duration-300 group-open:rotate-180" aria-hidden="true" />
           </summary>

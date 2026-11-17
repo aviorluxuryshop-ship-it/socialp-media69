@@ -1,7 +1,7 @@
 # PRIME KIDS — Çocuk Giyim Online Mağazası
 
 Anne-babalar için güven veren, mobilde kusursuz çalışan çocuk giyim mağazası.
-Next.js 16 (App Router), TypeScript, Tailwind CSS. Tüm sayfalar statik üretilir;
+Next.js 16 (App Router), TypeScript, Tailwind CSS. Yazı tipleri: Fredoka (başlık) + Nunito (metin). Tüm sayfalar statik üretilir;
 sepet tarayıcıda tutulur, ödeme altyapısı tek bir noktadan bağlanacak şekilde hazırdır.
 
 ```bash
@@ -33,7 +33,7 @@ npm run typecheck  # TypeScript
 
 | Dosya | Ne için |
 | --- | --- |
-| `data/site.ts` | Marka, WhatsApp/telefon/e-posta, Instagram & Trendyol, **şirket (satıcı) bilgileri**, IBAN, kargo ücreti ve eşiği, iade süresi, Primo açık/kapalı |
+| `data/site.ts` | Marka, WhatsApp/telefon/e-posta, Instagram & Trendyol, **şirket (satıcı) bilgileri**, IBAN, kargo ücreti ve eşiği, iade süresi |
 | `data/products.ts` | Ürünler, fiyatlar, renkler, bedenler, kumaş ve bakım bilgileri, beden tablosu |
 | `data/faq.ts` | Sıkça sorulan sorular |
 | `data/legal.ts` | Yasal metinler (satıcı bilgileri otomatik doldurulur) |
@@ -68,18 +68,15 @@ kendi güvenli sayfasında/iframe’inde girilir. Bağlantı noktası tek dosyad
 Bağlanana kadar siparişler **Havale/EFT** ile alınır: onay sayfası IBAN’ı gösterir ve
 sipariş özeti tek dokunuşla mağazanın WhatsApp hattına gönderilir.
 
-## Primo & Pia (çizgi film karakterleri)
+## Kenardan bakan çocuklar
 
-Markaya özel, özgün iki karakter: mavi kapüşonlu Primo ve pembe kapüşonlu Pia
-(`components/Kids.tsx`). Kullanıcı sayfayı biraz kaydırdıktan sonra ekranın sağ
-kenarından eğilerek çıkar, el sallar ve sayfaya göre bir öneri verir. Örneğin
-“Şu fuşya takıma bayıldım, bir bakar mısın?” der ve dokununca ürüne götürür;
-ürün sayfasında beden bulucuyu açar, galeride Instagram’ı önerir.
+`components/Peekers.tsx` içinde dört farklı küçük çocuk çizimi var: gözlüklü sarışın,
+topuzlu kız, bereli çocuk ve kıvırcık saçlı kız. Sayfa açıldıktan ~5 sn sonra, sonra
+da 20-38 sn arayla (sayfa başına en fazla 4 kez) ekranın sağından ya da solundan
+"pencereden bakar gibi" başını uzatıp el sallar ve ~4 sn sonra kaybolur.
 
-Oturum başına en fazla 4 kez çıkar, 18 sn sonra kendiliğinden geri çekilir,
-“Bir daha gösterme” seçeneği vardır ve **sepet, ödeme ve yasal sayfalarda hiç
-görünmez**. Mesajlar `components/Mascot.tsx › tipFor` içinde; kapatmak için
-`data/site.ts › mascot.enabled = false`.
+Mesaj vermezler, dokunmayı engellemezler (`pointer-events: none`), sepet ve
+ödemede çıkmazlar, telefonda "hareketi azalt" açıksa hiç gösterilmezler.
 
 ## Önizleme modu
 
