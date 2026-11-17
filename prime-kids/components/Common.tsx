@@ -59,11 +59,12 @@ export function TrustStrip({ compact = false }: { compact?: boolean }) {
     { icon: ShieldCheck, title: 'Güvenli Ödeme', text: '3D Secure · Kart bilgisi saklanmaz' },
     { icon: MessageCircleHeart, title: 'WhatsApp Destek', text: 'Beden & sipariş sorularınıza yanıt' },
   ]
+  const tints = ['bg-sky', 'bg-blush', 'bg-sage', 'bg-butter']
   return (
     <ul className={`grid grid-cols-2 gap-3 ${compact ? '' : 'md:grid-cols-4 md:gap-4'}`}>
-      {items.map(({ icon: Icon, title, text }) => (
+      {items.map(({ icon: Icon, title, text }, i) => (
         <li key={title} className="flex flex-col items-start gap-2.5 rounded-2xl bg-white p-3.5 ring-1 ring-line sm:flex-row sm:gap-3 md:p-4">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand">
+          <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${tints[i % 4]}`}>
             <Icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
           </span>
           <span className="min-w-0">

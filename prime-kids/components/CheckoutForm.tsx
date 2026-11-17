@@ -9,7 +9,7 @@ import { AlertCircle, Check, ChevronDown, CreditCard, Landmark, Loader2, Lock, S
 import { cartActions, summarize, useCart } from '@/lib/cart'
 import { formatPrice } from '@/lib/format'
 import { CITIES } from '@/data/cities'
-import { site } from '@/data/site'
+import { isPreview, site } from '@/data/site'
 import { getLegalDoc } from '@/data/legal'
 import { sizeLabel } from '@/data/products'
 import { newOrderNo, saveLastOrder, toOrderItems, type OrderDetails, type StoredOrder } from '@/lib/order'
@@ -372,6 +372,21 @@ export function CheckoutForm() {
           </li>
         ))}
       </ol>
+
+      {isPreview && (
+        <div role="note" className="mx-auto mt-6 max-w-3xl rounded-2xl border-2 border-dashed border-[#f1c46a] bg-butter/70 p-4 text-[14.5px] leading-snug text-ink-soft">
+          <strong className="text-ink">Önizleme sürümü:</strong> Sitemiz yakında satışa açılıyor; bu ekrandan verilen siparişler henüz işleme alınmaz.
+          {site.social.trendyol && (
+            <>
+              {' '}Hemen sipariş vermek için{' '}
+              <a href={site.social.trendyol} target="_blank" rel="noopener noreferrer" className="font-bold text-ink underline underline-offset-2">
+                Trendyol mağazamızı
+              </a>{' '}
+              ziyaret edebilirsiniz.
+            </>
+          )}
+        </div>
+      )}
 
       <h1 className="mt-7 text-[26px] md:text-[34px]">Siparişi tamamla</h1>
       <p className="mt-1 text-[15px] text-ink-soft">Üyelik gerekmez. Bilgileriniz yalnızca siparişiniz için kullanılır.</p>

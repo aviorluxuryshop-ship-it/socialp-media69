@@ -195,6 +195,23 @@
   }
 }
 
+/* Karakterlerin el sallaması — çıkıştan hemen sonra 3 kez, sonra durur */
+@keyframes kid-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  30% {
+    transform: rotate(16deg);
+  }
+  70% {
+    transform: rotate(-10deg);
+  }
+}
+.kid-wave {
+  animation: kid-wave 0.9s ease-in-out 0.8s 3;
+}
+
 /* Kaydırınca beliren bölümler — saf CSS (scroll-driven animation).
    Desteklemeyen tarayıcılarda içerik doğrudan görünür; yavaş internette
    JavaScript beklenmeden hiçbir şey gizli kalmaz. */

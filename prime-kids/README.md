@@ -68,13 +68,24 @@ kendi güvenli sayfasında/iframe’inde girilir. Bağlantı noktası tek dosyad
 Bağlanana kadar siparişler **Havale/EFT** ile alınır: onay sayfası IBAN’ı gösterir ve
 sipariş özeti tek dokunuşla mağazanın WhatsApp hattına gönderilir.
 
-## Primo (stil asistanı)
+## Primo & Pia (çizgi film karakterleri)
 
-Logodaki sade siyah-beyaz dile uygun, tek renkli çizgisel bir karakter. Kullanıcı
-sayfayı biraz kaydırdıktan sonra sağ altta belirip sayfaya özel bir ipucu verir
-(kışlık ürünler, beden bulucu, WhatsApp desteği…). Oturum başına en fazla 3 kez çıkar,
-15 sn sonra kendiliğinden kaybolur, “Bir daha gösterme” seçeneği vardır ve **sepet,
-ödeme ve yasal sayfalarda hiç görünmez**. Kapatmak için `data/site.ts › mascot.enabled = false`.
+Markaya özel, özgün iki karakter: mavi kapüşonlu Primo ve pembe kapüşonlu Pia
+(`components/Kids.tsx`). Kullanıcı sayfayı biraz kaydırdıktan sonra ekranın sağ
+kenarından eğilerek çıkar, el sallar ve sayfaya göre bir öneri verir. Örneğin
+“Şu fuşya takıma bayıldım, bir bakar mısın?” der ve dokununca ürüne götürür;
+ürün sayfasında beden bulucuyu açar, galeride Instagram’ı önerir.
+
+Oturum başına en fazla 4 kez çıkar, 18 sn sonra kendiliğinden geri çekilir,
+“Bir daha gösterme” seçeneği vardır ve **sepet, ödeme ve yasal sayfalarda hiç
+görünmez**. Mesajlar `components/Mascot.tsx › tipFor` içinde; kapatmak için
+`data/site.ts › mascot.enabled = false`.
+
+## Önizleme modu
+
+`data/site.ts` içindeki WhatsApp numarası ve şirket ünvanı deneme verisiyken
+ödeme ve sipariş onay sayfalarında “Önizleme sürümü” notu görünür ve müşteri
+Trendyol mağazasına yönlendirilir. Gerçek bilgiler girilince not kendiliğinden kalkar.
 
 ## Dağıtım (Vercel)
 

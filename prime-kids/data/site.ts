@@ -77,13 +77,20 @@ export const site = {
     cardEnabled: false,
   },
 
-  /** Primo — sağ altta ara sıra selam veren küçük stil asistanı. */
+  /** Primo & Pia — sağ kenardan ara sıra çıkıp selam veren çizgi film karakterleri. */
   mascot: {
     enabled: true,
-    firstDelayMs: 9000,
-    maxPerSession: 3,
+    firstDelayMs: 6000,
+    maxPerSession: 4,
   },
 } as const
+
+/**
+ * İletişim / şirket bilgileri hâlâ deneme verisiyken true olur. Bu sürede ödeme
+ * ekranında "önizleme" notu gösterilir ve müşteri Trendyol mağazasına yönlendirilir.
+ * Gerçek WhatsApp numarası ve şirket ünvanı girildiğinde kendiliğinden false olur.
+ */
+export const isPreview = site.contact.whatsapp === '905000000000' || site.company.title.startsWith('GÜNCELLENECEK')
 
 export const nav = [
   { href: '/', label: 'Ana Sayfa' },

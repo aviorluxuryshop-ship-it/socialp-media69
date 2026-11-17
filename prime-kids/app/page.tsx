@@ -9,6 +9,8 @@ import { Accordion, SectionHeading, TrustStrip } from '@/components/Common'
 import { SizeFinder } from '@/components/SizeFinder'
 import { ColorStory } from '@/components/ColorStory'
 import { WhatsAppIcon, InstagramIcon, StoreIcon } from '@/components/BrandIcons'
+import { Kid } from '@/components/Kids'
+import { Cloud, Heart, Squiggle, Star } from '@/components/Doodles'
 
 const shortcuts = [
   { label: 'Kız Çocuk', href: '/urunler?kategori=kiz', image: '/images/products/vintage-fusya.jpg' },
@@ -32,8 +34,8 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -left-40 top-64 h-[420px] w-[420px] rounded-full bg-sky/80 blur-3xl" aria-hidden="true" />
         <div className="container relative grid items-center gap-8 pb-10 pt-6 md:grid-cols-[1.02fr_1fr] md:gap-10 md:pb-20 md:pt-12">
           <div className="animate-fade-up">
-            <p className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 font-display text-[12px] font-bold uppercase tracking-[0.14em] text-ink-soft ring-1 ring-line">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" /> Yeni Sezon · Kış 2026
+            <p className="inline-flex items-center gap-2 rounded-full bg-butter px-3.5 py-1.5 font-display text-[12px] font-bold uppercase tracking-[0.14em] text-ink ring-1 ring-[#f1dfa6]">
+              <Sparkles className="h-3.5 w-3.5 text-coral" aria-hidden="true" /> Yeni Sezon · Kış 2026
             </p>
             <h1 className="mt-4 text-[38px] font-bold leading-[1.05] sm:text-[48px] lg:text-[62px]">
               Rahat giysin,
@@ -67,6 +69,14 @@ export default function HomePage() {
 
           {/* Kolaj */}
           <div className="relative mx-auto h-[360px] w-full max-w-[520px] sm:h-[500px] md:h-[560px]" aria-hidden="true">
+            <Star className="absolute -left-1 top-0 z-20 w-9 motion-safe:animate-twinkle md:w-12" />
+            <Star className="absolute right-2 top-[46%] z-20 w-7 motion-safe:animate-twinkle md:w-9" color="#ff9ec0" style={{ animationDelay: '1.2s' }} />
+            <Cloud className="absolute -right-2 -top-3 z-0 w-20 opacity-90 md:w-28" />
+            <Heart className="absolute bottom-24 left-2 z-20 w-6 md:bottom-28 md:w-8" />
+            <Squiggle className="absolute bottom-3 right-6 z-0 w-20 md:w-24" color="#7cc6a0" />
+            <div className="absolute -bottom-2 -left-3 z-30 w-[92px] -rotate-6 sm:w-[110px] md:bottom-auto md:-left-10 md:top-[318px] md:w-[130px]">
+              <Kid kid="pia" className="h-auto w-full drop-shadow-[0_10px_14px_rgba(21,19,17,.2)]" />
+            </div>
             <div className="absolute left-0 top-10 w-[46%] rotate-[-5deg] overflow-hidden rounded-[28px] bg-white p-1.5 shadow-lift">
               <div className="relative aspect-[3/4] overflow-hidden rounded-[22px]">
                 <Image src="/images/products/perfect-pembe.jpg" alt="" fill sizes="(min-width:768px) 240px, 45vw" className="object-cover object-top" />
@@ -82,7 +92,7 @@ export default function HomePage() {
                 <Image src="/images/products/legend-siyah.jpg" alt="" fill sizes="(min-width:768px) 290px, 54vw" className="object-cover object-top" priority />
               </div>
             </div>
-            <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2.5 font-display text-[13px] font-bold shadow-lift ring-1 ring-line sm:bottom-10">
+            <div className="absolute bottom-6 left-[58%] z-20 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2.5 font-display text-[13px] font-bold shadow-lift ring-1 ring-line sm:bottom-10">
               <span className="flex -space-x-1.5">
                 {['#1b1b1d', '#4a2a2f', '#7fb4d1', '#d8c7b0', '#0f5c52'].map((c) => (
                   <span key={c} className="h-4 w-4 rounded-full ring-2 ring-white" style={{ background: c }} />

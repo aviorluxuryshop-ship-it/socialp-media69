@@ -40,6 +40,21 @@ module.exports = {
         'peek': { from: { transform: 'translateY(110%) rotate(-8deg)' }, to: { transform: 'translateY(0) rotate(0)' } },
         'wave': { '0%,100%': { transform: 'rotate(0)' }, '25%': { transform: 'rotate(-14deg)' }, '75%': { transform: 'rotate(10deg)' } },
         'marquee': { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+        // Karakter sağ kenardan eğilerek çıkar / geri çekilir
+        'peek-side': {
+          '0%': { transform: 'translateX(120%) rotate(18deg)' },
+          '70%': { transform: 'translateX(8%) rotate(-10deg)' },
+          '100%': { transform: 'translateX(14%) rotate(-7deg)' },
+        },
+        'peek-out': {
+          from: { transform: 'translateX(14%) rotate(-7deg)' },
+          to: { transform: 'translateX(125%) rotate(14deg)' },
+        },
+        'bubble-in': {
+          '0%': { opacity: 0, transform: 'scale(.6) translateY(10px)' },
+          '100%': { opacity: 1, transform: 'none' },
+        },
+        'twinkle': { '0%,100%': { transform: 'scale(1) rotate(0)', opacity: 1 }, '50%': { transform: 'scale(.82) rotate(12deg)', opacity: .75 } },
       },
       animation: {
         'fade-up': 'fade-up .6s cubic-bezier(.22,1,.36,1) both',
@@ -51,6 +66,10 @@ module.exports = {
         peek: 'peek .7s cubic-bezier(.34,1.56,.64,1) both',
         wave: 'wave 1.2s ease-in-out 2',
         marquee: 'marquee 38s linear infinite',
+        'peek-side': 'peek-side .85s cubic-bezier(.34,1.56,.64,1) both',
+        'peek-out': 'peek-out .45s cubic-bezier(.55,0,.75,.2) both',
+        'bubble-in': 'bubble-in .45s cubic-bezier(.34,1.56,.64,1) .6s both',
+        twinkle: 'twinkle 3.6s ease-in-out infinite',
       },
     },
   },

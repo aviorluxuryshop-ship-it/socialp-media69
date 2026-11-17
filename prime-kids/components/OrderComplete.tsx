@@ -7,9 +7,9 @@ import { useHydrated } from '@/lib/hooks'
 import { Check, Copy, PackageCheck } from 'lucide-react'
 import { readLastOrder, orderWhatsappText, type StoredOrder } from '@/lib/order'
 import { formatPrice } from '@/lib/format'
-import { site, whatsappLink } from '@/data/site'
+import { isPreview, site, whatsappLink } from '@/data/site'
 import { WhatsAppIcon } from '@/components/BrandIcons'
-import { PrimoFace } from '@/components/Mascot.svg'
+import { Kid } from '@/components/Kids'
 
 export function OrderComplete() {
   const hydrated = useHydrated()
@@ -40,9 +40,9 @@ export function OrderComplete() {
   return (
     <div className="container max-w-3xl pb-12 pt-8">
       <div className="text-center">
-        <div className="relative mx-auto h-24 w-24">
-          <PrimoFace className="h-24 w-24 animate-peek" waving />
-          <span className="absolute -bottom-1 -right-1 grid h-9 w-9 place-items-center rounded-full bg-success text-white ring-4 ring-cream">
+        <div className="relative mx-auto h-36 w-[150px]">
+          <Kid kid="pia" className="h-36 w-auto animate-peek" />
+          <span className="absolute bottom-2 right-0 grid h-10 w-10 place-items-center rounded-full bg-success text-white ring-4 ring-cream">
             <Check className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
           </span>
         </div>
@@ -51,6 +51,17 @@ export function OrderComplete() {
           Sipariş numaranız <strong className="tabular text-ink">{order.no}</strong>. Lütfen ödeme ve onay için aşağıdaki iki adımı tamamlayın.
         </p>
       </div>
+
+      {isPreview && (
+        <p role="note" className="mt-6 rounded-2xl border-2 border-dashed border-[#f1c46a] bg-butter/70 p-4 text-center text-[14.5px] text-ink-soft">
+          <strong className="text-ink">Önizleme sürümü:</strong> Bu sipariş gerçek değildir, işleme alınmaz.{' '}
+          {site.social.trendyol && (
+            <a href={site.social.trendyol} target="_blank" rel="noopener noreferrer" className="font-bold text-ink underline underline-offset-2">
+              Trendyol mağazamızdan sipariş verin
+            </a>
+          )}
+        </p>
+      )}
 
       <ol className="mt-8 space-y-4">
         <li className="rounded-3xl border-2 border-ink bg-white p-5 md:p-6">
