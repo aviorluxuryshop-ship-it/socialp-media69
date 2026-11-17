@@ -6,7 +6,8 @@
  * dosyadan beslenir; başka bir yerde değişiklik gerekmez.
  */
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://primekids.com.tr'
+// Kendi alan adınızı aldığınızda burayı (veya Vercel'de NEXT_PUBLIC_SITE_URL) değiştirin.
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://prime-kids.vercel.app'
 
 export const site = {
   name: 'PRIME KIDS',
@@ -20,7 +21,7 @@ export const site = {
     whatsapp: '905000000000',
     phoneDisplay: '0 (500) 000 00 00',
     phoneHref: '+905000000000',
-    email: 'destek@primekids.com.tr',
+    email: 'destek@primekids.com.tr', // GÜNCELLENECEK — gerçek e-posta adresiniz
     hours: 'Hafta içi 09:00 – 18:00 · Cumartesi 10:00 – 16:00',
     whatsappHours: 'WhatsApp hattımız her gün 09:00 – 21:00 arası yanıt verir.',
   },

@@ -7,7 +7,7 @@ import { BottomNav } from '@/components/BottomNav'
 import { CookieNotice } from '@/components/CookieNotice'
 import { Mascot } from '@/components/Mascot'
 import { UIProvider } from '@/components/UIProvider'
-import { SITE_URL, site } from '@/data/site'
+import { SITE_URL, isPreview, site } from '@/data/site'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
   icons: { icon: '/icon.svg', apple: '/apple-touch-icon.png' },
   formatDetection: { telephone: false },
+  // Gerçek iletişim/şirket bilgileri girilene kadar Google'da listelenmez.
+  ...(isPreview ? { robots: { index: false, follow: false } } : {}),
 }
 
 export const viewport: Viewport = {
