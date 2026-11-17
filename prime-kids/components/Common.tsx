@@ -76,7 +76,7 @@ export function TrustStrip({ compact = false }: { compact?: boolean }) {
   )
 }
 
-export function SectionHeading({ eyebrow, title, lead, action }: { eyebrow?: string; title: string; lead?: string; action?: React.ReactNode }) {
+export function SectionHeading({ eyebrow, title, lead, action }: { eyebrow?: React.ReactNode; title: string; lead?: string; action?: React.ReactNode }) {
   return (
     <div className="mb-6 flex flex-col gap-3 md:mb-9 md:flex-row md:items-end md:justify-between">
       <div>

@@ -37,7 +37,14 @@ function tipFor(pathname: string): Tip | null {
       event: 'pk-open-size-guide',
     }
   if (pathname.startsWith('/galeri'))
-    return { text: 'Beğendiğin kareye dokun, o ürünü hemen önüne getireyim!', cta: 'Tamamdır' }
+    return site.social.instagram
+      ? {
+          text: `Beğendiğin kareye dokun, ürünü göstereyim! Yeni kombinler için Instagram’da ${site.social.instagramHandle} hesabımızı takip edebilirsin.`,
+          cta: 'Instagram’a git',
+          href: site.social.instagram,
+          external: true,
+        }
+      : { text: 'Beğendiğin kareye dokun, o ürünü hemen önüne getireyim!', cta: 'Tamamdır' }
   if (pathname.startsWith('/iletisim') || pathname.startsWith('/hizmetler') || pathname.startsWith('/sss'))
     return {
       text: 'Aklına takılan bir şey mi var? WhatsApp’tan yaz, ekibimizden biri yanıtlasın.',

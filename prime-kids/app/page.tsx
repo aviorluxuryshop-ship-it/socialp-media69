@@ -256,7 +256,15 @@ export default function HomePage() {
       {/* ---------- GALERİ ---------- */}
       <section className="section container" data-reveal>
         <SectionHeading
-          eyebrow="Galeri"
+          eyebrow={
+            site.social.instagramHandle ? (
+              <>
+                Instagram · <span className="normal-case tracking-normal">{site.social.instagramHandle}</span>
+              </>
+            ) : (
+              'Galeri'
+            )
+          }
           title="Stil ilhamı"
           lead="Beğendiğiniz kareye dokunun, ürüne gidin."
           action={
@@ -277,15 +285,15 @@ export default function HomePage() {
             ))}
         </ul>
         {(site.social.instagram || site.social.trendyol) && (
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
             {site.social.instagram && (
-              <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="btn-secondary">
-                <InstagramIcon className="h-5 w-5" /> Instagram’da takip et {site.social.instagramHandle}
+              <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                <InstagramIcon className="h-5 w-5" /> Instagram’da takip et · {site.social.instagramHandle}
               </a>
             )}
             {site.social.trendyol && (
               <a href={site.social.trendyol} target="_blank" rel="noopener noreferrer" className="btn-secondary">
-                <StoreIcon className="h-5 w-5" /> Trendyol mağazamız ve yorumlar
+                <StoreIcon className="h-5 w-5" /> Trendyol mağazamız ve müşteri yorumları
               </a>
             )}
           </div>

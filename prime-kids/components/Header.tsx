@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { Menu, ShoppingBag, X, ChevronRight, ShieldCheck } from 'lucide-react'
 import { Logo } from '@/components/Logo'
-import { WhatsAppIcon } from '@/components/BrandIcons'
+import { InstagramIcon, StoreIcon, WhatsAppIcon } from '@/components/BrandIcons'
 import { nav, site, whatsappLink } from '@/data/site'
 import { useCart, summarize } from '@/lib/cart'
 import { useUI } from '@/components/UIProvider'
@@ -226,6 +226,20 @@ export function Header() {
                 <WhatsAppIcon className="h-5 w-5" /> WhatsApp’tan Yazın
               </a>
               <p className="mt-2 text-center text-[13px] text-ink-muted">{site.contact.whatsappHours}</p>
+              {(site.social.instagram || site.social.trendyol) && (
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {site.social.instagram && (
+                    <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="btn-secondary min-h-[44px] px-3 text-[13.5px]">
+                      <InstagramIcon className="h-[18px] w-[18px]" /> Instagram
+                    </a>
+                  )}
+                  {site.social.trendyol && (
+                    <a href={site.social.trendyol} target="_blank" rel="noopener noreferrer" className="btn-secondary min-h-[44px] px-3 text-[13.5px]">
+                      <StoreIcon className="h-[18px] w-[18px]" /> Trendyol
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

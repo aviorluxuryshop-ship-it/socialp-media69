@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AlertCircle, ChevronLeft, Clock, Maximize2, Minus, Plus, RotateCcw, Ruler, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
+import { AlertCircle, ChevronLeft, ChevronRight, Clock, Maximize2, Minus, Plus, RotateCcw, Ruler, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
 import type { Product } from '@/data/products'
 import { BADGE_LABEL, CATEGORY_LABEL, SIZE_CHART, getVariant, sizeLabel } from '@/data/products'
 import { site, whatsappLink } from '@/data/site'
@@ -12,7 +12,7 @@ import { deliveryEstimate, formatPrice } from '@/lib/format'
 import { useUI } from '@/components/UIProvider'
 import { Accordion, Breadcrumbs } from '@/components/Common'
 import { SizeFinder, SizeTable } from '@/components/SizeFinder'
-import { WhatsAppIcon } from '@/components/BrandIcons'
+import { StoreIcon, WhatsAppIcon } from '@/components/BrandIcons'
 import { Dialog } from '@/components/Dialog'
 import Link from 'next/link'
 import { useHydrated } from '@/lib/hooks'
@@ -259,6 +259,24 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
               </li>
             </ul>
           </div>
+
+          {site.social.trendyol && (
+            <a
+              href={site.social.trendyol}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex items-center gap-3 rounded-3xl bg-white p-4 ring-1 ring-line transition hover:ring-ink/30"
+            >
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#fff1e6] text-[#c2410c]">
+                <StoreIcon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0 flex-1 text-[14.5px] leading-snug">
+                <strong className="block font-display text-[15px]">Müşteri yorumlarımızı okuyun</strong>
+                <span className="text-ink-muted">Trendyol mağazamızdaki gerçek alışveriş değerlendirmeleri</span>
+              </span>
+              <ChevronRight className="h-5 w-5 shrink-0 text-ink-muted" aria-hidden="true" />
+            </a>
+          )}
 
           {/* Detaylar */}
           <div className="mt-6">

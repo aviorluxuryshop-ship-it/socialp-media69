@@ -27,9 +27,10 @@ export const site = {
 
   // Boş bırakılan bağlantılar sitede hiç gösterilmez.
   social: {
-    instagram: '', // GÜNCELLENECEK — örn. https://www.instagram.com/primekids
-    instagramHandle: '', // örn. @primekids
-    trendyol: '', // GÜNCELLENECEK — Trendyol mağaza adresi
+    instagram: 'https://www.instagram.com/primeekids/',
+    instagramHandle: '@primeekids',
+    // Paylaşım linkindeki takip parametreleri (kullanıcı no vb.) bilerek çıkarıldı.
+    trendyol: 'https://www.trendyol.com/magaza/x-m-1241715',
   },
 
   /** Satıcı bilgileri — Mesafeli Satış Sözleşmesi ve Ön Bilgilendirme Formu için zorunludur. */
