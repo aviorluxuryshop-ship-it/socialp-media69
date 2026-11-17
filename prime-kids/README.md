@@ -16,7 +16,7 @@ npm run typecheck  # TypeScript
 
 | Adres | İçerik |
 | --- | --- |
-| `/` | Ana sayfa: karşılama, Kız / Erkek / Bebek & Mini kutuları, tüm ürünler, güvenceler, Instagram/Trendyol |
+| `/` | Ana sayfa: karşılama, kayan “Öne çıkanlar” vitrini, Kız / Erkek / Bebek & Mini kutuları, tüm ürünler, güvenceler, Instagram/Trendyol |
 | `/urunler` | Tüm ürünler — kategori, yaş, kışlık filtresi, arama, sıralama (filtreler adrese yazılır, paylaşılabilir) |
 | `/urun/[slug]` | Ürün detayı — renk/beden seçimi, beden rehberi penceresi, teslim tarihi tahmini, mobilde yapışkan “Sepete Ekle” |
 | `/sepet` | Sepetim — adet/beden değiştirme, geri alınabilir silme, ücretsiz kargo çubuğu, ücretsiz hediye paketi + not |
@@ -34,6 +34,7 @@ npm run typecheck  # TypeScript
 | --- | --- |
 | `data/site.ts` | Marka, WhatsApp/telefon/e-posta, Instagram & Trendyol, **şirket (satıcı) bilgileri**, IBAN, kargo ücreti ve eşiği, iade süresi |
 | `data/products.ts` | Ürünler, fiyatlar, renkler, bedenler, kumaş ve bakım bilgileri, beden tablosu |
+| `data/featured.ts` | Ana sayfadaki kayan vitrin: hangi ürün, hangi renk fotoğrafı, hangi etiket (“En Çok Sepete Eklenen”, “Kışın En İyisi”…) |
 | `data/faq.ts` | Sıkça sorulan sorular |
 | `data/legal.ts` | Yasal metinler (satıcı bilgileri otomatik doldurulur) |
 | `public/images/products/` | Ürün fotoğrafları (`<model>-<renk>.jpg`) |
@@ -66,6 +67,17 @@ kendi güvenli sayfasında/iframe’inde girilir. Bağlantı noktası tek dosyad
 
 Bağlanana kadar siparişler **Havale/EFT** ile alınır: onay sayfası IBAN’ı gösterir ve
 sipariş özeti tek dokunuşla mağazanın WhatsApp hattına gönderilir.
+
+## Öne çıkanlar vitrini
+
+Ana sayfada karşılamanın hemen altında. Her 2 saniyede bir sonraki ürüne kayar,
+sondan sonra başa döner; parmakla ya da fareyle elle kaydırılabilir. Üzerine
+gelince, dokununca veya klavyeyle odaklanınca durur, düğmeye basıldıktan sonra
+4 sn bekler; “Durdur” düğmesiyle tamamen durdurulur. Telefonda “hareketi azalt”
+açıksa kendiliğinden kaymaz.
+
+Etiketler (`data/featured.ts`) şu an örnek olarak dağıtılmıştır; gerçek satış
+verinize göre (ör. Trendyol’da en çok sepete eklenen ürün) değiştirin.
 
 ## Kenardan bakan çocuklar
 

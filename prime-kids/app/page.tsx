@@ -5,6 +5,7 @@ import { products } from '@/data/products'
 import { site } from '@/data/site'
 import { ProductCard } from '@/components/ProductCard'
 import { TrustStrip } from '@/components/Common'
+import { FeaturedCarousel } from '@/components/FeaturedCarousel'
 import { InstagramIcon, StoreIcon } from '@/components/BrandIcons'
 import { Heart, Star } from '@/components/Doodles'
 
@@ -61,6 +62,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ---------- ÖNE ÇIKANLAR (kayan vitrin) ---------- */}
+      <FeaturedCarousel />
 
       {/* ---------- KATEGORİLER ---------- */}
       <section className="container mt-10 md:mt-14" aria-labelledby="kategoriler">
