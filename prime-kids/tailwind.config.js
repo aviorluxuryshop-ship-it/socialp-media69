@@ -15,6 +15,12 @@ module.exports = {
         line: '#e3e8f2',
         // Neşeli çocuk paleti
         brand: { DEFAULT: '#2563eb', dark: '#1d4ed8', soft: '#e8f0ff' },
+        // Bölüm rengi: kız = pembe, erkek = mavi, bebek = mint (globals.css › data-theme)
+        accent: {
+          DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
+          dark: 'rgb(var(--accent-dark) / <alpha-value>)',
+          soft: 'rgb(var(--accent-soft) / <alpha-value>)',
+        },
         sun: { DEFAULT: '#ffc83d', soft: '#fff6d9' },
         pink: { DEFAULT: '#c2255c', bright: '#ff6f9c', soft: '#ffeef5' },
         mint: { DEFAULT: '#1f9d74', bright: '#3cc9a0', soft: '#e6f8f1' },
@@ -34,7 +40,7 @@ module.exports = {
         card: '0 1px 2px rgba(30,42,74,.05), 0 8px 24px -10px rgba(30,42,74,.16)',
         lift: '0 2px 4px rgba(30,42,74,.06), 0 18px 40px -16px rgba(30,42,74,.28)',
         sheet: '0 -10px 40px -10px rgba(30,42,74,.25)',
-        btn: '0 8px 18px -8px rgba(37,99,235,.6)',
+        btn: '0 8px 18px -8px rgb(var(--accent) / .6)',
       },
       borderRadius: { '4xl': '2rem' },
       transitionTimingFunction: { soft: 'cubic-bezier(.22,1,.36,1)' },

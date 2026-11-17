@@ -87,7 +87,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
   const askText = `Merhaba, "${product.name}" (${variant.name}${size ? `, ${sizeLabel(size)}` : ''}) hakkında bilgi almak istiyorum.`
 
   return (
-    <div className="container pb-10 pt-4 md:pt-6">
+    <div className="container pb-10 pt-4 md:pt-6" data-theme={product.category}>
       <div className="hidden md:block">
         <Breadcrumbs
           items={[
@@ -105,7 +105,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
       <div className="mt-1 grid gap-6 md:mt-4 md:grid-cols-[1.05fr_1fr] md:gap-10 lg:gap-14">
         {/* ---------- Görsel ---------- */}
         <div className="md:sticky md:top-24 md:self-start">
-          <div className="relative overflow-hidden rounded-[28px] bg-sand">
+          <div className="relative overflow-hidden rounded-[28px] bg-accent-soft">
             <button type="button" onClick={() => setZoomOpen(true)} className="relative block aspect-[4/5] w-full cursor-zoom-in md:aspect-[3/4]" aria-label="Fotoğrafı büyüt">
               <Image
                 key={variant.id}
@@ -133,7 +133,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
           <h1 className="text-[30px] font-bold leading-tight md:text-[38px]">{product.name}</h1>
           <p className="mt-1.5 text-[16.5px] text-ink-soft">{product.short}</p>
           <p className="mt-3 flex items-baseline gap-2">
-            <span className="tabular font-display text-[30px] font-semibold text-brand">{formatPrice(product.price)}</span>
+            <span className="tabular font-display text-[30px] font-semibold text-accent-dark">{formatPrice(product.price)}</span>
             <span className="text-[13.5px] font-semibold text-ink-muted">KDV dahil · takım fiyatı</span>
           </p>
 
@@ -153,7 +153,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
                     aria-label={c.name}
                     title={c.name}
                     className={`relative h-[74px] w-[56px] overflow-hidden rounded-2xl bg-sand ring-offset-2 ring-offset-cream transition md:h-[84px] md:w-[64px] ${
-                      c.id === variant.id ? 'ring-[3px] ring-brand' : 'ring-1 ring-line hover:ring-brand/50'
+                      c.id === variant.id ? 'ring-[3px] ring-accent' : 'ring-1 ring-line hover:ring-accent/50'
                     }`}
                   >
                     <Image src={c.image} alt="" fill sizes="64px" className="object-cover object-top" />
@@ -184,7 +184,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
                     onClick={() => chooseSize(s)}
                     aria-pressed={size === s}
                     className={`flex min-h-[58px] flex-col items-center justify-center rounded-2xl border-2 text-center transition ${
-                      size === s ? 'border-brand bg-brand text-white' : sizeError ? 'border-danger bg-white' : 'border-line bg-white hover:border-brand'
+                      size === s ? 'border-accent bg-accent text-white' : sizeError ? 'border-danger bg-white' : 'border-line bg-white hover:border-accent'
                     }`}
                   >
                     <span className="font-display text-[16px] font-semibold tabular">{s} yaş</span>
@@ -223,13 +223,13 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
 
           {/* Kısa güvenceler */}
           <ul className="mt-5 flex flex-wrap gap-2 text-[14px] font-semibold">
-            <li className="flex items-center gap-1.5 rounded-full bg-sky px-3 py-1.5 text-brand">
+            <li className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1.5 text-accent-dark">
               <Truck className="h-4 w-4" aria-hidden="true" /> {formatPrice(site.shipping.freeOver).replace(',00', '')} üzeri kargo bedava
             </li>
-            <li className="flex items-center gap-1.5 rounded-full bg-mint-soft px-3 py-1.5 text-success">
+            <li className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1.5 text-accent-dark">
               <RotateCcw className="h-4 w-4" aria-hidden="true" /> {site.returns.days} gün kolay iade
             </li>
-            <li className="flex items-center gap-1.5 rounded-full bg-pink-soft px-3 py-1.5 text-pink">
+            <li className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1.5 text-accent-dark">
               <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Güvenli ödeme
             </li>
           </ul>
@@ -244,7 +244,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
             )}
           </p>
           {site.social.trendyol && (
-            <a href={site.social.trendyol} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-[40px] items-center gap-1.5 text-[15px] font-semibold text-brand">
+            <a href={site.social.trendyol} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-[40px] items-center gap-1.5 text-[15px] font-semibold text-accent-dark">
               <StoreIcon className="h-[18px] w-[18px]" /> Müşteri yorumlarımız Trendyol’da <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </a>
           )}
@@ -262,7 +262,7 @@ export function ProductDetail({ product, initialColor }: { product: Product; ini
                       <ul className="mt-3 space-y-1.5">
                         {product.highlights.map((h) => (
                           <li key={h} className="flex gap-2">
-                            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" aria-hidden="true" /> {h}
+                            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" /> {h}
                           </li>
                         ))}
                       </ul>

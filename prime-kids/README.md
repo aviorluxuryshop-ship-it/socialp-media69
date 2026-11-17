@@ -16,14 +16,13 @@ npm run typecheck  # TypeScript
 
 | Adres | İçerik |
 | --- | --- |
-| `/` | Ana sayfa: hero, hızlı kategoriler, güvenceler, yeni sezon, yaşa göre alışveriş, renk vitrini, beden bulucu, hizmetler, galeri, SSS |
+| `/` | Ana sayfa: karşılama, Kız / Erkek / Bebek & Mini kutuları, tüm ürünler, güvenceler, Instagram/Trendyol |
 | `/urunler` | Tüm ürünler — kategori, yaş, kışlık filtresi, arama, sıralama (filtreler adrese yazılır, paylaşılabilir) |
 | `/urun/[slug]` | Ürün detayı — renk/beden seçimi, beden rehberi penceresi, teslim tarihi tahmini, mobilde yapışkan “Sepete Ekle” |
 | `/sepet` | Sepetim — adet/beden değiştirme, geri alınabilir silme, ücretsiz kargo çubuğu, ücretsiz hediye paketi + not |
 | `/odeme` | Güvenli ödeme — üyeliksiz, adres formu (81 il), fatura adresi, sözleşme onayı, ödeme yöntemi |
 | `/siparis-alindi` | Sipariş onayı — sipariş no, IBAN, siparişi WhatsApp’tan iletme |
 | `/hizmetler` | Beden danışmanlığı, kolay değişim, aynı gün kargo, hediye paketi, kardeş kombini, toplu sipariş |
-| `/galeri` | Filtrelenebilir galeri, kaydırılabilir büyük görüntüleyici, “Ürüne git” |
 | `/beden-rehberi` | Boya göre beden bulucu, beden tablosu, ölçüm rehberi |
 | `/iletisim` | WhatsApp, telefon, e-posta, çalışma saatleri, şirket bilgileri, iletişim formu |
 | `/hakkimizda`, `/sss` | Marka hikâyesi, sıkça sorulan sorular |
@@ -40,7 +39,7 @@ npm run typecheck  # TypeScript
 | `public/images/products/` | Ürün fotoğrafları (`<model>-<renk>.jpg`) |
 
 Yeni ürün: fotoğrafı `public/images/products/` içine koyun, `data/products.ts` dizisine
-bir nesne ekleyin. Liste, filtreler, galeri, sitemap ve arama otomatik güncellenir.
+bir nesne ekleyin. Liste, filtreler ve sitemap otomatik güncellenir.
 
 ## Yayın öncesi kontrol listesi
 

@@ -8,6 +8,10 @@ const nextConfig = {
     deviceSizes: [360, 480, 640, 828, 1080, 1280, 1600],
     imageSizes: [64, 96, 128, 200, 256, 384],
   },
+  async redirects() {
+    // Galeri kaldırıldı; eski bağlantılar ürünler sayfasına gider.
+    return [{ source: '/galeri', destination: '/urunler', permanent: true }]
+  },
   async headers() {
     return [
       {

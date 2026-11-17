@@ -258,14 +258,3 @@ export function recommendSize(heightCm: number) {
   if (bigger) return { row: bigger, between: true }
   return { row: SIZE_CHART[SIZE_CHART.length - 1], between: false }
 }
-
-/** Galeri — tüm kareler, ürün sayfalarına bağlı */
-export const galleryItems = products.flatMap((p) =>
-  p.colors.map((c) => ({
-    src: c.image,
-    alt: c.alt,
-    product: p,
-    color: c,
-    href: `/urun/${p.slug}?renk=${c.id}`,
-  })),
-)

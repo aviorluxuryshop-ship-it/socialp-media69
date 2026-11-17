@@ -18,8 +18,8 @@ export function ProductCard({ product, priority = false, sizes = '(min-width: 10
   const range = `${product.sizes[0].split('-')[0]}–${product.sizes[product.sizes.length - 1].split('-')[1]} yaş`
 
   return (
-    <article className="group flex flex-col">
-      <Link href={href} className="relative block overflow-hidden rounded-[24px] bg-sand" aria-label={`${product.name}, ${active.name}, ${formatPrice(product.price)}`}>
+    <article className="group flex flex-col" data-theme={product.category}>
+      <Link href={href} className="relative block overflow-hidden rounded-[24px] bg-accent-soft" aria-label={`${product.name}, ${active.name}, ${formatPrice(product.price)}`}>
         <div className="relative aspect-[3/4]">
           {product.colors
             .filter((c) => shown.includes(c.id))
@@ -42,12 +42,12 @@ export function ProductCard({ product, priority = false, sizes = '(min-width: 10
 
       <div className="mt-2.5 flex flex-1 flex-col px-1">
         <h3 className="font-display text-[16.5px] font-medium leading-snug md:text-[18px]">
-          <Link href={href} tabIndex={-1} className="block py-1.5 hover:text-brand">
+          <Link href={href} tabIndex={-1} className="block py-1.5 hover:text-accent-dark">
             {product.name}
           </Link>
         </h3>
         <div className="flex flex-wrap items-baseline justify-between gap-x-2">
-          <p className="tabular whitespace-nowrap font-display text-[17px] font-semibold text-brand">{formatPrice(product.price)}</p>
+          <p className="tabular whitespace-nowrap font-display text-[17px] font-semibold text-accent-dark">{formatPrice(product.price)}</p>
           <p className="whitespace-nowrap text-[13px] font-semibold text-ink-muted">{range}</p>
         </div>
         {product.colors.length > 1 && (
@@ -64,7 +64,7 @@ export function ProductCard({ product, priority = false, sizes = '(min-width: 10
                 className="grid h-8 w-8 place-items-center rounded-full"
               >
                 <span
-                  className={`h-[18px] w-[18px] rounded-full border border-ink/15 transition ${c.id === active.id ? 'ring-2 ring-brand ring-offset-2' : ''}`}
+                  className={`h-[18px] w-[18px] rounded-full border border-ink/15 transition ${c.id === active.id ? 'ring-2 ring-accent ring-offset-2' : ''}`}
                   style={{ backgroundColor: c.hex }}
                 />
               </button>

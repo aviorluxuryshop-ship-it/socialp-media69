@@ -95,7 +95,6 @@ export const nav = [
   { href: '/', label: 'Ana Sayfa' },
   { href: '/urunler', label: 'Ürünler' },
   { href: '/hizmetler', label: 'Hizmetler' },
-  { href: '/galeri', label: 'Galeri' },
   { href: '/iletisim', label: 'İletişim' },
 ] as const
 

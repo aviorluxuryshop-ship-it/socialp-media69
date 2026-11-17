@@ -40,7 +40,7 @@ export function PageHeader({
   children?: React.ReactNode
 }) {
   return (
-    <section className="bg-gradient-to-b from-sky to-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-accent-soft to-white">
       <div className="container pb-6 pt-4 md:pb-10 md:pt-6">
         {crumbs && <Breadcrumbs items={[{ label: 'Ana Sayfa', href: '/' }, ...crumbs]} />}
         {eyebrow && <p className="eyebrow mt-4">{eyebrow}</p>}

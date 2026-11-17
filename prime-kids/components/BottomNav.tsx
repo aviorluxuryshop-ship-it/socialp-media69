@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
-import { Home, LayoutGrid, ShoppingBag, Images } from 'lucide-react'
+import { Home, LayoutGrid, ShoppingBag, Ruler } from 'lucide-react'
 import { WhatsAppIcon } from '@/components/BrandIcons'
 import { useCart, summarize } from '@/lib/cart'
 import { useUI } from '@/components/UIProvider'
@@ -28,7 +28,7 @@ export function BottomNav() {
   const items = [
     { href: '/', label: 'Ana Sayfa', icon: Home, active: pathname === '/' },
     { href: '/urunler', label: 'Ürünler', icon: LayoutGrid, active: pathname.startsWith('/urunler') },
-    { href: '/galeri', label: 'Galeri', icon: Images, active: pathname.startsWith('/galeri') },
+    { href: '/beden-rehberi', label: 'Beden', icon: Ruler, active: pathname.startsWith('/beden-rehberi') },
     { href: '/sepet', label: 'Sepetim', icon: ShoppingBag, active: false, badge: count },
   ]
 
