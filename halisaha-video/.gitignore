@@ -1,0 +1,6 @@
+node/node_modules/
+preview/
+preview2/
+frames/
+audio/*.wav
+mix.wav
