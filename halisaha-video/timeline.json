@@ -1,16 +1,63 @@
 {
-  "fps": 25,
-  "duration": 83.0,
-  "dialog": [
-    {"clip": "c_g1",     "speaker": "comm", "start": 8.6,  "text": "Gooool! Bir sıfır!"},
-    {"clip": "c_g2",     "speaker": "comm", "start": 17.5, "text": "Gol! İki iki!"},
-    {"clip": "c_g3",     "speaker": "comm", "start": 21.5, "text": "Üç üç! Ortalık gerildi!"},
-    {"clip": "c_final1", "speaker": "comm", "start": 28.0, "text": "Doksan artı beşinci dakika... son hücum... uzaktan çok sert vurdu... GOOOOL! Doksana! Dört üç!"},
-    {"clip": "a_dayina", "speaker": "red",  "start": 35.8, "text": "Ooo, dayına çakayım!"},
-    {"clip": "b_nediyor","speaker": "blue", "start": 39.7, "text": "Ne diyor lan orospu çocuğu? Sikerim seni şurada!"},
-    {"clip": "a_golgol", "speaker": "red",  "start": 46.5, "text": "Gol, gol, gol! Dalgayı belki inanırsın!"},
-    {"clip": "b_tukurdu","speaker": "blue", "start": 58.6, "text": "Yüzüme tükürdü piç! Gel bir daha vuracağım sana!"},
-    {"clip": "a_doktor", "speaker": "red",  "start": 68.2, "text": "Doktor yok mu? Doktor! Adam ölüyor amk!"},
-    {"clip": "r_hakem",  "speaker": "ref",  "start": 74.2, "text": "Hop hop hop! Ne oluyor burada ya?!"}
-  ]
+ "fps": 25,
+ "duration": 75.0,
+ "dialog": [
+  {
+   "clip": "c_g1",
+   "speaker": "comm",
+   "start": 8.6,
+   "text": "Gooool! Bir sıfır!"
+  },
+  {
+   "clip": "c_g2",
+   "speaker": "comm",
+   "start": 17.5,
+   "text": "Gol! İki iki!"
+  },
+  {
+   "clip": "c_g3",
+   "speaker": "comm",
+   "start": 21.5,
+   "text": "Üç üç! Ortalık gerildi!"
+  },
+  {
+   "clip": "c_final1",
+   "speaker": "comm",
+   "start": 28.0,
+   "text": "Doksan artı beşinci dakika... son hücum... uzaktan çok sert vurdu... GOOOOL! Doksana! Dört üç!"
+  },
+  {
+   "clip": "a_dayina",
+   "speaker": "red",
+   "start": 35.8,
+   "text": "Ooo, dayına çakayım!"
+  },
+  {
+   "clip": "b_nediyor",
+   "speaker": "blue",
+   "start": 39.7,
+   "text": "Ne diyor lan orospu çocuğu? Sikerim seni şurada!"
+  },
+  {
+   "clip": "a_golgol",
+   "speaker": "red",
+   "start": 46.5,
+   "text": "Gol, gol, gol! Dalgayı belki inanırsın!"
+  },
+  {
+   "clip": "b_tukurdu",
+   "speaker": "blue",
+   "start": 58.6,
+   "text": "Yüzüme tükürdü piç! Gel bir daha vuracağım sana!"
+  },
+  {
+   "clip": "a_doktor",
+   "speaker": "red",
+   "start": 68.2,
+   "text": "Doktor yok mu? Doktor! Adam ölüyor amına koyim!"
+  }
+ ],
+ "slowAt": 70.15,
+ "slowFactor": 0.5,
+ "blackAt": 72.7
 }

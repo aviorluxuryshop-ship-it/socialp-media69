@@ -953,7 +953,7 @@ const SHOTS = [
     });
   }],
   // ---------------- 14: RED STAGGERS OUT (67.5-72)
-  [67.5, 72, lt => {
+  [67.5, 999, lt => {
     showBug = false; REF.root.visible = false;
     const fade = 1 - seg(lt, 2.0, 3.8);
     updateCloud(lt + 14, 1.2 * fade + 0.0001, 0.8 * fade);
@@ -964,13 +964,13 @@ const SHOTS = [
     applyPose(RED, P({ lean: 0.1 + Math.sin(lt * 4) * 0.15, side: Math.sin(lt * 3.3) * 0.18, headZ: Math.sin(lt * 4) * 0.25, sh: [[-1.6 + Math.sin(lt * 13) * 0.6, 1.4, 0], [-1.6 - Math.sin(lt * 13) * 0.6, 1.4, 0]], el: [-0.4, -0.4], hp: [Math.sin(lt * 7) * 0.4, -Math.sin(lt * 7) * 0.4], kn: [0.3, 0.3], mouth: 0.15 + m * 1.2, eye: 1.5, brow: -1, stars: 1, sweat: 1 }));
     // blue lying on ground, revealed as cloud fades
     BLUE.root.visible = fade < 0.9;
-    BLUE.root.position.set(0.3, 0.16, -0.2); BLUE.root.rotation.set(-Math.PI / 2, 0, 0.6);
+    BLUE.root.position.set(1.4, 0.16, 0.3); BLUE.root.rotation.set(-Math.PI / 2, 0, 0.6);
     applyPose(BLUE, P({ hp: [-0.9 + Math.sin(lt * 10) * 0.5, -0.9 - Math.sin(lt * 10) * 0.5], kn: [1.0, 1.0], sh: [[-0.3, 1.4 + Math.sin(lt * 9) * 0.3, 0], [-0.3, 1.4, 0]], el: [-0.4, -0.4], eye: 0.4, stars: 1, mouth: 0.3 }));
     ballAt([0.4, 0.11, -3]);
     cam([-0.3, 1.6, 6.8], [-0.3, 1.15, 1.2], 36);
   }],
   // ---------------- 15: REFEREE (72-78.5)
-  [72, 78.5, lt => {
+  [1000, 1001, lt => {
     showBug = false; updateCloud(0, 0, 0);
     dishevel(RED, true); dishevel(BLUE, true);
     // red still panicking, pointing at blue
@@ -1002,7 +1002,7 @@ const SHOTS = [
     });
   }],
   // ---------------- 16: END CARD (78.5-83)
-  [78.5, 83.01, lt => {
+  [1001, 1002, lt => {
     showBug = false;
     // freeze on referee shot
     const fr = 6.4;
@@ -1030,8 +1030,10 @@ function resetFrame() {
   for (const c of CHARS) { c.root.visible = true; c.root.rotation.set(0, 0, 0); dishevel(c, false); }
   bulgeNet(1, 0); bulgeNet(-1, 0);
 }
+const SLOW_AT = TL.slowAt, SLOW_F = TL.slowFactor, BLACK_AT = TL.blackAt;
 window.renderFrame = function (frame) {
-  T = frame / FPS;
+  const RT = frame / FPS;
+  T = RT < SLOW_AT ? RT : SLOW_AT + (RT - SLOW_AT) * SLOW_F;
   resetFrame();
   const sh = SHOTS.find(s => T >= s[0] && T < s[1]) || SHOTS[SHOTS.length - 1];
   sh[2](T - sh[0]);
@@ -1043,7 +1045,14 @@ window.renderFrame = function (frame) {
   ov.clearRect(0, 0, W, H);
   for (const f of overlayFns) f();
   if (showBug) scoreBug(score[0], score[1], minute);
+  if (RT > SLOW_AT) {
+    const k = seg(RT, SLOW_AT, SLOW_AT + 0.4);
+    ov.fillStyle = `rgba(20,10,0,${0.18 * k})`; ov.fillRect(0, 0, W, H);
+    vignette(0.6 * k); letterbox(k);
+  }
   subtitles();
+  const blk = seg(RT, BLACK_AT, BLACK_AT + 1.2);
+  if (blk > 0) { ov.fillStyle = `rgba(0,0,0,${blk})`; ov.fillRect(0, 0, W, H); }
   return true;
 };
 window.TOTAL_FRAMES = Math.round(TL.duration * FPS);

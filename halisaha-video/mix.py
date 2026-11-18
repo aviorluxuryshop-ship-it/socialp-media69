@@ -113,20 +113,20 @@ def fight(t0, t1, dens):
 fight(53.2, 58.0, 4); fight(58.0, 62.5, 1.2); fight(62.5, 67.6, 6.5); fight(67.6, 69.5, 2)
 # blue pops out
 put(whoosh(0.4), 58.0); put(whoosh(0.4), 62.0); put(poof() * 1.5, 62.4)
-# referee: running steps, whistle
-for t in np.arange(72.0, 73.6, 0.2): put(step(), t)
-put(whistle(1.1) * 1.3, 73.0)
-for t in np.arange(72.5, 78.0, 0.6): put(boing() * 0.15, t)   # blue wiggling on the ground
-# sad trombone end
-for k, (f, d) in enumerate([(233, 0.45), (220, 0.45), (208, 0.45), (196, 1.4)]):
-    put(boop(f, d, 0.18), 78.7 + k * 0.5)
+# slow-motion ending: muffle everything after slowAt, add low drone + boom at blackout
+sa = int(tl['slowAt'] * SR)
+tail = mix[sa:].copy(); mix[sa:] = lowpass(tail, 350) * 1.6 * np.linspace(1, 0.2, len(tail))
+dr = tt(4.0); put(np.sin(2 * np.pi * 48 * dr) * 0.25 * np.minimum(1, dr * 2) * np.minimum(1, (4.0 - dr)), tl['slowAt'])
+put(whoosh(1.2) * 1.2, tl['slowAt'] - 0.3)
+put(kick() * 1.6, tl['blackAt'] + 0.6); put(poof(2.0) * 0.8, tl['blackAt'] + 0.6)
 
 # --- dialogue (with light compression / level matching)
 for d in tl['dialog']:
-    s = load(d['clip']); s = s / (np.max(np.abs(s)) + 1e-6) * 0.85
+    s = load(d['clip'] + ('_slow' if d['clip'] == 'a_doktor' else '')); s = s / (np.max(np.abs(s)) + 1e-6) * 0.85
     g = 0.9 if d['speaker'] != 'comm' else 0.75
     put(s, d['start'], g)
     # duck ambience under speech
+fa = int((tl['blackAt'] + 1.2) * SR); mix[fa:] *= np.linspace(1, 0, len(mix) - fa) ** 2
 mix = np.tanh(mix * 0.95)
 mix = mix[:int(tl['duration'] * SR)]
 out = (mix / np.max(np.abs(mix)) * 0.92 * 32767).astype(np.int16)
