@@ -305,8 +305,8 @@ function makeChar(o) {
   return c;
 }
 
-const RED = makeChar({ name: 'TAYFUN', num: '10', jersey: 0xd7262e, trim: 0xffffff, trimCss: '#7a0d12', shorts: 0xffffff, socks: 0xd7262e, skin: 0xd9a27a, hair: 0x1a1210, hairStyle: 'curly', stubble: 0x8a6a55, boots: 0xffd400 });
-const BLUE = makeChar({ name: 'ERCAN', num: '7', jersey: 0x1f5fd1, trim: 0xffffff, trimCss: '#0a2a6a', shorts: 0x10224a, socks: 0x1f5fd1, skin: 0xc98f66, hair: 0x2a1c14, hairStyle: 'buzz', moustache: true, boots: 0xff3b8d });
+const RED = makeChar({ name: 'DORUK', num: '10', jersey: 0xd7262e, trim: 0xffffff, trimCss: '#7a0d12', shorts: 0xffffff, socks: 0xd7262e, skin: 0xd9a27a, hair: 0x1a1210, hairStyle: 'curly', stubble: 0x8a6a55, boots: 0xffd400 });
+const BLUE = makeChar({ name: 'SEYDU', num: '7', jersey: 0x1f5fd1, trim: 0xffffff, trimCss: '#0a2a6a', shorts: 0x10224a, socks: 0x1f5fd1, skin: 0xc98f66, hair: 0x2a1c14, hairStyle: 'buzz', moustache: true, boots: 0xff3b8d });
 const REF = makeChar({ name: 'HAKEM', num: '', jersey: 0x151515, trim: 0xf5d000, trimCss: '#000', shorts: 0x111111, socks: 0x111111, skin: 0xe0b08a, hair: 0x555555, hairStyle: 'bald', moustache: true, whistle: true, brow: 0x333333 });
 const CHARS = [RED, BLUE, REF];
 
@@ -494,9 +494,9 @@ function scoreBug(r, b, minute) {
   ov.fillStyle = '#1f5fd1'; ov.fillRect(x + 262, y + 8, 10, 30);
   ov.fillStyle = '#f2f2f2'; ov.fillRect(x + 140, y + 4, 92, 38);
   ov.globalAlpha = 1;
-  txt('TAYFUN', x + 78, y + 24, 20, '#fff', { stroke: false });
+  txt('DORUK', x + 78, y + 24, 20, '#fff', { stroke: false });
   txt(`${r} - ${b}`, x + 186, y + 24, 26, '#0d1424', { stroke: false });
-  txt('ERCAN', x + 335, y + 24, 20, '#fff', { stroke: false });
+  txt('SEYDU', x + 335, y + 24, 20, '#fff', { stroke: false });
   ov.fillStyle = '#2bd46a'; ov.beginPath(); ov.roundRect(x + 425, y, 96, 46, 8); ov.fill();
   txt(minute, x + 473, y + 24, 22, '#06210f', { stroke: false });
   ov.restore();
@@ -504,7 +504,7 @@ function scoreBug(r, b, minute) {
 function subtitles() {
   for (const d of TL.dialog) {
     if (T >= d.start && T <= d.start + d.dur + 0.4) {
-      const who = { red: ['TAYFUN', '#ff5a5f'], blue: ['ERCAN', '#5aa2ff'], ref: ['HAKEM', '#ffd400'], comm: ['SPİKER', '#9be89b'] }[d.speaker];
+      const who = { red: ['DORUK', '#ff5a5f'], blue: ['SEYDU', '#5aa2ff'], ref: ['HAKEM', '#ffd400'], comm: ['SPİKER', '#9be89b'] }[d.speaker];
       const a = clamp((T - d.start) * 6) * clamp((d.start + d.dur + 0.4 - T) * 6);
       ov.save(); ov.globalAlpha = a * 0.7; ov.fillStyle = '#000';
       ov.font = 'bold 30px DejaVu Sans';
@@ -605,7 +605,7 @@ const SHOTS = [
       const k = easeOut(seg(lt, 0.3, 1.1));
       txt('HALI SAHA', W / 2, 260, 96, '#ffde00', { scale: 0.6 + 0.4 * k, alpha: k, lw: 14 });
       txt('DERBİSİ', W / 2, 360, 120, '#fff', { scale: 0.6 + 0.4 * easeOut(seg(lt, 0.6, 1.4)), alpha: seg(lt, 0.6, 1.4), lw: 16 });
-      txt('TAYFUN  vs  ERCAN', W / 2, 460, 36, '#fff', { alpha: seg(lt, 1.4, 2.0) });
+      txt('DORUK  vs  SEYDU', W / 2, 460, 36, '#fff', { alpha: seg(lt, 1.4, 2.0) });
       txt('Tamamen kurgusal 3D animasyon', W / 2, 660, 20, '#cfd8ff', { alpha: seg(lt, 1.6, 2.2) * 0.8, lw: 4 });
       ov.fillStyle = `rgba(0,0,0,${Math.max(0, 1 - lt * 1.5)})`; ov.fillRect(0, 0, W, H);
     });
@@ -1012,7 +1012,7 @@ const SHOTS = [
     overlayFns.push(() => {
       ov.fillStyle = `rgba(0,0,0,${0.55 * k})`; ov.fillRect(0, 0, W, H);
       txt('MAÇ SONUCU', W / 2, 170, 44, '#cfd8ff', { alpha: k });
-      txt('TAYFUN 4 - 3 ERCAN', W / 2, 250, 70, '#fff', { alpha: seg(lt, 0.3, 0.8), lw: 10 });
+      txt('DORUK 4 - 3 SEYDU', W / 2, 250, 70, '#fff', { alpha: seg(lt, 0.3, 0.8), lw: 10 });
       txt('Kazanan: Doktor', W / 2, 350, 64, '#ffde00', { alpha: seg(lt, 1.0, 1.5), rot: -0.04, lw: 10 });
       txt('Rövanş: Gelecek Salı, aynı saha', W / 2, 440, 32, '#fff', { alpha: seg(lt, 1.8, 2.3) });
       txt('SON', W / 2, 560, 90, '#ff5a5f', { alpha: seg(lt, 2.6, 3.0), scale: 0.8 + 0.2 * easeOut(seg(lt, 2.6, 3.0)), lw: 12 });
