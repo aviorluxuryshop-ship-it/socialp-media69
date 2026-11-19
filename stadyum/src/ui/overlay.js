@@ -1,5 +1,6 @@
 import { onBuyTicket, onExitStadium } from '../flow.js';
-import { onModeChange } from '../state.js';
+import { onModeChange, state } from '../state.js';
+import { leaveSection } from '../sectionView.js';
 import { periodName } from '../scene/lighting.js';
 
 const fmt = (h) => {
@@ -43,7 +44,7 @@ export function createOverlay(root) {
     clearTimeout(hintTimer);
     hintTimer = setTimeout(() => hintIn.classList.add('is-hidden'), ms);
   };
-  back.addEventListener('click', () => onExitStadium());
+  back.addEventListener('click', () => (state.mode === 'section' ? leaveSection() : onExitStadium()));
   buy.addEventListener('click', () => onBuyTicket());
 
   const chrome = [root.querySelector('.brand'), root.querySelector('#clock')];
@@ -53,6 +54,7 @@ export function createOverlay(root) {
     cta.classList.toggle('is-hidden', !ext);
     hint.classList.toggle('is-hidden', !ext);
     back.classList.toggle('is-hidden', !inside);
+    back.textContent = mode === 'section' ? '← Tüm stadyum' : '← Dışarı çık';
     sectionBar.classList.toggle('is-hidden', !inside);
     chrome[0]?.classList.toggle('is-faded', !ext);
     chrome[1]?.classList.toggle('is-faded', mode === 'entering');
@@ -61,7 +63,7 @@ export function createOverlay(root) {
       toast.textContent = prev === 'exterior' ? 'Stadyuma giriliyor…' : 'Dışarı çıkılıyor…';
       toast.classList.add('is-on');
     } else toast.classList.remove('is-on');
-    if (mode === 'interior' && prev === 'entering') showHint('Döndürmek için sürükleyin · Yakınlaştırmak için iki parmak');
+    if (mode === 'interior' && prev === 'entering') showHint('Döndürmek için sürükleyin · Bir tribüne dokunarak bölgeyi seçin');
   });
 
   return {

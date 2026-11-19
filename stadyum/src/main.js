@@ -10,6 +10,8 @@ import { createLighting, readHour } from './scene/lighting.js';
 import { createOverlay } from './ui/overlay.js';
 import { SECTIONS, SECTION_BY_ID } from './data/sections.js';
 import './style.css';
+import './ui/sections.css';
+import { initSections } from './sections.js';
 
 const quality = getQuality();
 state.quality = quality;
@@ -88,7 +90,8 @@ function frame() {
   requestAnimationFrame(frame);
   const dt = Math.min(clock.getDelta(), 0.1), t = clock.elapsedTime;
   const m = state.mode;
-  if ((m === 'exterior' || m === 'interior' || m === 'section') && !isFlying()) controls.update(dt);
+  // section modunda kamerayı lookAround kontrol eder (OrbitControls güncellenmez)
+  if ((m === 'exterior' || m === 'interior') && !isFlying()) controls.update(dt);
   env.update(dt, camera);
   for (const fn of app.frameCallbacks) fn(dt, t);
   renderer.render(scene, camera);
@@ -106,3 +109,4 @@ Object.assign(app, {
   ui, flyTo,
 });
 window.__arena = app; // hata ayıklama / testler
+initSections();
