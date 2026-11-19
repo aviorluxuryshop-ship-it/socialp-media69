@@ -32,6 +32,7 @@ export function createOverlay(root) {
     <div class="hint hint--in is-hidden" id="hint-in"></div>
     <!-- ADIM 3: tribün seçim butonları buraya eklenecek (#section-bar). Adım 2'de boş. -->
     <div class="section-bar is-hidden" id="section-bar" aria-label="Tribün seçimi"></div>
+    <p class="disclaimer" id="disclaimer">Bu site Beşiktaş JK'nın resmi bilet sitesi değildir · Demo</p>
     <div class="toast" id="toast" role="status"></div>
     <div class="fade" id="fade" aria-hidden="true"></div>
   `;
@@ -53,6 +54,7 @@ export function createOverlay(root) {
     const ext = mode === 'exterior';
     const inside = mode === 'interior' || mode === 'section';
     cta.classList.toggle('is-hidden', !ext);
+    root.querySelector('#disclaimer').classList.toggle('is-hidden', !ext);
     hint.classList.toggle('is-hidden', !ext);
     back.classList.toggle('is-hidden', !inside);
     back.textContent = mode === 'section' ? '← Tüm stadyum' : '← Dışarı çık';

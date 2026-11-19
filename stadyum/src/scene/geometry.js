@@ -147,15 +147,15 @@ function toTex(c, { repeat = true, srgb = true, aniso = 4 } = {}) {
 export function seatTexture(riserFrac) {
   const [c, g] = canvas(128, 64);
   const treadH = Math.round(64 * (1 - riserFrac));
-  g.fillStyle = '#b1b4bb'; g.fillRect(0, 0, 128, 64);
-  g.fillStyle = '#d6d8dd'; g.fillRect(0, 0, 128, treadH);
+  g.fillStyle = '#3a3c43'; g.fillRect(0, 0, 128, 64);
+  g.fillStyle = '#45474f'; g.fillRect(0, 0, 128, treadH);
   for (let i = 0; i < 8; i++) {
-    const dark = i % 4 === 3;
-    g.fillStyle = dark ? '#4a4c54' : '#f1f1f4';
+    const white = i % 4 === 1; // Beşiktaş: siyah koltuklar, beyaz vurgular
+    g.fillStyle = white ? '#f0f0f3' : '#17181c';
     g.beginPath(); g.roundRect(i * 16 + 2, 3, 12, treadH - 6, 3); g.fill();
-    g.fillStyle = dark ? '#33353b' : '#c9cbd2'; g.fillRect(i * 16 + 3, treadH - 8, 10, 3);
+    g.fillStyle = white ? '#c9cbd2' : '#0b0b0d'; g.fillRect(i * 16 + 3, treadH - 8, 10, 3);
   }
-  g.fillStyle = '#5d6068'; g.fillRect(0, treadH, 128, 2);
+  g.fillStyle = '#25262b'; g.fillRect(0, treadH, 128, 2);
   return toTex(c);
 }
 
@@ -196,16 +196,21 @@ export function pitchTexture() {
 }
 
 export function facadeTexture() {
+  // kireç taşı kolonadın arkasındaki koyu cam yüzey, kat silmeleri
   const [c, g] = canvas(128, 512);
-  g.fillStyle = '#e3e0d8'; g.fillRect(0, 0, 128, 512);
-  g.fillStyle = '#2b2d33'; g.fillRect(0, 0, 128, 26); // üst silme
-  g.fillStyle = '#c9c5bb'; g.fillRect(0, 26, 128, 6);
-  g.fillStyle = '#34363c'; g.fillRect(0, 430, 128, 82); // zemin kat
-  for (let i = 0; i < 4; i++) { g.fillStyle = '#1b1c20'; g.fillRect(10 + i * 30, 440, 20, 72); }
-  for (let i = 0; i < 8; i++) { // dikey ritim: ince yarıklar
-    g.fillStyle = '#4a4c53'; g.fillRect(6 + i * 16, 90, 5, 290);
+  g.fillStyle = '#1c2026'; g.fillRect(0, 0, 128, 512);
+  g.fillStyle = '#e6dcc6'; g.fillRect(0, 0, 128, 22); // üst silme
+  g.fillStyle = '#cfc4ab'; g.fillRect(0, 22, 128, 5);
+  for (const y of [150, 270, 390]) { g.fillStyle = '#d9cfb8'; g.fillRect(0, y, 128, 7); g.fillStyle = '#9d947f'; g.fillRect(0, y + 7, 128, 2); }
+  for (let r = 0; r < 4; r++) {
+    const y0 = 34 + r * 120;
+    for (let i = 0; i < 4; i++) { g.fillStyle = '#2f3a47'; g.fillRect(8 + i * 30, y0, 22, 100); g.fillStyle = '#4a5a6c'; g.fillRect(8 + i * 30, y0, 22, 6); }
   }
-  g.fillStyle = '#b9b5aa'; g.fillRect(0, 395, 128, 8);
+  g.fillStyle = '#d9cfb8'; g.fillRect(0, 436, 128, 76); // zemin kat: kireç taşı kemerler
+  for (let i = 0; i < 4; i++) {
+    g.fillStyle = '#15171b'; g.beginPath(); g.moveTo(6 + i * 30, 512); g.lineTo(6 + i * 30, 462);
+    g.arc(18 + i * 30, 462, 12, Math.PI, 0); g.lineTo(30 + i * 30, 512); g.fill();
+  }
   return toTex(c);
 }
 
@@ -241,13 +246,33 @@ export function locaTexture(emissive = false) {
   return toTex(c);
 }
 
-export function roofTexture() {
-  const [c, g] = canvas(64, 64);
-  g.clearRect(0, 0, 64, 64);
-  g.fillStyle = 'rgba(235,238,242,0.55)'; g.fillRect(0, 0, 64, 64);
-  g.fillStyle = 'rgba(60,64,72,0.9)'; g.fillRect(0, 0, 2, 64);
-  g.fillStyle = 'rgba(60,64,72,0.6)'; g.fillRect(0, 31, 64, 1);
+export function roofTexture() { // üst yüzey: beyaz/açık gri membran, dikiş panelleri
+  const [c, g] = canvas(128, 128);
+  g.fillStyle = '#e9ebee'; g.fillRect(0, 0, 128, 128);
+  g.fillStyle = '#c4c8ce'; g.fillRect(0, 0, 2, 128);
+  g.fillStyle = '#d3d6db'; g.fillRect(0, 63, 128, 1);
   return toTex(c);
+}
+
+export function roofUnderTexture() { // alt yüzey: açık gri, radyal halatlar
+  const [c, g] = canvas(128, 128);
+  g.fillStyle = '#b9bec6'; g.fillRect(0, 0, 128, 128);
+  g.fillStyle = '#4a4f58'; g.fillRect(0, 0, 3, 128);
+  g.fillStyle = '#9aa0a9'; g.fillRect(0, 62, 128, 2);
+  return toTex(c);
+}
+
+// Çatı yazısı: saydam zemin üzerine koyu harfler. Metin tuvale sığacak şekilde yatay ölçeklenir.
+export function roofLetterTexture(text, w, h, color = '#14151a') {
+  const [c, g] = canvas(w, h);
+  g.clearRect(0, 0, w, h);
+  g.fillStyle = color; g.textBaseline = 'middle'; g.textAlign = 'center';
+  const size = Math.round(h * 0.86);
+  g.font = `900 ${size}px "Arial Black", Impact, "DejaVu Sans", Arial, sans-serif`;
+  const m = g.measureText(text).width;
+  g.save(); g.translate(w / 2, h * 0.53); g.scale(Math.min(1.25, (w * 0.97) / m), 1);
+  g.fillText(text, 0, 0); g.restore();
+  return toTex(c, { repeat: false });
 }
 
 export function glowTexture() {

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { LAYOUT, SECTIONS, STAND_PIECES } from '../data/sections.js';
 import {
   pathSamples, loft, stairs, resample, LOOP_PIECES,
-  seatTexture, pitchTexture, facadeTexture, archTexture, locaTexture, roofTexture, glowTexture,
+  seatTexture, pitchTexture, facadeTexture, archTexture, locaTexture, roofTexture, roofUnderTexture, roofLetterTexture,
 } from './geometry.js';
 
 // Tribün renk tonları: dokuyla çarpılır; neredeyse beyaz, hafif tribün tonu.
@@ -14,9 +14,11 @@ const SECTION_COLORS = {
   'bati-loca': 0xffffff,
 };
 
+const SPOT_MAX = 14000;
+
 export function buildStadium(quality) {
   const arc = quality.arcSegments;
-  const { tiers, facade, roof } = LAYOUT;
+  const { tiers, facade, roof, bowl } = LAYOUT;
   const root = new THREE.Group();
   root.name = 'stadium';
 
@@ -96,14 +98,15 @@ export function buildStadium(quality) {
   wall.name = 'facade-wall'; wall.receiveShadow = true; wall.castShadow = true;
   facadeGroup.add(wall);
   // altın şerit (çatı kenarında)
-  const trim = new THREE.Mesh(loft(loopSamples, [[facade.d + 0.45, facade.h - 1.2], [facade.d + 0.45, facade.h - 0.6]]), goldMat);
+  const stoneMat = new THREE.MeshLambertMaterial({ color: 0xe3d8bf, side: THREE.DoubleSide });
+  const trim = new THREE.Mesh(loft(loopSamples, [[facade.d + 0.7, facade.h - 1.6], [facade.d + 0.7, facade.h - 0.2], [facade.d - 0.2, facade.h - 0.2]]), stoneMat);
   trim.name = 'facade-trim';
   facadeGroup.add(trim);
 
   // dikey kolonlar (instanced)
-  const cols = resample(loopSamples, facade.d + 0.55, 6);
-  const colGeo = new THREE.BoxGeometry(1.1, facade.h - 0.8, 1.2);
-  const colMat = new THREE.MeshLambertMaterial({ color: 0xeeebe4 });
+  const cols = resample(loopSamples, facade.d + 0.55, 4.2);
+  const colGeo = new THREE.BoxGeometry(1.5, facade.h - 0.8, 1.4);
+  const colMat = new THREE.MeshLambertMaterial({ color: 0xe9dfc8 });
   const colMesh = new THREE.InstancedMesh(colGeo, colMat, cols.length);
   colMesh.name = 'facade-columns'; colMesh.castShadow = true;
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), one = new THREE.Vector3(1, 1, 1);
@@ -129,34 +132,102 @@ export function buildStadium(quality) {
   archWall.rotation.y = Math.PI / 2;
   archWall.position.set(a + facade.d + 0.9, archH / 2, 0);
   facadeGroup.add(archWall);
-  const archCap = new THREE.Mesh(new THREE.BoxGeometry(2, 0.8, archLen), goldMat);
+  const archCap = new THREE.Mesh(new THREE.BoxGeometry(2, 0.8, archLen), stoneMat);
   archCap.position.set(a + facade.d + 0.9, archH + 0.2, 0);
   facadeGroup.add(archCap);
   structure.add(facadeGroup);
 
-  // ---- Çatı halkası ----
+  // ---- Çatı halkası (opak: üstte beyaz membran, altta gri halat/panel yüzeyi) ----
   const roofGroup = new THREE.Group(); roofGroup.name = 'roof';
-  const rt = roofTexture();
-  const roofMat = new THREE.MeshLambertMaterial({
-    map: rt, color: 0xf2f4f7, transparent: true, opacity: 0.82, side: THREE.DoubleSide, depthWrite: false,
-  });
   const roofSpan = Math.hypot(roof.dOut - roof.dIn, roof.yOut - roof.yIn);
-  const membrane = new THREE.Mesh(loft(loopSamples, [[roof.dIn, roof.yIn], [roof.dOut, roof.yOut]], { uScale: 8, vLen: roofSpan }), roofMat);
-  membrane.name = 'roof-membrane'; membrane.renderOrder = 2;
-  const steelMat = new THREE.MeshStandardMaterial({ color: 0x17181b, roughness: 0.45, metalness: 0.7, side: THREE.DoubleSide });
-  const w = 0.35;
-  const inner = new THREE.Mesh(loft(loopSamples, [
-    [roof.dIn - w, roof.yIn - 0.5], [roof.dIn + w, roof.yIn - 0.5], [roof.dIn + w, roof.yIn + 0.5],
-    [roof.dIn - w, roof.yIn + 0.5], [roof.dIn - w, roof.yIn - 0.5],
-  ]), steelMat);
-  inner.name = 'roof-inner-ring'; inner.castShadow = true;
-  const outer = new THREE.Mesh(loft(loopSamples, [
-    [roof.dOut - 0.6, roof.yOut - 0.9], [roof.dOut + 0.6, roof.yOut - 0.9], [roof.dOut + 0.6, roof.yOut + 0.4],
-    [roof.dOut - 0.6, roof.yOut + 0.4], [roof.dOut - 0.6, roof.yOut - 0.9],
-  ]), steelMat);
-  outer.name = 'roof-outer-ring';
-  roofGroup.add(membrane, inner, outer);
+  const roofGeo = loft(loopSamples, [[roof.dIn, roof.yIn], [roof.dOut, roof.yOut]], { uScale: 8, vLen: roofSpan });
+  // hangi yüzün yukarı baktığını normalden bul (loft sarım yönü)
+  const upFront = roofGeo.attributes.normal.getY(0) > 0;
+  const topMat = new THREE.MeshLambertMaterial({ map: roofTexture(), color: 0xffffff, side: upFront ? THREE.FrontSide : THREE.BackSide });
+  const underMat = new THREE.MeshLambertMaterial({ map: roofUnderTexture(), color: 0xffffff, side: upFront ? THREE.BackSide : THREE.FrontSide });
+  const membrane = new THREE.Mesh(roofGeo, topMat); membrane.name = 'roof-membrane';
+  const underside = new THREE.Mesh(roofGeo, underMat); underside.name = 'roof-underside';
+  const steelMat = new THREE.MeshStandardMaterial({ color: 0xd5d8dd, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
+  const darkSteel = new THREE.MeshStandardMaterial({ color: 0x2a2c31, roughness: 0.5, metalness: 0.6, side: THREE.DoubleSide });
+  const w = 0.5;
+  const ring = (d, y, hw, hu, hd, mat, name) => {
+    const m = new THREE.Mesh(loft(loopSamples, [
+      [d - hw, y - hd], [d + hw, y - hd], [d + hw, y + hu], [d - hw, y + hu], [d - hw, y - hd],
+    ]), mat);
+    m.name = name; return m;
+  };
+  const inner = ring(roof.dIn, roof.yIn, w, 0.35, 0.8, darkSteel, 'roof-inner-ring');
+  const outer = ring(roof.dOut, roof.yOut, 0.9, 0.5, 1.4, steelMat, 'roof-outer-ring');
+  roofGroup.add(membrane, underside, inner, outer);
+
+  // alt yüzde radyal halatlar (tek LineSegments)
+  const spokes = resample(loopSamples, roof.dIn, 7);
+  const sp = [];
+  for (const c of spokes) {
+    sp.push(c.x + c.nx * 0, roof.yIn - 0.2, c.z + c.nz * 0);
+    sp.push(c.x + c.nx * (roof.dOut - roof.dIn), roof.yOut - 0.2, c.z + c.nz * (roof.dOut - roof.dIn));
+  }
+  const spokeGeo = new THREE.BufferGeometry(); spokeGeo.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+  const spokeLines = new THREE.LineSegments(spokeGeo, new THREE.LineBasicMaterial({ color: 0x3b3f47 }));
+  spokeLines.name = 'roof-cables';
+  roofGroup.add(spokeLines);
+
+  // çatı üstü yazıları: eğime oturan tek dörtgenler (tek doku)
+  const roofY = (d) => roof.yIn + ((d - roof.dIn) / (roof.dOut - roof.dIn)) * (roof.yOut - roof.yIn) + 0.12;
+  const letterQuad = (stand, text, len, d0, d1, tw, th) => {
+    const [nx, nz] = { dogu: [1, 0], bati: [-1, 0], kuzey: [0, -1], guney: [0, 1] }[stand];
+    const bl = stand === 'dogu' || stand === 'bati' ? bowl.a : bowl.b;
+    const cx = nx * bl, cz = nz * bl;
+    const rx = nz, rz = -nx; // yukarıdan bakınca (üst = merkeze doğru) sağ yön
+    const pt = (sgn, d, u, v) => [cx + rx * sgn * len / 2 + nx * d, roofY(d), cz + rz * sgn * len / 2 + nz * d, u, v];
+    const v = [pt(-1, d0, 0, 1), pt(1, d0, 1, 1), pt(1, d1, 1, 0), pt(-1, d1, 0, 0)];
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(v.flatMap((p) => p.slice(0, 3)), 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(v.flatMap((p) => p.slice(3)), 2));
+    g.setIndex([0, 1, 2, 0, 2, 3]); g.computeVertexNormals();
+    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({
+      map: roofLetterTexture(text, tw, th), transparent: true, side: THREE.DoubleSide, depthWrite: false,
+      polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
+    }));
+    m.name = 'roof-text-' + stand; m.renderOrder = 1;
+    return m;
+  };
+  roofGroup.add(
+    letterQuad('bati', 'BEŞİKTAŞ', 76, 18, 35, 2048, 460),
+    letterQuad('dogu', 'BEŞİKTAŞ', 76, 18, 35, 2048, 460),
+    letterQuad('kuzey', 'TÜPRAŞ STADYUMU', 42, 22, 29, 2048, 340),
+    letterQuad('guney', 'TÜPRAŞ STADYUMU', 42, 22, 29, 2048, 340),
+  );
   structure.add(roofGroup);
+
+  // ---- Çatı altı LED projektör halkası (instanced) + az sayıda gerçek SpotLight ----
+  const floodGroup = new THREE.Group(); floodGroup.name = 'roof-floodlights';
+  const unitMat = new THREE.MeshStandardMaterial({ color: 0x2b2d32, emissive: 0xfff3d6, emissiveIntensity: 0.0, roughness: 0.5 });
+  nightMats.push({ mat: unitMat, max: 3.4, prop: 'emissiveIntensity' });
+  const units = resample(loopSamples, roof.dIn + 0.9, 2.4);
+  const unitMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1.7, 0.9, 0.7), unitMat, units.length);
+  unitMesh.name = 'floodlight-units';
+  {
+    const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), qp = new THREE.Quaternion(), one = new THREE.Vector3(1, 1, 1);
+    const ax = new THREE.Vector3(1, 0, 0), up = new THREE.Vector3(0, 1, 0);
+    units.forEach((c, i) => {
+      q.setFromAxisAngle(up, Math.atan2(-c.nx, -c.nz)); // yerel +Z merkeze bakar
+      qp.setFromAxisAngle(ax, 0.55);                    // aşağı eğim (sahaya)
+      q.multiply(qp);
+      m4.compose(new THREE.Vector3(c.x, roof.yIn - 1.0, c.z), q, one);
+      unitMesh.setMatrixAt(i, m4);
+    });
+  }
+  floodGroup.add(unitMesh);
+  const spots = [];
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    const sl = new THREE.SpotLight(0xfff1d8, 0, 0, 0.75, 0.75, 1.6);
+    sl.position.set(sx * 40, roof.yIn - 2, sz * 58);
+    sl.target.position.set(-sx * 8, 0, -sz * 14);
+    sl.castShadow = false;
+    spots.push(sl); floodGroup.add(sl, sl.target);
+  }
+  root.add(floodGroup);
 
   // ---- Saha ----
   const pitchGroup = new THREE.Group(); pitchGroup.name = 'pitch';
@@ -181,33 +252,11 @@ export function buildStadium(quality) {
   }
   root.add(pitchGroup);
 
-  // ---- Işık kuleleri ----
-  const towers = new THREE.Group(); towers.name = 'light-towers';
-  const headMat = new THREE.MeshStandardMaterial({ color: 0x222428, emissive: 0xfff1cf, emissiveIntensity: 0.05, roughness: 0.5 });
-  nightMats.push({ mat: headMat, max: 3.2, base: 0.05, prop: 'emissiveIntensity' });
-  const mastMat = new THREE.MeshStandardMaterial({ color: 0x8a8d94, roughness: 0.5, metalness: 0.6 });
-  const glowTex = glowTexture();
-  const glowSprites = [];
-  const cxz = [(a - r), (b - r)], rr = (r + 52) * Math.SQRT1_2;
-  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
-    const g = new THREE.Group();
-    const x = sx * (cxz[0] + rr), z = sz * (cxz[1] + rr);
-    g.position.set(x, 0, z);
-    const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.1, 50, 8), mastMat); mast.position.y = 25; mast.castShadow = true;
-    const head = new THREE.Mesh(new THREE.BoxGeometry(9, 5.5, 1.2), headMat); head.position.y = 51.5;
-    g.add(mast, head);
-    g.lookAt(0, 0, 0); // başlık sahaya bakar
-    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }));
-    sp.scale.set(36, 36, 1); sp.position.set(x, 51.5, z);
-    glowSprites.push(sp);
-    towers.add(g, sp);
-  }
-  root.add(towers);
-
   // ---- Gece ----
   function setNight(n) {
     for (const o of nightMats) o.mat[o.prop] = (o.base || 0) + n * o.max;
-    for (const sp of glowSprites) sp.material.opacity = n * 0.95;
+    topMat.color.setScalar(1 - 0.5 * n);
+    for (const l of spots) l.intensity = n * SPOT_MAX;
   }
   setNight(0);
 
@@ -216,7 +265,7 @@ export function buildStadium(quality) {
     sections,                         // Map<id, Group>
     sectionList: SECTIONS.map((d) => sections.get(d.id)),
     standSamples,
-    parts: { structure, sectionsGroup, roof: roofGroup, facade: facadeGroup, pitch: pitchGroup, towers },
+    parts: { structure, sectionsGroup, roof: roofGroup, facade: facadeGroup, pitch: pitchGroup, floods: floodGroup },
     pitch, setNight,
   };
 }

@@ -6,7 +6,7 @@ akışına geçin.
 
 ## Özellikler
 
-- **Dış görünüm**: prosedürel stadyum (kase, çatı, cephe, kemerli tarihi yüzey, ışık kuleleri), gün saatine göre
+- **Dış görünüm**: prosedürel stadyum (kase, çatı, cephe, kemerli tarihi yüzey, çatı projektörleri), gün saatine göre
   güneş/gökyüzü/gece aydınlatması. Dışarıda hiç koltuk çizilmez; yalnızca kabuk görünür.
 - **Giriş uçuşu**: "Bilet Al" ile sinematik kamera uçuşu, kaseye geçiş.
 - **İç görünüm**: OrbitControls ile saha çevresinde gezinti, 9 bölge (Kuzey/Güney/Doğu alt-üst, Batı alt, Batı Loca,
@@ -45,7 +45,7 @@ npm run preview   # derlemeyi yerelde önizle
 ## Yapı
 
 - `src/main.js` başlatma, render döngüsü, OrbitControls, sekme görünürlüğü
-- `src/scene/stadium.js` tribün, çatı, cephe, saha, ışık kuleleri
+- `src/scene/stadium.js` tribün, çatı, cephe, saha, çatı projektörleri
 - `src/scene/seats.js` 3D koltuklar (InstancedMesh, tembel üretim, mesafe LOD)
 - `src/scene/environment.js` gökyüzü, zemin, su, şehir
 - `src/scene/lighting.js` gün saatine göre ışık/renk, iç görünüm dolgu ışığı

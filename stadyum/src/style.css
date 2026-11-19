@@ -92,3 +92,6 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 }
 #ui > .back { pointer-events: auto; }
 #ui > .back.is-hidden { pointer-events: none; }
+
+.disclaimer { position: absolute; left: 0; right: 0; bottom: calc(6px + var(--safe-b, 0px)); margin: 0; text-align: center; font-size: 10.5px; letter-spacing: .04em; color: rgba(255,255,255,.6); text-shadow: 0 1px 6px rgba(0,0,0,.7); pointer-events: none; padding: 0 12px; }
+.disclaimer.is-hidden { display: none; }

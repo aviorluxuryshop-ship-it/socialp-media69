@@ -99,7 +99,7 @@ export function createLighting({ scene, renderer, quality, env, stadium }) {
   function applyFill() {
     // gündüz beyaz, gece sıcak (saha ışıkları); iç modda açık
     ambient.color.setRGB(1, 1, 1).lerp(FLOOD_WARM, state.night);
-    ambient.intensity = state.interior ? 0.6 + 0.15 * state.night : 0;
+    ambient.intensity = state.interior ? 0.6 + 0.8 * state.night : 0.12 * state.night;
   }
   function setInterior(on) { state.interior = on; applyFill(); }
 

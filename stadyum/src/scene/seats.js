@@ -14,7 +14,7 @@ const CHUNK_LEN = 18;       // yaklaşık parça uzunluğu (m)
 const NEAR_SKIP = 1.3;      // kamera noktasına yatay mesafe: bu içindeki koltuklar atlanır
 
 const ACCENT = { kuzey: 0x4f79c9, guney: 0xc9524f, dogu: 0xd2a640, bati: 0x3fb0a6 };
-const WHITE = new THREE.Color(0xf2f2f5), DARK = new THREE.Color(0x4b4d56);
+const WHITE = new THREE.Color(0x24252b), DARK = new THREE.Color(0xf0f0f3);
 
 // Alçak poligonlu koltuk (20 üçgen): gövde/minder bloğu + sırt; alt yüzler yok. Yerel +Z = sahaya bakış.
 function seatGeometry() {
@@ -92,7 +92,7 @@ export function createSeats({ stadium, quality }) {
           // kamera noktasına çok yakın koltukları atla (yakın düzlemde kesilmesin)
           if (Math.hypot(p.x - vp[0], p.z - vp[2]) < NEAR_SKIP && Math.abs(y - vpTread) < 1.5) continue;
           // sakin desen: çoğu beyaz, çiftli koyu çapraz, 8 sırada bir bölge rengi şeridi
-          const colorId = k % 8 === 3 ? 2 : ((i >> 1) + k) % 7 === 0 ? 1 : 0;
+          const colorId = k % 8 === 3 ? 2 : (((i >> 2) + k) % 4 === 0) ? 1 : 0;
           const c = Math.min(nch - 1, Math.floor((i / n) * nch));
           chunks[c].push(p.x, y, p.z, Math.atan2(-p.nx, -p.nz), cls, colorId);
           total++;
