@@ -9,8 +9,14 @@ Roof top = planar top-down map of the world x/z plane (+-TEX_X by +-TEX_Z m, nor
 = top row, west = left column): white membrane cushions (72 radial panels x 3
 concentric cushions, thin seams, soft AO) + the lettering "BESIKTAS" (north end,
 following the ring curvature), "Tupras" (both long sides, letter tops pointing
-outward) and a generic black eagle silhouette (south end). No club crest and no
-Tupras logo mark.
+outward) and a generic black eagle silhouette (south end).
+
+Optional logo artwork (transparent PNGs in stadyum/blender/assets/, drawn when present,
+skipped when missing -- see README):
+  besiktas-crest.png  club crest, placed before the "B" of BESIKTAS (rotated with the text)
+  tupras-mark.png     red Tupras mark, placed before the "T" of each "Tupras" (rotated with
+                      the text, its top facing outward): west side at the south end of the
+                      text, east side at the north end (point symmetric, as on the real roof)
 """
 import argparse
 import math
@@ -24,6 +30,13 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import ringlib as RL  # noqa: E402
+
+ASSETS = os.path.join(HERE, 'assets')
+CREST_PNG = os.path.join(ASSETS, 'besiktas-crest.png')
+MARK_PNG = os.path.join(ASSETS, 'tupras-mark.png')
+CREST_H_M = 15.0          # crest height on the roof (m)
+MARK_H_M = 16.0           # Tupras mark: bbox height (m), measured on the reference photo (~ letter height x 1.8)
+LOGO_GAP_M = 2.5          # gap between a logo and the first letter of its text (m)
 
 FONT_URLS = {
     'Montserrat-ExtraBold.ttf': 'https://raw.githubusercontent.com/JulietaUla/Montserrat/master/fonts/ttf/Montserrat-ExtraBold.ttf',
@@ -94,9 +107,32 @@ def eagle_mask(scale_m_per_unit, px_per_m, ss=4):
     return img.resize((w, h), Image.LANCZOS), (cx / ss, cy / ss)
 
 
+def load_logo(path):
+    """Optional transparent PNG artwork -> premultiplied-safe RGBA image, or None if the file is missing."""
+    if not os.path.exists(path):
+        print('  (no %s -- skipped)' % os.path.relpath(path, os.path.join(HERE, '..', '..')))
+        return None
+    return Image.open(path).convert('RGBA')
+
+
+def place_logo(layer, logo, height_m, k, cx_m, cz_m, ang_deg):
+    """Scale `logo` to `height_m` (bbox height), rotate CCW by ang_deg, alpha-composite centred at world (cx, cz)."""
+    h = max(2, int(round(height_m * k)))
+    w = max(2, int(round(logo.width * h / logo.height)))
+    t = logo.convert('RGBa').resize((w, h), Image.LANCZOS)          # premultiplied: no dark fringes
+    t = t.rotate(ang_deg, resample=Image.BICUBIC, expand=True).convert('RGBA')
+    x0 = int(round((cx_m + RL.TEX_X) * k - t.width / 2))
+    y0 = int(round((cz_m + RL.TEX_Z) * k - t.height / 2))
+    layer.alpha_composite(t, (x0, y0))
+
+
 def lettering_mask(font_path, W, Hc, k):
-    """Text + eagle mask on a uniform canvas: W x Hc px, k px/m. Row 0 = north (-z)."""
+    """Text + eagle mask (+ optional logo layer) on a uniform canvas: W x Hc px, k px/m. Row 0 = north (-z).
+
+    Returns (mask 'L', logo layer RGBA or None)."""
     mask = Image.new('L', (W, Hc), 0)
+    logos = Image.new('RGBA', (W, Hc), (0, 0, 0, 0))
+    crest, mark = load_logo(CREST_PNG), load_logo(MARK_PNG)
     ring = RL.Ring(RL.PANEL_D_REF)
     X, Z = RL.TEX_X, RL.TEX_Z
 
@@ -114,6 +150,7 @@ def lettering_mask(font_path, W, Hc, k):
         adv = [font.getlength(ch) / k for ch in text]
         total = sum(adv) + track_m * (len(text) - 1)
         s = s_anchor - total / 2
+        s_start = s
         for ch, a in zip(text, adv):
             sc = (s + a / 2) % cum[-1]
             gx, gz = np.interp(sc, cum, x), np.interp(sc, cum, z)
@@ -128,15 +165,33 @@ def lettering_mask(font_path, W, Hc, k):
             mask.paste(255, (int(round(px(gx) - rot.width / 2)), int(round(py(gz) - rot.height / 2))), rot)
             s += a + track_m
 
+        def logo_before(logo, height_m):
+            """Place `logo` just before the first letter (reading direction), on the same ring line, rotated like the text."""
+            wm = logo.width * height_m / logo.height
+            sc = (s_start - LOGO_GAP_M - wm / 2) % cum[-1]
+            gx, gz = np.interp(sc, cum, x), np.interp(sc, cum, z)
+            gnx, gnz = np.interp(sc, cum, nx), np.interp(sc, cum, nz)
+            n = math.hypot(gnx, gnz)
+            ang = math.degrees(math.atan2(-gnx / n, -gnz / n))
+            place_logo(logos, logo, height_m, k, gx, gz, ang)
+
+        return logo_before
+
     # clockwise ring param: t=0 east, P/4 south, P/2 west, 3P/4 north
     P = ring.P
-    text_on_ring('BEŞİKTAŞ', 27.5, 0.75 * P, 12.6, 3.0)
-    text_on_ring('Tüpraş', 26.0, 0.0, 12.6, 5.2)          # east: reads top-to-bottom, tops outward
-    text_on_ring('Tüpraş', 26.0, 0.5 * P, 12.6, 5.2)      # west: reads bottom-to-top
+    before = text_on_ring('BEŞİKTAŞ', 27.5, 0.75 * P, 12.6, 3.0)
+    if crest is not None:
+        before(crest, CREST_H_M)                          # north end, left (west) of the "B"
+    before = text_on_ring('Tüpraş', 26.0, 0.0, 12.6, 5.2)          # east: reads top-to-bottom, tops outward
+    if mark is not None:
+        before(mark, MARK_H_M)                            # north end of the east text
+    before = text_on_ring('Tüpraş', 26.0, 0.5 * P, 12.6, 5.2)      # west: reads bottom-to-top
+    if mark is not None:
+        before(mark, MARK_H_M)                            # south end of the west text
     # south end: generic eagle (head towards the pitch = up/north)
     em, (ex, ey) = eagle_mask(0.80, k)
     mask.paste(255, (int(px(0) - ex), int(py(RL.B + 27.0) - ey)), em)
-    return mask
+    return mask, (logos if (crest is not None or mark is not None) else None)
 
 
 # ----------------------------------------------------------------------------
@@ -224,10 +279,16 @@ def make_roof(size, font_path, out):
     # lettering (drawn uniform-scale, then squashed to the square map)
     k = W / (2 * X)
     Hc = int(round(2 * Z * k))
-    mask = lettering_mask(font_path, W, Hc, k).resize((W, H), Image.LANCZOS)
+    mask, logos = lettering_mask(font_path, W, Hc, k)
+    mask = mask.resize((W, H), Image.LANCZOS)
     m = (np.asarray(mask, np.float32) / 255.0)[..., None] * 0.94
     ink = np.array([22, 23, 28], np.float32)
     img = img * (1 - m) + (ink * (0.80 + 0.20 * (img / 250.0))) * m
+    if logos is not None:                                   # club crest + Tupras mark (own colours, same roof shading)
+        lg = np.asarray(logos.convert('RGBa').resize((W, H), Image.LANCZOS).convert('RGBA'), np.float32)
+        la = (lg[..., 3:4] / 255.0)
+        img = img * (1 - la) + lg[..., :3] * (0.88 + 0.12 * (img / 250.0)) * la
+        del lg, la
     Image.fromarray(np.clip(img + 0.5, 0, 255).astype(np.uint8)).save(out, quality=90, subsampling=0, optimize=True)
     print('  roof_top %s  %.1fs  %.2f MB' % (out, time.time() - t0, os.path.getsize(out) / 1e6))
 

@@ -36,8 +36,29 @@ malzemeler, doku boyutları, accessor tabanlı sınır kutusu).
 * `ringlib.py` – ortak yerleşim matematiği (yuvarlatılmış dikdörtgen "offset" eğrileri, çatı paneli düzeni). Blender'dan
   bağımsız; hem model hem doku üreticisi aynı geometriyi kullanır.
 * `build_tupras.py` – Blender betiği (mesh üretimi, malzemeler, GLB dışa aktarım, önizleme).
-* `make_textures.py` – çatı üstü dokusu (yastık paneller + yazılar + kartal), saha, koltuk, cam.
+* `make_textures.py` – çatı üstü dokusu (yastık paneller + yazılar + kartal + arma/Tüpraş logosu), saha, koltuk, cam.
+* `assets/` – çatıya basılan logo görselleri (aşağıya bakın).
 * `validate_glb.py` – GLB denetimi.
+
+## Çatıdaki logolar (`assets/`)
+
+Çatı dokusuna iki logo basılır; ikisi de saydam PNG'dir ve `make_textures.py` tarafından `stadyum/blender/assets/`
+içinden **isteğe bağlı** okunur (dosya yoksa o logo atlanır, yazılar yine çizilir):
+
+| dosya | nereye | boyut |
+| --- | --- | --- |
+| `besiktas-crest.png` | Beşiktaş arması: kuzey ucundaki "BEŞİKTAŞ" yazısının **solundaki** (batı) başlangıcına, yazıyla aynı halka teğetine yatık | yükseklik 15 m |
+| `tupras-mark.png` | Kırmızı Tüpraş işareti (yazısız sembol): her "Tüpraş" yazısının **dış ucuna** — batı kenarda yazının güney ucuna, doğu kenarda kuzey ucuna (noktasal simetrik); yazıyla birlikte döner, üstü dışarı bakar | yükseklik 16 m (referans fotoğraftan ölçüldü; harf yüksekliğinin ~1.8 katı) |
+
+Yerleşim `make_textures.py` başındaki `CREST_H_M`, `MARK_H_M`, `LOGO_GAP_M` sabitleriyle ayarlanır. Yazılar önceki gibi
+ortalıdır; logolar yazının başlangıcının önüne (boşluk `LOGO_GAP_M`) konur.
+
+Kaynaklar (Wikimedia Commons; ikisi de "Public domain" olarak işaretli, ancak tescilli markadır): arma
+`besiktas-crest-source.svg` ← "File:Logo of Beşiktaş JK.svg"; Tüpraş `tupras-logo-source.png` ← "File:Tüpraş logo.svg"
+(Commons'un 3840 px PNG önizlemesi, saydam zemin). PNG'ler şöyle türetildi: arma SVG'si cairosvg ile ~2400 px yükseklikte
+rasterlandı, **üstteki üç yıldız kırpıldı** (referans çatı fotoğrafında yalnızca kalkan görünür) ve kenarlara sıkıştırıldı;
+Tüpraş görselinden yalnızca soldaki kırmızı sembol (yazı olmadan) kırpıldı. İkisi de 1024+ px, saydam zeminli.
+Logolar ilgili kurumların tescilli markalarıdır; bu demo sitede kullanım izni proje sahibince verilmiştir.
 
 ## Koordinatlar / ölçek
 

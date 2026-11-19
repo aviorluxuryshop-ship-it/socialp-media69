@@ -730,6 +730,9 @@ def export_glb(path):
 PREVIEW_VIEWS = {
     # name: (camera pos, target, lens/ortho, resolution)
     'top': dict(pos=(0, 420, 0.01), tgt=(0, 0, 0), ortho=215, res=(840, 1000)),
+    'top_nw': dict(pos=(-40, 420, -75.99), tgt=(-40, 0, -76), ortho=100, res=(900, 700)),     # crest + BESIKTAS start
+    'top_ne': dict(pos=(48, 420, -49.99), tgt=(48, 0, -50), ortho=100, res=(900, 700)),       # Tupras mark (east)
+    'top_sw': dict(pos=(-48, 420, 50.01), tgt=(-48, 0, 50), ortho=100, res=(900, 700)),       # Tupras mark (west)
     'east': dict(pos=(262, 118, 70), tgt=(0, 14, 0), lens=38, res=(960, 540)),
     'south': dict(pos=(-95, 105, 262), tgt=(0, 12, 20), lens=38, res=(960, 540)),
     'north': dict(pos=(70, 95, -270), tgt=(0, 14, 0), lens=38, res=(960, 540)),
