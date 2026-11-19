@@ -246,14 +246,6 @@ export function locaTexture(emissive = false) {
   return toTex(c);
 }
 
-export function roofTexture() { // üst yüzey: beyaz/açık gri membran, dikiş panelleri
-  const [c, g] = canvas(128, 128);
-  g.fillStyle = '#e9ebee'; g.fillRect(0, 0, 128, 128);
-  g.fillStyle = '#c4c8ce'; g.fillRect(0, 0, 2, 128);
-  g.fillStyle = '#d3d6db'; g.fillRect(0, 63, 128, 1);
-  return toTex(c);
-}
-
 export function roofUnderTexture() { // alt yüzey: açık gri, radyal halatlar
   const [c, g] = canvas(128, 128);
   g.fillStyle = '#b9bec6'; g.fillRect(0, 0, 128, 128);
@@ -262,17 +254,204 @@ export function roofUnderTexture() { // alt yüzey: açık gri, radyal halatlar
   return toTex(c);
 }
 
-// Çatı yazısı: saydam zemin üzerine koyu harfler. Metin tuvale sığacak şekilde yatay ölçeklenir.
-export function roofLetterTexture(text, w, h, color = '#14151a') {
-  const [c, g] = canvas(w, h);
-  g.clearRect(0, 0, w, h);
-  g.fillStyle = color; g.textBaseline = 'middle'; g.textAlign = 'center';
-  const size = Math.round(h * 0.86);
-  g.font = `900 ${size}px "Arial Black", Impact, "DejaVu Sans", Arial, sans-serif`;
-  const m = g.measureText(text).width;
-  g.save(); g.translate(w / 2, h * 0.53); g.scale(Math.min(1.25, (w * 0.97) / m), 1);
-  g.fillText(text, 0, 0); g.restore();
-  return toTex(c, { repeat: false });
+// ---- Çatı üst yüzeyi: tek tuval, yukarıdan bakışla düz (planar) UV ----
+// Tuval dünya xz düzlemine eşlenir: üst = Kuzey (-Z), sol = Batı (-X).
+export function roofTopExtent() {
+  const { roof, bowl } = LAYOUT;
+  return { X: bowl.a + roof.dOut + 2, Z: bowl.b + roof.dOut + 2 };
+}
+
+const ROOF_FONT = '"Montserrat", "Arial Black", Impact, "DejaVu Sans", Arial, sans-serif';
+
+function drawEagle(g, cx, cy, s) {
+  g.save(); g.translate(cx, cy); g.scale(s, s);
+  g.fillStyle = '#15161a';
+  const wing = (m) => {
+    g.save(); g.scale(m, 1); g.beginPath();
+    g.moveTo(1.5, -6.5);
+    g.bezierCurveTo(7, -11, 17, -10, 24, -2);     // hücum kenarı
+    g.bezierCurveTo(25, -0.5, 25.4, 1, 24.6, 2.4); // kanat ucu
+    g.bezierCurveTo(17, 1, 9, 2, 1.2, 4);          // arka kenar (tüylerin kökü)
+    g.closePath(); g.fill();
+    // ayrı birincil tüyler: kökten aşağı/dışa sivri uçlar
+    for (let i = 0; i < 7; i++) {
+      const t = i / 6, bx = 4 + t * 20.5, by = 3.6 - t * 1.4;
+      const tx = bx + 1.6 - t * 1.2, ty = by + 9.5 + 3.2 * Math.sin(t * Math.PI) - t * 2.5;
+      g.beginPath(); g.moveTo(bx - 1.5, by - 0.5); g.lineTo(bx + 1.2, by - 0.5); g.lineTo(tx, ty); g.closePath(); g.fill();
+    }
+    g.restore();
+  };
+  wing(1); wing(-1);
+  // gövde + kuyruk
+  g.beginPath(); g.moveTo(0, -8.5);
+  g.bezierCurveTo(3.4, -6, 3.2, 2, 2.2, 6);
+  g.lineTo(4, 13); g.lineTo(1.4, 11.4); g.lineTo(0, 14.5); g.lineTo(-1.4, 11.4); g.lineTo(-4, 13); g.lineTo(-2.2, 6);
+  g.bezierCurveTo(-3.2, 2, -3.4, -6, 0, -8.5); g.fill();
+  // beyazımsı baş + gaga
+  g.fillStyle = '#e9e9ea';
+  g.beginPath(); g.ellipse(0, -9.6, 2.1, 2.5, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#15161a';
+  g.beginPath(); g.moveTo(-0.9, -8.4); g.lineTo(0.9, -8.4); g.lineTo(0, -6.4); g.closePath(); g.fill();
+  g.restore();
+}
+
+export function roofTopTexture(size = 2048) {
+  const { roof, bowl } = LAYOUT;
+  const { X, Z } = roofTopExtent();
+  const W = size, H = Math.round(size * Z / X), k = W / (2 * X); // px / metre
+  const [c, g] = canvas(W, H);
+  const tex = toTex(c, { repeat: false, aniso: 8 });
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  const PX = (x) => (x + X) * k, PY = (z) => (z + Z) * k;
+
+  // kapalı çevre (d=0 hattı), kümülatif uzunluk
+  const ring = pathSamples(LOOP_PIECES, 40);
+  ring.push({ ...ring[0] });
+  const cum = [0];
+  for (let i = 1; i < ring.length; i++) cum.push(cum[i - 1] + Math.hypot(ring[i].x - ring[i - 1].x, ring[i].z - ring[i - 1].z));
+  const P = cum[cum.length - 1];
+  const at = (s) => { // d=0 hattında s konumu
+    s = ((s % P) + P) % P;
+    let i = 1; while (cum[i] < s) i++;
+    const t = (s - cum[i - 1]) / (cum[i] - cum[i - 1] || 1), p = ring[i - 1], q = ring[i];
+    const nx = p.nx + (q.nx - p.nx) * t, nz = p.nz + (q.nz - p.nz) * t, l = Math.hypot(nx, nz) || 1;
+    return { x: p.x + (q.x - p.x) * t, z: p.z + (q.z - p.z) * t, nx: nx / l, nz: nz / l };
+  };
+  // d ofsetli hattın yay uzunluğu eşlemesi (yazı yerleşimi için)
+  const offLen = (d) => {
+    let L = 0;
+    for (let i = 1; i < ring.length; i++) L += Math.hypot(ring[i].x + ring[i].nx * d - ring[i - 1].x - ring[i - 1].nx * d, ring[i].z + ring[i].nz * d - ring[i - 1].z - ring[i - 1].nz * d);
+    return L;
+  };
+  const atOff = (d, s) => { // d ofsetli hatta s (ofset uzunluğu) konumu
+    const L = offLen(d); s = ((s % L) + L) % L;
+    let acc = 0;
+    for (let i = 1; i < ring.length; i++) {
+      const p = ring[i - 1], q = ring[i];
+      const px = p.x + p.nx * d, pz = p.z + p.nz * d, qx = q.x + q.nx * d, qz = q.z + q.nz * d;
+      const l = Math.hypot(qx - px, qz - pz);
+      if (acc + l >= s || i === ring.length - 1) {
+        const t = l ? (s - acc) / l : 0;
+        const nx = p.nx + (q.nx - p.nx) * t, nz = p.nz + (q.nz - p.nz) * t, m = Math.hypot(nx, nz) || 1;
+        return { x: px + (qx - px) * t, z: pz + (qz - pz) * t, nx: nx / m, nz: nz / m };
+      }
+      acc += l;
+    }
+  };
+  const sOfPoint = (d, x0, z0) => { // d hattında (x0,z0)'a en yakın noktanın ofset-uzunluk konumu
+    let best = 1e9, bs = 0, acc = 0;
+    for (let i = 1; i < ring.length; i++) {
+      const p = ring[i - 1], q = ring[i];
+      const px = p.x + p.nx * d, pz = p.z + p.nz * d, qx = q.x + q.nx * d, qz = q.z + q.nz * d;
+      const l = Math.hypot(qx - px, qz - pz);
+      const dd = Math.hypot(qx - x0, qz - z0);
+      if (dd < best) { best = dd; bs = acc + l; }
+      acc += l;
+    }
+    return bs;
+  };
+
+  const N = 72;                    // radyal panel sayısı
+  const dIn = roof.dIn, dOut = roof.dOut;
+  const panels = [];
+  for (let i = 0; i < N; i++) {
+    const s0 = (i * P) / N, s1 = ((i + 1) * P) / N;
+    const pts = [at(s0)];
+    for (let j = 1; j < ring.length - 1; j++) if (cum[j] > s0 && cum[j] < s1) pts.push(ring[j]);
+    pts.push(at(s1));
+    panels.push(pts);
+  }
+  const splits = [0, 0.34, 0.67, 1];           // eşmerkezli dikiş oranları
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  function draw(fontReady) {
+    g.clearRect(0, 0, W, H);
+    g.fillStyle = '#f0f2f5'; g.fillRect(0, 0, W, H);
+    const poly = (pts, d1, d2) => {
+      g.beginPath();
+      pts.forEach((p, i) => { const x = PX(p.x + p.nx * d1), y = PY(p.z + p.nz * d1); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+      for (let i = pts.length - 1; i >= 0; i--) { const p = pts[i]; g.lineTo(PX(p.x + p.nx * d2), PY(p.z + p.nz * d2)); }
+      g.closePath();
+    };
+    // yastık dolguları
+    for (const pts of panels) {
+      for (let j = 0; j < 3; j++) {
+        const d1 = lerp(dIn, dOut, splits[j]), d2 = lerp(dIn, dOut, splits[j + 1]);
+        let cx = 0, cz = 0;
+        for (const p of pts) { cx += p.x + p.nx * (d1 + d2) / 2; cz += p.z + p.nz * (d1 + d2) / 2; }
+        cx /= pts.length; cz /= pts.length;
+        const a = pts[0], b = pts[pts.length - 1];
+        const rr = Math.max(Math.hypot(b.x - a.x, b.z - a.z) / 2 + 0.5, (d2 - d1) / 2) * k * 1.05;
+        const gr = g.createRadialGradient(PX(cx), PY(cz), 0, PX(cx), PY(cz), rr);
+        const edge = j === 0 ? '#dfe3e8' : '#e8ebef'; // iç kenara doğru hafif gölge
+        gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.55, '#fafbfc'); gr.addColorStop(1, edge);
+        g.fillStyle = gr; poly(pts, d1, d2); g.fill();
+      }
+    }
+    // dikişler
+    g.lineCap = 'round';
+    g.strokeStyle = 'rgba(150,158,168,0.85)'; g.lineWidth = Math.max(1.4, 0.2 * k);
+    for (let i = 0; i < N; i++) {
+      const p = at((i * P) / N);
+      g.beginPath(); g.moveTo(PX(p.x + p.nx * dIn), PY(p.z + p.nz * dIn)); g.lineTo(PX(p.x + p.nx * dOut), PY(p.z + p.nz * dOut)); g.stroke();
+    }
+    g.strokeStyle = 'rgba(150,158,168,0.6)'; g.lineWidth = Math.max(1.2, 0.16 * k);
+    for (const sp of [splits[1], splits[2]]) {
+      const d = lerp(dIn, dOut, sp);
+      g.beginPath();
+      ring.forEach((p, i) => { const x = PX(p.x + p.nx * d), y = PY(p.z + p.nz * d); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+      g.stroke();
+    }
+    // iç kenarda ince koyu çizgi, dış kenarda gri çerçeve
+    for (const [d, col, lw] of [[dIn + 0.2, '#3a3d44', 0.55], [dOut - 0.35, '#aab0b8', 0.7]]) {
+      g.strokeStyle = col; g.lineWidth = lw * k; g.beginPath();
+      ring.forEach((p, i) => { const x = PX(p.x + p.nx * d), y = PY(p.z + p.nz * d); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+      g.stroke();
+    }
+
+    // eğriyi izleyen harfler (harf üstü dışa bakar)
+    const ink = '#14151a';
+    const textOnRing = (text, d, cx0, cz0, fs, track) => {
+      g.font = `900 ${Math.round(fs * k)}px ${ROOF_FONT}`;
+      g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = ink;
+      const ws = [...text].map((ch) => g.measureText(ch).width / k);
+      const total = ws.reduce((a, b) => a + b, 0) + track * (ws.length - 1);
+      let s = sOfPoint(d, cx0, cz0) - total / 2;
+      [...text].forEach((ch, i) => {
+        const p = atOff(d, s + ws[i] / 2);
+        g.save(); g.translate(PX(p.x), PY(p.z)); g.rotate(Math.atan2(p.nx, -p.nz));
+        g.fillText(ch, 0, fs * 0.36 * k); // büyük harf yüksekliğinin ortası ofset hattında
+        g.restore();
+        s += ws[i] + track;
+      });
+    };
+    const dTxt = 27.5;
+    textOnRing('BEŞİKTAŞ', dTxt, 0, -(bowl.b + dTxt), 11.5, 3.4);
+    textOnRing('Tüpraş', 26, bowl.a + 26, 0, 11, 5);
+    textOnRing('Tüpraş', 26, -(bowl.a + 26), 0, 11, 5);
+    // Güney ucu: jenerik kartal siluet
+    drawEagle(g, PX(0), PY(bowl.b + 27), 0.8 * k);
+  }
+  draw(false);
+  // yazı tipi: Montserrat (Google Fonts); olmazsa yedek kalın sans-serif
+  if (typeof document !== 'undefined' && document.fonts && document.fonts.load) {
+    document.fonts.load('900 100px Montserrat', 'BEŞİKTAŞ Tüpraş').then(() => { draw(true); tex.needsUpdate = true; }).catch(() => {});
+  }
+  tex.needsUpdate = true;
+  return tex;
+}
+
+// Üst yüzey geometrisi: orijinal çatı ağının UV'lerini planar (xz) olarak yeniden yazar.
+export function planarRoofUV(geo) {
+  const { X, Z } = roofTopExtent();
+  const g = geo.clone();
+  const pos = g.attributes.position, uv = new Float32Array(pos.count * 2);
+  for (let i = 0; i < pos.count; i++) {
+    uv[i * 2] = (pos.getX(i) + X) / (2 * X);
+    uv[i * 2 + 1] = 1 - (pos.getZ(i) + Z) / (2 * Z);
+  }
+  g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  return g;
 }
 
 export function glowTexture() {

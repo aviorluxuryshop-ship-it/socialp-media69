@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { LAYOUT, SECTIONS, STAND_PIECES } from '../data/sections.js';
 import {
   pathSamples, loft, stairs, resample, LOOP_PIECES,
-  seatTexture, pitchTexture, facadeTexture, archTexture, locaTexture, roofTexture, roofUnderTexture, roofLetterTexture,
+  seatTexture, pitchTexture, facadeTexture, archTexture, locaTexture, roofTopTexture, roofUnderTexture, planarRoofUV,
 } from './geometry.js';
 
 // Tribün renk tonları: dokuyla çarpılır; neredeyse beyaz, hafif tribün tonu.
@@ -143,9 +143,9 @@ export function buildStadium(quality) {
   const roofGeo = loft(loopSamples, [[roof.dIn, roof.yIn], [roof.dOut, roof.yOut]], { uScale: 8, vLen: roofSpan });
   // hangi yüzün yukarı baktığını normalden bul (loft sarım yönü)
   const upFront = roofGeo.attributes.normal.getY(0) > 0;
-  const topMat = new THREE.MeshLambertMaterial({ map: roofTexture(), color: 0xffffff, side: upFront ? THREE.FrontSide : THREE.BackSide });
+  const topMat = new THREE.MeshLambertMaterial({ map: roofTopTexture(quality.name === 'high' ? 3072 : 2048), color: 0xffffff, side: upFront ? THREE.FrontSide : THREE.BackSide });
   const underMat = new THREE.MeshLambertMaterial({ map: roofUnderTexture(), color: 0xffffff, side: upFront ? THREE.BackSide : THREE.FrontSide });
-  const membrane = new THREE.Mesh(roofGeo, topMat); membrane.name = 'roof-membrane';
+  const membrane = new THREE.Mesh(planarRoofUV(roofGeo), topMat); membrane.name = 'roof-membrane';
   const underside = new THREE.Mesh(roofGeo, underMat); underside.name = 'roof-underside';
   const steelMat = new THREE.MeshStandardMaterial({ color: 0xd5d8dd, roughness: 0.5, metalness: 0.5, side: THREE.DoubleSide });
   const darkSteel = new THREE.MeshStandardMaterial({ color: 0x2a2c31, roughness: 0.5, metalness: 0.6, side: THREE.DoubleSide });
@@ -172,33 +172,7 @@ export function buildStadium(quality) {
   spokeLines.name = 'roof-cables';
   roofGroup.add(spokeLines);
 
-  // çatı üstü yazıları: eğime oturan tek dörtgenler (tek doku)
-  const roofY = (d) => roof.yIn + ((d - roof.dIn) / (roof.dOut - roof.dIn)) * (roof.yOut - roof.yIn) + 0.12;
-  const letterQuad = (stand, text, len, d0, d1, tw, th) => {
-    const [nx, nz] = { dogu: [1, 0], bati: [-1, 0], kuzey: [0, -1], guney: [0, 1] }[stand];
-    const bl = stand === 'dogu' || stand === 'bati' ? bowl.a : bowl.b;
-    const cx = nx * bl, cz = nz * bl;
-    const rx = nz, rz = -nx; // yukarıdan bakınca (üst = merkeze doğru) sağ yön
-    const pt = (sgn, d, u, v) => [cx + rx * sgn * len / 2 + nx * d, roofY(d), cz + rz * sgn * len / 2 + nz * d, u, v];
-    // Yazı 180° döndürüldü: harfin üstü dışa bakar, dışarıdan bakan düz okur.
-    const v = [pt(-1, d0, 1, 0), pt(1, d0, 0, 0), pt(1, d1, 0, 1), pt(-1, d1, 1, 1)];
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(v.flatMap((p) => p.slice(0, 3)), 3));
-    g.setAttribute('uv', new THREE.Float32BufferAttribute(v.flatMap((p) => p.slice(3)), 2));
-    g.setIndex([0, 1, 2, 0, 2, 3]); g.computeVertexNormals();
-    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({
-      map: roofLetterTexture(text, tw, th), transparent: true, side: THREE.DoubleSide, depthWrite: false,
-      polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
-    }));
-    m.name = 'roof-text-' + stand; m.renderOrder = 1;
-    return m;
-  };
-  roofGroup.add(
-    letterQuad('bati', 'BEŞİKTAŞ', 76, 18, 35, 2048, 460),
-    letterQuad('dogu', 'BEŞİKTAŞ', 76, 18, 35, 2048, 460),
-    letterQuad('kuzey', 'TÜPRAŞ STADYUMU', 42, 22, 29, 2048, 340),
-    letterQuad('guney', 'TÜPRAŞ STADYUMU', 42, 22, 29, 2048, 340),
-  );
+  // çatı üstü yazıları ve kartal: roofTopTexture içinde (tek tuval)
   structure.add(roofGroup);
 
   // ---- Çatı altı LED projektör halkası (instanced) + az sayıda gerçek SpotLight ----
