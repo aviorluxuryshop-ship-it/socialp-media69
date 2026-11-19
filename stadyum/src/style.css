@@ -56,10 +56,12 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 .loader__brand span { color: var(--gold-soft); }
 .loader__mark { width: 16px; height: 16px; border: 1.5px solid var(--gold); transform: rotate(45deg); box-shadow: 0 0 18px rgba(201,162,74,.55); margin-bottom: 6px; animation: markpulse 2.4s ease-in-out infinite; }
 .loader__bar { width: min(240px, 60vw); height: 1px; background: rgba(255,255,255,.12); overflow: hidden; }
-.loader__bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, rgba(201,162,74,.4), var(--gold-soft)); transform-origin: left center; transform: scaleX(.04); animation: loadfill 3.2s cubic-bezier(.16,.7,.2,1) forwards; }
-.loader.is-done .loader__bar i { animation: none; transform: scaleX(1); transition: transform .3s ease-out; }
+/* çubuk, JS'in yazdığı --p (0..1: GLB indirmesi + kurulum) ile dolar */
+.loader__bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, rgba(201,162,74,.4), var(--gold-soft)); transform-origin: left center; transform: scaleX(calc(.04 + var(--p) * .96)); transition: transform .35s cubic-bezier(.16,.7,.2,1); }
+.loader.is-done .loader__bar i { transform: scaleX(1); transition: transform .3s ease-out; }
+.loader.has-error .loader__bar i { background: #b5544a; transform: scaleX(1); }
+.loader.has-error .loader__mark { animation: none; border-color: #b5544a; box-shadow: none; }
 .loader__txt { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-dim); }
-@keyframes loadfill { to { transform: scaleX(.9); } }
 @keyframes markpulse { 0%,100% { opacity: .65; } 50% { opacity: 1; } }
 
 @media (max-width: 520px) {
@@ -71,7 +73,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
   .hint { bottom: calc(128px + var(--safe-b)); font-size: 11px; }
   .cta { bottom: calc(28px + var(--safe-b)); }
 }
-@media (prefers-reduced-motion: reduce) { .buy, .buy::before, .loader__bar i, .loader__mark { animation: none; } .loader__bar i { transform: scaleX(.6); } }
+@media (prefers-reduced-motion: reduce) { .buy, .buy::before, .loader__mark { animation: none; } .loader__bar i { transition: none; } }
 
 /* Adım 2: iç görünüm arayüzü */
 .brand, .clock { transition: opacity .5s; }

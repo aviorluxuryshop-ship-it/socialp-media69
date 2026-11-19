@@ -43,6 +43,8 @@ function standY(d) {
   if (d <= T.koridor.d1) return T.koridor.y0 + ((d - T.koridor.d0) / (T.koridor.d1 - T.koridor.d0)) * (T.koridor.y1 - T.koridor.y0);
   return T.ust.y0 + ((Math.min(d, T.ust.d1) - T.ust.d0) / (T.ust.d1 - T.ust.d0)) * (T.ust.y1 - T.ust.y0);
 }
+// GLB çatı alt yüzü bu doğrusal eğrinin en fazla ~1.6 m altına sarkar (iç halka/kirişler); `roofY - 2.2` kamera sınırı
+// GLB köşe noktalarına ≥1.05 m boşluk bırakır (blender/ çıktısından ölçüldü), yani kamera çatının içinden geçmez.
 const roofY = (d) => RF.yIn + ((d - RF.dIn) / (RF.dOut - RF.dIn)) * (RF.yOut - RF.yIn);
 const D_MAX = 36, OPEN_MAX_Y = 23;
 const _g = new THREE.Vector3();
@@ -59,10 +61,11 @@ export function clampInterior(cam) {
   return p;
 }
 
-// İç modda gizlenen nesneler (performans): cephe + dış çevre (gökyüzü/yıldızlar hariç).
+// İç modda gizlenen nesneler (performans): GLB dış kabuğu (cephe, güney binası, podyum) + dış çevre (gökyüzü/yıldızlar hariç).
+// Çatı (üst + alt), kase kabuğu, bölümler ve saha içeriden görünür: kalır.
 const KEEP_IN_ENV = new Set(['sky', 'stars']);
 function setInteriorVisibility(interior) {
-  app.stadium.parts.facade.visible = !interior;
+  for (const o of app.stadium.parts.exteriorOnly) o.visible = !interior;
   app.lighting.setInterior(interior);
   if (interior) app.seats.show(); else app.seats.hide(); // koltuklar yalnız içeride (ilk girişte üretilir)
   for (const o of app.env.group.children) if (!KEEP_IN_ENV.has(o.name)) o.visible = !interior;

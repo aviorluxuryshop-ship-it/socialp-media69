@@ -75,7 +75,12 @@ export function createOverlay(root) {
       l.classList.add('is-done');
       setTimeout(() => l.remove(), 900);
     },
-    setProgress(p) { $('loader')?.style.setProperty('--p', String(p)); },
+    setProgress(p) { $('loader')?.style.setProperty('--p', String(Math.min(1, Math.max(0, p)))); },
+    setLoaderError(msg) {
+      const l = $('loader'); if (!l) return;
+      l.classList.add('has-error');
+      l.querySelector('.loader__txt').textContent = msg;
+    },
     setClock(hour, forced) {
       $('clock').textContent = `${periodName(hour)} · ${fmt(hour)}${forced ? ' (test)' : ''}`;
     },

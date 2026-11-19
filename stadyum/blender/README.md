@@ -53,13 +53,19 @@ x ±86, y 0…36.4, z −104.5…+119.6'dır. Tüm nesnelerin dönüşümü sıf
 
 ## Siteye entegrasyon notları
 
+Entegrasyon `src/scene/shell.js` (yükleme, malzeme, gece, çatı dokusu) + `src/scene/stadium.js` + `src/flow.js` içindedir; ayrıntılar
+`stadyum/README.md` → "Stadyum modeli (GLB)".
+
 * `sections.js` LAYOUT sayıları birebir kullanıldı (kase `a=34, b=52.5, r=12`; çatı `dIn=10 … dOut=47`, çatı üstü
   y≈26.4 → 36.0; cephe `d=46`). Kabuk (`stands_lower/concourse/stands_upper`) mevcut basamaklı tribün yüzeyinin
-  **0.30 m altında** durur, yani prosedürel bölümler/koltuklar üstte z-fighting yapmadan kalabilir.
-* Değiştirir: prosedürel cephe (`parts.facade`), çatı grubu (`roof`), çatı alt halkası/kablolar. Kalması gerekenler:
-  bölümler (`sections`), koltuklar, reklam panosu, loca camı, gece ışıkları/spot ışıklar, çevre (`world.js`).
-* `roof_lights` koyu gövde kutularıdır; sitenin emissive `floodlight-units` kutuları kalacaksa bu düğümü gizleyin.
-* İç mod (`setInteriorVisibility`): `facade`, `south_building` ve `podium` gizlenir; `roof_top/roof_under` kalır.
-  Çatı alt yüzü doğrusal `roofY(d)` eğrisinden en fazla ~1 m aşağıdadır (kamera sıkıştırması `roofY−2.2` geçerli kalır).
-* Gece: `roof_top` malzemesinin `color` değeri (çarpan) kısılabilir (`topMat.color.setScalar(1-0.5*n)` gibi).
-* Tek yüzlü (backface-culling) malzemeler kullanılır; yüzler doğru sarımlıdır.
+  **0.30 m altında** durur, yani prosedürel bölümler/koltuklar üstte z-fighting yapmadan kalır.
+* Siteden kaldırılan prosedürel parçalar: cephe (`parts.facade`), çatı grubu, çatı alt halkası/kablolar, koridor bandı
+  (`koridor-*`), saha yüzeyi/çevre çimi. Kalanlar: bölümler (`sections`), koltuklar, reklam panosu, loca camı, gece
+  ışıkları/spot ışıklar, kaleler (GLB'de yok), çevre (`world.js`).
+* `roof_lights` koyu gövde kutularıdır; site emissive `floodlight-units` kutularını kullandığı için bu düğüm yüklemede atılır.
+* İç mod: `facade`, `south_building`, `podium` gizlenir; `roof_top/roof_under`, `stands_*`, `concourse`, `pitch` kalır.
+  Çatı alt yüzü doğrusal `roofY(d)` eğrisinden en fazla ~1.6 m aşağıdadır; kamera sıkıştırması `roofY−2.2` bu yüzden
+  GLB köşelerine ≥ 1.05 m boşluk bırakır.
+* Gece: `roof_top` malzemesinin `color` değeri `1−0.5·n` ile kısılır; saha/çim/cam hafif emissive olur.
+* Tek yüzlü (backface-culling) malzemeler kullanılır; yüzler doğru sarımlıdır. İçeriden alçak açıyla bakınca karşı çatının
+  üst yüzü görünür (çatı eğimi 14.5°, bakış açısı daha düşük) — bu doğrudur, hata değildir.

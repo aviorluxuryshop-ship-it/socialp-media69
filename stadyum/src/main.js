@@ -5,6 +5,7 @@ import { isFlying, flyTo } from './camera/flyTo.js';
 import { app } from './app.js';
 import { getQuality } from './quality.js';
 import { buildStadium } from './scene/stadium.js';
+import { loadShell } from './scene/shell.js';
 import { buildEnvironment } from './scene/environment.js';
 import { createLighting, readHour } from './scene/lighting.js';
 import { createOverlay } from './ui/overlay.js';
@@ -32,15 +33,6 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, 1, 8, 6000);
 
 const ui = createOverlay(document.getElementById('ui'));
-
-const env = buildEnvironment(quality);
-scene.add(env.group);
-const stadium = buildStadium(quality);
-scene.add(stadium.group);
-const lighting = createLighting({ scene, renderer, quality, env, stadium });
-// 3D koltuklar: yalnız iç görünümde, ilk girişte üretilir (dışarıda hiç koltuk çizilmez)
-const seats = createSeats({ stadium, quality });
-scene.add(seats.group);
 
 // ---- Dış kamera ve kontroller ----
 const TARGET = new THREE.Vector3(0, 8, 0);
@@ -89,51 +81,80 @@ function fitCamera(initial) {
 fitCamera(true);
 window.addEventListener('resize', () => fitCamera(false));
 
-// ---- Gün ışığı: yerel saat, her dakika güncellenir (?saat=21 ile zorlanır) ----
-function tickClock() {
-  const { hour, forced } = readHour();
-  lighting.setHour(hour, forced);
-  state.hour = hour;
-  ui.setClock(hour, forced);
-}
-tickClock();
-setInterval(tickClock, 60 * 1000);
+// ---- Başlatma: GLB kabuğu indirilirken çevre (world.js) üretilir; kabuk gelmeden ilk kare çizilmez ----
+// Yükleme çubuğu GLB indirmesinin gerçek ilerlemesini gösterir (0.04 -> 0.80), ardından ayrıştırma/kurulum ve ilk kareler.
+const nextPaint = () => new Promise((r) => { requestAnimationFrame(() => r()); setTimeout(r, 120); }); // gizli sekmede rAF çalışmaz
 
-// ---- Döngü ----
-const clock = new THREE.Clock();
-let frames = 0, rafId = 0;
-function frame() {
-  rafId = 0;
-  if (document.hidden) return; // sekme gizliyken çizme (batarya)
-  rafId = requestAnimationFrame(frame);
-  const dt = Math.min(clock.getDelta(), 0.1), t = clock.elapsedTime;
-  const m = state.mode;
-  // section modunda kamerayı lookAround kontrol eder (OrbitControls güncellenmez)
-  if ((m === 'exterior' || m === 'interior') && !isFlying()) {
-    if (m === 'exterior' && controls.autoRotate) sway();
-    controls.update(dt);
-    if (m === 'interior') clampInterior(camera); // çatı altında / kase içinde kal
+async function boot() {
+  ui.setProgress(0.04);
+  const shellP = loadShell(quality, renderer, (p) => ui.setProgress(0.04 + 0.76 * p));
+  shellP.catch(() => {}); // hata aşağıda ele alınır (yakalanmamış reddedilme uyarısı çıkmasın)
+  await nextPaint();       // yükleme ekranı çizilsin, indirme sürerken ana iş parçacığı meşgul olacak
+  const env = buildEnvironment(quality);
+  scene.add(env.group);
+  let shell;
+  try { shell = await shellP; } catch (err) {
+    console.error('Stadyum modeli yüklenemedi:', err);
+    ui.setLoaderError('Stadyum modeli yüklenemedi. Sayfayı yenileyin.');
+    return;
   }
-  env.update(dt, camera);
-  seats.update(dt, camera.position);
-  for (const fn of app.frameCallbacks) fn(dt, t);
-  renderer.render(scene, camera);
-  if (++frames === 3) ui.hideLoader();
-}
-rafId = requestAnimationFrame(frame);
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && !rafId) { clock.getDelta(); rafId = requestAnimationFrame(frame); }
-});
+  ui.setProgress(0.88);
+  const stadium = buildStadium(quality, shell);
+  scene.add(stadium.group);
+  const lighting = createLighting({ scene, renderer, quality, env, stadium });
+  // 3D koltuklar: yalnız iç görünümde, ilk girişte üretilir (dışarıda hiç koltuk çizilmez)
+  const seats = createSeats({ stadium, quality });
+  scene.add(seats.group);
+  ui.setProgress(0.95);
 
-// ---- Sonraki adımlar için dışa açılanlar ----
-Object.assign(app, {
-  state, setMode, quality, renderer, scene, camera, controls, env, lighting,
-  stadium, seats,
-  sections: stadium.sections, // Map<id, THREE.Group>
-  sectionDefs: SECTIONS, sectionById: SECTION_BY_ID,
-  exteriorTarget: TARGET,
-  ui, flyTo,
-});
-window.__arena = app; // hata ayıklama / testler
-initSections();
-initPerf();
+  // ---- Gün ışığı: yerel saat, her dakika güncellenir (?saat=21 ile zorlanır) ----
+  function tickClock() {
+    const { hour, forced } = readHour();
+    lighting.setHour(hour, forced);
+    state.hour = hour;
+    ui.setClock(hour, forced);
+  }
+  tickClock();
+  setInterval(tickClock, 60 * 1000);
+
+  // ---- Döngü ----
+  const clock = new THREE.Clock();
+  let frames = 0, rafId = 0;
+  function frame() {
+    rafId = 0;
+    if (document.hidden) return; // sekme gizliyken çizme (batarya)
+    rafId = requestAnimationFrame(frame);
+    const dt = Math.min(clock.getDelta(), 0.1), t = clock.elapsedTime;
+    const m = state.mode;
+    // section modunda kamerayı lookAround kontrol eder (OrbitControls güncellenmez)
+    if ((m === 'exterior' || m === 'interior') && !isFlying()) {
+      if (m === 'exterior' && controls.autoRotate) sway();
+      controls.update(dt);
+      if (m === 'interior') clampInterior(camera); // çatı altında / kase içinde kal
+    }
+    env.update(dt, camera);
+    seats.update(dt, camera.position);
+    for (const fn of app.frameCallbacks) fn(dt, t);
+    renderer.render(scene, camera);
+    if (++frames === 3) ui.hideLoader();
+  }
+  rafId = requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !rafId) { clock.getDelta(); rafId = requestAnimationFrame(frame); }
+  });
+
+  // ---- Sonraki adımlar için dışa açılanlar ----
+  Object.assign(app, {
+    state, setMode, quality, renderer, scene, camera, controls, env, lighting,
+    stadium, seats, shell,
+    sections: stadium.sections, // Map<id, THREE.Group>
+    sectionDefs: SECTIONS, sectionById: SECTION_BY_ID,
+    exteriorTarget: TARGET,
+    ui, flyTo,
+  });
+  window.__arena = app; // hata ayıklama / testler
+  initSections();
+  initPerf();
+}
+
+boot();

@@ -24,6 +24,7 @@ export function downgradeToLow(reason = 'auto') {
     });
   }
   seats.setDensity('low');
+  app.shell?.downscaleRoof(); // GLB çatı dokusu 4096² -> 2048² (GPU belleği ve doku bant genişliği)
   ui.showHint('Performans modu açıldı: daha akıcı görüntü için ayrıntılar azaltıldı', 4500);
   return true;
 }
