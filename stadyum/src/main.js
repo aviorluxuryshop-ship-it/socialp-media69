@@ -14,6 +14,7 @@ import './ui/sections.css';
 import { initSections } from './sections.js';
 import { createSeats } from './scene/seats.js';
 import { initPerf } from './perf.js';
+import { clampInterior } from './flow.js';
 
 const quality = getQuality();
 state.quality = quality;
@@ -51,7 +52,7 @@ controls.enablePan = false;
 controls.rotateSpeed = 0.55;
 controls.zoomSpeed = 0.7;
 controls.minDistance = 140;
-controls.maxDistance = 900;
+controls.maxDistance = 1500;
 controls.minPolarAngle = 0.25;
 controls.maxPolarAngle = 1.4; // yerin altına inme
 controls.autoRotate = true;
@@ -64,14 +65,24 @@ controls.addEventListener('end', () => {
   resumeTimer = setTimeout(() => { if (state.mode === 'exterior') controls.autoRotate = true; }, 4000);
 });
 
+// Sinematik görünüm: Boğaz ve köprü arka planda kalsın diye otomatik dönüş sürekli dönmez, ±55° salınır.
+const DIR0 = new THREE.Vector3(-0.92, 0.27, -0.34).normalize(); // Batı'dan bakış: stadyumun ardında Boğaz + köprü
+const AZ0 = Math.atan2(DIR0.x, DIR0.z), SWAY = 0.95;
+let swaySign = 1;
+function sway() {
+  let rel = controls.getAzimuthalAngle() - AZ0;
+  rel = Math.atan2(Math.sin(rel), Math.cos(rel));
+  if (rel < -SWAY) swaySign = -1; else if (rel > SWAY) swaySign = 1;
+  controls.autoRotateSpeed = 0.45 * swaySign;
+}
+
 function fitCamera(initial) {
   const w = window.innerWidth, h = window.innerHeight;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   const dist = 400 * (camera.aspect < 1 ? Math.pow(camera.aspect, -0.6) : 1);
   if (initial) {
-    const dir = new THREE.Vector3(0.62, 0.30, 0.66).normalize();
-    camera.position.copy(TARGET).addScaledVector(dir, dist);
+    camera.position.copy(TARGET).addScaledVector(DIR0, dist);
   }
   camera.updateProjectionMatrix();
 }
@@ -98,7 +109,11 @@ function frame() {
   const dt = Math.min(clock.getDelta(), 0.1), t = clock.elapsedTime;
   const m = state.mode;
   // section modunda kamerayı lookAround kontrol eder (OrbitControls güncellenmez)
-  if ((m === 'exterior' || m === 'interior') && !isFlying()) controls.update(dt);
+  if ((m === 'exterior' || m === 'interior') && !isFlying()) {
+    if (m === 'exterior' && controls.autoRotate) sway();
+    controls.update(dt);
+    if (m === 'interior') clampInterior(camera); // çatı altında / kase içinde kal
+  }
   env.update(dt, camera);
   seats.update(dt, camera.position);
   for (const fn of app.frameCallbacks) fn(dt, t);

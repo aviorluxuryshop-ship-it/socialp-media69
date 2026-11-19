@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { windowsTexture, waterTexture } from './geometry.js';
+import { buildWorld } from './world.js';
 
 const SKY_VERT = /* glsl */`
   varying vec3 vDir;
@@ -22,6 +22,8 @@ const SKY_FRAG = /* glsl */`
     col += uSunColor * (pow(sd, 6.0) * 0.28 + pow(sd, 48.0) * 0.5) * uSunVis;
     col += uSunColor * smoothstep(0.9993, 0.9998, sd) * 2.0 * uSunVis;
     gl_FragColor = vec4(col, 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
   }
 `;
 
@@ -53,88 +55,25 @@ export function buildEnvironment(quality) {
   const stars = new THREE.Points(sg, starMat); stars.name = 'stars'; stars.frustumCulled = false; stars.renderOrder = -9;
   group.add(stars);
 
-  // zemin + meydan
-  const groundMat = new THREE.MeshLambertMaterial({ color: 0x6d7462 });
-  const ground = new THREE.Mesh(new THREE.CircleGeometry(3000, 48), groundMat);
-  ground.rotation.x = -Math.PI / 2; ground.name = 'ground'; ground.receiveShadow = true;
-  const plazaMat = new THREE.MeshLambertMaterial({ color: 0xb3afa4 });
-  const plaza = new THREE.Mesh(new THREE.CircleGeometry(150, 64), plazaMat);
-  plaza.rotation.x = -Math.PI / 2; plaza.position.y = 0.12; plaza.name = 'plaza'; plaza.receiveShadow = true;
-  group.add(ground, plaza);
-  const DAY_GROUND = new THREE.Color(0x6d7462), NIGHT_GROUND = new THREE.Color(0x141a26);
-  const DAY_PLAZA = new THREE.Color(0xb3afa4), NIGHT_PLAZA = new THREE.Color(0x232a38);
-  const DAY_CITY = new THREE.Color(0xffffff), NIGHT_CITY = new THREE.Color(0x4a5166);
-
-  // su (Boğaz ipucu) – Batı tarafı
-  const waterTex = waterTexture(); waterTex.repeat.set(30, 120);
-  const waterMat = new THREE.MeshStandardMaterial({
-    color: 0x2c5a85, map: waterTex, roughness: 0.28, metalness: 0.15,
-  });
-  const water = new THREE.Mesh(new THREE.PlaneGeometry(330, 2400), waterMat);
-  water.rotation.x = -Math.PI / 2; water.position.set(-355, 0.3, 0); water.name = 'water';
-  // rıhtım
-  const quay = new THREE.Mesh(new THREE.BoxGeometry(6, 1.2, 2400), new THREE.MeshLambertMaterial({ color: 0x8d8a82 }));
-  quay.position.set(-192, 0.3, 0);
-  group.add(water, quay);
-
-  // ağaçlar (instanced koniler)
-  const treeGeo = new THREE.ConeGeometry(2.2, 7, 6); treeGeo.translate(0, 3.5, 0);
-  const treeMat = new THREE.MeshLambertMaterial({ color: 0x3d5a3a });
-  const trees = new THREE.InstancedMesh(treeGeo, treeMat, quality.treeCount);
-  const m = new THREE.Matrix4();
-  for (let i = 0; i < quality.treeCount; i++) {
-    const ang = Math.random() * Math.PI * 2;
-    const rad = 118 + Math.random() * 30;
-    const x = Math.cos(ang) * rad * 0.95, z = Math.sin(ang) * rad * 1.05;
-    const s = 0.8 + Math.random() * 0.8;
-    m.compose(new THREE.Vector3(x, 0, z), new THREE.Quaternion(), new THREE.Vector3(s, s, s));
-    trees.setMatrixAt(i, m);
-  }
-  trees.name = 'trees'; group.add(trees);
-
-  // uzak şehir blokları (instanced)
-  const winTex = windowsTexture();
-  const cityMat = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveMap: winTex, emissiveIntensity: 0 });
-  const city = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), cityMat, quality.cityCount);
-  const col = new THREE.Color();
-  let placed = 0, guard = 0;
-  while (placed < quality.cityCount && guard++ < 5000) {
-    const ang = Math.random() * Math.PI * 2;
-    const rad = 480 + Math.pow(Math.random(), 0.8) * 1100;
-    const x = Math.cos(ang) * rad, z = Math.sin(ang) * rad;
-    if (x < -180 && x > -520) continue; // su şeridi
-    const w = 14 + Math.random() * 26, d = 14 + Math.random() * 26;
-    const far = rad / 1500;
-    const h = 12 + Math.random() * (30 + 60 * far * Math.random());
-    m.compose(new THREE.Vector3(x, h / 2, z), new THREE.Quaternion(), new THREE.Vector3(w, h, d));
-    city.setMatrixAt(placed, m);
-    const g = 0.55 + Math.random() * 0.35;
-    city.setColorAt(placed, col.setRGB(g, g * 0.97, g * 0.92));
-    placed++;
-  }
-  city.count = placed; city.name = 'city'; group.add(city);
+  // gerçek çevre (OpenStreetMap): zemin, Boğaz, binalar, yollar, parklar, köprü
+  const world = buildWorld(quality);
+  group.add(world.group);
 
   function apply(st, night) {
     skyMat.uniforms.uZenith.value.copy(st.zenith);
-    skyMat.uniforms.uHorizon.value.copy(st.horizon);
+    skyMat.uniforms.uHorizon.value.copy(st.fog); // ufuk = sis rengi: uzak yapılar gökyüzüne kusursuz solar
     skyMat.uniforms.uSunColor.value.copy(st.sun);
     skyMat.uniforms.uSunVis.value = THREE.MathUtils.clamp(st.sunI / 1.2, 0, 1);
     starMat.opacity = Math.max(0, (night - 0.45) / 0.55);
-    waterMat.color.copy(st.horizon).lerp(new THREE.Color(0x0d2740), 0.55);
-    cityMat.emissiveIntensity = night * 1.1;
-    groundMat.color.copy(DAY_GROUND).lerp(NIGHT_GROUND, night);
-    plazaMat.color.copy(DAY_PLAZA).lerp(NIGHT_PLAZA, night);
-    cityMat.color.copy(DAY_CITY).lerp(NIGHT_CITY, night);
-    treeMat.color.setHex(0x3d5a3a).lerp(new THREE.Color(0x121c1c), night);
+    world.apply(st, night);
   }
 
-  function setSunDirection(dir) { skyMat.uniforms.uSunDir.value.copy(dir); }
+  function setSunDirection(dir) { skyMat.uniforms.uSunDir.value.copy(dir); world.setSunDirection(dir); }
 
   function update(dt, camera) {
     sky.position.copy(camera.position); stars.position.copy(camera.position);
-    waterTex.offset.y += dt * 0.0006;
-    waterTex.offset.x += dt * 0.0003;
+    if (group.children.includes(world.group) && world.group.visible) world.update(dt, camera);
   }
 
-  return { group, apply, setSunDirection, update, materials: { water: waterMat, ground: groundMat } };
+  return { group, apply, setSunDirection, update, world };
 }

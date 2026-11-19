@@ -2,7 +2,7 @@ import { state, setMode } from './state.js';
 import { app } from './app.js';
 import { flyTo } from './camera/flyTo.js';
 import { createLookAround } from './camera/lookAround.js';
-import { configureInteriorControls, onExitStadium, INTERIOR_START, INTERIOR_TARGET } from './flow.js';
+import { configureInteriorControls, onExitStadium, INTERIOR_START, INTERIOR_TARGET, OPENING_PATH } from './flow.js';
 import { SECTION_BY_ID, standPoint } from './data/sections.js';
 
 export const SECTION_FOV = 60, INTERIOR_FOV = 62;
@@ -68,7 +68,7 @@ export async function leaveSection() {
   setMode('interior');
   const fov0 = app.camera.fov;
   let nearBack = false;
-  const path = def ? (() => { const { A, B } = approach(def); return [B, A]; })() : [];
+  const path = def ? (() => { const { A, B } = approach(def); return [B, A, ...OPENING_PATH.slice(2)]; })() : [];
   const ok = await flyTo({
     position: INTERIOR_START,
     lookAt: INTERIOR_TARGET,

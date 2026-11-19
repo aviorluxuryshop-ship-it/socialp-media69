@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { FOG_NEAR, FOG_FAR } from './world.js';
 
 // Güneş yüksekliğine (derece) göre renk durakları.
 const C = (h) => new THREE.Color(h);
@@ -91,7 +92,7 @@ export function createLighting({ scene, renderer, quality, env, stadium }) {
     c.left = -150; c.right = 150; c.top = 150; c.bottom = -150; c.near = 10; c.far = 700;
     sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.6;
   }
-  scene.fog = new THREE.Fog(0xcfe1f2, 500, 2600);
+  scene.fog = new THREE.Fog(0xcfe1f2, FOG_NEAR, FOG_FAR);
   scene.background = new THREE.Color(0xcfe1f2);
 
   const state = { hour: 12, elevation: 0, night: 0, forced: false, interior: false };

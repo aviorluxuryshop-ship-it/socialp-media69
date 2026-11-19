@@ -95,3 +95,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 
 .disclaimer { position: absolute; left: 0; right: 0; bottom: calc(6px + var(--safe-b, 0px)); margin: 0; text-align: center; font-size: 10.5px; letter-spacing: .04em; color: rgba(255,255,255,.6); text-shadow: 0 1px 6px rgba(0,0,0,.7); pointer-events: none; padding: 0 12px; }
 .disclaimer.is-hidden { display: none; }
+.disclaimer__osm { opacity: .85; font-size: 9.5px; }
+.disclaimer a { color: inherit; text-decoration: none; pointer-events: auto; }
+.disclaimer a:hover { text-decoration: underline; }
+@media (max-width: 600px) { .disclaimer__osm { display: block; } .disclaimer__osm::before { content: none; } }

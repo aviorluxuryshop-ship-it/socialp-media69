@@ -6,6 +6,7 @@ akışına geçin.
 
 ## Özellikler
 
+- **Gerçek çevre**: stadyum Tüpraş Stadyumu'nun gerçek konumunda; Dolmabahçe Sarayı, Boğaz (Güney yönünde), sokaklar, binalar, camiler, Asya yakası ve Boğaz Köprüsü OSM verisiyle çizilir; stadyum içindeyken hiçbiri çizilmez.
 - **Dış görünüm**: prosedürel stadyum (kase, çatı, cephe, kemerli tarihi yüzey, çatı projektörleri), gün saatine göre
   güneş/gökyüzü/gece aydınlatması. Dışarıda hiç koltuk çizilmez; yalnızca kabuk görünür.
 - **Giriş uçuşu**: "Bilet Al" ile sinematik kamera uçuşu, kaseye geçiş.
@@ -47,7 +48,9 @@ npm run preview   # derlemeyi yerelde önizle
 - `src/main.js` başlatma, render döngüsü, OrbitControls, sekme görünürlüğü
 - `src/scene/stadium.js` tribün, çatı, cephe, saha, çatı projektörleri
 - `src/scene/seats.js` 3D koltuklar (InstancedMesh, tembel üretim, mesafe LOD)
-- `src/scene/environment.js` gökyüzü, zemin, su, şehir
+- `src/scene/environment.js` gökyüzü, yıldızlar; gerçek çevreyi `world.js`'ten ekler
+- `src/scene/world.js` OpenStreetMap verisinden Dolmabahçe/Beşiktaş çevresi: binalar (karo başına tek mesh), yollar, parklar, ağaçlar, Boğaz (animasyonlu su), Asya yakası, 15 Temmuz Şehitler Köprüsü; mesafe/kalite bazlı karo gizleme
+- `src/data/osm-dolmabahce.json` sadeleştirilmiş OSM verisi (yerel metre, saha merkezi orijin, saha uzun ekseni Z). `node scripts/fetch-osm.mjs` ile yeniden üretilir (`--convert`: yalnız önbellekten). Harita verisi © OpenStreetMap katkıda bulunanlar (ODbL).
 - `src/scene/lighting.js` gün saatine göre ışık/renk, iç görünüm dolgu ışığı
 - `src/perf.js` otomatik performans düşürme
 - `src/data/sections.js` 9 bölüm tanımı (id, ad, kapasite, fiyat, kamera noktası) ve yerleşim yardımcıları

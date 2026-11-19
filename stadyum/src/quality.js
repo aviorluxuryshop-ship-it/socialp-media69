@@ -17,8 +17,11 @@ export function getQuality() {
     shadows: high,
     shadowMapSize: 1024,
     arcSegments: high ? 12 : 7,
-    cityCount: high ? 320 : 120,
-    treeCount: high ? 160 : 60,
+    treeCount: high ? 2200 : 600,
+    detailRadius: high ? 1400 : 800,   // bu mesafeden uzak bina karoları kutu olarak çizilir
+    cullDist: high ? 2600 : 1600,       // kameraya bu mesafeden uzak bina/yol karoları gizlenir
+    farCull: high ? 4200 : 2600,        // uzak (kutu) karolar; Asya kıyısı her zaman görünür
+    farKeep: high ? 1 : 0.4,            // uzak küçük yapıların tutulma oranı
     stars: high ? 500 : 200,
   };
 }
