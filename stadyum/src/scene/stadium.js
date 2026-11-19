@@ -5,12 +5,12 @@ import {
   seatTexture, pitchTexture, facadeTexture, archTexture, locaTexture, roofTexture, glowTexture,
 } from './geometry.js';
 
-// Tribün renk tonları (grafit; hafif farklar)
+// Tribün renk tonları: dokuyla çarpılır; neredeyse beyaz, hafif tribün tonu.
 const SECTION_COLORS = {
-  'kuzey-alt': 0x9aa0ac, 'kuzey-ust': 0xb4bac6,
-  'guney-alt': 0x9aa0ac, 'guney-ust': 0xb4bac6,
-  'dogu-alt': 0xa2a8b4, 'dogu-ust': 0xbcc2ce,
-  'bati-alt': 0xa2a8b4, 'bati-ust': 0xbcc2ce,
+  'kuzey-alt': 0xdfe6f2, 'kuzey-ust': 0xeef2f9,
+  'guney-alt': 0xf2dfe0, 'guney-ust': 0xf9eeee,
+  'dogu-alt': 0xf3ead6, 'dogu-ust': 0xfaf4e6,
+  'bati-alt': 0xdcefee, 'bati-ust': 0xeefaf9,
   'bati-loca': 0xffffff,
 };
 
@@ -37,7 +37,7 @@ export function buildStadium(quality) {
   const seatUst = seatTexture(LAYOUT.rowRise / (LAYOUT.rowRise + (tiers.ust.d1 - tiers.ust.d0) / Math.round((tiers.ust.y1 - tiers.ust.y0) / LAYOUT.rowRise)));
   const locaMap = locaTexture(false), locaEmi = locaTexture(true);
 
-  const concrete = new THREE.MeshLambertMaterial({ color: 0x5a5d64, side: THREE.DoubleSide });
+  const concrete = new THREE.MeshLambertMaterial({ color: 0xa4a7ae, side: THREE.DoubleSide });
 
   for (const def of SECTIONS) {
     const s = standSamples[def.stand];
@@ -215,6 +215,7 @@ export function buildStadium(quality) {
     group: root,
     sections,                         // Map<id, Group>
     sectionList: SECTIONS.map((d) => sections.get(d.id)),
+    standSamples,
     parts: { structure, sectionsGroup, roof: roofGroup, facade: facadeGroup, pitch: pitchGroup, towers },
     pitch, setNight,
   };

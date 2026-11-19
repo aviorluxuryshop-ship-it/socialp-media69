@@ -69,13 +69,18 @@ export function periodName(h) {
   return 'Gece';
 }
 
+const FLOOD_WARM = new THREE.Color(0xffe7bd);
+
 export function createLighting({ scene, renderer, quality, env, stadium }) {
   const hemi = new THREE.HemisphereLight(0xffffff, 0x555555, 1);
   const sun = new THREE.DirectionalLight(0xffffff, 1);
   sun.name = 'sun';
   const flood = new THREE.DirectionalLight(0xfff0d8, 0); // gece: stadyum ışıkları / ay
   flood.name = 'flood'; flood.position.set(-30, 160, 60);
-  scene.add(hemi, sun, sun.target, flood);
+  // iç görünüm dolgu ışığı: kasenin güneşe sırtı dönük tarafları siyaha düşmesin
+  const ambient = new THREE.AmbientLight(0xffffff, 0);
+  ambient.name = 'interior-fill';
+  scene.add(hemi, sun, sun.target, flood, ambient);
 
   if (quality.shadows) {
     renderer.shadowMap.enabled = true;
@@ -89,7 +94,14 @@ export function createLighting({ scene, renderer, quality, env, stadium }) {
   scene.fog = new THREE.Fog(0xcfe1f2, 500, 2600);
   scene.background = new THREE.Color(0xcfe1f2);
 
-  const state = { hour: 12, elevation: 0, night: 0, forced: false };
+  const state = { hour: 12, elevation: 0, night: 0, forced: false, interior: false };
+
+  function applyFill() {
+    // gündüz beyaz, gece sıcak (saha ışıkları); iç modda açık
+    ambient.color.setRGB(1, 1, 1).lerp(FLOOD_WARM, state.night);
+    ambient.intensity = state.interior ? 0.6 + 0.15 * state.night : 0;
+  }
+  function setInterior(on) { state.interior = on; applyFill(); }
 
   function setHour(h, forced = state.forced) {
     state.hour = h; state.forced = forced;
@@ -110,8 +122,9 @@ export function createLighting({ scene, renderer, quality, env, stadium }) {
     env.setSunDirection(dir);
     env.apply(st, night);
     stadium.setNight(night);
+    applyFill();
     return state;
   }
 
-  return { hemi, sun, flood, state, setHour };
+  return { hemi, sun, flood, ambient, state, setHour, setInterior };
 }

@@ -54,10 +54,13 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 .loader.is-done { opacity: 0; pointer-events: none; }
 .loader__brand { font-family: var(--serif); font-size: 40px; letter-spacing: .08em; font-weight: 600; }
 .loader__brand span { color: var(--gold-soft); }
-.loader__bar { width: 160px; height: 2px; background: rgba(255,255,255,.12); overflow: hidden; border-radius: 2px; }
-.loader__bar i { display: block; height: 100%; width: 40%; background: linear-gradient(90deg, transparent, var(--gold), transparent); animation: load 1.2s ease-in-out infinite; }
+.loader__mark { width: 16px; height: 16px; border: 1.5px solid var(--gold); transform: rotate(45deg); box-shadow: 0 0 18px rgba(201,162,74,.55); margin-bottom: 6px; animation: markpulse 2.4s ease-in-out infinite; }
+.loader__bar { width: min(240px, 60vw); height: 1px; background: rgba(255,255,255,.12); overflow: hidden; }
+.loader__bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, rgba(201,162,74,.4), var(--gold-soft)); transform-origin: left center; transform: scaleX(.04); animation: loadfill 3.2s cubic-bezier(.16,.7,.2,1) forwards; }
+.loader.is-done .loader__bar i { animation: none; transform: scaleX(1); transition: transform .3s ease-out; }
 .loader__txt { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-dim); }
-@keyframes load { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+@keyframes loadfill { to { transform: scaleX(.9); } }
+@keyframes markpulse { 0%,100% { opacity: .65; } 50% { opacity: 1; } }
 
 @media (max-width: 520px) {
   .brand { left: 16px; top: calc(14px + var(--safe-t)); }
@@ -68,7 +71,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
   .hint { bottom: calc(128px + var(--safe-b)); font-size: 11px; }
   .cta { bottom: calc(28px + var(--safe-b)); }
 }
-@media (prefers-reduced-motion: reduce) { .buy, .buy::before, .loader__bar i { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .buy, .buy::before, .loader__bar i, .loader__mark { animation: none; } .loader__bar i { transform: scaleX(.6); } }
 
 /* Adım 2: iç görünüm arayüzü */
 .brand, .clock { transition: opacity .5s; }

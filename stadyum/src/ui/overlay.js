@@ -11,6 +11,7 @@ const fmt = (h) => {
 export function createOverlay(root) {
   root.innerHTML = `
     <div class="loader" id="loader" role="status" aria-live="polite">
+      <span class="loader__mark" aria-hidden="true"></span>
       <div class="loader__brand">Arena <span>Bilet</span></div>
       <div class="loader__bar"><i></i></div>
       <div class="loader__txt">Stadyum hazırlanıyor…</div>

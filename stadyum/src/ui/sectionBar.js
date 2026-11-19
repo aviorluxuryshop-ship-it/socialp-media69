@@ -11,6 +11,14 @@ export function createSectionBar(bar) {
   grid.className = 'sb';
   grid.setAttribute('role', 'group');
   grid.setAttribute('aria-label', 'Bölge seçimi');
+  // dar ekranda tribün görünümünde çubuk tek bir hap düğmeye iner ("Bölge değiştir")
+  const pill = document.createElement('button');
+  pill.type = 'button'; pill.className = 'sb__pill';
+  pill.setAttribute('aria-expanded', 'false');
+  pill.innerHTML = '<span>Bölge değiştir</span><i aria-hidden="true">▾</i>';
+  const setOpen = (o) => { bar.classList.toggle('is-expanded', o); pill.setAttribute('aria-expanded', String(o)); };
+  pill.addEventListener('click', () => setOpen(!bar.classList.contains('is-expanded')));
+  bar.appendChild(pill);
   bar.appendChild(grid);
 
   const tabs = new Map(), sets = new Map(), chips = new Map();
@@ -53,6 +61,7 @@ export function createSectionBar(bar) {
     for (const [k, s] of sets) s.classList.toggle('is-active', k === id);
   }
   function sync() {
+    setOpen(false); // mod / bölge değişince hap kapalı başlar
     const id = state.selectedSection;
     for (const [k, c] of chips) {
       const on = k === id && state.mode === 'section';

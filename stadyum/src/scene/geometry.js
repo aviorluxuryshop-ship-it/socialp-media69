@@ -142,18 +142,20 @@ function toTex(c, { repeat = true, srgb = true, aniso = 4 } = {}) {
   return t;
 }
 
-// Koltuk sıraları: dönem başında dikey yükselti (altta), üstünde basamak.
+// Koltuk sıraları (dış görünümde boyalı doku): dönem başında dikey yükselti (altta), üstünde basamak.
+// Açık gri beton üzerinde siyah/beyaz koltuk deseni; hiçbir bölge saf siyah olmaz.
 export function seatTexture(riserFrac) {
   const [c, g] = canvas(128, 64);
   const treadH = Math.round(64 * (1 - riserFrac));
-  g.fillStyle = '#4a4a4e'; g.fillRect(0, 0, 128, 64);
-  g.fillStyle = '#8a8a90'; g.fillRect(0, 0, 128, treadH);
+  g.fillStyle = '#b1b4bb'; g.fillRect(0, 0, 128, 64);
+  g.fillStyle = '#d6d8dd'; g.fillRect(0, 0, 128, treadH);
   for (let i = 0; i < 8; i++) {
-    g.fillStyle = '#d6d6da';
+    const dark = i % 4 === 3;
+    g.fillStyle = dark ? '#4a4c54' : '#f1f1f4';
     g.beginPath(); g.roundRect(i * 16 + 2, 3, 12, treadH - 6, 3); g.fill();
-    g.fillStyle = '#b4b4ba'; g.fillRect(i * 16 + 3, treadH - 8, 10, 3);
+    g.fillStyle = dark ? '#33353b' : '#c9cbd2'; g.fillRect(i * 16 + 3, treadH - 8, 10, 3);
   }
-  g.fillStyle = '#26262a'; g.fillRect(0, treadH, 128, 2);
+  g.fillStyle = '#5d6068'; g.fillRect(0, treadH, 128, 2);
   return toTex(c);
 }
 

@@ -33,6 +33,8 @@ export function configureInteriorControls() {
 const KEEP_IN_ENV = new Set(['sky', 'stars']);
 function setInteriorVisibility(interior) {
   app.stadium.parts.facade.visible = !interior;
+  app.lighting.setInterior(interior);
+  if (interior) app.seats.show(); else app.seats.hide(); // koltuklar yalnız içeride (ilk girişte üretilir)
   for (const o of app.env.group.children) if (!KEEP_IN_ENV.has(o.name)) o.visible = !interior;
 }
 

@@ -13,6 +13,15 @@ export function initSections() {
   initPicking(root);
   ensureLook();
 
+  // Batı Loca: içeriden bakınca cam bant yarı saydam (kutunun içinden dışarı bakış hissi)
+  const locaMat = app.sections.get('bati-loca')?.getObjectByName('bati-loca-mesh')?.material;
+  if (locaMat) {
+    onModeChange((mode) => {
+      const on = mode === 'section' && state.selectedSection === 'bati-loca';
+      locaMat.transparent = on; locaMat.opacity = on ? 0.55 : 1; locaMat.depthWrite = !on;
+    });
+  }
+
   // kamera yakın düzlemi: yalnız tribün görünümünde küçük (koltuk sıraları kesilmesin)
   onModeChange((mode) => {
     if (mode === 'exterior' || mode === 'entering') {

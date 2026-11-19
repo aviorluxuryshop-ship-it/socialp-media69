@@ -21,7 +21,7 @@ export function initPicking(root) {
     if (!mesh) continue;
     meshes.push(mesh);
     const mat = mesh.material;
-    fx.set(def.id, { mat, base: mat.color.clone(), glow: 0, target: 0, hasEmi: def.tier !== 'koridor' });
+    fx.set(def.id, { seatMat: app.seats.materials.get(def.id), mat, base: mat.color.clone(), glow: 0, target: 0, hasEmi: def.tier !== 'koridor' });
   }
 
   // DOM: tooltip + yüzen etiket
@@ -109,7 +109,7 @@ export function initPicking(root) {
   // etiket konumu + vurgu animasyonu (her karede, ucuz)
   const v = new THREE.Vector3();
   let labelId = null;
-  const tmp = new THREE.Color();
+  const tmp = new THREE.Color(), tmp2 = new THREE.Color();
   app.frameCallbacks.add((dt) => {
     // renk animasyonu
     const k = 1 - Math.exp(-dt * 10);
@@ -123,6 +123,10 @@ export function initPicking(root) {
       f.mat.color.copy(f.base).multiply(tmp.setRGB(
         1 + m * (GOLD.r - 1), 1 + m * (GOLD.g - 1), 1 + m * (GOLD.b - 1)));
       if (f.hasEmi) { f.mat.emissive.copy(EMI).multiplyScalar(0.28 * m); }
+      if (f.seatMat) { // 3D koltuklar aynı vurguyu alır
+        f.seatMat.color.copy(f.mat.color).multiply(tmp2.setRGB(1 / f.base.r, 1 / f.base.g, 1 / f.base.b));
+        f.seatMat.emissive.copy(EMI).multiplyScalar(0.28 * m);
+      }
     }
     // etiket: hover > seçili (yalnızca iç görünüm)
     const id = interiorOnly() ? (hover || state.selectedSection) : null;
