@@ -69,3 +69,23 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
   .cta { bottom: calc(28px + var(--safe-b)); }
 }
 @media (prefers-reduced-motion: reduce) { .buy, .buy::before, .loader__bar i { animation: none; } }
+
+/* Adım 2: iç görünüm arayüzü */
+.brand, .clock { transition: opacity .5s; }
+.is-faded { opacity: 0; }
+.fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 5; }
+.back { position: absolute; top: calc(18px + var(--safe-t)); left: 16px; pointer-events: auto; cursor: pointer; font: inherit; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); padding: 11px 18px; min-height: 44px; border-radius: 999px; background: var(--glass); border: 1px solid rgba(201,162,74,.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: opacity .5s, transform .5s, background .2s; }
+.back:hover { background: rgba(40, 34, 18, .7); }
+.back:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 3px; }
+.back.is-hidden { pointer-events: none; transform: none; }
+.hint--in { bottom: calc(110px + var(--safe-b)); padding: 0 16px; }
+.hint--in.is-hidden { transform: none; }
+/* Adım 3 bu kapsayıcıyı tribün butonlarıyla dolduracak */
+.section-bar { position: absolute; left: 0; right: 0; bottom: calc(16px + var(--safe-b)); min-height: 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 0 12px; transition: opacity .5s; }
+.section-bar > * { pointer-events: auto; }
+.section-bar.is-hidden { transform: none; pointer-events: none; }
+@media (max-width: 520px) {
+  .back { top: calc(14px + var(--safe-t)); left: 12px; padding: 10px 14px; font-size: 12px; }
+}
+#ui > .back { pointer-events: auto; }
+#ui > .back.is-hidden { pointer-events: none; }

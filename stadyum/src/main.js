@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { state, setMode } from './state.js';
+import { isFlying, flyTo } from './camera/flyTo.js';
 import { app } from './app.js';
 import { getQuality } from './quality.js';
 import { buildStadium } from './scene/stadium.js';
@@ -86,7 +87,8 @@ let frames = 0;
 function frame() {
   requestAnimationFrame(frame);
   const dt = Math.min(clock.getDelta(), 0.1), t = clock.elapsedTime;
-  if (state.mode === 'exterior') controls.update(dt);
+  const m = state.mode;
+  if ((m === 'exterior' || m === 'interior' || m === 'section') && !isFlying()) controls.update(dt);
   env.update(dt, camera);
   for (const fn of app.frameCallbacks) fn(dt, t);
   renderer.render(scene, camera);
@@ -101,6 +103,6 @@ Object.assign(app, {
   sections: stadium.sections, // Map<id, THREE.Group>
   sectionDefs: SECTIONS, sectionById: SECTION_BY_ID,
   exteriorTarget: TARGET,
-  ui,
+  ui, flyTo,
 });
 window.__arena = app; // hata ayıklama / testler

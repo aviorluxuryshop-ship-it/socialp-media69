@@ -1,4 +1,4 @@
-import { onBuyTicket } from '../flow.js';
+import { onBuyTicket, onExitStadium } from '../flow.js';
 import { onModeChange } from '../state.js';
 import { periodName } from '../scene/lighting.js';
 
@@ -26,20 +26,42 @@ export function createOverlay(root) {
         <span class="buy__sub">Tribününü seç, sahayı gör</span>
       </button>
     </div>
+    <button class="back is-hidden" id="back" type="button" aria-label="Stadyumdan dışarı çık">← Dışarı çık</button>
+    <div class="hint hint--in is-hidden" id="hint-in"></div>
+    <!-- ADIM 3: tribün seçim butonları buraya eklenecek (#section-bar). Adım 2'de boş. -->
+    <div class="section-bar is-hidden" id="section-bar" aria-label="Tribün seçimi"></div>
     <div class="toast" id="toast" role="status"></div>
+    <div class="fade" id="fade" aria-hidden="true"></div>
   `;
   const $ = (id) => root.querySelector('#' + id);
   const buy = $('buy'), cta = $('cta'), hint = $('hint'), toast = $('toast');
+  const back = $('back'), hintIn = $('hint-in'), sectionBar = $('section-bar'), fade = $('fade');
+  let hintTimer = 0;
+  const showHint = (text, ms = 5500) => {
+    hintIn.textContent = text;
+    hintIn.classList.remove('is-hidden');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(() => hintIn.classList.add('is-hidden'), ms);
+  };
+  back.addEventListener('click', () => onExitStadium());
   buy.addEventListener('click', () => onBuyTicket());
 
-  onModeChange((mode) => {
+  const chrome = [root.querySelector('.brand'), root.querySelector('#clock')];
+  onModeChange((mode, prev) => {
     const ext = mode === 'exterior';
+    const inside = mode === 'interior' || mode === 'section';
     cta.classList.toggle('is-hidden', !ext);
     hint.classList.toggle('is-hidden', !ext);
+    back.classList.toggle('is-hidden', !inside);
+    sectionBar.classList.toggle('is-hidden', !inside);
+    chrome[0]?.classList.toggle('is-faded', !ext);
+    chrome[1]?.classList.toggle('is-faded', mode === 'entering');
+    if (mode !== 'interior' && mode !== 'section') hintIn.classList.add('is-hidden');
     if (mode === 'entering') {
-      toast.textContent = 'Stadyuma giriliyor…';
+      toast.textContent = prev === 'exterior' ? 'Stadyuma giriliyor…' : 'Dışarı çıkılıyor…';
       toast.classList.add('is-on');
     } else toast.classList.remove('is-on');
+    if (mode === 'interior' && prev === 'entering') showHint('Döndürmek için sürükleyin · Yakınlaştırmak için iki parmak');
   });
 
   return {
@@ -52,6 +74,8 @@ export function createOverlay(root) {
     setClock(hour, forced) {
       $('clock').textContent = `${periodName(hour)} · ${fmt(hour)}${forced ? ' (test)' : ''}`;
     },
-    elements: { buy, cta, toast, hint },
+    setFade(v) { fade.style.opacity = String(v); },
+    showHint,
+    elements: { buy, cta, toast, hint, back, sectionBar },
   };
 }

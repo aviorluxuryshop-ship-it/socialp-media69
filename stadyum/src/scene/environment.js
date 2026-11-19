@@ -61,6 +61,9 @@ export function buildEnvironment(quality) {
   const plaza = new THREE.Mesh(new THREE.CircleGeometry(150, 64), plazaMat);
   plaza.rotation.x = -Math.PI / 2; plaza.position.y = 0.12; plaza.name = 'plaza'; plaza.receiveShadow = true;
   group.add(ground, plaza);
+  const DAY_GROUND = new THREE.Color(0x6d7462), NIGHT_GROUND = new THREE.Color(0x141a26);
+  const DAY_PLAZA = new THREE.Color(0xb3afa4), NIGHT_PLAZA = new THREE.Color(0x232a38);
+  const DAY_CITY = new THREE.Color(0xffffff), NIGHT_CITY = new THREE.Color(0x4a5166);
 
   // su (Boğaz ipucu) – Batı tarafı
   const waterTex = waterTexture(); waterTex.repeat.set(30, 120);
@@ -119,7 +122,10 @@ export function buildEnvironment(quality) {
     starMat.opacity = Math.max(0, (night - 0.45) / 0.55);
     waterMat.color.copy(st.horizon).lerp(new THREE.Color(0x0d2740), 0.55);
     cityMat.emissiveIntensity = night * 1.1;
-    groundMat.color.setHex(0x6d7462).multiplyScalar(1);
+    groundMat.color.copy(DAY_GROUND).lerp(NIGHT_GROUND, night);
+    plazaMat.color.copy(DAY_PLAZA).lerp(NIGHT_PLAZA, night);
+    cityMat.color.copy(DAY_CITY).lerp(NIGHT_CITY, night);
+    treeMat.color.setHex(0x3d5a3a).lerp(new THREE.Color(0x121c1c), night);
   }
 
   function setSunDirection(dir) { skyMat.uniforms.uSunDir.value.copy(dir); }
