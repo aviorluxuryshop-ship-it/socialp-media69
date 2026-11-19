@@ -180,7 +180,8 @@ export function buildStadium(quality) {
     const cx = nx * bl, cz = nz * bl;
     const rx = nz, rz = -nx; // yukarıdan bakınca (üst = merkeze doğru) sağ yön
     const pt = (sgn, d, u, v) => [cx + rx * sgn * len / 2 + nx * d, roofY(d), cz + rz * sgn * len / 2 + nz * d, u, v];
-    const v = [pt(-1, d0, 0, 1), pt(1, d0, 1, 1), pt(1, d1, 1, 0), pt(-1, d1, 0, 0)];
+    // Yazı 180° döndürüldü: harfin üstü dışa bakar, dışarıdan bakan düz okur.
+    const v = [pt(-1, d0, 1, 0), pt(1, d0, 0, 0), pt(1, d1, 0, 1), pt(-1, d1, 1, 1)];
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(v.flatMap((p) => p.slice(0, 3)), 3));
     g.setAttribute('uv', new THREE.Float32BufferAttribute(v.flatMap((p) => p.slice(3)), 2));
