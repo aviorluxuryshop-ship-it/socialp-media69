@@ -17,14 +17,36 @@ const GLASS_DAY = new THREE.Color(0xd8dde6), GLASS_NIGHT = new THREE.Color(0xffd
 
 let cache = null;
 
+// Yedek yol: bazı barındırma ortamları .glb dosyası sunmaz. O zaman aynı model `tupras.glb.txt` içinde base64 metin olarak
+// durur (scripts: `base64 -w0 tupras.glb > tupras.glb.txt`); indirilip çözülür ve GLTFLoader'a verilir.
+async function loadBase64(loader, onProgress) {
+  const res = await fetch(`${MODEL_URL}.txt`);
+  if (!res.ok) throw new Error(`Model indirilemedi (${res.status})`);
+  const total = Number(res.headers.get('content-length')) || 0;
+  const reader = res.body.getReader();
+  const chunks = [];
+  let loaded = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value); loaded += value.length;
+    onProgress?.({ loaded, total: total || FALLBACK_BYTES * 1.34 });
+  }
+  const text = new TextDecoder().decode(await new Blob(chunks).arrayBuffer());
+  const bin = atob(text.trim());
+  const buf = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  return loader.parseAsync(buf.buffer, `${import.meta.env.BASE_URL}models/`);
+}
+
 // Yükleme + kurulum. Aynı sayfa ömründe ikinci çağrı aynı Promise'i döndürür.
 // onProgress(0..1): yalnız ağ indirmesi (ayrıştırma/GPU yükü ayrıca bildirilmez).
 export function loadShell(quality, renderer, onProgress) {
   if (!cache) {
     const t0 = performance.now();
-    cache = new GLTFLoader().loadAsync(MODEL_URL, (e) => {
-      onProgress?.(Math.min(1, e.loaded / (e.total || FALLBACK_BYTES)));
-    }).then((gltf) => {
+    const loader = new GLTFLoader();
+    const prog = (e) => onProgress?.(Math.min(1, e.loaded / (e.total || FALLBACK_BYTES)));
+    cache = loader.loadAsync(MODEL_URL, prog).catch(() => loadBase64(loader, prog)).then((gltf) => {
       const tNet = performance.now();
       const shell = setupShell(gltf, quality, renderer);
       shell.stats.loadMs = Math.round(tNet - t0);
