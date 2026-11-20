@@ -125,7 +125,7 @@ export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Tex
           // slightly below the original brightness keeps the orange saturated after tone mapping;
           // a faint constant glow keeps a far block readable
           if (inSel && !sold) col = mix(col, uOrange * (sh * 0.85 + 0.08) + spec * 0.5, 0.96);
-          if ((block == uHoverBlock || inSet) && !inSel && !sold) col = mix(col, uOrange * (sh * 0.85 + 0.05), 0.42);
+          if ((block == uHoverBlock || inSet) && !inSel && !sold) col = mix(col, uOrange * (sh * 0.85 + 0.05), 0.62);
           // the row being browsed in the panel
           if (inSel && row == uRow && !sold) col = mix(col, vec3(1.0, 0.82, 0.55) * (sh * 0.9 + 0.15), 0.7);
           if (seat == uHoverSeat && seat >= 0.0) col = mix(col, vec3(1.0, 0.86, 0.6) * max(sh, 0.6) * 1.4, 0.85);

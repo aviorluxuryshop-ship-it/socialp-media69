@@ -269,6 +269,8 @@ export class SeatPicker {
       requestAnimationFrame(() => {
         if (this.step !== 'seat' || this.seat === null) return;
         this.seatView = this.app.captureView();
+        // at the seat the view should look like match day: no orange block in the foreground
+        this.app.selection.selectBlock(-1);
         this.app.director.seatLook(true);
         this.render();
       }),

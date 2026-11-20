@@ -152,7 +152,7 @@ export class StadiumMaterials {
         m.depthWrite = !on;
         m.needsUpdate = true;
       }
-      m.opacity = 1 - 0.84 * k;
+      m.opacity = 1 - 0.9 * k;
     }
   }
 
