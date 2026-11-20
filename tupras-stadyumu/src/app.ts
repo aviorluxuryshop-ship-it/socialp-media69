@@ -8,7 +8,8 @@ import { Engine } from './core/engine.ts';
 import { PostPipeline } from './core/post.ts';
 import { loadWorld, type World } from './world/data.ts';
 import { buildStadium, type Stadium } from './stadium/index.ts';
-import { PITCH_ELEVATION } from './stadium/config.ts';
+import { CATEGORIES, PITCH_ELEVATION } from './stadium/config.ts';
+import type { Block } from './stadium/layout.ts';
 import { paintGround } from './world/ground.ts';
 import { groundMaterial, buildFarTerrain } from './world/terrain.ts';
 import { createBuildingMaterial } from './world/buildings.ts';
@@ -121,6 +122,7 @@ export class App {
 
     // camera
     this.director = new CameraDirector(camera, renderer.domElement, world);
+    if (this.params.has('fast')) this.director.speed = 5; // automated tests only
     const viewParam = this.params.get('view') as ViewId | null;
     const v = this.views.find((x) => x.id === viewParam) ?? null;
     if (v) this.director.lock(v);
@@ -186,12 +188,47 @@ export class App {
     this.director.fly(frames, v, onDone);
   }
 
+  /** Cinematic flight to a stand or block frame (STEP 05). */
+  flyToFrame(dest: KeyFrame, via: Block, onDone?: () => void): void {
+    const frames = planToFrame(this.planContext(), this.director.pose(), { ...dest, position: dest.position.clone(), target: dest.target.clone() }, via);
+    const v: LockedView = { id: 'seat' as ViewId, label: dest.label, caption: '', position: dest.position, target: dest.target, fov: dest.fov };
+    this.director.fly(frames, v, onDone);
+  }
+
   /** Cinematic flight to a seat (STEP 05 uses this). */
   flyToSeat(seat: number, onDone?: () => void): void {
     const frames = planToSeat(this.planContext(), this.director.pose(), seat);
     const s = seatFrame(this.stadium.layout, seat);
     const v: LockedView = { id: 'uzun', label: 'Koltuk', caption: '', position: s.position, target: s.target, fov: s.fov, seat };
     this.director.fly(frames, { ...v, id: 'seat' as ViewId }, onDone);
+  }
+
+  seatPrice(seat: number): number {
+    return CATEGORIES[this.stadium.layout.seats.category[seat]]?.price ?? 0;
+  }
+
+  /** Render the current view right now (no time advance). */
+  renderNow(): void {
+    this.selection.prepare(this.elapsed);
+    this.post.render(0);
+  }
+
+  /**
+   * Capture the current view without any highlight — the ticket image.
+   * Read back in the same task as the render (the drawing buffer is not preserved).
+   */
+  captureView(): string {
+    const st = { ...this.selection.state };
+    const hov = this.selection.hoverEnabled;
+    Object.assign(this.selection.state, { block: -1, row: -1, seat: -1, hoverSeat: -1, hoverBlock: -1, mask: false });
+    this.selection.hoverEnabled = false;
+    this.selection.setHoverSet([]);
+    this.renderNow();
+    const url = this.engine.canvas.toDataURL('image/jpeg', 0.88);
+    Object.assign(this.selection.state, st);
+    this.selection.hoverEnabled = hov;
+    this.renderNow();
+    return url;
   }
 
   onFrame(fn: FrameHook): void {
@@ -241,7 +278,8 @@ export class App {
     }
     engine.renderer.info.reset();
     this.selection.prepare(this.elapsed);
-    this.post.render(dt);
+    if (this.params.has('nopost')) engine.renderer.render(engine.scene, camera);
+    else this.post.render(dt);
 
     const ms = performance.now() - t0;
     this.frameTimes.push(ms);

@@ -40,7 +40,7 @@ export class CameraDirector {
     this.controls.maxPolarAngle = Math.PI * 0.495;
     // any manual drag in a locked view returns to free exploration around the same target
     this.controls.addEventListener('start', () => {
-      if (this.mode === 'locked') this.setMode('free', null);
+      if (this.mode === 'locked' && !this.seatMode) this.setMode('free', null);
     });
   }
 
@@ -94,13 +94,46 @@ export class CameraDirector {
     this.setMode('locked', view);
   }
 
+  /**
+   * Seat view: drag to look around from the seat (the orbit pivots on the
+   * eye point), no zoom or pan so the camera stays in the seat.
+   */
+  seatLook(on: boolean): void {
+    const c = this.controls;
+    if (on) {
+      const dir = this.target.clone().sub(this.camera.position).normalize();
+      // pivot 5 cm in front of the eye: turning the view barely moves the camera
+      c.target.copy(this.camera.position).addScaledVector(dir, 0.05);
+      c.minDistance = c.maxDistance = 0.05;
+      c.enableZoom = false;
+      c.enablePan = false;
+      c.rotateSpeed = 0.4;
+      c.maxPolarAngle = Math.PI * 0.62;
+      c.minPolarAngle = Math.PI * 0.25;
+    } else {
+      c.minDistance = 4;
+      c.maxDistance = 5000;
+      c.enableZoom = true;
+      c.enablePan = true;
+      c.rotateSpeed = 1;
+      c.maxPolarAngle = Math.PI * 0.495;
+      c.minPolarAngle = 0;
+    }
+    this.seatMode = on;
+  }
+
+  seatMode = false;
+
   free(): void {
     this.setMode('free', null);
   }
 
-  /** Read back the camera's current pose. */
+  /** Read back the camera's current pose (look target at least 30 m out). */
   pose(): CameraPose {
-    return { position: this.camera.position.clone(), target: this.target.clone(), fov: this.camera.fov };
+    const dir = this.target.clone().sub(this.camera.position);
+    const d = dir.length();
+    const target = d < 30 ? this.camera.position.clone().addScaledVector(dir.normalize(), 30) : this.target.clone();
+    return { position: this.camera.position.clone(), target, fov: this.camera.fov };
   }
 
   update(dt = 0): void {
@@ -131,6 +164,11 @@ export class CameraDirector {
       this.target.copy(this.controls.target);
     } else {
       this.controls.enabled = this.mode === 'locked';
+      if (this.mode === 'locked' && this.seatMode) {
+        // look around from the seat: the orbit target sits just in front of the eye
+        this.controls.update();
+        this.target.copy(this.controls.target);
+      }
     }
   }
 }

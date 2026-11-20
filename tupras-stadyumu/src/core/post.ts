@@ -21,7 +21,9 @@ export class PostPipeline {
   constructor(renderer: WebGLRenderer, scene: Scene, camera: Camera, q: QualitySettings) {
     this.renderer = renderer;
     const size = renderer.getDrawingBufferSize(new Vector2());
-    const rt = new WebGLRenderTarget(size.x, size.y, { type: HalfFloatType, samples: q.antialias ? 4 : 0 });
+    const msaa = new URLSearchParams(location.search).get('msaa');
+    const samples = msaa !== null ? Number(msaa) : q.antialias ? 4 : 0;
+    const rt = new WebGLRenderTarget(size.x, size.y, { type: HalfFloatType, samples });
     this.composer = new EffectComposer(renderer, rt);
     this.renderPass = new RenderPass(scene, camera);
     this.composer.addPass(this.renderPass);

@@ -20,7 +20,7 @@ const lin = (hex: number) => {
   return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
 };
 
-export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
+export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Texture): ShaderPass {
   const orange = new Color(0xff7a1a);
   const pass = new ShaderPass({
     name: 'HighlightPass',
@@ -28,6 +28,7 @@ export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
       tDiffuse: { value: null },
       tId: { value: idTex },
       tInfo: { value: info },
+      tSet: { value: blockSet },
       uRes: { value: new Vector2(1, 1) },
       uBlock: { value: -1 },
       uHoverSeat: { value: -1 },
@@ -39,6 +40,7 @@ export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
       uAlbedo: { value: new Vector3(lin(SEAT_COLORS.white), lin(SEAT_COLORS.black), lin(SEAT_COLORS.vip)) },
       uSoldLum: { value: lin(SEAT_COLORS.sold) },
       uAvailability: { value: 0 },
+      uRow: { value: -1 },
     },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
@@ -47,8 +49,9 @@ export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
       uniform sampler2D tDiffuse;
       uniform sampler2D tId;
       uniform sampler2D tInfo;
+      uniform sampler2D tSet;
       uniform vec2 uRes;
-      uniform float uBlock, uHoverSeat, uSelSeat, uHoverBlock, uMode, uTime, uSoldLum, uAvailability;
+      uniform float uBlock, uHoverSeat, uSelSeat, uHoverBlock, uMode, uTime, uSoldLum, uAvailability, uRow;
       uniform vec3 uOrange, uAlbedo;
       varying vec2 vUv;
 
@@ -65,7 +68,9 @@ export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
           float seat = id - 1.0;
           ivec2 tc = ivec2(int(mod(seat, 256.0)), int(floor(seat / 256.0)));
           vec4 inf = texelFetch(tInfo, tc, 0);
-          meta = vec2(floor(inf.r * 255.0 + 0.5), floor(inf.g * 255.0 + 0.5));
+          float packed = floor(inf.r * 255.0 + 0.5);
+          // meta = (shade, sold, row) packed: shade = packed mod 4, sold = bit 2
+          meta = vec2(mod(packed, 4.0), floor(packed / 4.0) + floor(inf.g * 255.0 + 0.5) * 8.0);
           float block = floor(inf.b * 255.0 + 0.5) + floor(inf.a * 255.0 + 0.5) * 256.0;
           return vec3(1.0, seat, block);
         }
@@ -100,7 +105,9 @@ export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
         bool inSel = block == uBlock && uBlock >= 0.0;
         if (kind > 0.5 && kind < 1.5) {
           float shade = meta.x;
-          bool sold = meta.y > 0.5 && uAvailability > 0.5;
+          float soldBit = mod(meta.y, 8.0);
+          float row = floor(meta.y / 8.0);
+          bool sold = soldBit > 0.5 && uAvailability > 0.5;
           float alb = shade < 0.5 ? uAlbedo.x : (shade < 1.5 ? uAlbedo.y : uAlbedo.z);
           if (sold) alb = uSoldLum;
           float L = lum(col);
@@ -111,7 +118,10 @@ export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
           // slightly below the original brightness keeps the orange saturated after tone mapping;
           // a faint constant glow keeps a far block readable
           if (inSel && !sold) col = mix(col, uOrange * (shading * 0.82 + 0.1) + spec * 0.5, 0.96);
-          if (block == uHoverBlock && !inSel && uHoverBlock >= 0.0 && !sold) col = mix(col, uOrange * shading, 0.35);
+          bool inSet = block >= 0.0 && texelFetch(tSet, ivec2(int(block), 0), 0).r > 0.5;
+          if ((block == uHoverBlock || inSet) && !inSel && !sold) col = mix(col, uOrange * (shading * 0.85 + 0.05), 0.42);
+          // the row being browsed in the panel
+          if (inSel && row == uRow && !sold) col = mix(col, vec3(1.0, 0.82, 0.55) * (shading * 0.9 + 0.15), 0.7);
           if (seat == uHoverSeat && seat >= 0.0) col = mix(col, vec3(1.0, 0.86, 0.6) * max(shading, 0.6) * 1.4, 0.85);
           if (seat == uSelSeat && seat >= 0.0) {
             float pulse = 0.75 + 0.25 * sin(uTime * 5.0);
@@ -136,5 +146,6 @@ export function createHighlightPass(idTex: Texture, info: Texture): ShaderPass {
   // textures become copies, so bind the live textures after construction
   pass.uniforms.tId.value = idTex;
   pass.uniforms.tInfo.value = info;
+  pass.uniforms.tSet.value = blockSet;
   return pass;
 }

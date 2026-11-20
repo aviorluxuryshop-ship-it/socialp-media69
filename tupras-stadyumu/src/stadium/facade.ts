@@ -135,6 +135,28 @@ export function buildFacade(layout: StadiumLayout, mats: StadiumMaterials, ringH
   return group;
 }
 
+/** Ten gates spread around, skipping the south-east end where Eski Açık stands. */
+const GATE_GAPS = [3, 11, 19, 27, 34, 48, 55, 62, 70, 77];
+
+/** Plan angles of the gates (KAPI 1 … 10). */
+export function gateAngles(layout: StadiumLayout): number[] {
+  return GATE_GAPS.map((gap) => layout.outer.tAtU(((gap + 1) % FACADE.columns) / FACADE.columns));
+}
+
+/** Nearest gate number (1-based) for a plan angle. */
+export function nearestGate(layout: StadiumLayout, t: number): number {
+  let best = 0;
+  let bd = Infinity;
+  gateAngles(layout).forEach((g, i) => {
+    let d = Math.abs(((t - g) % (2 * Math.PI) + 3 * Math.PI) % (2 * Math.PI) - Math.PI);
+    if (d < bd) {
+      bd = d;
+      best = i;
+    }
+  });
+  return best + 1;
+}
+
 /** Entrance gates between piers: dark portal, canopy, numbered sign. */
 function buildGates(layout: StadiumLayout): Group {
   const outer = layout.outer;
@@ -144,9 +166,7 @@ function buildGates(layout: StadiumLayout): Group {
   const portalMat = new MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.9 });
   const canopyMat = new MeshStandardMaterial({ color: 0x1b1c1f, roughness: 0.5, metalness: 0.4 });
   const frameMat = new MeshStandardMaterial({ color: 0xcfc6b2, roughness: 0.7 });
-  // ten gates spread around, skipping the south-east end where Eski Açık stands
-  const gaps = [3, 11, 19, 27, 34, 48, 55, 62, 70, 77];
-  gaps.forEach((gap, k) => {
+  GATE_GAPS.forEach((gap, k) => {
     const t = outer.tAtU(((gap + 1) % N) / N);
     const q = outer.offset(t, -2.3);
     const n = outer.normal(t);

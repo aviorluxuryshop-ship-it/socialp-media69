@@ -11,6 +11,8 @@ import { createHighlightPass } from './highlight.ts';
 
 export interface SelectionState {
   block: number;
+  /** row of the selected block being browsed (1-based, −1 none) */
+  row: number;
   seat: number;
   hoverSeat: number;
   hoverBlock: number;
@@ -21,7 +23,7 @@ export interface SelectionState {
 export class Selection {
   readonly idPass: IdPass;
   readonly pass: ShaderPass;
-  readonly state: SelectionState = { block: -1, seat: -1, hoverSeat: -1, hoverBlock: -1, mask: false, availability: false };
+  readonly state: SelectionState = { block: -1, row: -1, seat: -1, hoverSeat: -1, hoverBlock: -1, mask: false, availability: false };
   /** hover picking on/off (the seat picker turns it on) */
   hoverEnabled = false;
   private readonly stadium: Stadium;
@@ -38,7 +40,7 @@ export class Selection {
     this.stadium = stadium;
     this.canvas = renderer.domElement;
     this.idPass = new IdPass(renderer, scene, stadium);
-    this.pass = createHighlightPass(this.idPass.target.texture, this.idPass.info);
+    this.pass = createHighlightPass(this.idPass.target.texture, this.idPass.info, this.idPass.blockSet);
     this.pass.enabled = false;
     const size = renderer.getDrawingBufferSize(new Vector2());
     this.setSize(size.x, size.y);
@@ -90,6 +92,13 @@ export class Selection {
     for (const l of this.hoverListeners) l(p);
   }
 
+  private setSize_ = 0;
+  /** Blocks tinted as a group (a stand under the pointer in the stand list). */
+  setHoverSet(blocks: number[]): void {
+    this.setSize_ = blocks.length;
+    this.idPass.setBlockSet(blocks);
+  }
+
   selectBlock(block: number): void {
     this.state.block = block;
   }
@@ -122,7 +131,7 @@ export class Selection {
       this.pointerDirty = false;
       this.setHover(this.pickAt(this.pointer.x, this.pointer.y));
     }
-    const active = s.mask || s.block >= 0 || s.seat >= 0 || s.hoverSeat >= 0 || s.hoverBlock >= 0;
+    const active = s.mask || s.block >= 0 || s.seat >= 0 || s.hoverSeat >= 0 || s.hoverBlock >= 0 || this.setSize_ > 0;
     this.pass.enabled = active;
     if (!active) return;
     this.idPass.render(this.camera);
@@ -134,6 +143,7 @@ export class Selection {
     u.uMode.value = s.mask ? 1 : 0;
     u.uTime.value = time;
     u.uAvailability.value = s.availability ? 1 : 0;
+    u.uRow.value = s.row;
   }
 
   /**

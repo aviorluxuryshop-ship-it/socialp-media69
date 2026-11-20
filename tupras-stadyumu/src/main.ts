@@ -8,6 +8,7 @@ import './styles.css';
 
 import { App } from './app.ts';
 import { mountViewsBar } from './ui/viewsBar.ts';
+import { mountPicker } from './ui/picker.ts';
 
 async function main() {
   const container = document.getElementById('viewport')!;
@@ -32,6 +33,10 @@ async function main() {
 
   // ---- locked views
   mountViewsBar(app, (v) => app.flyToView(v));
+
+  // ---- seat picker (STEP 05)
+  const picker = mountPicker(app);
+  (window as unknown as { __picker: unknown }).__picker = picker;
 
   // ---- debug HUD (?debug)
   const hud = document.getElementById('debug')!;

@@ -83,10 +83,13 @@ export class IdPass {
   private readonly worldMat: MeshBasicMaterial;
   private readonly swapped: { o: Object3D; m: Material | Material[]; v?: boolean }[] = [];
   private readonly pickBuf = new Uint8Array(4);
-  /** per-seat info for the compositing shader: R shade, G sold, B/A block index */
+  /** per-seat info for the compositing shader: R shade | sold << 2, G row, B/A block index */
   readonly info: DataTexture;
   private readonly infoData: Uint8Array;
   private readonly stadiumObjects = new Set<Object3D>();
+  /** per-block flags (1 = part of the hovered set, e.g. a whole stand) */
+  readonly blockSet: DataTexture;
+  private readonly blockSetData = new Uint8Array(256 * 4);
 
   constructor(renderer: WebGLRenderer, scene: Scene, stadium: Stadium) {
     this.renderer = renderer;
@@ -121,14 +124,23 @@ export class IdPass {
     this.info.minFilter = this.info.magFilter = NearestFilter;
     this.info.colorSpace = LinearSRGBColorSpace;
     this.refreshInfo();
+    this.blockSet = new DataTexture(this.blockSetData, 256, 1, RGBAFormat, UnsignedByteType);
+    this.blockSet.minFilter = this.blockSet.magFilter = NearestFilter;
+    this.blockSet.needsUpdate = true;
+  }
+
+  setBlockSet(blocks: number[]): void {
+    this.blockSetData.fill(0);
+    for (const b of blocks) if (b >= 0 && b < 256) this.blockSetData[b * 4] = 255;
+    this.blockSet.needsUpdate = true;
   }
 
   /** Re-encode seat shade / sold state / block for the compositing shader. */
   refreshInfo(): void {
     const S = this.stadium.layout.seats;
     for (let i = 0; i < S.count; i++) {
-      this.infoData[i * 4] = S.shade[i];
-      this.infoData[i * 4 + 1] = S.sold[i];
+      this.infoData[i * 4] = S.shade[i] | ((S.sold[i] === 1 ? 1 : 0) << 2);
+      this.infoData[i * 4 + 1] = S.row[i];
       this.infoData[i * 4 + 2] = S.block[i] % 256;
       this.infoData[i * 4 + 3] = Math.floor(S.block[i] / 256);
     }

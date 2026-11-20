@@ -14,7 +14,7 @@
 | STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
 | STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
 | STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
-| STEP 05 – Pick your seat, get the ticket | 🟡 Sıradaki |
+| STEP 05 – Pick your seat, get the ticket | 🟡 Kod yazıldı, derleniyor; uçtan uca test yarıda kaldı |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
 | Dinamik yükleme / performans | 🟡 Parça akışı + havuz + LOD çalışıyor; ölçüm/ayar bekliyor |
 
@@ -153,9 +153,21 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 
 ## Sıradaki işlem
 
-STEP 05: `src/ui/picker.ts` (tribün/blok/sıra/koltuk paneli, mobil alt sayfa), `src/ui/ticket.ts`
-(dijital bilet, koltuğun görüşü offscreen render), seçim akışını uçuşlara bağlama
-(tribün → standFrame, blok → blockFrame, koltuk → seat), hover fiyat etiketi, VIP/Loca kısayolları.
+STEP 05 durumu: `src/ui/picker.ts` (giriş kartı, tribün/blok/sıra/koltuk paneli, mobilde alt sayfa,
+VIP ve Loca yolları, 3D üzerine gelme ipucu + fiyat, 3D tıklama ile seçim, sol/sağ koltuk),
+`src/ui/ticket.ts` (koltuğun gerçek görüşüyle dijital bilet, PNG indirme, örnek "Bileti Al"),
+`src/ui/format.ts`, sıra vurgusu ve tribün grubu vurgusu (`setHoverSet`), koltukta etrafa bakma
+(`director.seatLook`). Tip denetimi, `npm test` ve üretim derlemesi geçiyor.
+
+**Yapılacak (sıradaki oturum):**
+1. `node scripts/flow.mjs <dir> 960 540` ile uçtan uca akış testini tamamla (yarıda kaldı); hataları düzelt.
+2. Mobil test: `node scripts/flow.mjs <dir> 0 0 mobile` (iPhone 13 emülasyonu).
+3. Gece–gündüz son kontrolü, performans bütçeleri (kademe başına çizim çağrısı/üçgen, gölge boyutu).
+4. PROGRESS.md son hali.
+
+Not: bu ortamda tarayıcı yazılım GPU'su (SwiftShader) kullanıyor; kare başına 1–2 s sürüyor
+(ana iş parçacığı 6–12 ms). Gerçek GPU performansını göstermez. Test parametreleri:
+`?fast` (uçuşlar 5× hızlı), `?msaa=0`, `?nopost` (teşhis).
 
 Bilinen görsel eksikler (sonra ele alınabilir):
 - Ağaçlar düşük poligon; yakında oyuncak gibi.
