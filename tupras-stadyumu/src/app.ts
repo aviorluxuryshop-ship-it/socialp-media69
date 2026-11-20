@@ -332,17 +332,17 @@ export class App {
     atmosphere.setShadowFocus(camera.position, director.target);
     atmosphere.update(this.time.sun, camera.position, dt);
     const f = atmosphere.factors;
-    engine.uNight.value = f.night * 0.9 + f.lights * 0.1;
-    for (const m of this.groundMats) m.emissiveIntensity = f.night * 0.5;
+    engine.uNight.value = f.city * 0.9 + f.lights * 0.1;
+    for (const m of this.groundMats) m.emissiveIntensity = f.city * 0.5;
     stadium.materials.setAtmosphere(f.day, f.lights);
-    streamer.setNight(f.night);
+    streamer.setNight(f.city);
     water.update(this.elapsed);
-    water.setNight(f.night);
-    landmarks.update(this.elapsed, f.night);
+    water.setNight(f.city);
+    landmarks.update(this.elapsed, f.city);
     streamer.update(camera);
     stadium.seats.update(camera);
     engine.updateClipPlanes();
-    this.post.setBloom(f.night * 0.5);
+    this.post.setBloom(f.city * 0.5);
     if (this.geometryPass) {
       engine.renderer.toneMappingExposure = 1;
       this.post.setBloom(0);

@@ -35,6 +35,10 @@ export interface AtmosphereFactors {
   golden: number; // 0..1 (low sun)
   night: number; // 0..1
   lights: number; // floodlights 0..1
+  /** city lights (windows, street lamps): on from before sunset until after sunrise */
+  city: number;
+  /** night-sky blend: full night plus a share of it through civil twilight */
+  sky: number;
   altitude: number;
 }
 
@@ -48,7 +52,11 @@ export function factorsFor(alt: number): AtmosphereFactors {
   const night = 1 - smooth(-13, -3, alt);
   const golden = Math.max(0, 1 - Math.abs(alt - 3) / 11) * (1 - night);
   const lights = 1 - smooth(1, 9, alt);
-  return { day, golden, night, lights, altitude: alt };
+  // street lights stay on until the sun is up; with `night` alone they switched
+  // off at −3° and civil twilight came out darker than midnight
+  const city = Math.max(night, 1 - smooth(-2, 3, alt));
+  const sky = Math.max(night, (1 - smooth(-6, 0, alt)) * 0.55);
+  return { day, golden, night, lights, city, sky, altitude: alt };
 }
 
 export class Atmosphere {
@@ -271,8 +279,8 @@ export class Atmosphere {
     this.fog.density = 0.000085 + f.golden * 0.00005 + f.night * 0.00007;
 
     // night sky
-    this.sky.material.uniforms.uNight.value = f.night;
-    this.envSky.material.uniforms.uNight.value = f.night;
+    this.sky.material.uniforms.uNight.value = f.sky;
+    this.envSky.material.uniforms.uNight.value = f.sky;
     (this.stars.material as PointsMaterial).opacity = Math.max(0, f.night - 0.25) * 1.2;
     this.stars.visible = f.night > 0.25;
     // keep the domes centred on the camera so they never clip
