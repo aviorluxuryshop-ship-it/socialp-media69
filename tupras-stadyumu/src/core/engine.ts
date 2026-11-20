@@ -57,6 +57,13 @@ export class Engine {
     this.resizeFns.push(fn);
   }
 
+  /** Change the render resolution at runtime (frame governor) and resize every target. */
+  setPixelRatio(r: number): void {
+    this.renderer.setPixelRatio(r);
+    const parent = this.canvas.parentElement;
+    if (parent) this.resize(parent);
+  }
+
   resize(container: HTMLElement): void {
     const w = container.clientWidth;
     const h = container.clientHeight;

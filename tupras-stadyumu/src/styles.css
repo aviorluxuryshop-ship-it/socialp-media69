@@ -584,9 +584,12 @@ body.picking .views-bar {
   border-color: var(--accent);
   background: rgba(255, 122, 26, 0.08);
 }
-.block-chip.off {
+.block-chip.off,
+.block-chip.off:hover {
   opacity: 0.35;
   cursor: default;
+  border-color: var(--line);
+  background: transparent;
 }
 .bc-code {
   font: 700 17px/1 var(--font-display);

@@ -14,7 +14,7 @@
 | STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
 | STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
 | STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
-| STEP 05 – Pick your seat, get the ticket | 🟡 Kod yazıldı, derleniyor; uçtan uca test yarıda kaldı |
+| STEP 05 – Pick your seat, get the ticket | 🟡 Masaüstü uçtan uca akış hatasız; mobil test sürüyor |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
 | Dinamik yükleme / performans | 🟡 Bakış yönüne göre kırpma + koni akışı eklendi ve ölçüldü; mobil bütçe ayarı bekliyor |
 
@@ -37,6 +37,26 @@ seçenekleri, mobil + masaüstü testleri.
 - Ölçüm (800×450, medium): Batı üst koltuktan sahaya bakış ana geçiş 898 bin + gölge 289 bin üçgen
   (önce 1.38 M + 1.21 M); aynı koltukta arkaya bakış 215 bin; havadan stadyuma bakış 454 bin,
   stadyuma sırtını dönünce 129 bin. Çizim çağrısı 480 → 180 (arkaya bakış).
+
+## STEP 05 doğrulaması (uçtan uca akış, `scripts/flow.mjs`)
+
+Gerçek DOM tıklamalarıyla tam akış (960×540, `?fast&q=medium&msaa=0`), konsol hatası: **yok**.
+Giriş → "Koltuk Seç" → Batı tribünü (üzerine gelince tüm tribün turuncu) → Blok 416 → Sıra 12 →
+koltuk üzerine gelme (fiyat ipucu) → koltuğa uçuş → koltuktan görünüm → dijital bilet (koltuğun
+gerçek 3D görüntüsü) → "Bileti Al" → Onaylandı → sağ koltuk (kamera 0.47 m kaydı) → VIP → Localar.
+
+Bu turda bulunup düzeltilenler:
+- **Vurgu rengi koltuktan koltuğa değişiyordu.** Siyah koltuğun albedo'su çok küçük olduğundan
+  parlama payı "ışık ÷ albedo" hesabını şişiriyor, siyah koltuklar parlak turuncu, beyazlar kiremit
+  rengi çıkıyordu. Vurgulanan bloklar artık ana çizimde tek tip nötr (beyaz) albedo ile çiziliyor
+  (`SeatSystem.setNeutralBlocks`), turuncu yeniden aydınlatma her koltukta aynı doğrulukta. Güneşe
+  sırtı dönük tarafta da turuncu okunsun diye ışık/gölge sırası korunarak yumuşak bir eğri eklendi.
+- **Açılış kamerası** Süzer Plaza'yı stadın önüne koyuyordu → Gümüşsuyu üstünden yeni açı; dikey
+  ekranda stat giriş kartının üstünde kalacak ayrı çerçeve.
+- **Bilet** 540 px yükseklikte üstten kesiliyordu → taşınca üstten kaydırılıyor; kısa yatay
+  ekranlarda görüntü solda, bilgiler sağda geniş bilet düzeni.
+- Masaüstünde görünüm çubuğu koltuk panelinin altına giriyordu → panelin solundaki alana ortalanıyor.
+- Tamamen satılmış localar/bloklar listede tıklanabiliyordu → "satıldı"/"dolu" olarak kapalı.
 
 ## Kare süresi yöneticisi (performans bütçesi, `src/core/governor.ts`)
 

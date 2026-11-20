@@ -297,10 +297,13 @@ export class SeatPicker {
       const bs = this.blocksOf(this.stand);
       const chip = (b: Block) => {
         const a = availability(L, b);
-        const dis = b.kind === 'press';
+        const press = b.kind === 'press';
+        const full = !press && a.free === 0;
+        const dis = press || full;
+        const label = press ? 'kapalı' : full ? (b.kind === 'suite' ? 'satıldı' : 'dolu') : String(a.free);
         return `<button class="block-chip${dis ? ' off' : ''}" type="button" data-block="${b.index}" ${dis ? 'disabled' : ''}>
-          <span class="bc-code">${escapeHtml(b.kind === 'suite' ? String(Number(b.code.slice(1))) : b.kind === 'press' ? 'BASIN' : b.code)}</span>
-          <span class="bc-free">${dis ? 'kapalı' : a.free}</span></button>`;
+          <span class="bc-code">${escapeHtml(b.kind === 'suite' ? String(Number(b.code.slice(1))) : press ? 'BASIN' : b.code)}</span>
+          <span class="bc-free">${label}</span></button>`;
       };
       if (this.stand === 'LOCA') {
         html = `<h2>Localar</h2><p class="sub">147 loca, katlar arasında kesintisiz bant. Bir loca seçin.</p>`;

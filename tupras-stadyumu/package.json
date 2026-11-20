@@ -9,7 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0 --port 4173",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types scripts/test-logic.ts && node --experimental-strip-types scripts/test-clips.ts",
+    "test": "node --experimental-strip-types scripts/test-logic.ts && node --experimental-strip-types scripts/test-clips.ts && node --experimental-strip-types scripts/test-governor.ts",
     "test:clips": "node --experimental-strip-types scripts/test-clips.ts"
   },
   "dependencies": {

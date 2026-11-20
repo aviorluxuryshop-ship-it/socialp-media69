@@ -81,8 +81,16 @@ await idle();
 await tap('.stand-card[data-stand="LOCA"]');
 await idle();
 await shot('loca-list');
-const l74 = await page.evaluate(() => window.__app.stadium.layout.blocks.find((b) => b.code === 'L074').index);
-await tap(`.block-chip[data-block="${l74}"]`);
+// first box with free seats (sold-out boxes are disabled in the list)
+const loca = await page.evaluate(() => {
+  const L = window.__app.stadium.layout;
+  const b = L.blocks.find((x) => x.kind === 'suite' && Array.from({ length: x.seatCount }, (_, k) => L.seats.sold[x.seatStart + k]).some((v) => v === 0));
+  const full = L.blocks.filter((x) => x.kind === 'suite' && !Array.from({ length: x.seatCount }, (_, k) => L.seats.sold[x.seatStart + k]).some((v) => v === 0)).map((x) => x.index);
+  const disabledOk = full.every((i) => document.querySelector(`.block-chip[data-block="${i}"]`)?.hasAttribute('disabled'));
+  return { index: b.index, code: b.code, full: full.length, disabledOk };
+});
+console.log('loca', JSON.stringify(loca));
+await tap(`.block-chip[data-block="${loca.index}"]`);
 await idle();
 await tap('.row-btn[data-row="1"]');
 await page.waitForTimeout(400);

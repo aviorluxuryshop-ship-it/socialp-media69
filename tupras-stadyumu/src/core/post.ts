@@ -17,6 +17,8 @@ export class PostPipeline {
   readonly bloom: UnrealBloomPass | null;
   readonly output: OutputPass;
   private readonly renderer: WebGLRenderer;
+  /** the frame governor can switch the night bloom off */
+  bloomAllowed = true;
 
   constructor(renderer: WebGLRenderer, scene: Scene, camera: Camera, q: QualitySettings) {
     this.renderer = renderer;
@@ -51,7 +53,7 @@ export class PostPipeline {
   setBloom(strength: number): void {
     if (!this.bloom) return;
     this.bloom.strength = strength;
-    this.bloom.enabled = strength > 0.01;
+    this.bloom.enabled = this.bloomAllowed && strength > 0.01;
   }
 
   render(dt: number): void {

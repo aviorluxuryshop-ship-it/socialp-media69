@@ -61,6 +61,10 @@ async function main() {
         `chunks ${s.streamer.loaded} (lod0 ${s.streamer.lod0}, in view ${s.streamer.inView}, dropped behind ${s.streamer.droppedBehind}) · queue ${s.streamer.queued} · pool ${s.streamer.pooled}`,
         `sun ${ts.sun.altitude.toFixed(1)}° / ${ts.sun.azimuth.toFixed(0)}° · cam ${cam.toArray().map((v) => v.toFixed(0)).join(',')}`,
         `seats ${app.stadium.layout.seats.count} · stadium tris ${(app.stadium.stats.triangles / 1000).toFixed(0)}k · ${app.director.mode}`,
+        app.governor
+          ? `governor ${app.governor.level}/${app.governor.stepCount}${app.governor.locked ? ' (locked)' : ''} · frame ${app.governor.meanMs.toFixed(1)} ms · px ${app.engine.pixelRatio}` +
+            (app.governor.history.length ? ` · ${app.governor.history[app.governor.history.length - 1]}` : '')
+          : 'governor off',
       ].join('\n');
     }
   });

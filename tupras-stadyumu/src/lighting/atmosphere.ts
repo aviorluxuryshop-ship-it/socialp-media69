@@ -183,6 +183,14 @@ export class Atmosphere {
     this.shadowExtent = Math.min(650, Math.max(175, height * 1.4 + dist * 0.15));
   }
 
+  /** Change the shadow map resolution at runtime (frame governor). */
+  setShadowMapSize(n: number): void {
+    if (this.sun.shadow.mapSize.x === n) return;
+    this.sun.shadow.mapSize.set(n, n);
+    this.sun.shadow.map?.dispose();
+    this.sun.shadow.map = null;
+  }
+
   /** Called every frame. `dt` in seconds; `instant` skips smoothing. */
   update(sun: SunState, cameraPos: Vector3, dt: number, instant = false): void {
     if (Number.isNaN(this.curAlt) || instant) {

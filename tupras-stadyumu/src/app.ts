@@ -6,6 +6,7 @@ import { Group, MeshNormalMaterial, NoToneMapping, Timer, Vector3, type Instance
 import { splitInstancedBySector, splitMeshesBySector } from './core/split.ts';
 import { detectQuality, type QualitySettings } from './core/quality.ts';
 import { Engine } from './core/engine.ts';
+import { FrameGovernor, type GovernorStep } from './core/governor.ts';
 import { PostPipeline } from './core/post.ts';
 import { loadWorld, type World } from './world/data.ts';
 import { buildStadium, type Stadium } from './stadium/index.ts';
@@ -54,8 +55,10 @@ export class App {
   private fps = 0;
   private frames = 0;
   private fpsAcc = 0;
-  /** frame-time samples (ms) for the performance governor and the debug HUD */
+  /** CPU time of frame() (ms) for the debug HUD */
   readonly frameTimes: number[] = [];
+  /** runtime quality governor (real devices only) */
+  governor: FrameGovernor | null = null;
 
   async init(container: HTMLElement, step: (txt: string, p: number) => Promise<unknown>): Promise<void> {
     this.quality = detectQuality();
@@ -169,6 +172,48 @@ export class App {
     this.time = this.clock.now();
     this.atmosphere.update(this.time.sun, camera.position, 0, true);
     renderer.info.autoReset = false;
+
+    // automated runs pin the quality (?q=, ?fast, webdriver); ?gov forces the governor on
+    const p = this.params;
+    if (p.has('gov') || (!p.has('q') && !p.has('fast') && !navigator.webdriver && !this.geometryPass)) {
+      this.governor = new FrameGovernor(this.governorSteps());
+    }
+  }
+
+  /**
+   * Quality steps the frame governor may take, cheapest loss first. They change
+   * only how things are drawn, never the stadium or seat data.
+   */
+  private governorSteps(): GovernorStep[] {
+    const { engine, quality: q, post, atmosphere } = this;
+    const steps: GovernorStep[] = [];
+    let pr = engine.pixelRatio;
+    if (pr > 1.3) {
+      const from = pr;
+      const to = Math.max(1, Math.round(pr * 0.8 * 100) / 100);
+      steps.push({ name: `çözünürlük ${from}× → ${to}×`, apply: () => engine.setPixelRatio(to), revert: () => engine.setPixelRatio(from) });
+      pr = to;
+    }
+    if (pr > 1) {
+      const from = pr;
+      steps.push({ name: `çözünürlük ${from}× → 1×`, apply: () => engine.setPixelRatio(1), revert: () => engine.setPixelRatio(from) });
+      pr = 1;
+    }
+    if (post.bloom) steps.push({ name: 'gece parlaması', apply: () => (post.bloomAllowed = false), revert: () => (post.bloomAllowed = true) });
+    if (q.shadows && q.shadowMapSize > 1024) {
+      const size = q.shadowMapSize;
+      steps.push({ name: 'gölge haritası', apply: () => atmosphere.setShadowMapSize(size / 2), revert: () => atmosphere.setShadowMapSize(size) });
+    }
+    const d = { seat: q.seatDetailDistance, det: q.cityDetailRadius, load: q.cityLoadRadius };
+    const setDetail = (k: number) => {
+      q.seatDetailDistance = d.seat * k;
+      this.stadium.seats.detailDistance = q.seatDetailDistance;
+      q.cityDetailRadius = d.det * (0.5 + 0.5 * k);
+      q.cityLoadRadius = d.load * (0.7 + 0.3 * k);
+    };
+    steps.push({ name: 'detay yarıçapları', apply: () => setDetail(0.6), revert: () => setDetail(1) });
+    if (pr === 1) steps.push({ name: 'çözünürlük 1× → 0.8×', apply: () => engine.setPixelRatio(0.8), revert: () => engine.setPixelRatio(1) });
+    return steps;
   }
 
   /** Planner context: the layout plus a safe-height function (terrain, Süzer Plaza). */
@@ -257,6 +302,7 @@ export class App {
 
   private frame(t: number): void {
     const t0 = performance.now();
+    this.governor?.tick(t);
     this.timer.update(t);
     const dt = Math.min(0.1, this.timer.getDelta());
     this.elapsed += dt;

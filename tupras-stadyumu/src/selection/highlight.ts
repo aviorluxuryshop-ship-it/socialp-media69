@@ -119,16 +119,19 @@ export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Tex
           float shading = min(L / max(alb, 0.004), 5.0);
           // keep a part of the original highlights (specular reflections)
           vec3 spec = max(col - vec3(alb * shading), vec3(0.0));
+          // soft knee: keeps the order of light and shadow but lifts seats facing away from the
+          // sun, so the block still reads as orange (not brick red) on the shaded side
+          float sh = shading / (shading + 0.3) * 1.3;
           // slightly below the original brightness keeps the orange saturated after tone mapping;
           // a faint constant glow keeps a far block readable
-          if (inSel && !sold) col = mix(col, uOrange * (shading * 0.82 + 0.1) + spec * 0.5, 0.96);
-          if ((block == uHoverBlock || inSet) && !inSel && !sold) col = mix(col, uOrange * (shading * 0.85 + 0.05), 0.42);
+          if (inSel && !sold) col = mix(col, uOrange * (sh * 0.85 + 0.08) + spec * 0.5, 0.96);
+          if ((block == uHoverBlock || inSet) && !inSel && !sold) col = mix(col, uOrange * (sh * 0.85 + 0.05), 0.42);
           // the row being browsed in the panel
-          if (inSel && row == uRow && !sold) col = mix(col, vec3(1.0, 0.82, 0.55) * (shading * 0.9 + 0.15), 0.7);
-          if (seat == uHoverSeat && seat >= 0.0) col = mix(col, vec3(1.0, 0.86, 0.6) * max(shading, 0.6) * 1.4, 0.85);
+          if (inSel && row == uRow && !sold) col = mix(col, vec3(1.0, 0.82, 0.55) * (sh * 0.9 + 0.15), 0.7);
+          if (seat == uHoverSeat && seat >= 0.0) col = mix(col, vec3(1.0, 0.86, 0.6) * max(sh, 0.6) * 1.4, 0.85);
           if (seat == uSelSeat && seat >= 0.0) {
             float pulse = 0.75 + 0.25 * sin(uTime * 5.0);
-            col = vec3(1.0, 0.45, 0.08) * max(shading, 0.8) * (1.6 + pulse);
+            col = vec3(1.0, 0.45, 0.08) * max(sh, 0.8) * (1.6 + pulse);
           }
         }
         // thin outline around the selected block (seats + terraces)
