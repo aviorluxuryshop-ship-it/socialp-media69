@@ -9,8 +9,9 @@
  * runs clockwise round the ring (seen from above) with its top towards the
  * outside, as on the real roof.
  *
- * The sponsor mark is a simplified red ring drawn for the presentation, not
- * the company's artwork; swap `drawSponsorMark` for the supplied logo.
+ * The sponsor is the official Tüpraş logo (red drop + wordmark,
+ * public/brand/tupras-logo.svg), bent along the ring strip by strip so it
+ * follows the curve of the long sides like the lettering on the membrane.
  */
 import { CanvasTexture, SRGBColorSpace, Vector4, type MeshStandardMaterial } from 'three';
 import { Superellipse } from './shape.ts';
@@ -23,7 +24,6 @@ const PX = RES / ROOF_DECAL_RECT.w;
 const MID = new Superellipse(82.6, 59.1, 3.1);
 
 const INK = '#16181c';
-const RED = '#e2241b';
 
 type Ctx = CanvasRenderingContext2D;
 
@@ -92,22 +92,20 @@ function gap(w: number): RunItem {
   return { w, draw: () => {} };
 }
 
-/** A rounded red ring open at the top: the sponsor mark, simplified. */
-function drawSponsorMark(c: Ctx, size: number): void {
-  const r = size * 0.5;
-  c.save();
-  c.strokeStyle = RED;
-  c.lineWidth = size * 0.16;
-  c.lineCap = 'round';
-  c.beginPath();
-  // a soft heart / drop: two shoulders and a rounded point towards the inside
-  c.moveTo(-r * 0.12, -r * 0.62);
-  c.bezierCurveTo(-r * 0.55, -r * 1.02, -r * 1.12, -r * 0.55, -r * 0.82, r * 0.02);
-  c.bezierCurveTo(-r * 0.6, r * 0.45, -r * 0.22, r * 0.72, 0, r * 0.86);
-  c.bezierCurveTo(r * 0.22, r * 0.72, r * 0.6, r * 0.45, r * 0.82, r * 0.02);
-  c.bezierCurveTo(r * 1.12, -r * 0.55, r * 0.55, -r * 1.02, r * 0.12, -r * 0.62);
-  c.stroke();
-  c.restore();
+/**
+ * Draw an image centred on the ring at polar angle t, bent along it: cut into
+ * thin vertical strips, each placed at its own arc position and turned with
+ * the ring (length and height in metres; the image's top towards the outside).
+ */
+function drawAlongRing(ctx: Ctx, img: CanvasImageSource & { width: number; height: number }, t: number, length: number, height: number): void {
+  const strips = 64;
+  const s0 = MID.arcAt(t) - length / 2;
+  const sw = img.width / strips;
+  const w = length / strips;
+  for (let k = 0; k < strips; k++) {
+    // a hair of overlap so the strips never show seams
+    at(ctx, s0 + (k + 0.5) * w, (c) => c.drawImage(img, k * sw, 0, sw, img.height, -w / 2 - 0.03, -height / 2, w + 0.06, height));
+  }
 }
 
 /** The black eagle, wings spread; head towards +y (the pitch), tail towards −y (outside). */
@@ -202,7 +200,7 @@ function drawSeams(ctx: Ctx): void {
   ctx.restore();
 }
 
-function paint(canvas: HTMLCanvasElement, crest: HTMLImageElement | null): void {
+function paint(canvas: HTMLCanvasElement, crest: HTMLImageElement | null, sponsor: HTMLCanvasElement | null): void {
   const ctx = canvas.getContext('2d')!;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawSeams(ctx);
@@ -219,10 +217,11 @@ function paint(canvas: HTMLCanvasElement, crest: HTMLImageElement | null): void 
   };
   layRun(ctx, Math.PI, [crestItem, gap(4), ...letters(ctx, 'BEŞİKTAŞ', 16.5, '600', INK, 0.07)]);
 
-  // long sides: the sponsor mark, then the wordmark
-  const markItem: RunItem = { w: 16, draw: (c) => drawSponsorMark(c, 14.5) };
-  for (const t of [Math.PI / 2, (3 * Math.PI) / 2]) {
-    layRun(ctx, t, [markItem, gap(5), ...letters(ctx, 'Tüpraş', 20, '600', INK, 0.03)]);
+  // long sides: the sponsor's logo (drop first, as on the roof), 24 m tall
+  if (sponsor) {
+    const h = 24;
+    const len = h * (sponsor.width / sponsor.height);
+    for (const t of [Math.PI / 2, (3 * Math.PI) / 2]) drawAlongRing(ctx, sponsor, t, len, h);
   }
 
   // south end (+X, Eski Açık): the eagle, head towards the pitch
@@ -239,8 +238,9 @@ export function createRoofDecal(): CanvasTexture {
   tex.flipY = false;
   tex.anisotropy = 4;
   let crest: HTMLImageElement | null = null;
+  let sponsor: HTMLCanvasElement | null = null;
   const repaint = () => {
-    paint(canvas, crest);
+    paint(canvas, crest, sponsor);
     tex.needsUpdate = true;
   };
   repaint();
@@ -250,6 +250,17 @@ export function createRoofDecal(): CanvasTexture {
     repaint();
   };
   img.src = './brand/bjk-logo.svg';
+  // the sponsor logo is rasterised once (strips are cut from a bitmap, not the SVG)
+  const logo = new Image();
+  logo.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = 1188;
+    c.height = 320;
+    c.getContext('2d')!.drawImage(logo, 0, 0, c.width, c.height);
+    sponsor = c;
+    repaint();
+  };
+  logo.src = './brand/tupras-logo.svg';
   document.fonts?.load('600 100px Inter').then(repaint, () => {});
   return tex;
 }

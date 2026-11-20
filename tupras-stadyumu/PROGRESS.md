@@ -31,8 +31,10 @@ Kullanıcının yeni akışı gözden geçirmesi; ardından "gerisini sonra hall
   harfler iç kenara doğru sıkışırdı; böylece yukarıdan bakınca fotoğraftaki gibi düz okunuyor. Tüm
   yazılar (üstten bakınca) saat yönünde ve harflerin tepesi dışa dönük, gerçek çatıdaki gibi. Panel
   sıralarının halka dikişleri de dokuda. Gece membran ışıması yazıların üstünde kısılıyor.
-  Sponsor işareti sunum için sadeleştirilmiş kırmızı halka (şirketin çizimi değil); gerçek logo
-  gelince `drawSponsorMark` değiştirilir.
+  Sponsor: **resmî Tüpraş logosu** (kırmızı damla + "Tüpraş" yazısı) — tupras.com.tr'deki SVG
+  sprite'tan alındı, `public/brand/tupras-logo.svg` (Wikimedia Commons'ta "public domain,
+  trademarked"). Logo ince şeritlere bölünüp çatının kavisi boyunca diziliyor (24 m yükseklik).
+  İlk sürümdeki elle çizilmiş kalp biçimli işaret kaldırıldı.
 - **Çevre verisi genişletildi** ("araziler boş, yollar yarım kalıyor"): OSM alanı 3.9 × 2.7 km'den
   6.4 × 4.9 km'ye (Taksim/Harbiye/Cihangir → Yıldız → Üsküdar kıyısı → Tophane). Bina 5.479 → 21.089,
   yol 2.211 → 7.338, alan 344 → 1.367. Yoğun karolar API sınırını aşarsa dörde bölünerek indiriliyor
@@ -253,6 +255,7 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 - `src/selection/{idpass,highlight,selection}.ts` — maske/ID geçişi, vurgu birleştirme, seçim ve GPU seçimi;
   `scripts/verify-mask.mjs` (test parametreleri: `?block=416`, `?mask`, `?sold`)
 - `public/brand/bjk-logo.svg` — resmî arma (Wikimedia Commons, PD-Turkey)
+- `public/brand/tupras-logo.svg` — resmî Tüpraş logosu (tupras.com.tr; Commons: public domain, trademarked)
 - `src/ui/picker.ts`, `src/ui/regions.ts`, `src/ui/ticket.ts` — seçim akışı, bölgeler, dijital bilet
 - `src/stadium/roofDecal.ts` — çatı grafikleri (plan koordinatında doku, membran üstüne baskı)
 - `scripts/flow.mjs` — uçtan uca akış (gerçek tıklama/dokunma), `scripts/regions.mjs` — tüm bölge
