@@ -2,7 +2,8 @@
  * Application root: builds the world, the stadium and the atmosphere, owns
  * the camera director and the frame loop.
  */
-import { MeshNormalMaterial, NoToneMapping, Timer, Vector3, type MeshStandardMaterial } from 'three';
+import { Group, MeshNormalMaterial, NoToneMapping, Timer, Vector3, type InstancedMesh, type Mesh, type MeshStandardMaterial } from 'three';
+import { splitInstancedBySector, splitMeshesBySector } from './core/split.ts';
 import { detectQuality, type QualitySettings } from './core/quality.ts';
 import { Engine } from './core/engine.ts';
 import { PostPipeline } from './core/post.ts';
@@ -67,6 +68,7 @@ export class App {
 
     await step('Tüpraş Stadyumu kuruluyor', 0.3);
     this.stadium = buildStadium(world.json.eskiAcik);
+    this.stadium.seats.detailDistance = this.quality.seatDetailDistance;
     scene.add(this.stadium.group);
     this.views = buildViews(this.stadium.layout);
 
@@ -81,8 +83,15 @@ export class App {
     const buildingsMat = createBuildingMaterial({ uNight: engine.uNight });
     this.streamer = new ChunkStreamer(world, { groundDetail, groundWide, buildings: buildingsMat, trees: treeMaterial() }, detailCover, wideCover, q);
     scene.add(this.streamer.group);
-    scene.add(buildFarTerrain(world, this.streamer.halfExtent, ChunkStreamer.PINNED_RADIUS));
-    scene.add(buildFarCity(world, engine.uNight, q.tier === 'low' ? 120 : 80, 0));
+    // the far terrain and the far city span 16 km: cut them into sectors so
+    // only what lies in the view direction is drawn
+    const farGroup = new Group();
+    farGroup.name = 'far';
+    scene.add(farGroup);
+    farGroup.add(buildFarTerrain(world, this.streamer.halfExtent, ChunkStreamer.PINNED_RADIUS));
+    farGroup.add(buildFarCity(world, engine.uNight, q.tier === 'low' ? 120 : 80, 0));
+    splitMeshesBySector([farGroup.getObjectByName('far-terrain') as Mesh], 16);
+    splitInstancedBySector(farGroup.getObjectByName('far-city') as InstancedMesh, 16);
     this.water = buildWater();
     scene.add(this.water.mesh);
     this.landmarks = buildLandmarks(world);

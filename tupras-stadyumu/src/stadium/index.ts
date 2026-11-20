@@ -8,6 +8,7 @@ import { buildRoof, type RoofParts } from './roof.ts';
 import { buildFacade } from './facade.ts';
 import { buildPitch } from './pitch.ts';
 import { buildEskiAcik } from './eskiAcik.ts';
+import { splitMeshesBySector } from '../core/split.ts';
 
 export interface Stadium {
   group: Group;
@@ -35,6 +36,19 @@ export function buildStadium(eskiAcikFootprint: number[]): Stadium {
   const eski = buildEskiAcik(eskiAcikFootprint, materials);
   group.add(bowl.group, seats.group, roof.group, facade, pitch, eski);
 
+  // view-direction culling: cut the big static meshes into 12 angular sectors so
+  // the parts behind the camera are dropped by frustum culling
+  const heavy: Mesh[] = [];
+  group.traverse((o) => {
+    const m = o as Mesh;
+    if (!m.isMesh || (m as unknown as { isInstancedMesh?: boolean }).isInstancedMesh) return;
+    const g = m.geometry;
+    const tris = (g.index ? g.index.count : g.getAttribute('position').count) / 3;
+    if (tris > 2000 && m.name !== 'runoff' && m.name !== 'grass') heavy.push(m);
+  });
+  const parts = splitMeshesBySector(heavy, 12);
+  const blockMeshes = parts.filter((p) => p.geometry.getAttribute('blockId'));
+
   let triangles = 0;
   let meshes = 0;
   group.traverse((o) => {
@@ -47,5 +61,6 @@ export function buildStadium(eskiAcikFootprint: number[]): Stadium {
     triangles += (n / 3) * ((m as unknown as { isInstancedMesh?: boolean }).isInstancedMesh ? inst : 1);
   });
   void (null as unknown as Material);
-  return { group, layout, materials, seats, roof, blockMeshes: bowl.blockMeshes, stats: { triangles: Math.round(triangles), meshes } };
+  void bowl.blockMeshes;
+  return { group, layout, materials, seats, roof, blockMeshes, stats: { triangles: Math.round(triangles), meshes } };
 }

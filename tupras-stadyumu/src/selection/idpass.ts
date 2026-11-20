@@ -101,7 +101,7 @@ export class IdPass {
 
     // one ID material per seat mesh (the seat start differs)
     for (const p of stadium.seats.pairs) {
-      for (const m of [p.detailed, p.simple]) {
+      for (const m of [p.detailed, p.simple, p.far]) {
         m.userData.idMaterial = new ShaderMaterial({
           glslVersion: GLSL3,
           uniforms: { uSeatStart: { value: p.seatStart } },
@@ -186,7 +186,7 @@ export class IdPass {
         any.geometry.boundingSphere ?? any.geometry.computeBoundingSphere();
         const bs = any.geometry.boundingSphere!;
         const c = bs.center.clone().applyMatrix4(o.matrixWorld);
-        if (c.distanceTo(camPos) - bs.radius > reach || o.name === 'far-terrain' || o.name === 'far-city') {
+        if (c.distanceTo(camPos) - bs.radius > reach || o.name.startsWith('far-terrain') || o.name.startsWith('far-city')) {
           this.swapped.push({ o, m: mat, v: true });
           any.visible = false;
           return;

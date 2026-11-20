@@ -49,6 +49,8 @@ export class SeatPicker {
         <button class="btn ghost" type="button" data-act="explore">Stadyumu Gez</button>
       </div>`;
     document.body.appendChild(this.intro);
+    // opened straight into a view (shared link, screenshots): start without the card
+    if (app.params.has('view')) this.intro.classList.add('hidden');
     this.intro.querySelector('[data-act="start"]')!.addEventListener('click', () => this.go('stand'));
     this.intro.querySelector('[data-act="explore"]')!.addEventListener('click', () => this.intro.classList.add('hidden'));
 

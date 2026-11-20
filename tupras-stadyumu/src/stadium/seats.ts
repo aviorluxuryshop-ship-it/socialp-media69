@@ -59,29 +59,31 @@ function geometry(pos: number[], nor: number[]): BufferGeometry {
   return g;
 }
 
-/** Detailed moulded seat (~70 triangles). Local +Z faces the pitch. */
+/** Detailed moulded seat (~34 triangles, ~46 for VIP). Local +Z faces the pitch. */
 export function seatGeometryDetailed(vip = false): BufferGeometry {
   const pos: number[] = [];
   const nor: number[] = [];
   const w = vip ? 0.5 : 0.44;
+  // faces: 1 top, 2 bottom, 4 front, 8 back, 16 right, 32 left — the bottoms and
+  // inner sides are never seen from a spectator's height, so they are skipped
   // seat pan, slightly raised at the front edge
-  pushBox(pos, nor, 0, 0.42, 0.02, w, 0.05, 0.38, 0.06);
+  pushBox(pos, nor, 0, 0.42, 0.02, w, 0.05, 0.38, 0.06, 0b110101);
   // front lip
-  pushBox(pos, nor, 0, 0.405, 0.2, w * 0.96, 0.05, 0.04, 0, 0b111101);
+  pushBox(pos, nor, 0, 0.405, 0.2, w * 0.96, 0.05, 0.04, 0, 0b000101);
   // backrest in three panels forming a shallow bucket
   const backY = vip ? 0.7 : 0.66;
   const backH = vip ? 0.5 : 0.42;
-  pushBox(pos, nor, 0, backY, -0.19, w * 0.62, backH, 0.04, 0.2);
+  pushBox(pos, nor, 0, backY, -0.19, w * 0.62, backH, 0.04, 0.2, 0b001101);
   const side = w * 0.2;
   for (const sx of [-1, 1]) {
     const x = sx * (w * 0.31 + side / 2 - 0.01);
-    pushBox(pos, nor, x, backY, -0.17, side, backH * 0.96, 0.04, 0.2);
+    pushBox(pos, nor, x, backY, -0.17, side, backH * 0.96, 0.04, 0.2, sx > 0 ? 0b011101 : 0b101101);
   }
-  // pedestal (dark metal visually reads as the seat colour's shadow)
-  pushBox(pos, nor, 0, 0.2, -0.02, 0.07, 0.36, 0.07, 0, 0b111100);
+  // pedestal (front face only)
+  pushBox(pos, nor, 0, 0.2, -0.02, 0.07, 0.36, 0.07, 0, 0b000100);
   if (vip) {
     // armrests
-    for (const sx of [-1, 1]) pushBox(pos, nor, sx * (w / 2 + 0.02), 0.6, -0.02, 0.04, 0.04, 0.34);
+    for (const sx of [-1, 1]) pushBox(pos, nor, sx * (w / 2 + 0.02), 0.6, -0.02, 0.04, 0.04, 0.34, 0, 0b110101);
   }
   return geometry(pos, nor);
 }
@@ -95,12 +97,21 @@ export function seatGeometrySimple(): BufferGeometry {
   return geometry(pos, nor);
 }
 
+/** Very far seats: just the backrest as one quad (2 triangles). */
+export function seatGeometryFar(): BufferGeometry {
+  const pos: number[] = [];
+  const nor: number[] = [];
+  pushBox(pos, nor, 0, 0.6, -0.17, 0.46, 0.56, 0.04, 0.2, 0b000100);
+  return geometry(pos, nor);
+}
+
 export interface SeatMeshPair {
   seatStart: number;
   count: number;
   blocks: number[];
   detailed: InstancedMesh;
   simple: InstancedMesh;
+  far: InstancedMesh;
   centre: Vector3;
   radius: number;
 }
@@ -129,6 +140,8 @@ export class SeatSystem {
   private readonly hover = new Color(0xffb15c);
   private readonly selected = new Color(0xff7a1a);
   detailDistance = 70;
+  /** beyond this the backrest-only LOD is used (seats are a few pixels wide) */
+  farDistance = 150;
 
   constructor(layout: StadiumLayout, mats: StadiumMaterials) {
     this.layout = layout;
@@ -137,6 +150,7 @@ export class SeatSystem {
     const gDet = seatGeometryDetailed(false);
     const gVip = seatGeometryDetailed(true);
     const gSim = seatGeometrySimple();
+    const gFar = seatGeometryFar();
 
     // groups: every tier block on its own, suites in runs of 12
     const groups: number[][] = [];
@@ -152,12 +166,15 @@ export class SeatSystem {
       const vipLike = first.kind === 'vip' || first.kind === 'suite' || first.kind === 'press';
       const detailed = new InstancedMesh(vipLike ? gVip : gDet, mats.seatDetail as Material, count);
       const simple = new InstancedMesh(gSim, mats.seat as Material, count);
+      const far = new InstancedMesh(gFar, mats.seat as Material, count);
       const matrices = new InstancedBufferAttribute(new Float32Array(count * 16), 16);
       const colors = new InstancedBufferAttribute(new Float32Array(count * 3), 3);
       detailed.instanceMatrix = matrices;
       simple.instanceMatrix = matrices;
+      far.instanceMatrix = matrices;
       detailed.instanceColor = colors;
       simple.instanceColor = colors;
+      far.instanceColor = colors;
       const S = layout.seats;
       for (let k = 0; k < count; k++) {
         const i = start + k;
@@ -169,6 +186,11 @@ export class SeatSystem {
       }
       detailed.computeBoundingSphere();
       simple.boundingSphere = detailed.boundingSphere!.clone();
+      far.boundingSphere = detailed.boundingSphere!.clone();
+      far.castShadow = false;
+      far.receiveShadow = true;
+      far.visible = false;
+      far.name = `seats-${first.code}-far`;
       detailed.castShadow = true;
       detailed.receiveShadow = true;
       simple.castShadow = false;
@@ -182,13 +204,15 @@ export class SeatSystem {
         blocks: blockIdxs,
         detailed,
         simple,
+        far,
         centre: detailed.boundingSphere!.center.clone(),
         radius: detailed.boundingSphere!.radius,
       };
       detailed.userData.pair = this.pairs.length;
       simple.userData.pair = this.pairs.length;
+      far.userData.pair = this.pairs.length;
       this.pairs.push(pair);
-      this.group.add(detailed, simple);
+      this.group.add(detailed, simple, far);
     }
     this.refreshAllColors();
   }
@@ -246,8 +270,12 @@ export class SeatSystem {
     for (const p of this.pairs) {
       const d = cam.distanceTo(p.centre) - p.radius;
       const near = d < this.detailDistance;
+      const far = d > this.farDistance;
       p.detailed.visible = near;
-      p.simple.visible = !near;
+      // seat-on-concrete shadows only read up close: limit casters to the nearest blocks
+      p.detailed.castShadow = d < 12;
+      p.simple.visible = !near && !far;
+      p.far.visible = far;
     }
   }
 
@@ -256,6 +284,7 @@ export class SeatSystem {
     for (const p of this.pairs) {
       p.detailed.visible = on;
       p.simple.visible = !on;
+      p.far.visible = false;
     }
   }
 }

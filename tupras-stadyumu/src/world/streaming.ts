@@ -53,6 +53,8 @@ interface ChunkState {
   lod: number; // −1 = not loaded
   obj: ChunkObj | null;
   queued: number | null; // LOD waiting in the queue
+  /** last time (ms) the chunk was inside the view cone */
+  seenAt: number;
 }
 
 export interface StreamerMaterials {
@@ -93,7 +95,12 @@ export class ChunkStreamer {
   private readonly frustum = new Frustum();
   private readonly projScreen = new Matrix4();
   private readonly sphere = new Sphere();
-  stats = { loaded: 0, lod0: 0, pooled: 0, queued: 0, builtThisFrame: 0, created: 0, released: 0 };
+  stats = { loaded: 0, lod0: 0, pooled: 0, queued: 0, builtThisFrame: 0, created: 0, released: 0, inView: 0, droppedBehind: 0 };
+  /** chunks closer than this stay loaded whatever the view direction */
+  keepRadius = 450;
+  /** seconds a chunk may stay outside the view cone before it is released */
+  behindGrace = 2.5;
+  private readonly fwd = new Vector3();
 
   constructor(world: World, mats: StreamerMaterials, detail: GroundCoverage, wide: GroundCoverage, q: QualitySettings) {
     this.world = world;
@@ -156,7 +163,7 @@ export class ChunkStreamer {
         const key = `${ix},${iz}`;
         const cx = (ix + 0.5) * C;
         const cz = (iz + 0.5) * C;
-        this.chunks.set(key, { key, ix, iz, centre: new Vector3(cx, world.heightAt(cx, cz), cz), lod: -1, obj: null, queued: null });
+        this.chunks.set(key, { key, ix, iz, centre: new Vector3(cx, world.heightAt(cx, cz), cz), lod: -1, obj: null, queued: null, seenAt: -Infinity });
       }
     }
   }
@@ -266,13 +273,58 @@ export class ChunkStreamer {
     this.update(camera, Infinity);
   }
 
+  /**
+   * View cone in the ground plane: the horizontal field of view plus a
+   * margin, so chunks start loading before they enter the picture.
+   */
+  private coneTest(camera: Camera): (st: ChunkState) => boolean {
+    const cam = camera.position;
+    camera.getWorldDirection(this.fwd);
+    const pc = camera as Camera & { fov?: number; aspect?: number };
+    const vfov = ((pc.fov ?? 60) * Math.PI) / 180;
+    const hfov = Math.atan(Math.tan(vfov / 2) * (pc.aspect ?? 1.6));
+    const half = Math.min(Math.PI, hfov + 0.6);
+    const fx = this.fwd.x;
+    const fz = this.fwd.z;
+    const fl = Math.hypot(fx, fz);
+    // looking (almost) straight down: everything around is on screen
+    const allAround = fl < 0.35;
+    const C = this.world.chunkSize;
+    return (st) => {
+      const dx = st.centre.x - cam.x;
+      const dz = st.centre.z - cam.z;
+      const d = Math.hypot(dx, dz);
+      if (allAround || d < this.keepRadius) return true;
+      const cos = (dx * fx + dz * fz) / (d * fl);
+      const ang = Math.acos(Math.max(-1, Math.min(1, cos)));
+      return ang < half + Math.atan((C * 0.8) / d);
+    };
+  }
+
   update(camera: Camera, budgetMs = this.q.streamBudgetMs): void {
     const cam = camera.position;
     this.projScreen.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     this.frustum.setFromProjectionMatrix(this.projScreen);
+    const now = performance.now();
+    const inCone = this.coneTest(camera);
+    let inView = 0;
+    let dropped = 0;
     const want: ChunkState[] = [];
     for (const st of this.chunks.values()) {
-      const lod = this.desiredLod(st, cam);
+      let lod = this.desiredLod(st, cam);
+      const visible = inCone(st);
+      if (visible) {
+        st.seenAt = now;
+        inView++;
+      } else if (lod !== -1) {
+        // behind the camera: no trees/lamps; after the grace period release it
+        // (around the stadium keep the cheap LOD so the ground never opens)
+        const pinned = Math.hypot(st.centre.x, st.centre.z) < ChunkStreamer.PINNED_RADIUS;
+        if (now - st.seenAt > this.behindGrace * 1000) {
+          lod = pinned ? 1 : -1;
+          if (!pinned) dropped++;
+        } else if (lod === 0 && st.lod !== 0) lod = st.lod === -1 ? 1 : st.lod;
+      }
       if (lod === -1) {
         if (st.obj) {
           this.releaseObj(st.obj);
@@ -315,6 +367,8 @@ export class ChunkStreamer {
     this.stats.pooled = this.pool.length;
     this.stats.queued = this.queue.length;
     this.stats.builtThisFrame = built;
+    this.stats.inView = inView;
+    this.stats.droppedBehind = dropped;
   }
 
   private priority(st: ChunkState, cam: Vector3, C: number): number {

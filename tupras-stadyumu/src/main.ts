@@ -58,7 +58,7 @@ async function main() {
       hud.textContent = [
         `${s.fps.toFixed(0)} fps · cpu ${s.cpuMs.toFixed(1)} ms (p95 ${s.cpuP95.toFixed(1)}) · ${app.quality.tier} · ${app.engine.reversedDepth ? 'reversed-z' : 'near ' + app.engine.camera.near.toFixed(2)}`,
         `draw ${s.calls} · tris ${(s.triangles / 1000).toFixed(0)}k · geo ${s.geometries} · tex ${s.textures}`,
-        `chunks ${s.streamer.loaded} (lod0 ${s.streamer.lod0}) · queue ${s.streamer.queued} · pool ${s.streamer.pooled} · built ${s.streamer.created}/${s.streamer.released}`,
+        `chunks ${s.streamer.loaded} (lod0 ${s.streamer.lod0}, in view ${s.streamer.inView}, dropped behind ${s.streamer.droppedBehind}) · queue ${s.streamer.queued} · pool ${s.streamer.pooled}`,
         `sun ${ts.sun.altitude.toFixed(1)}° / ${ts.sun.azimuth.toFixed(0)}° · cam ${cam.toArray().map((v) => v.toFixed(0)).join(',')}`,
         `seats ${app.stadium.layout.seats.count} · stadium tris ${(app.stadium.stats.triangles / 1000).toFixed(0)}k · ${app.director.mode}`,
       ].join('\n');

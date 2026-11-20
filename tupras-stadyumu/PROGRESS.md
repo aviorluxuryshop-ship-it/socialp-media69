@@ -16,13 +16,27 @@
 | STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
 | STEP 05 – Pick your seat, get the ticket | 🟡 Kod yazıldı, derleniyor; uçtan uca test yarıda kaldı |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
-| Dinamik yükleme / performans | 🟡 Parça akışı + havuz + LOD çalışıyor; ölçüm/ayar bekliyor |
+| Dinamik yükleme / performans | 🟡 Bakış yönüne göre kırpma + koni akışı eklendi ve ölçüldü; mobil bütçe ayarı bekliyor |
 
 ## Devam eden aşama
 
 **STEP 05** — tribün → blok → sıra → koltuk seçim akışı, fare ile koltuk vurgusu + fiyat,
 koltuğa uçuş, koltuktan görüş, dijital bilet (koltuğun gerçek görüş görüntüsüyle), VIP ve Loca
 seçenekleri, mobil + masaüstü testleri.
+
+## Bakış yönüne göre kırpma (kullanıcı isteği, "Subway Surfers" mantığı)
+
+- Büyük statik stadyum ağları (basamaklar, membran, loca bandı, çatı çeliği, cephe, alt yüzey…)
+  12 açısal sektöre bölündü (`src/core/split.ts`); uzak arazi ve uzak şehir 16 sektöre. Arkada
+  kalan sektörler görüş konisi kırpmasıyla çizilmez, dönünce anında geri gelir.
+- Şehir parçaları: kameraya 450 m içindekiler her yönde yüklü; ötesinde yalnızca bakış konisi
+  (+0.6 rad pay) içindekiler yüklenir/önceliklenir; koninin dışında 2.5 s kalan parçalar boşaltılıp
+  havuza iade edilir (stadyum çevresindeki sabit parçalar yalnızca ağaç/lambalarını bırakır).
+- Koltuk LOD: yakın detaylı (~34 üçgen, kademeye göre 18–34 m), orta 10 üçgen, 150 m ötesi yalnızca
+  sırtlık (2 üçgen). Koltuk gölgesi yalnızca 12 m içindeki bloklarda.
+- Ölçüm (800×450, medium): Batı üst koltuktan sahaya bakış ana geçiş 898 bin + gölge 289 bin üçgen
+  (önce 1.38 M + 1.21 M); aynı koltukta arkaya bakış 215 bin; havadan stadyuma bakış 454 bin,
+  stadyuma sırtını dönünce 129 bin. Çizim çağrısı 480 → 180 (arkaya bakış).
 
 ## STEP 04 doğrulaması
 
