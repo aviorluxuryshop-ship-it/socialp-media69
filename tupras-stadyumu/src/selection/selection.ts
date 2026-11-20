@@ -180,10 +180,13 @@ export class Selection {
     const v = new Vector3();
     let onScreen = 0, own = 0, sameBlock = 0, ownTerrace = 0, other = 0;
     for (let i = b.seatStart; i < b.seatStart + b.seatCount; i++) {
-      // a point every seat LOD covers: the middle of the far LOD's slanted quad; the
-      // detailed and simple seats put their backrest (front views) or pan (from above) there
+      // a point on the seat as it is drawn now: the backrest for the detailed and
+      // simple LODs, the middle of the slanted quad for the far LOD
       const yaw = L.seats.yaw[i];
-      v.set(L.seats.pos[i * 3] - Math.sin(yaw) * 0.02, L.seats.pos[i * 3 + 1] + PITCH_ELEVATION + 0.66, L.seats.pos[i * 3 + 2] - Math.cos(yaw) * 0.02);
+      const far = this.stadium.seats.pairs[this.stadium.seats.pairOf[i]].far.visible;
+      const back = far ? 0.02 : 0.19;
+      const up = far ? 0.66 : 0.62;
+      v.set(L.seats.pos[i * 3] - Math.sin(yaw) * back, L.seats.pos[i * 3 + 1] + PITCH_ELEVATION + up, L.seats.pos[i * 3 + 2] - Math.cos(yaw) * back);
       v.project(this.camera);
       if (v.z < -1 || v.z > 1 || Math.abs(v.x) > 0.98 || Math.abs(v.y) > 0.98) continue;
       const px = Math.floor((v.x * 0.5 + 0.5) * width);
