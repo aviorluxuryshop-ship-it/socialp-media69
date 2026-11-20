@@ -18,6 +18,12 @@ await page.goto('http://127.0.0.1:5173/?t=14:00&fast&q=medium&msaa=0', { waitUnt
 await page.waitForFunction(() => document.body.dataset.ready === '1', null, { timeout: 300000 });
 const idle = async () => {
   await page.waitForFunction(() => window.__app.director.mode !== 'flying', null, { timeout: 240000, polling: 500 });
+  // the lens shift glides when the panel changes size; with software GL a frame
+  // takes ~1 s, so wait until it has settled before projecting tap targets
+  await page.waitForFunction(() => {
+    const e = window.__app.engine;
+    return Math.abs(e.shift.x - e.shiftGoal.x) < 0.05 && Math.abs(e.shift.y - e.shiftGoal.y) < 0.05;
+  }, null, { timeout: 240000, polling: 500 });
   await page.waitForTimeout(2500);
 };
 let n = 0;

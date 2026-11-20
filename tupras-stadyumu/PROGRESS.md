@@ -61,6 +61,9 @@ Donma ölçümü (`scripts/hitch.mjs`, yükleme sonrası derlenen shader sayıs�
   gölge vericilerini, ID ve vurgu geçişlerini bir kez çizerek bütün programları derliyor ve örnek
   tamponlarını GPU'ya yüklüyor. Akışın hiçbir adımında (giriş, bölge, koltuk, geri) **yeni program
   derlenmiyor (+0)**; kare başına en kötü CPU payı akış 10 ms, seçim 7 ms.
+- Varıştan sonra görüntü yavaşça kayıyordu: OrbitControls'un sönümlü dönüş artığı (otomatik dönüşten
+  ya da sürüklemeden) uçuş sırasında bekleyip inişten sonra uygulanıyordu (~1°; yazılım GPU'sunda
+  dokunulan koltuğun komşusunu seçtirecek kadar). Uçuş başında ve bakma moduna geçerken sıfırlanıyor.
 - Koltuk görüntüsü (bilet) tam çözünürlükte eş zamanlı JPEG kodlanıyordu (telefonda 100–300 ms
   donma) → 1280 px'e küçültülüp `toBlob` ile arka planda kodlanıyor.
 
@@ -270,7 +273,8 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 
 ## Sıradaki işlem
 
-Yeni akış masaüstü (1280×720, 960×540) ve mobil (iPhone 13) uçtan uca konsol hatası olmadan geçiyor
+Yeni akış masaüstü (1280×720 Batı Alt, 960×540 Doğu Alt) ve mobil (iPhone 13, Kuzey Alt) uçtan uca
+konsol hatası olmadan geçiyor; dokunulan koltuk birebir seçiliyor. Canlı: https://tupras-stadyumu-iota.vercel.app
 (`scripts/with-server.sh node scripts/flow.mjs <dir> 960 540 '' DOGU-lower` / `… 390 664 mobile`).
 
 **Yapılacak:**

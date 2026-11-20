@@ -67,8 +67,22 @@ export class CameraDirector {
     this.camera.updateMatrixWorld();
   }
 
+  /**
+   * Drop the orbit controls' leftover motion. With damping on they keep a
+   * decaying rotation (from a drag or the auto-turn) that is only applied
+   * while they update; disabled during a flight, it would otherwise play out
+   * after landing and slowly turn the view away from the pose it landed on.
+   */
+  private stopInertia(): void {
+    const c = this.controls as unknown as { _sphericalDelta?: { set(r: number, p: number, t: number): void }; _panOffset?: Vector3; _scale?: number };
+    c._sphericalDelta?.set(0, 0, 0);
+    c._panOffset?.set(0, 0, 0);
+    if (c._scale !== undefined) c._scale = 1;
+  }
+
   /** Play a chain of key frames as one continuous move. */
   fly(frames: KeyFrame[], view: LockedView | null, onDone?: () => void, maxDuration = Infinity): Flight {
+    this.stopInertia();
     const f = new Flight(frames, 1, maxDuration);
     this.flight = f;
     this.flightTime = 0;
@@ -100,6 +114,7 @@ export class CameraDirector {
    */
   seatLook(on: boolean): void {
     const c = this.controls;
+    this.stopInertia();
     if (on) {
       const dir = this.target.clone().sub(this.camera.position).normalize();
       // pivot 5 cm in front of the eye: turning the view barely moves the camera
