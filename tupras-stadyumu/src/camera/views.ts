@@ -22,7 +22,7 @@ export interface LockedView extends CameraPose {
   seat?: number;
 }
 
-export type ViewId = 'ustten' | 'dis' | 'uzun' | 'kale' | 'vip' | 'cati' | 'bogaz';
+export type ViewId = 'ustten' | 'dis' | 'uzun' | 'kale' | 'vip' | 'cati' | 'bogaz' | 'seat';
 
 const Y = PITCH_ELEVATION;
 

@@ -12,16 +12,33 @@
 | Koltuk yerleşim motoru (saf veri) | ✅ Tamamlandı, testler geçiyor — `src/stadium/layout.ts` |
 | STEP 01 – Stadium in code | ✅ Tamamlandı ve görsel olarak doğrulandı |
 | STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
-| STEP 03 – Clips start and end | 🟡 Sıradaki |
-| STEP 04 – Choice in post (maske/vurgu) | ⏳ Bekliyor |
+| STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
+| STEP 04 – Choice in post (maske/vurgu) | 🟡 Sıradaki |
 | STEP 05 – Pick your seat, get the ticket | ⏳ Bekliyor |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
 | Dinamik yükleme / performans | 🟡 Parça akışı + havuz + LOD çalışıyor; ölçüm/ayar bekliyor |
 
 ## Devam eden aşama
 
-**STEP 03** — sinematik kamera klipleri: üstten → yaklaşma → tribüne iniş → blok → koltuk;
-her klibin son karesi bir sonrakinin ilk karesi; drone hareketi; ani sıçrama yok.
+**STEP 04** — aynı 3D modelden doğru kamera açısında maske (blok kimliği) geçişi; seçili blok
+maskede kırmızı; son işlemde seçili blok koltukları turuncu (ışık/gölge/yansıma korunarak);
+satılmış koltuklar gri; maske ↔ koltuk verisi birebir eşleşme testi.
+
+## STEP 03 doğrulaması
+
+- `src/camera/clips.ts`: uçuş = anahtar kare zinciri. Kareler: Üstten → Yaklaşma (çatı açıklığı
+  üstü) → Tribüne iniş → Bloğa yaklaşma → Dönüş (bakış tribün boyunca yana süpürülür, kameranın
+  içinden geçmez) → Süzülme → Koltuğa varış. Bir klibin son karesi = sonrakinin ilk karesi.
+- Konum/hedef: merkezcil Catmull-Rom; klip içi yay uzunluğu parametrizasyonu; zaman eşlemesi
+  quintic Hermite (düğümlerde hız sürekli, ivme 0 → C2). Süreler mesafe, dönüş açısı, irtifaya
+  bağlı hız sınırı ve klip ivme profiline göre yinelemeli çözülür.
+- Rota kuralları: bowl'a giriş/çıkış yalnızca çatı açıklığından; üst kata giriş/çıkış iç kafesin
+  altından; localardan önce üst kat çıkıntısının dışına; yakın koltuk değişimi sahaya bakarak kayma.
+- `scripts/test-clips.ts` (`npm run test:clips`): 56 blok + 13 loca + 7 koltuk→koltuk + 42
+  görünüm→görünüm = 118 uçuş, 60 fps örnekleme: başlangıç/bitiş tam, klip sınırları tam, çarpışma yok
+  (çatı alt yüzeyi, tribün betonu, üst kat döşemesi, localar), hız ≤ irtifa sınırı, dönüş ≤ 2.6°/kare,
+  ivme sıçraması ≤ 25 m/s²/kare. Sonuç: maks. 2.41°/kare, 11.4 m/s²/kare, süreler 2.7–14.7 s.
+- Görseller: `docs/screens/step03-*.jpg` (havadan koltuk 416'ya, koltuktan koltuğa film şeritleri).
 
 ## STEP 02 doğrulaması
 
@@ -74,6 +91,7 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 - `src/camera/{views,director}.ts` — kilitli görünümler, kamera yönetimi (serbest/kilitli)
 - `src/ui/viewsBar.ts` — görünüm çubuğu
 - `scripts/views.mjs`, `scripts/compare_views.py` — görünüm çıktıları ve geometri özdeşlik testi
+- `src/camera/clips.ts` — uçuş planlayıcı + oynatıcı; `scripts/test-clips.ts`, `scripts/filmstrip.mjs`
 - `public/brand/bjk-logo.svg` — resmî arma (Wikimedia Commons, PD-Turkey)
 
 ## Yapılan önemli kararlar
@@ -116,10 +134,10 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 
 ## Sıradaki işlem
 
-STEP 03: `src/camera/clips.ts` — kamera klipleri (başlangıç/bitiş kareleri, Bézier/Catmull-Rom yol,
-yumuşak hız profili, bakış yönünün kuaternion ile yumuşak geçişi, çatı açıklığından iniş),
-`director` içinde 'flying' modu, görünüm çubuğunun uçuşla çalışması, kesintisizlik testi
-(ardışık karelerde konum/yön sıçraması ölçümü).
+STEP 04: `src/selection/mask.ts` — blok kimliği render hedefi (koltuk örnekleri + beton blockId),
+maske görüntüsü (seçili blok kırmızı), `HighlightPass` (maske + güzellik görüntüsü → turuncu ton,
+parlaklık korunur), satılmış koltuk gri modu, GPU seçimi (fare altındaki koltuk/blok),
+eşleşme testi (maske piksellerinin blok verisiyle tutarlılığı).
 
 Bilinen görsel eksikler (sonra ele alınabilir):
 - Ağaçlar düşük poligon; yakında oyuncak gibi.

@@ -20,6 +20,7 @@ import { SunClock, type TimeSource } from './lighting/sun.ts';
 import { Atmosphere } from './lighting/atmosphere.ts';
 import { CameraDirector } from './camera/director.ts';
 import { buildViews, type LockedView, type ViewId } from './camera/views.ts';
+import { planToFrame, planToSeat, seatFrame, type KeyFrame, type PlanContext } from './camera/clips.ts';
 
 export interface FrameHook {
   (dt: number, elapsed: number): void;
@@ -140,6 +141,43 @@ export class App {
     renderer.info.autoReset = false;
   }
 
+  /** Planner context: the layout plus a safe-height function (terrain, Süzer Plaza). */
+  planContext(): PlanContext {
+    const w = this.world;
+    const suzer = w.json.landmarks.suzerPlaza.p as number[];
+    return {
+      layout: this.stadium.layout,
+      minHeight: (x, z) => {
+        let h = Math.max(w.heightAt(x, z), 0) + 18;
+        if (Math.hypot(x - suzer[0], z - suzer[1]) < 60) h = Math.max(h, w.heightAt(suzer[0], suzer[1]) + 175);
+        return h;
+      },
+    };
+  }
+
+  /** Cinematic flight to a locked view (STEP 03). */
+  flyToView(v: LockedView, onDone?: () => void): void {
+    const from = this.director.pose();
+    const frames: KeyFrame[] =
+      v.seat !== undefined
+        ? planToSeat(this.planContext(), from, v.seat)
+        : planToFrame(this.planContext(), from, { position: v.position.clone(), target: v.target.clone(), fov: v.fov, label: v.label }, null);
+    // land exactly on the locked pose
+    const last = frames[frames.length - 1];
+    last.position.copy(v.position);
+    last.target.copy(v.target);
+    last.fov = v.fov;
+    this.director.fly(frames, v, onDone);
+  }
+
+  /** Cinematic flight to a seat (STEP 05 uses this). */
+  flyToSeat(seat: number, onDone?: () => void): void {
+    const frames = planToSeat(this.planContext(), this.director.pose(), seat);
+    const s = seatFrame(this.stadium.layout, seat);
+    const v: LockedView = { id: 'uzun', label: 'Koltuk', caption: '', position: s.position, target: s.target, fov: s.fov, seat };
+    this.director.fly(frames, { ...v, id: 'seat' as ViewId }, onDone);
+  }
+
   onFrame(fn: FrameHook): void {
     this.hooks.push(fn);
   }
@@ -160,7 +198,7 @@ export class App {
     const { engine, director, atmosphere, stadium, streamer, water, landmarks } = this;
     const camera = engine.camera;
 
-    director.update();
+    director.update(dt);
     for (const h of this.hooks) h(dt, this.elapsed);
 
     this.time = this.clock.now();

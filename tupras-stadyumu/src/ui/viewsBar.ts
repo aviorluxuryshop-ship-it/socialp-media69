@@ -26,10 +26,15 @@ export function mountViewsBar(app: App, go: (v: LockedView) => void): HTMLElemen
   document.body.appendChild(bar);
   const sync = () => {
     const cur = app.director.current;
-    caption.textContent = cur ? cur.caption : 'Serbest gezinti · sürükle, yakınlaş';
+    caption.textContent = app.director.mode === 'flying' ? 'Uçuş…' : cur ? cur.caption : 'Serbest gezinti · sürükle, yakınlaş';
     for (const el of list.querySelectorAll<HTMLButtonElement>('.view-btn')) el.classList.toggle('active', el.dataset.view === cur?.id);
   };
   app.director.onChange(sync);
+  // live clip label while flying (start/end frames of each clip)
+  app.onFrame(() => {
+    const seg = app.director.segment;
+    if (app.director.mode === 'flying' && seg) caption.textContent = `${app.director.current?.label ?? ''} · ${seg.label}`;
+  });
   sync();
   return bar;
 }

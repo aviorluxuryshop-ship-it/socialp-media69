@@ -31,7 +31,7 @@ async function main() {
   liveBtn.addEventListener('click', () => app.clock.setOverride(null));
 
   // ---- locked views
-  mountViewsBar(app, (v) => app.director.lock(v));
+  mountViewsBar(app, (v) => app.flyToView(v));
 
   // ---- debug HUD (?debug)
   const hud = document.getElementById('debug')!;

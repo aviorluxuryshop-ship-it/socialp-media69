@@ -8,6 +8,7 @@ import { PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { World } from '../world/data.ts';
 import type { CameraPose, LockedView } from './views.ts';
+import { Flight, type FlightSegment, type KeyFrame } from './clips.ts';
 
 export type DirectorMode = 'free' | 'locked' | 'flying';
 
@@ -20,6 +21,13 @@ export class CameraDirector {
   readonly target = new Vector3();
   private readonly world: World;
   private readonly listeners: ((mode: DirectorMode, view: LockedView | null) => void)[] = [];
+  flight: Flight | null = null;
+  flightTime = 0;
+  private flightView: LockedView | null = null;
+  private flightDone: (() => void) | null = null;
+  private readonly tmpPose: CameraPose = { position: new Vector3(), target: new Vector3(), fov: 50 };
+  /** playback speed multiplier (tests and "skip" can raise it) */
+  speed = 1;
 
   constructor(camera: PerspectiveCamera, dom: HTMLElement, world: World) {
     this.camera = camera;
@@ -59,6 +67,28 @@ export class CameraDirector {
     this.camera.updateMatrixWorld();
   }
 
+  /** Play a chain of key frames as one continuous move. */
+  fly(frames: KeyFrame[], view: LockedView | null, onDone?: () => void): Flight {
+    const f = new Flight(frames);
+    this.flight = f;
+    this.flightTime = 0;
+    this.flightView = view;
+    this.flightDone = onDone ?? null;
+    this.setMode('flying', view);
+    return f;
+  }
+
+  get segment(): FlightSegment | null {
+    return this.flight ? this.flight.segmentAt(this.flightTime) : null;
+  }
+
+  /** Jump the running flight to a time (tests, scrubbing). */
+  seek(time: number): void {
+    if (!this.flight) return;
+    this.flightTime = Math.max(0, Math.min(this.flight.duration, time));
+    this.applyPose(this.flight.poseAt(this.flightTime, this.tmpPose));
+  }
+
   lock(view: LockedView): void {
     this.applyPose(view);
     this.setMode('locked', view);
@@ -73,7 +103,26 @@ export class CameraDirector {
     return { position: this.camera.position.clone(), target: this.target.clone(), fov: this.camera.fov };
   }
 
-  update(): void {
+  update(dt = 0): void {
+    if (this.mode === 'flying' && this.flight) {
+      this.controls.enabled = false;
+      this.flightTime += dt * this.speed;
+      const f = this.flight;
+      if (this.flightTime >= f.duration) {
+        const last = f.frames[f.frames.length - 1];
+        this.applyPose(last);
+        this.flight = null;
+        const v = this.flightView;
+        const done = this.flightDone;
+        this.flightView = null;
+        this.flightDone = null;
+        this.setMode('locked', v);
+        done?.();
+      } else {
+        this.applyPose(f.poseAt(this.flightTime, this.tmpPose));
+      }
+      return;
+    }
     if (this.mode === 'free') {
       this.controls.enabled = true;
       this.controls.update();
