@@ -32,8 +32,8 @@ seçenekleri, mobil + masaüstü testleri.
 - Şehir parçaları: kameraya 450 m içindekiler her yönde yüklü; ötesinde yalnızca bakış konisi
   (+0.6 rad pay) içindekiler yüklenir/önceliklenir; koninin dışında 2.5 s kalan parçalar boşaltılıp
   havuza iade edilir (stadyum çevresindeki sabit parçalar yalnızca ağaç/lambalarını bırakır).
-- Koltuk LOD: yakın detaylı (~34 üçgen, kademeye göre 18–34 m), orta 10 üçgen, 150 m ötesi yalnızca
-  sırtlık (2 üçgen). Koltuk gölgesi yalnızca 12 m içindeki bloklarda.
+- Koltuk LOD: yakın detaylı (~34 üçgen, kademeye göre 18–34 m), orta 10 üçgen, 150 m ötesi tek
+  eğik dörtgen (2 üçgen). Koltuk gölgesi yalnızca 12 m içindeki bloklarda.
 - Ölçüm (800×450, medium): Batı üst koltuktan sahaya bakış ana geçiş 898 bin + gölge 289 bin üçgen
   (önce 1.38 M + 1.21 M); aynı koltukta arkaya bakış 215 bin; havadan stadyuma bakış 454 bin,
   stadyuma sırtını dönünce 129 bin. Çizim çağrısı 480 → 180 (arkaya bakış).
@@ -68,6 +68,8 @@ Bu turda bulunup düzeltilenler:
   membranı yarı saydam oluyor (gölgesi kalır; ID geçişi saydam malzemeyi atladığı için koltuklar
   çatının altından da seçilebiliyor). Böylece dört tribün de görünüyor ve kartın üzerine gelince
   tribün stadyumda turuncu yanıyor. Bloğa inerken çatı yeniden katılaşıyor.
+  Uzak koltuk LOD'u dik bir sırtlık dörtgeniydi, tepeden bakınca bıçak gibi kayboluyordu → oturak
+  önünden sırtlık tepesine 45° eğik tek dörtgen: önden sırtlık, tepeden oturak izi gibi görünüyor.
 
 ## Kare süresi yöneticisi (performans bütçesi, `src/core/governor.ts`)
 

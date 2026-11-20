@@ -97,11 +97,23 @@ export function seatGeometrySimple(): BufferGeometry {
   return geometry(pos, nor);
 }
 
-/** Very far seats: just the backrest as one quad (2 triangles). */
+/**
+ * Very far seats: one slanted quad (2 triangles) from the front edge of the
+ * pan up to the top of the backrest. From the stands or the pitch it reads as
+ * the backrest, from above (the seat-map overview) as the seat's footprint —
+ * an upright backrest quad all but vanished when seen from the sky.
+ */
 export function seatGeometryFar(): BufferGeometry {
-  const pos: number[] = [];
+  const hx = 0.23;
+  const a = [0.44, 0.2]; // (y, z) front edge of the pan
+  const b = [0.88, -0.24]; // (y, z) top of the backrest
+  const pos = [
+    -hx, a[0], a[1], hx, a[0], a[1], hx, b[0], b[1],
+    -hx, a[0], a[1], hx, b[0], b[1], -hx, b[0], b[1],
+  ];
+  const n = Math.SQRT1_2;
   const nor: number[] = [];
-  pushBox(pos, nor, 0, 0.6, -0.17, 0.46, 0.56, 0.04, 0.2, 0b000100);
+  for (let i = 0; i < 6; i++) nor.push(0, n, n);
   return geometry(pos, nor);
 }
 
