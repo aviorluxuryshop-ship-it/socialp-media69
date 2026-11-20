@@ -35,17 +35,18 @@ const times = ['06:00', '07:45', '08:30', '12:00', '15:30', '17:15', '17:45', '1
 for (const t of times) {
   const [hh, mm] = t.split(':').map(Number);
   await page.evaluate((m) => window.__app.clock.setOverride(m), hh * 60 + mm);
-  await page.waitForFunction(() => {
+  // wait until a frame has picked up the new time AND the glide has arrived
+  await page.waitForFunction((label) => {
     const a = window.__app;
-    return Math.abs(a.atmosphere.factors.altitude - a.time.sun.altitude) < 0.2;
-  }, null, { timeout: 240000, polling: 500 });
+    return a.time.label === label && Math.abs(a.atmosphere.factors.altitude - a.time.sun.altitude) < 0.2;
+  }, t, { timeout: 480000, polling: 500 });
   await page.waitForTimeout(1500);
   await page.screenshot({ path: `${out}/${view}_${t.replace(':', '')}.png` });
   console.log('sweep', JSON.stringify(await state()));
 }
 // 2) live transition: jump 12:00 → 21:00 and sample the glide
 await page.evaluate(() => window.__app.clock.setOverride(12 * 60));
-await page.waitForFunction(() => Math.abs(window.__app.atmosphere.factors.altitude - window.__app.time.sun.altitude) < 0.2, null, { timeout: 240000, polling: 500 });
+await page.waitForFunction(() => window.__app.time.label === '12:00' && Math.abs(window.__app.atmosphere.factors.altitude - window.__app.time.sun.altitude) < 0.2, null, { timeout: 480000, polling: 500 });
 await page.evaluate(() => window.__app.clock.setOverride(21 * 60));
 for (let i = 0; i < 8; i++) {
   await page.waitForTimeout(700);

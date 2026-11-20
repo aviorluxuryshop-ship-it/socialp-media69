@@ -287,7 +287,10 @@ export class Atmosphere {
     // adapts to the floodlights, so close down again (like a camera would)
     const horiz = Math.hypot(cameraPos.x, cameraPos.z);
     const inside = (1 - smooth(95, 150, horiz)) * (1 - smooth(this.pitchElevation + 45, this.pitchElevation + 90, cameraPos.y));
-    const nightOpen = f.night * 0.3 * (1 - inside * f.lights) - inside * f.lights * 0.12;
+    // darkness rises as soon as the sun is down, not only at full night: with
+    // `night` alone civil twilight (sun 0…−6°) came out darker than midnight
+    const dark = Math.max(f.night, 1 - smooth(-4, 4, alt));
+    const nightOpen = dark * 0.3 * (1 - inside * f.lights) - inside * f.lights * 0.12;
     this.renderer.toneMappingExposure = 0.92 + f.golden * 0.12 * (1 - inside) + nightOpen;
 
     // environment map: regenerate when the sky changed enough (throttled)
