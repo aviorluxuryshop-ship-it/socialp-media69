@@ -175,5 +175,7 @@ export const SEAT_COLORS = {
   white: 0xf2f2ef,
   black: 0x17181a,
   vip: 0x232427,
-  sold: 0x6e7176,
+  sold: 0x1a1b1e,
+  /** free seats while choosing: a bright green that glows (never confused with the black/white pattern) */
+  free: 0x3ee07f,
 };

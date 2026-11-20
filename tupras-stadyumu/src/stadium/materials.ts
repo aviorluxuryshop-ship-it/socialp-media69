@@ -22,6 +22,8 @@ export class StadiumMaterials {
   readonly stonePlain: MeshStandardMaterial;
   readonly seat: MeshStandardMaterial;
   readonly seatDetail: MeshStandardMaterial;
+  /** emissive boost of free seats (availability view), 0 = off */
+  readonly seatGlow = { value: 0 };
   readonly steelWhite: MeshStandardMaterial;
   readonly steelDark: MeshStandardMaterial;
   readonly membraneTop: MeshStandardMaterial;
@@ -62,6 +64,21 @@ export class StadiumMaterials {
     // seats: white base so instanceColor carries the black/white pattern
     this.seat = new MeshStandardMaterial({ color: 0xffffff, roughness: 0.42, metalness: 0.0 });
     this.seatDetail = new MeshStandardMaterial({ color: 0xffffff, roughness: 0.42, metalness: 0.0 });
+    // while choosing a seat the free ones glow (their instance colour is white,
+    // sold ones are dark so they barely glow): readable in shade, under the roof
+    // and at night
+    for (const m of [this.seat, this.seatDetail]) {
+      m.onBeforeCompile = (sh) => {
+        sh.uniforms.uSeatGlow = this.seatGlow;
+        sh.fragmentShader = sh.fragmentShader
+          .replace('#include <common>', '#include <common>\nuniform float uSeatGlow;')
+          .replace(
+            '#include <emissivemap_fragment>',
+            '#include <emissivemap_fragment>\n#ifdef USE_COLOR\ntotalEmissiveRadiance += vColor.rgb * vColor.rgb * uSeatGlow;\n#endif',
+          );
+      };
+      m.customProgramCacheKey = () => 'seat-glow';
+    }
     this.steelWhite = new MeshStandardMaterial({ color: 0xe9e9e6, roughness: 0.45, metalness: 0.35, vertexColors: true });
     this.steelDark = new MeshStandardMaterial({ color: 0x45484c, roughness: 0.5, metalness: 0.55, vertexColors: true });
     this.membraneTop = new MeshStandardMaterial({

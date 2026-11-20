@@ -55,8 +55,8 @@ export function settingsFor(tier: QualityTier): QualitySettings {
     case 'medium':
       return {
         tier,
-        pixelRatio: Math.min(dpr, 1.5),
-        shadowMapSize: 2048,
+        pixelRatio: dpr,
+        shadowMapSize: 4096,
         shadows: true,
         antialias: true,
         cityDetailRadius: 650,
@@ -69,8 +69,8 @@ export function settingsFor(tier: QualityTier): QualitySettings {
     default:
       return {
         tier,
-        pixelRatio: Math.min(dpr, 1.25),
-        shadowMapSize: 1024,
+        pixelRatio: Math.min(dpr, 1.75),
+        shadowMapSize: 2048,
         shadows: true,
         antialias: true,
         cityDetailRadius: 450,

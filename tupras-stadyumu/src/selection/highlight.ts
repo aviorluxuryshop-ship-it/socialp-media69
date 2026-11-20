@@ -39,6 +39,7 @@ export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Tex
       uOrange: { value: new Vector3(orange.r, orange.g, orange.b) },
       uAlbedo: { value: new Vector3(lin(SEAT_COLORS.white), lin(SEAT_COLORS.black), lin(SEAT_COLORS.vip)) },
       uSoldLum: { value: lin(SEAT_COLORS.sold) },
+      uFreeLum: { value: lin(SEAT_COLORS.free) },
       uAvailability: { value: 0 },
       uRow: { value: -1 },
     },
@@ -51,7 +52,7 @@ export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Tex
       uniform sampler2D tInfo;
       uniform sampler2D tSet;
       uniform vec2 uRes;
-      uniform float uBlock, uHoverSeat, uSelSeat, uHoverBlock, uMode, uTime, uSoldLum, uAvailability, uRow;
+      uniform float uBlock, uHoverSeat, uSelSeat, uHoverBlock, uMode, uTime, uSoldLum, uFreeLum, uAvailability, uRow;
       uniform vec3 uOrange, uAlbedo;
       varying vec2 vUv;
 
@@ -113,7 +114,8 @@ export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Tex
           float alb = shade < 0.5 ? uAlbedo.x : (shade < 1.5 ? uAlbedo.y : uAlbedo.z);
           // highlighted blocks are rendered with the white albedo (SeatSystem.setNeutralBlocks)
           if (lit) alb = uAlbedo.x;
-          if (sold) alb = uSoldLum;
+          // availability view: free seats are drawn green, sold ones dark
+          if (uAvailability > 0.5) alb = sold ? uSoldLum : uFreeLum;
           float L = lum(col);
           // recover the light that reached this seat, then re-light it in orange
           float shading = min(L / max(alb, 0.004), 5.0);

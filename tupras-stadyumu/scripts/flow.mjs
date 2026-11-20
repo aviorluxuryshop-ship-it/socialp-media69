@@ -56,7 +56,7 @@ await idle();
 await shot('region');
 
 // 3) a seat in 3D: a free seat near the middle of the anchor block, projected to the screen
-const target = await page.evaluate(() => {
+const findTarget = () => page.evaluate(() => {
   const a = window.__app;
   const p = window.__picker;
   const L = a.stadium.layout;
@@ -64,73 +64,81 @@ const target = await page.evaluate(() => {
   const cam = a.engine.camera;
   cam.updateMatrixWorld();
   const V = a.engine.camera.position.constructor;
-  // the label block first, then the rest of the region
+  const fa = p.area;
+  const cx = fa.x + fa.w / 2, cy = fa.y + fa.h / 2;
+  let best = null;
   for (const b of [p.region.anchor, ...p.region.blocks]) {
-  const free = [];
-  for (let i = b.seatStart; i < b.seatStart + b.seatCount; i++) if (S.sold[i] === 0) free.push(i);
-  free.sort((x, y) => Math.abs(S.row[x] - b.rows * 0.4) - Math.abs(S.row[y] - b.rows * 0.4) || Math.abs(x - (b.seatStart + b.seatCount / 2)) - Math.abs(y - (b.seatStart + b.seatCount / 2)));
-  for (const i of free) {
-    const yaw = S.yaw[i];
-    const v = new V(S.pos[i * 3] - Math.sin(yaw) * 0.19, S.pos[i * 3 + 1] + 8.5 + 0.62, S.pos[i * 3 + 2] - Math.cos(yaw) * 0.19).project(cam);
-    // whole CSS pixels (pointer events report integers) with a 1 px margin around
-    const x = Math.round((v.x * 0.5 + 0.5) * innerWidth);
-    const y = Math.round((-v.y * 0.5 + 0.5) * innerHeight);
-    // only where a visitor can tap: the area the panel leaves free
-    const fa = p.area;
-    if (x < fa.x + 8 || x > fa.x + fa.w - 8 || y < fa.y + 8 || y > fa.y + fa.h - 8) continue;
-    const ok = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => a.selection.pickAt(x + dx, y + dy).seat === i);
-    if (ok) return { seat: i, x, y, row: S.row[i], num: S.num[i], block: b.code };
+    for (let i = b.seatStart; i < b.seatStart + b.seatCount; i++) {
+      if (S.sold[i] !== 0) continue;
+      const yaw = S.yaw[i];
+      const v = new V(S.pos[i * 3] - Math.sin(yaw) * 0.19, S.pos[i * 3 + 1] + 8.5 + 0.62, S.pos[i * 3 + 2] - Math.cos(yaw) * 0.19).project(cam);
+      if (v.z > 1 || v.z < -1) continue;
+      const x = Math.round((v.x * 0.5 + 0.5) * innerWidth);
+      const y = Math.round((-v.y * 0.5 + 0.5) * innerHeight);
+      if (x < fa.x + 8 || x > fa.x + fa.w - 8 || y < fa.y + 8 || y > fa.y + fa.h - 8) continue;
+      const d = Math.hypot(x - cx, y - cy);
+      if (best && d >= best.d) continue;
+      const ok = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => a.selection.pickAt(x + dx, y + dy).seat === i);
+      if (ok) best = { seat: i, x, y, d, row: S.row[i], num: S.num[i], block: b.code, px: +p.seatPx(i).toFixed(1) };
+    }
+    if (best) break;
   }
-  }
-  return null;
+  return best;
 });
+let target = await findTarget();
+console.log('first tap target', JSON.stringify(target));
+await press(target.x, target.y);
+await page.waitForTimeout(400);
+console.log('zoomed', await page.evaluate(() => window.__picker.zoomed), 'zoom flight', await flight(), 's');
+await idle();
+await shot('zoomed');
+target = await findTarget();
 console.log('tap target', JSON.stringify(target));
 if (!mobile) {
   await page.mouse.move(target.x, target.y);
   await page.waitForTimeout(2500);
   await shot('seat-hover');
 }
-await page.evaluate(() => {
-  const a = window.__app;
-  window.__clicks = [];
-  a.selection.onClick((p) => window.__clicks.push({ seat: p.seat, block: p.block, sold: p.seat >= 0 ? a.stadium.layout.seats.sold[p.seat] : -1, step: window.__picker.step, cam: a.engine.camera.position.toArray().map((v) => +v.toFixed(3)) }));
-});
-console.log('pick right before tap', JSON.stringify(await page.evaluate((t) => ({ ...window.__app.selection.pickAt(t.x, t.y), cam: window.__app.engine.camera.position.toArray().map((v) => +v.toFixed(3)) }), target)));
 await press(target.x, target.y);
-await page.waitForTimeout(200);
-console.log('clicks', JSON.stringify(await page.evaluate(() => window.__clicks)));
-await page.waitForTimeout(300);
+await page.waitForTimeout(500);
 console.log('seat flight', await flight(), 's');
 await idle();
 await page.waitForFunction(() => !document.querySelector('[data-act="ticket"]')?.hasAttribute('disabled'), null, { timeout: 120000, polling: 500 });
 await shot('at-seat');
 const info = await page.evaluate(() => {
   const p = window.__picker; const a = window.__app; const S = a.stadium.layout.seats;
-  const e = a.engine.camera.position;
-  const dl = [...document.querySelectorAll('.seat-dl > div')].map((d) => d.querySelector('dt').textContent + '=' + d.querySelector('dd').textContent);
-  return { seat: p.seat, region: p.region?.name, row: S.row[p.seat], num: S.num[p.seat], block: a.stadium.layout.blocks[S.block[p.seat]].code, panel: dl, cam: [e.x, e.y, e.z].map((v) => +v.toFixed(2)) };
+  return { seat: p.seat, region: p.region?.name, row: S.row[p.seat], num: S.num[p.seat], panel: document.querySelector('.seat-card')?.innerText.replace(/\s+/g, ' '), panelH: Math.round(document.querySelector('.picker').getBoundingClientRect().height) };
 });
 console.log('seat', JSON.stringify(info), 'tapped', target.seat === info.seat ? 'same seat' : 'DIFFERENT');
 
-// 4) ticket
+// 4) live: a second visitor (another tab) watches the same region
+const page2 = await ctx.newPage();
+page2.on('pageerror', (e) => errors.push('p2 ' + e.message));
+await page2.goto('http://127.0.0.1:5173/?t=14:00&fast&q=low&msaa=0', { waitUntil: 'load' });
+await page2.waitForFunction(() => document.body.dataset.ready === '1', null, { timeout: 300000 });
+
+// 5) ticket → buy
 await tap('[data-act="ticket"]');
 await page.waitForTimeout(1000);
 await shot('ticket');
-if (await page.locator('.ticket [data-act="confirm"]').count()) {
-  await tap('.ticket [data-act="confirm"]');
-  await page.waitForTimeout(800);
-}
+await tap('.ticket [data-act="confirm"]');
+await page.waitForTimeout(1500);
+console.log('bought', await page.evaluate(() => document.querySelector('.ticket .st')?.textContent));
+const seen = await page2.evaluate((s) => window.__app.stadium.layout.seats.sold[s], info.seat);
+console.log('second visitor sees seat sold:', seen === 1, 'toast:', await page2.evaluate(() => document.querySelector('.live-toast')?.textContent));
+// a second buyer of the same seat must lose
+const res2 = await page2.evaluate((s) => window.__picker.live.claim(s), info.seat);
+console.log('second claim of the same seat:', res2);
+await page2.close();
 await tap('.ticket-close');
 
-// 5) back: another seat → region; back → regions; close → intro
-await tap('[data-act="change"]');
-console.log('back-to-region flight', await flight(), 's');
-await idle();
-console.log('step after change', await page.evaluate(() => window.__picker.step));
-await tap('.picker [data-act="back"]');
-console.log('back-to-regions flight', await flight(), 's');
-await idle();
-console.log('step after back', await page.evaluate(() => window.__picker.step));
+// 6) the step chips
+const chip = async (s) => { await tap(`.steps [data-s="${s}"]`); console.log('chip', s, '→ step', await page.evaluate(() => window.__picker.step), 'flight', await flight(), 's'); await idle(); };
+console.log('chips enabled', await page.evaluate(() => [...document.querySelectorAll('.steps button')].map((b) => b.dataset.s + ':' + !b.disabled).join(' ')));
+await chip('region');
+await shot('back-region');
+await chip('seat');
+await chip('regions');
 await tap('.picker [data-act="close"]');
 console.log('exit flight', await flight(), 's');
 await idle();

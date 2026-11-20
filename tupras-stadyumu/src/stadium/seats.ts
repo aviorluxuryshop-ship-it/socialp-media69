@@ -128,7 +128,7 @@ export interface SeatMeshPair {
   radius: number;
 }
 
-export type SeatVisualState = 'normal' | 'hover' | 'selected' | 'dim';
+export type SeatVisualState = 'normal' | 'hover' | 'selected' | 'dim' | 'flash';
 
 const _m = new Matrix4();
 const _q = new Quaternion();
@@ -149,6 +149,10 @@ export class SeatSystem {
   private readonly black = new Color(SEAT_COLORS.black);
   private readonly vip = new Color(SEAT_COLORS.vip);
   private readonly sold = new Color(SEAT_COLORS.sold);
+  private readonly free = new Color(SEAT_COLORS.free);
+  /** recently sold seats flash red for a moment (live sales) */
+  private readonly flash = new Color(0xe0182a);
+  private readonly glow: { value: number };
   private readonly hover = new Color(0xffb15c);
   private readonly selected = new Color(0xff7a1a);
   detailDistance = 70;
@@ -157,6 +161,7 @@ export class SeatSystem {
 
   constructor(layout: StadiumLayout, mats: StadiumMaterials) {
     this.layout = layout;
+    this.glow = mats.seatGlow;
     this.group.name = 'seats';
     this.pairOf = new Uint16Array(layout.seats.count);
     const gDet = seatGeometryDetailed(false);
@@ -255,7 +260,7 @@ export class SeatSystem {
 
   baseColor(i: number, out: Color): Color {
     const S = this.layout.seats;
-    if (this.availabilityMode) return out.copy(S.sold[i] !== 0 ? this.sold : this.white);
+    if (this.availabilityMode) return out.copy(S.sold[i] !== 0 ? this.sold : this.free);
     if (this.neutral.has(S.block[i])) return out.copy(this.white);
     const sh = S.shade[i];
     return out.copy(sh === 0 ? this.white : sh === 1 ? this.black : this.vip);
@@ -265,7 +270,8 @@ export class SeatSystem {
     const pair = this.pairs[this.pairOf[i]];
     const k = i - pair.seatStart;
     const st = this.overrides.get(i);
-    if (st === 'hover') _c.copy(this.hover);
+    if (st === 'flash') _c.copy(this.flash);
+    else if (st === 'hover') _c.copy(this.hover);
     else if (st === 'selected') _c.copy(this.selected);
     else this.baseColor(i, _c);
     if (st === 'dim') _c.multiplyScalar(0.35);
@@ -276,6 +282,11 @@ export class SeatSystem {
     pair.detailed.instanceColor!.needsUpdate = true;
   }
 
+  /** Re-colour single seats (a live sale) without touching the rest. */
+  refreshSeats(seats: Iterable<number>): void {
+    for (const i of seats) this.writeColor(i);
+  }
+
   refreshAllColors(): void {
     for (let i = 0; i < this.layout.seats.count; i++) this.writeColor(i);
   }
@@ -283,6 +294,7 @@ export class SeatSystem {
   setAvailabilityMode(on: boolean): void {
     if (this.availabilityMode === on) return;
     this.availabilityMode = on;
+    this.glow.value = on ? 0.7 : 0;
     this.refreshAllColors();
   }
 

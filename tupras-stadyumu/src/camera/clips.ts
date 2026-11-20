@@ -166,6 +166,31 @@ export function regionFrame(layout: StadiumLayout, anchor: Block, kind: RegionKi
   return { position: p, target: c, fov: portrait ? 64 : 56, label: 'Bölge' };
 }
 
+/**
+ * Close-up in front of a seat for picking it: near enough that one seat is
+ * about `seatPx` CSS pixels wide on a screen `viewH` pixels tall, slightly
+ * above it and looking down the rake at it (the stand falls away towards the
+ * pitch faster than the line of sight, so nothing is in between).
+ */
+export function seatCloseFrame(layout: StadiumLayout, seat: number, viewH: number, portrait: boolean, seatPx = 40): KeyFrame {
+  const S = layout.seats;
+  const b = layout.blocks[S.block[seat]];
+  const { out } = frameAt(layout, b.tc);
+  const fov = portrait ? 52 : 40;
+  const seatW = 0.5;
+  const d = Math.min(26, Math.max(7, (viewH * seatW) / (2 * Math.tan(((fov / 2) * Math.PI) / 180) * seatPx)));
+  const elev = (13 * Math.PI) / 180;
+  const sx = S.pos[seat * 3];
+  const sy = S.pos[seat * 3 + 1] + 0.6;
+  const sz = S.pos[seat * 3 + 2];
+  const p = new Vector3(sx - out.x * d * Math.cos(elev), sy + d * Math.sin(elev), sz - out.z * d * Math.cos(elev));
+  // stay under the upper tier's front (lower tier) and under the roof structure
+  let maxY = roofUnderside(layout, p.x, p.z) - 1.5;
+  if (b.tier === 'lower') maxY = Math.min(maxY, FASCIA.bottomY - 1);
+  p.y = Math.min(p.y, maxY) + Y;
+  return { position: p, target: new Vector3(sx, sy + Y, sz), fov, label: 'Yakın' };
+}
+
 export function seatFrame(layout: StadiumLayout, seat: number, fov = 62): KeyFrame {
   const e = seatEye(layout, seat);
   const position = new Vector3(e.x, e.y + Y, e.z);

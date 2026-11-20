@@ -22,6 +22,40 @@
 
 Kullanıcının yeni akışı gözden geçirmesi; ardından "gerisini sonra hallederiz" dediği ayrıntılar.
 
+## Koltuk seçimi geri bildirimi (20 Kasım, 2. tur)
+
+- **Yakınlaştırma:** bölge görünümünde bir koltuk ekranda ~7 px'ti. Tribüne ilk dokunuş o noktaya
+  yakınlaştırıyor (`seatCloseFrame`, clips.ts): koltuk masaüstünde ~40 px, telefonda ~44 px oluyor;
+  ikinci dokunuş koltuğu seçiyor. Tekerlek / iki parmakla görüş açısı (FOV 16–72°) değiştirilebiliyor.
+  Kural: dokunulan koltuk ekranda 26 px'ten darsa önce yakınlaştır (`TAP_SEAT_PX`).
+- **Adım çipleri tıklanabilir:** Bölge · Koltuk · Görüş artık butonlar; geri oku kaldırıldı.
+  "Koltuk" bölge görünümüne (yakınlaştırmadan da) döner, "Görüş" son bakılan koltuğa (hâlâ boşsa).
+- **Netlik:** piksel oranı tavanı yükseltildi (yüksek/orta: cihaz, en çok 2×; düşük: 1.75×), gölge
+  haritası orta 4096 / düşük 2048. Kare süresi yöneticisi artık önce detay, gece parlaması ve gölgeyi
+  düşürüyor; çözünürlüğü en son ve yüksek yoğunluklu ekranda 1.25×'in altına hiç indirmiyor; ancak
+  ~35 fps'in altında devreye giriyor (`slowMs 28`).
+- **Boş koltuklar:** seçim adımlarında boş koltuk parlak yeşil ve kendinden ışıklı (gölgede, çatı
+  altında, gecede okunuyor), satılmış koltuk koyu antrasit. Siyah-beyaz maç günü deseniyle
+  karışmasın diye yeşil seçildi. Koltuk seçerken blok turuncuya boyanmıyor; yalnızca imleçteki koltuk.
+- **Canlı satış** (`src/net/liveSeats.ts`): bir koltuk alındığında diğer ziyaretçilerde anında koyu
+  olur, 1.8 s kırmızı yanıp söner ve üstte "Az önce satıldı …" bildirimi çıkar. Bakılan koltuk başkası
+  tarafından alınırsa panel uyarır, bilet butonu kapanır. Aynı koltuğu iki kişi aynı anda alamaz:
+  ilk yazan kazanır, ikinciye "başka bir taraftar aldı" denir.
+  - Aynı tarayıcının sekmeleri arasında BroadcastChannel ile şimdiden çalışıyor (test: iki sekme).
+  - Cihazlar arası için Firebase Realtime Database (REST + SSE, SDK yok) hazır; `VITE_SEAT_DB_URL`
+    ortam değişkeni (veya test için `?db=<url>`) verilince açılıyor. Kurallar:
+    `{"rules":{"sales":{".read":true,"$seat":{".write":"!data.exists() && newData.exists()",".validate":"newData.hasChildren(['t']) && $seat.matches(/^s[0-9]{1,6}$/)"}}}}`
+    **Açık:** kullanıcının ücretsiz bir Firebase projesi açıp veritabanı adresini vermesi gerekiyor.
+- **Kompakt panel:** masaüstünde 320 px ve içerik kadar yüksek; telefonda en çok %46. Görüş adımı tek
+  satır kart (bölge · blok, sıra · koltuk, fiyat, ‹ › komşu koltuk) + "Bileti Gör".
+- **Giriş:** başlık ve metin kaldırıldı; yalnızca altta ortada küçük "Koltuk Seç" butonu.
+- **Eski Açık kolonadı** ("stattan ayrık sur gibi"): OSM hilalinden çizilen çember yayı stadın ~15 m
+  dışında duruyordu. Artık cephe eğrisinin (OUTER_CURVE) 1.6 m dışından onu sararak gidiyor; kuleler
+  ve kapı da eğriye oturuyor.
+- Doğrulama: `scripts/flow.mjs` masaüstü 960×540 Doğu Alt ve iPhone 13 Kuzey Alt: yakınlaştır → koltuk
+  → bilet al → ikinci sekme koltuğu satılmış görüyor → aynı koltuğa ikinci alım "taken" → çipler;
+  konsol hatası yok.
+
 ## Çatı grafikleri ve çevre (kullanıcı geri bildirimi, 20 Kasım — hava fotoğrafı referans)
 
 - **Çatı:** gerçek hava fotoğrafındaki gibi Kuzey (Maçka) ucunda arma + "BEŞİKTAŞ", iki uzun kenarda
@@ -306,7 +340,7 @@ konsol hatası olmadan geçiyor; dokunulan koltuk birebir seçiliyor. Canlı: ht
 (`scripts/with-server.sh node scripts/flow.mjs <dir> 960 540 '' DOGU-lower` / `… 390 664 mobile`).
 
 **Yapılacak:**
-1. Kullanıcının yeni akışı denemesi ve geri bildirimi ("gerisini sonra hallederiz").
+1. Cihazlar arası canlı satış için Firebase veritabanı adresi (kullanıcıdan) → `VITE_SEAT_DB_URL`.
 2. Canlı link: Vercel hesabında aynı repoya bağlı 10 proje var; her push 10 deploy başlatıyor ve
    günlük 100 sınırı hızla doluyor. Kullanıcı ilgisiz projelerin Git bağlantısını kesmeli.
    `tupras-stadyumu` projesinin önizlemeleri Vercel girişi ister (Deployment Protection).

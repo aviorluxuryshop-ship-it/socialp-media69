@@ -56,7 +56,7 @@ function bars(code: string): number[] {
   return out;
 }
 
-export function showTicket(t: TicketData, onConfirm: (() => void) | null): void {
+export function showTicket(t: TicketData, onConfirm: (() => void | Promise<void>) | null): void {
   document.querySelector('.ticket-overlay')?.remove();
   const o = document.createElement('div');
   o.className = 'ticket-overlay';
@@ -121,8 +121,11 @@ export function showTicket(t: TicketData, onConfirm: (() => void) | null): void 
     }
   });
   o.querySelector('[data-act="png"]')!.addEventListener('click', () => downloadPng(t));
-  o.querySelector('[data-act="confirm"]')?.addEventListener('click', () => {
-    onConfirm?.();
+  o.querySelector<HTMLButtonElement>('[data-act="confirm"]')?.addEventListener('click', (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    btn.disabled = true;
+    btn.textContent = 'Satın alınıyor…';
+    void onConfirm?.();
   });
   (o.querySelector('.ticket-close') as HTMLElement).focus();
 }

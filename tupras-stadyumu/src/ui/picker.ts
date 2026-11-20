@@ -3,29 +3,41 @@
  *
  * Flow: one button ("Koltuk Seç") → the camera drops into the bowl and turns
  * slowly; labels on the stands name the regions (Doğu Alt, Kuzey Üst, VIP,
- * Localar…) → choosing a region flies in front of it, sold seats grey → a tap
- * on a seat flies to that seat: the real view, with region, block, row, seat
- * number and price beside it → the digital ticket.
+ * Localar…) → choosing a region flies in front of it: free seats glow, sold
+ * ones are dark → a tap on the stand zooms in until single seats are big
+ * enough for a finger → a tap on a seat flies to that seat: the real view,
+ * with region, block, row, seat number and price beside it → the ticket.
+ *
+ * The step chips (Bölge · Koltuk · Görüş) are the navigation: tap one to go
+ * back to it. Seats sold by anyone show up live (net/liveSeats.ts).
  */
 import type { App } from '../app.ts';
 import { Vector3 } from 'three';
 import type { Block } from '../stadium/layout.ts';
-import { insideFrame, PICKER_MAX, regionFrame, type KeyFrame } from '../camera/clips.ts';
+import { PITCH_ELEVATION } from '../stadium/config.ts';
+import { insideFrame, PICKER_MAX, regionFrame, seatCloseFrame, type KeyFrame } from '../camera/clips.ts';
 import type { PickResult } from '../selection/idpass.ts';
+import { LiveSeats } from '../net/liveSeats.ts';
 import { blockTitle, categoryName, escapeHtml, price } from './format.ts';
 import { buildRegions, nearestFreeSeat, regionOfBlock, regionStats, type Region } from './regions.ts';
 import { showTicket, ticketFor } from './ticket.ts';
 
 type Step = 'intro' | 'regions' | 'region' | 'seat';
 
-
 const STEP_ORDER: Step[] = ['regions', 'region', 'seat'];
+/** a seat narrower than this on screen is zoomed in on first (CSS px) */
+const TAP_SEAT_PX = 26;
 
 export class SeatPicker {
   step: Step = 'intro';
   region: Region | null = null;
   seat: number | null = null;
+  /** the region view is zoomed in on part of the stand */
+  zoomed = false;
   readonly regions: Region[];
+  readonly live: LiveSeats;
+  /** last seat looked at (the "Görüş" chip returns to it) */
+  private lastSeat: number | null = null;
   private seatView: string | null = null;
   private notice = '';
   private readonly purchased = new Set<number>();
@@ -36,6 +48,7 @@ export class SeatPicker {
   private readonly foot: HTMLElement;
   private readonly intro: HTMLElement;
   private readonly tip: HTMLElement;
+  private readonly toast: HTMLElement;
   private readonly labels: HTMLElement;
   private readonly labelEls = new Map<string, HTMLButtonElement>();
   private pointer = { x: 0, y: 0 };
@@ -44,23 +57,18 @@ export class SeatPicker {
   private turnedByUser = false;
   private hoverRegion: Region | null = null;
   private readonly tmp = new Vector3();
+  private toastTimer = 0;
 
   constructor(app: App) {
     this.app = app;
     this.regions = buildRegions(app.stadium.layout);
 
-    // ---- intro card: a single action
+    // ---- intro: a single button
     this.intro = document.createElement('section');
     this.intro.className = 'intro';
-    this.intro.innerHTML = `
-      <div class="eyebrow">Tüpraş Stadyumu · Dolmabahçe</div>
-      <h1>Koltuğunu seç,<br/>sahayı oradan gör.</h1>
-      <p>Stadın içine girin, bölgenizi seçin, koltuğunuza dokunun. Sahayı o koltuktan görün; sıra, koltuk numarası ve fiyatı hemen yanında.</p>
-      <div class="intro-actions">
-        <button class="btn primary" type="button" data-act="start">Koltuk Seç</button>
-      </div>`;
+    this.intro.innerHTML = `<button class="btn primary intro-btn" type="button" data-act="start">Koltuk Seç</button>`;
     document.body.appendChild(this.intro);
-    // opened straight into a view (shared link, screenshots): start without the card
+    // opened straight into a view (shared link, screenshots): start without the button
     if (app.params.has('view')) this.intro.classList.add('hidden');
     this.intro.querySelector('[data-act="start"]')!.addEventListener('click', () => this.start());
 
@@ -81,16 +89,16 @@ export class SeatPicker {
     }
     document.body.appendChild(this.labels);
 
-    // ---- panel
+    // ---- panel: the step chips are the navigation
     this.panel = document.createElement('aside');
     this.panel.className = 'picker hidden';
     this.panel.setAttribute('aria-label', 'Koltuk seçimi');
     this.panel.innerHTML = `
       <div class="picker-head">
-        <button class="icon-btn" type="button" data-act="back" aria-label="Geri">‹</button>
-        <ol class="steps">
-          <li data-s="regions">Bölge</li><li data-s="region">Koltuk</li><li data-s="seat">Görüş</li>
-        </ol>
+        <nav class="steps" aria-label="Adımlar">
+          <button type="button" data-s="regions">Bölge</button><button type="button" data-s="region">Koltuk</button><button type="button" data-s="seat">Görüş</button>
+        </nav>
+        <span class="live-dot" title="Canlı satış"></span>
         <button class="icon-btn" type="button" data-act="close" aria-label="Kapat">×</button>
       </div>
       <div class="picker-body"></div>
@@ -101,13 +109,18 @@ export class SeatPicker {
     window.addEventListener('resize', () => this.updateLensShift());
     this.body = this.panel.querySelector('.picker-body')!;
     this.foot = this.panel.querySelector('.picker-foot')!;
-    this.panel.querySelector('[data-act="back"]')!.addEventListener('click', () => this.back());
+    for (const b of this.panel.querySelectorAll<HTMLButtonElement>('.steps button')) b.addEventListener('click', () => this.goStep(b.dataset.s as Step));
     this.panel.querySelector('[data-act="close"]')!.addEventListener('click', () => this.close());
 
-    // ---- hover tooltip
+    // ---- hover tooltip and live-sale toast
     this.tip = document.createElement('div');
     this.tip.className = 'seat-tip hidden';
     document.body.appendChild(this.tip);
+    this.toast = document.createElement('div');
+    this.toast.className = 'live-toast hidden';
+    this.toast.setAttribute('role', 'status');
+    document.body.appendChild(this.toast);
+
     app.engine.canvas.addEventListener('pointermove', (e) => (this.pointer = { x: e.clientX, y: e.clientY }));
     app.selection.onHover((p) => this.onHover(p));
     app.selection.onClick((p) => this.onPick(p));
@@ -118,6 +131,12 @@ export class SeatPicker {
     });
     app.director.onChange((mode) => this.onDirector(mode));
     app.onFrame(() => this.updateLabels());
+    this.bindZoomGestures();
+
+    // ---- live sales
+    this.live = new LiveSeats(app.stadium.layout.seats.count);
+    this.live.onSold((seats, byOther) => this.onLiveSold(seats, byOther));
+    this.live.onStatus((on) => this.panel.classList.toggle('live', on));
   }
 
   // ------------------------------------------------------------------ helpers
@@ -141,6 +160,10 @@ export class SeatPicker {
 
   private regionOfSeat(seat: number): Region | null {
     return regionOfBlock(this.regions, this.L.seats.block[seat]);
+  }
+
+  private isFree(seat: number): boolean {
+    return this.L.seats.sold[seat] === 0;
   }
 
   /** Free screen area next to / above the panel (CSS px). */
@@ -171,6 +194,14 @@ export class SeatPicker {
     c.autoRotateSpeed = 0.7; // ≈ 4° per second
   }
 
+  /** Width of one seat on screen (CSS px) as seen from the current camera. */
+  private seatPx(seat: number): number {
+    const S = this.L.seats;
+    const cam = this.app.engine.camera;
+    const d = this.tmp.set(S.pos[seat * 3], S.pos[seat * 3 + 1] + PITCH_ELEVATION + 0.6, S.pos[seat * 3 + 2]).distanceTo(cam.position);
+    return (window.innerHeight * 0.5) / (2 * d * Math.tan(((cam.fov / 2) * Math.PI) / 180));
+  }
+
   // ------------------------------------------------------------------ navigation
 
   private go(step: Step): void {
@@ -183,25 +214,52 @@ export class SeatPicker {
     this.panel.dataset.step = step;
     this.labels.classList.remove('show');
     this.updateLensShift();
-    for (const li of this.panel.querySelectorAll<HTMLElement>('.steps li')) {
-      li.classList.toggle('done', STEP_ORDER.indexOf(li.dataset.s as Step) < STEP_ORDER.indexOf(step));
-      li.classList.toggle('now', li.dataset.s === step);
-    }
     // at the seat the view stays clean: no hover tint over the stand around you
     sel.hoverEnabled = step === 'regions' || step === 'region';
-    // sold seats grey while choosing; at the seat the stand looks like match day
-    sel.setAvailability(step === 'region');
+    // only the seat under the pointer lights up while choosing a seat
+    sel.hoverBlockTint = step === 'regions';
+    // free seats glow while choosing; at the seat the stand looks like match day
+    sel.setAvailability(step === 'regions' || step === 'region');
     sel.selectBlock(-1);
     sel.state.row = -1;
     if (step !== 'seat') {
       this.seat = null;
       sel.selectSeat(-1);
     }
+    if (step !== 'region') this.zoomed = false;
     this.setHoverRegion(null, false);
     this.hideTip();
     app.director.seatLook(false);
     this.setAutoTurn(false);
     this.render();
+  }
+
+  /** A step chip: go back (or forward) to that step if it is reachable. */
+  private goStep(s: Step): void {
+    if (!this.canGo(s)) return;
+    if (s === 'regions') this.toRegions();
+    else if (s === 'region' && this.region) this.chooseRegion(this.region);
+    else if (s === 'seat' && this.lastSeat !== null) this.chooseSeat(this.lastSeat);
+  }
+
+  private canGo(s: Step): boolean {
+    if (this.app.director.mode === 'flying' && this.step === s) return false;
+    if (s === 'regions') return this.step !== 'regions';
+    if (s === 'region') return this.region !== null && (this.step === 'seat' || (this.step === 'region' && this.zoomed));
+    // back to the last seat viewed, if it is still to be had
+    return this.step !== 'seat' && this.lastSeat !== null && (this.isFree(this.lastSeat) || this.purchased.has(this.lastSeat));
+  }
+
+  private renderSteps(): void {
+    for (const b of this.panel.querySelectorAll<HTMLButtonElement>('.steps button')) {
+      const s = b.dataset.s as Step;
+      const now = s === this.step;
+      b.classList.toggle('now', now);
+      b.classList.toggle('done', STEP_ORDER.indexOf(s) < STEP_ORDER.indexOf(this.step));
+      const can = this.canGo(s);
+      b.disabled = !can && !now;
+      b.setAttribute('aria-current', now ? 'step' : 'false');
+    }
   }
 
   /** "Koltuk Seç": into the stadium. */
@@ -225,10 +283,21 @@ export class SeatPicker {
     this.app.flyToFrame(regionFrame(this.L, r.frameBlock, r.kind, this.portrait), null, undefined, fromSeat ? PICKER_MAX.back : PICKER_MAX.region);
   }
 
+  /** Zoom in on the stand around a seat until single seats are easy to tap. */
+  private zoomTo(seat: number): void {
+    this.zoomed = true;
+    this.hideTip();
+    this.app.director.seatLook(false);
+    this.render();
+    const f = seatCloseFrame(this.L, seat, window.innerHeight, this.portrait, this.portrait ? 44 : 40);
+    this.app.flyToFrame(f, null, undefined, 1.6);
+  }
+
   chooseSeat(seat: number, notice = ''): void {
     const sel = this.app.selection;
     this.region = this.regionOfSeat(seat) ?? this.region;
     this.seat = seat;
+    this.lastSeat = seat;
     this.seatView = null;
     this.notice = notice;
     this.go('seat');
@@ -238,12 +307,14 @@ export class SeatPicker {
 
   back(): void {
     if (this.step === 'seat' && this.region) this.chooseRegion(this.region);
+    else if (this.step === 'region' && this.zoomed && this.region) this.chooseRegion(this.region);
     else if (this.step === 'region') this.toRegions();
     else this.close();
   }
 
   close(): void {
     this.region = null;
+    document.querySelector('.ticket-overlay')?.remove();
     this.go('intro');
     const app = this.app;
     const home = app.startPose;
@@ -253,6 +324,10 @@ export class SeatPicker {
 
   private onDirector(mode: string): void {
     this.labels.classList.toggle('show', mode !== 'flying' && this.step === 'regions');
+    this.renderSteps();
+    // the view moved: whatever was under the pointer is stale
+    this.hideTip();
+    this.app.selection.resetHover();
     if (mode !== 'locked') {
       if (this.step === 'seat') this.render();
       return;
@@ -280,6 +355,92 @@ export class SeatPicker {
         });
       }),
     );
+  }
+
+  // ------------------------------------------------------------------ zoom gestures
+
+  /** Wheel and pinch change the lens (field of view) while looking around. */
+  private bindZoomGestures(): void {
+    const canvas = this.app.engine.canvas;
+    const zoomBy = (k: number) => {
+      const d = this.app.director;
+      if (this.step === 'intro' || d.mode !== 'locked' || !d.seatMode) return;
+      const cam = this.app.engine.camera;
+      const fov = Math.min(72, Math.max(16, cam.fov * k));
+      if (fov === cam.fov) return;
+      cam.fov = fov;
+      cam.updateProjectionMatrix();
+      this.hideTip();
+    };
+    canvas.addEventListener(
+      'wheel',
+      (e) => {
+        if (this.step === 'intro') return;
+        e.preventDefault();
+        zoomBy(Math.exp(e.deltaY * 0.0012));
+      },
+      { passive: false },
+    );
+    const touches = new Map<number, { x: number; y: number }>();
+    let last = 0;
+    const spread = () => {
+      const [a, b] = [...touches.values()];
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    };
+    canvas.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'touch') return;
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size === 2) last = spread();
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!touches.has(e.pointerId)) return;
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size !== 2) return;
+      const s = spread();
+      if (last > 0 && s > 0) zoomBy(last / s);
+      last = s;
+    });
+    const up = (e: PointerEvent) => {
+      touches.delete(e.pointerId);
+      last = 0;
+    };
+    canvas.addEventListener('pointerup', up);
+    canvas.addEventListener('pointercancel', up);
+  }
+
+  // ------------------------------------------------------------------ live sales
+
+  private onLiveSold(seats: number[], byOther: boolean): void {
+    const S = this.L.seats;
+    for (const s of seats) S.sold[s] = 1;
+    this.stats.clear();
+    this.app.selection.refreshSold(seats);
+    if (!byOther) return;
+    // seats someone else just bought flash red, then stay dark
+    const seatsSys = this.app.stadium.seats;
+    for (const s of seats) seatsSys.setState(s, 'flash');
+    window.setTimeout(() => {
+      for (const s of seats) seatsSys.setState(s, 'normal');
+    }, 1800);
+    if (this.step === 'intro') return;
+    // the seat this visitor is looking at is gone
+    if (this.seat !== null && seats.includes(this.seat) && !this.purchased.has(this.seat)) {
+      document.querySelector('.ticket-overlay')?.remove();
+      this.notice = 'Bu koltuk az önce başka bir taraftar tarafından alındı. Başka bir koltuk seçin.';
+      this.render();
+    } else if (this.step !== 'seat') this.render();
+    const near = seats.filter((s) => this.region !== null && this.regionOfSeat(s) === this.region);
+    const s = near[0] ?? seats[0];
+    const r = this.regionOfSeat(s);
+    const more = seats.length > 1 ? ` (+${seats.length - 1})` : '';
+    this.showToast(`<b>Az önce satıldı</b> ${escapeHtml(r?.name ?? '')} · Sıra ${S.row[s]} · Koltuk ${S.num[s]}${more}`);
+  }
+
+  private showToast(html: string): void {
+    this.toast.innerHTML = html;
+    this.toast.classList.remove('hidden');
+    window.clearTimeout(this.toastTimer);
+    this.toastTimer = window.setTimeout(() => this.toast.classList.add('hidden'), 3200);
   }
 
   // ------------------------------------------------------------------ 3D input
@@ -310,15 +471,18 @@ export class SeatPicker {
       this.setHoverRegion(r, false);
       if (!r) return this.hideTip();
       const s = this.statsOf(r);
-      this.showTip(`<b>${escapeHtml(r.name)}</b><span>${escapeHtml(r.note)} · ${price(s.from)}’den · ${s.free.toLocaleString('tr-TR')} boş</span>`);
+      this.showTip(`<b>${escapeHtml(r.name)}</b><span>${price(s.from)}’den · ${s.free.toLocaleString('tr-TR')} boş</span>`);
       return;
     }
     if (p.seat >= 0) {
       const S = this.L.seats;
-      const sold = S.sold[p.seat] !== 0 && !this.purchased.has(p.seat);
-      const r = this.regionOfSeat(p.seat);
+      const sold = !this.isFree(p.seat) && !this.purchased.has(p.seat);
+      if (this.step === 'region' && this.seatPx(p.seat) < TAP_SEAT_PX) {
+        this.showTip(`<b>${escapeHtml(blockTitle(b))}</b><span>Yakınlaştırmak için tıklayın</span>`);
+        return;
+      }
       this.showTip(
-        `<b>${escapeHtml(r?.name ?? '')} · ${escapeHtml(blockTitle(b))} · Sıra ${S.row[p.seat]} · Koltuk ${S.num[p.seat]}</b>` +
+        `<b>Sıra ${S.row[p.seat]} · Koltuk ${S.num[p.seat]}</b>` +
           (sold ? `<span class="sold">Satıldı</span>` : `<span>${price(this.app.seatPrice(p.seat))} · ${escapeHtml(categoryName(S.category[p.seat]))}</span>`),
       );
       return;
@@ -336,14 +500,25 @@ export class SeatPicker {
       if (r) this.chooseRegion(r);
       return;
     }
-    const S = this.L.seats;
     if (this.step === 'seat') {
       // at a seat: another free seat of the same region
-      if (p.seat >= 0 && S.sold[p.seat] === 0 && this.regionOfSeat(p.seat) === this.region && p.seat !== this.seat) this.chooseSeat(p.seat);
+      if (p.seat >= 0 && this.isFree(p.seat) && this.regionOfSeat(p.seat) === this.region && p.seat !== this.seat) this.chooseSeat(p.seat);
       return;
     }
-    // region step: the seat under the finger, or the closest free one
-    if (p.seat >= 0 && S.sold[p.seat] === 0) {
+    // region step: a tap on another region's stand switches to it
+    const r = regionOfBlock(this.regions, p.block);
+    if (r && r !== this.region) {
+      this.chooseRegion(r);
+      return;
+    }
+    // seats still small on screen: zoom in on the spot first
+    const ref = p.seat >= 0 ? p.seat : nearestFreeSeat(this.L, b);
+    if (ref >= 0 && b.tier !== 'suite' && this.seatPx(ref) < TAP_SEAT_PX) {
+      this.zoomTo(ref);
+      return;
+    }
+    // the seat under the finger, or the closest free one
+    if (p.seat >= 0 && this.isFree(p.seat)) {
       this.chooseSeat(p.seat);
       return;
     }
@@ -402,64 +577,51 @@ export class SeatPicker {
     if (this.step === 'regions') {
       for (const r of this.regions) {
         const s = this.statsOf(r);
-        this.labelEls.get(r.id)!.querySelector('span')!.textContent = `${price(s.from)}’den`;
+        this.labelEls.get(r.id)!.querySelector('span')!.textContent = s.free === 0 ? 'Tükendi' : `${price(s.from)}’den`;
       }
       const card = (r: Region) => {
         const s = this.statsOf(r);
         const full = s.free === 0;
         return `<button class="region-card${full ? ' off' : ''}" type="button" data-region="${r.id}" ${full ? 'disabled' : ''}>
           <span class="rc-name">${escapeHtml(r.name)}</span>
-          <span class="rc-note">${escapeHtml(r.note)}</span>
-          <span class="rc-meta">${full ? 'Tükendi' : `${price(s.from)}’den · ${s.free.toLocaleString('tr-TR')} boş`}</span>
+          <span class="rc-meta">${full ? 'Tükendi' : `${price(s.from)}’den`}</span>
         </button>`;
       };
-      html = `<h2>Bölge seçin</h2>
-        <p class="sub">Stadın içindesiniz. Sürükleyerek etrafa bakın; stadyumda ya da listede bir bölgeye dokunun.</p>
-        <div class="region-grid">${this.regions.map(card).join('')}</div>`;
+      html = `<div class="region-grid">${this.regions.map(card).join('')}</div>`;
     } else if (this.step === 'region' && this.region) {
       const r = this.region;
       const s = this.statsOf(r);
-      const cats = [...new Set(r.blocks.map((b) => S.category[b.seatStart]))].map((c) => categoryName(c)).join(' · ');
-      html = `<div class="block-head">
-          <div class="eyebrow">Bölge</div>
+      html = `<div class="region-head">
           <h2>${escapeHtml(r.name)}</h2>
-          <div class="sub">${escapeHtml(r.note)} · ${escapeHtml(cats)}</div>
-          <div class="kpis"><span><b>${price(s.from)}</b>’den</span><span><b>${s.free.toLocaleString('tr-TR')}</b> boş koltuk</span></div>
+          <span class="kpi">${s.free === 0 ? 'Tükendi' : `${price(s.from)}’den · <b>${s.free.toLocaleString('tr-TR')}</b> boş`}</span>
         </div>
-        <ol class="howto">
-          <li>Stadyumda bir koltuğa dokunun.</li>
-          <li>Kamera sizi o koltuğa götürür.</li>
-          <li>Sahayı oradan görün; sıra, koltuk ve fiyat yanında.</li>
-        </ol>
-        <div class="legend"><span><i class="lg free"></i>Boş</span><span><i class="lg sold"></i>Satıldı</span></div>`;
-      foot = `<p class="foot-hint"><b>Bir koltuğa dokunun.</b> Sürükleyerek bölgede sağa sola bakabilirsiniz.</p>`;
+        <div class="legend"><span><i class="lg free"></i>Boş</span><span><i class="lg sold"></i>Satıldı</span>
+          <span class="hint">${this.zoomed ? 'Yeşil bir koltuğa dokunun' : 'Yakınlaşmak için tribüne dokunun'}</span></div>`;
     } else if (this.step === 'seat' && this.seat !== null) {
       const i = this.seat;
       const b = L.blocks[S.block[i]];
       const r = this.region;
       const mine = this.purchased.has(i);
+      const gone = !mine && !this.isFree(i);
       const flying = this.app.director.mode === 'flying';
-      html = `<div class="seat-head">
-          <div class="eyebrow">${flying ? 'Koltuğunuza gidiliyor…' : mine ? 'Bu koltuk sizin · onaylandı' : 'Koltuğunuzdan görünüm'}</div>
-        </div>
-        ${this.notice ? `<p class="notice">${escapeHtml(this.notice)}</p>` : ''}
-        <dl class="seat-dl">
-          <div><dt>Bölge</dt><dd>${escapeHtml(r?.name ?? '')}</dd></div>
-          <div><dt>${b.kind === 'suite' ? 'Loca' : 'Blok'}</dt><dd>${escapeHtml(this.blockLabel(b))}</dd></div>
-          <div><dt>Sıra</dt><dd>${S.row[i]}</dd></div>
-          <div><dt>Koltuk</dt><dd>${S.num[i]}</dd></div>
-          <div><dt>Kategori</dt><dd class="small">${escapeHtml(categoryName(S.category[i]))}</dd></div>
-          <div class="price"><dt>Fiyat</dt><dd>${price(this.app.seatPrice(i))}</dd></div>
-        </dl>
-        <div class="seat-nav">
-          <button class="btn ghost" type="button" data-act="prev">‹ Sol koltuk</button>
-          <button class="btn ghost" type="button" data-act="next">Sağ koltuk ›</button>
+      html = `${this.notice ? `<p class="notice${gone ? ' bad' : ''}">${escapeHtml(this.notice)}</p>` : ''}
+        <div class="seat-card">
+          <button class="nav-btn" type="button" data-act="prev" aria-label="Soldaki boş koltuk">‹</button>
+          <div class="seat-main">
+            <div class="seat-where">${escapeHtml(r?.name ?? '')} · ${b.kind === 'suite' ? '' : 'Blok '}${escapeHtml(this.blockLabel(b))}${flying ? ' · gidiliyor…' : mine ? ' · sizin' : ''}</div>
+            <div class="seat-rc">Sıra <b>${S.row[i]}</b> · Koltuk <b>${S.num[i]}</b></div>
+            <div class="seat-cat">${escapeHtml(categoryName(S.category[i]))}</div>
+          </div>
+          <div class="seat-price">${price(this.app.seatPrice(i))}</div>
+          <button class="nav-btn" type="button" data-act="next" aria-label="Sağdaki boş koltuk">›</button>
         </div>`;
-      foot = `<button class="btn primary wide" type="button" data-act="ticket" ${this.seatView ? '' : 'disabled'}>${this.seatView ? (mine ? 'Bileti Görüntüle' : 'Bileti Gör') : 'Görüş hazırlanıyor…'}</button>
-        <button class="btn ghost wide" type="button" data-act="change">Başka koltuk seç</button>`;
+      const label = gone ? 'Satıldı' : this.seatView ? (mine ? 'Bileti Görüntüle' : 'Bileti Gör') : 'Görüş hazırlanıyor…';
+      foot = `<button class="btn primary wide" type="button" data-act="ticket" ${this.seatView && !gone ? '' : 'disabled'}>${label}</button>`;
     }
     this.body.innerHTML = html;
     this.foot.innerHTML = foot;
+    this.foot.classList.toggle('empty', foot === '');
+    this.renderSteps();
     this.bind();
   }
 
@@ -471,7 +633,6 @@ export class SeatPicker {
       el.addEventListener('pointerleave', () => this.setHoverRegion(null, true));
     }
     this.panel.querySelector('[data-act="ticket"]')?.addEventListener('click', () => this.openTicket());
-    this.panel.querySelector('[data-act="change"]')?.addEventListener('click', () => this.back());
     this.panel.querySelector('[data-act="prev"]')?.addEventListener('click', () => this.neighbour(-1));
     this.panel.querySelector('[data-act="next"]')?.addEventListener('click', () => this.neighbour(1));
   }
@@ -486,7 +647,7 @@ export class SeatPicker {
     const e = b.rowStart[r];
     // seat numbers increase left → right and seat indices run in numbering order
     for (let i = this.seat + dir; i >= a && i < e; i += dir) {
-      if (S.sold[i] === 0) {
+      if (this.isFree(i)) {
         this.chooseSeat(i);
         return;
       }
@@ -496,18 +657,27 @@ export class SeatPicker {
   private openTicket(): void {
     if (this.seat === null || !this.seatView) return;
     const i = this.seat;
-    const S = this.L.seats;
-    const canBuy = S.sold[i] === 0 && !this.purchased.has(i);
+    const canBuy = this.isFree(i) && !this.purchased.has(i);
     const t = ticketFor(this.app, i, this.seatView, this.purchased.has(i));
     showTicket(
       t,
       canBuy
-        ? () => {
-            S.sold[i] = 1;
-            this.purchased.add(i);
-            this.stats.clear();
-            this.app.selection.refreshSold();
-            showTicket(ticketFor(this.app, i, this.seatView!, true), null);
+        ? async () => {
+            const res = await this.live.claim(i);
+            if (res === 'ok') {
+              this.purchased.add(i);
+              this.L.seats.sold[i] = 1;
+              this.stats.clear();
+              this.app.selection.refreshSold([i]);
+              if (this.seat === i) showTicket(ticketFor(this.app, i, this.seatView!, true), null);
+              this.render();
+              return;
+            }
+            document.querySelector('.ticket-overlay')?.remove();
+            this.notice =
+              res === 'taken'
+                ? 'Bu koltuğu sizden birkaç saniye önce başka bir taraftar aldı. Başka bir koltuk seçin.'
+                : 'Bağlantı kurulamadı; satın alma tamamlanmadı. Tekrar deneyin.';
             this.render();
           }
         : null,

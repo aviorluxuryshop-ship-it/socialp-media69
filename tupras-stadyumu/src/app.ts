@@ -185,7 +185,8 @@ export class App {
     // automated runs pin the quality (?q=, ?fast, webdriver); ?gov forces the governor on
     const p = this.params;
     if (p.has('gov') || (!p.has('q') && !p.has('fast') && !navigator.webdriver && !this.geometryPass)) {
-      this.governor = new FrameGovernor(this.governorSteps());
+      // the picker is mostly still: ~35 fps is fine, a blurry image is not
+      this.governor = new FrameGovernor(this.governorSteps(), { slowMs: 28, fastMs: 20, fastP90Ms: 26 });
     }
   }
 
@@ -240,23 +241,8 @@ export class App {
   private governorSteps(): GovernorStep[] {
     const { engine, quality: q, post, atmosphere } = this;
     const steps: GovernorStep[] = [];
-    let pr = engine.pixelRatio;
-    if (pr > 1.3) {
-      const from = pr;
-      const to = Math.max(1, Math.round(pr * 0.8 * 100) / 100);
-      steps.push({ name: `çözünürlük ${from}× → ${to}×`, apply: () => engine.setPixelRatio(to), revert: () => engine.setPixelRatio(from) });
-      pr = to;
-    }
-    if (pr > 1) {
-      const from = pr;
-      steps.push({ name: `çözünürlük ${from}× → 1×`, apply: () => engine.setPixelRatio(1), revert: () => engine.setPixelRatio(from) });
-      pr = 1;
-    }
-    if (post.bloom) steps.push({ name: 'gece parlaması', apply: () => (post.bloomAllowed = false), revert: () => (post.bloomAllowed = true) });
-    if (q.shadows && q.shadowMapSize > 1024) {
-      const size = q.shadowMapSize;
-      steps.push({ name: 'gölge haritası', apply: () => atmosphere.setShadowMapSize(size / 2), revert: () => atmosphere.setShadowMapSize(size) });
-    }
+    // sharpness matters most: cheaper losses first, resolution last and never
+    // below 1.25× on a high-density screen (below that everything looks pixelated)
     const d = { seat: q.seatDetailDistance, det: q.cityDetailRadius, load: q.cityLoadRadius };
     const setDetail = (k: number) => {
       q.seatDetailDistance = d.seat * k;
@@ -265,7 +251,23 @@ export class App {
       q.cityLoadRadius = d.load * (0.7 + 0.3 * k);
     };
     steps.push({ name: 'detay yarıçapları', apply: () => setDetail(0.6), revert: () => setDetail(1) });
-    if (pr === 1) steps.push({ name: 'çözünürlük 1× → 0.8×', apply: () => engine.setPixelRatio(0.8), revert: () => engine.setPixelRatio(1) });
+    if (post.bloom) steps.push({ name: 'gece parlaması', apply: () => (post.bloomAllowed = false), revert: () => (post.bloomAllowed = true) });
+    if (q.shadows && q.shadowMapSize > 1024) {
+      const size = q.shadowMapSize;
+      steps.push({ name: 'gölge haritası', apply: () => atmosphere.setShadowMapSize(size / 2), revert: () => atmosphere.setShadowMapSize(size) });
+    }
+    let pr = engine.pixelRatio;
+    const floor = pr >= 1.5 ? 1.25 : pr;
+    if (pr > 1.6) {
+      const from = pr;
+      const to = Math.max(1.5, Math.round(pr * 0.8 * 100) / 100);
+      steps.push({ name: `çözünürlük ${from}× → ${to}×`, apply: () => engine.setPixelRatio(to), revert: () => engine.setPixelRatio(from) });
+      pr = to;
+    }
+    if (pr > floor) {
+      const from = pr;
+      steps.push({ name: `çözünürlük ${from}× → ${floor}×`, apply: () => engine.setPixelRatio(floor), revert: () => engine.setPixelRatio(from) });
+    }
     return steps;
   }
 

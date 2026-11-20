@@ -26,6 +26,8 @@ export class Selection {
   readonly state: SelectionState = { block: -1, row: -1, seat: -1, hoverSeat: -1, hoverBlock: -1, mask: false, availability: false };
   /** hover picking on/off (the seat picker turns it on) */
   hoverEnabled = false;
+  /** tint the whole block under the pointer (off while picking a seat: the free seats must stay readable) */
+  hoverBlockTint = true;
   private readonly stadium: Stadium;
   private readonly camera: PerspectiveCamera;
   private readonly canvas: HTMLCanvasElement;
@@ -103,11 +105,18 @@ export class Selection {
   /** Highlighted blocks are drawn with a neutral albedo in the beauty pass (see SeatSystem). */
   private syncNeutral(): void {
     const s = this.state;
-    const hb = this.hoverEnabled ? s.hoverBlock : -1;
+    const hb = this.hoverEnabled && this.hoverBlockTint ? s.hoverBlock : -1;
     const key = `${s.block}|${hb}|${this.hoverSet.join(',')}`;
     if (key === this.neutralKey) return;
     this.neutralKey = key;
     this.stadium.seats.setNeutralBlocks([s.block, hb, ...this.hoverSet]);
+  }
+
+  /** Forget what is under the pointer (the view moved): the next pointer move picks afresh. */
+  resetHover(): void {
+    this.state.hoverSeat = -1;
+    this.state.hoverBlock = -1;
+    this.pointerDirty = this.pointer !== null;
   }
 
   selectBlock(block: number): void {
@@ -128,9 +137,10 @@ export class Selection {
   }
 
   /** Mark seats sold/free (e.g. after a purchase) and refresh both passes. */
-  refreshSold(): void {
+  refreshSold(seats?: number[]): void {
     this.idPass.refreshInfo();
-    this.stadium.seats.refreshAllColors();
+    if (seats) this.stadium.seats.refreshSeats(seats);
+    else this.stadium.seats.refreshAllColors();
   }
 
   /** Call once per frame before the composer renders. */
@@ -143,7 +153,7 @@ export class Selection {
       this.setHover(this.pickAt(this.pointer.x, this.pointer.y));
     }
     this.syncNeutral();
-    const active = s.mask || s.block >= 0 || s.seat >= 0 || s.hoverSeat >= 0 || s.hoverBlock >= 0 || this.hoverSet.length > 0;
+    const active = s.mask || s.block >= 0 || s.seat >= 0 || s.hoverSeat >= 0 || (s.hoverBlock >= 0 && this.hoverBlockTint) || this.hoverSet.length > 0;
     this.pass.enabled = active;
     if (!active) return;
     this.idPass.render(this.camera);
@@ -151,7 +161,7 @@ export class Selection {
     u.uBlock.value = s.block;
     u.uSelSeat.value = s.seat;
     u.uHoverSeat.value = this.hoverEnabled ? s.hoverSeat : -1;
-    u.uHoverBlock.value = this.hoverEnabled ? s.hoverBlock : -1;
+    u.uHoverBlock.value = this.hoverEnabled && this.hoverBlockTint ? s.hoverBlock : -1;
     u.uMode.value = s.mask ? 1 : 0;
     u.uTime.value = time;
     u.uAvailability.value = s.availability ? 1 : 0;
