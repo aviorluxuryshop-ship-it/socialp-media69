@@ -22,6 +22,13 @@ const AREA_FILL: Record<number, string> = {
   5: '#3f8eb3',
   6: '#bcb3a2',
   7: '#85837d',
+  // landuse: residential, institutional grounds (lawns between campus buildings),
+  // commercial, industrial / rail, sand
+  8: '#8a8174',
+  9: '#6d7a52',
+  10: '#928b81',
+  11: '#86817a',
+  12: '#d6c79f',
 };
 
 const ROAD_FILL: Record<number, string> = {
@@ -87,7 +94,7 @@ export function paintGround(world: World, cx: number, cz: number, size: number, 
     d.fillStyle = AREA_FILL[cls] ?? '#999';
     path(d, ring, true);
     d.fill();
-    if (cls === 1 || cls === 2) {
+    if (cls === 1 || cls === 2 || cls === 9) {
       // darker tree-canopy mottling inside green areas
       d.save();
       d.clip();

@@ -17,7 +17,9 @@ import {
   MeshStandardMaterial,
   SphereGeometry,
   ConeGeometry,
+  MeshBasicMaterial,
 } from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import type { World } from './data.ts';
 import { addMinaret, type Buf } from './buildings.ts';
 
@@ -214,6 +216,43 @@ function buildBridge(world: World): { group: Group; update(time: number, night: 
   const hangMat = new LineBasicMaterial({ color: 0xb8bcbf, transparent: true, opacity: 0.8 });
   const hangers = new LineSegments(hangGeo, hangMat);
   group.add(cables, hangers);
+
+  // ---------------------------------------------------------- tunnel mouths
+  // (Bomonti–Dolmabahçe next to the stadium, Taşkışla, Cumhuriyet Cd…): the drawn
+  // road stops where OSM sends it underground, so it ends in a portal, not in the air
+  const portals = world.json.portals ?? [];
+  if (portals.length) {
+    const frame: BufferGeometry[] = [];
+    const mouth: BufferGeometry[] = [];
+    for (const [x, z, dx, dz, w] of portals) {
+      const W = w + 2.6;
+      const H = 7.2;
+      const D = 6;
+      const y = world.heightAt(x, z) - 0.2;
+      const yaw = Math.atan2(dx, dz);
+      // front face on the road's end, the body set back into the slope
+      const cx = x + dx * (D / 2);
+      const cz = z + dz * (D / 2);
+      const place = (g: BufferGeometry, ox: number, oy: number, oz: number) => g.translate(ox, oy, oz).rotateY(yaw).translate(cx, y, cz);
+      frame.push(place(new BoxGeometry(1.3, H, D), -(W / 2 - 0.65), H / 2, 0));
+      frame.push(place(new BoxGeometry(1.3, H, D), W / 2 - 0.65, H / 2, 0));
+      frame.push(place(new BoxGeometry(W, 1.8, D), 0, H - 0.9, 0));
+      frame.push(place(new BoxGeometry(W - 2.6, H - 1.8, 0.4), 0, (H - 1.8) / 2, D / 2 - 0.2));
+      // wing walls holding back the slope either side
+      for (const side of [-1, 1]) {
+        const wing = new BoxGeometry(0.9, H * 0.7, 7).translate(0, (H * 0.7) / 2, -3.2);
+        wing.rotateY(side * 0.35).translate(side * (W / 2 - 0.4), 0, -D / 2);
+        frame.push(place(wing, 0, 0, 0));
+      }
+      mouth.push(place(new BoxGeometry(W - 2.6, H - 1.8, 0.05), 0, (H - 1.8) / 2, -D / 2 + 0.6));
+    }
+    const fm = new Mesh(mergeGeometries(frame.map((g) => g.toNonIndexed())), new MeshStandardMaterial({ color: 0xb3ada2, roughness: 0.88 }));
+    const mm = new Mesh(mergeGeometries(mouth.map((g) => g.toNonIndexed())), new MeshBasicMaterial({ color: 0x050506 }));
+    fm.name = 'tunnel-portals';
+    fm.castShadow = fm.receiveShadow = true;
+    group.add(fm, mm);
+  }
+
   const day = new Color(0xcfd3d6);
   const c = new Color();
   return {

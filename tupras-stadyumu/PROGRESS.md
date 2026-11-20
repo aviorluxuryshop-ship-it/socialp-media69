@@ -22,6 +22,30 @@
 
 Kullanıcının yeni akışı gözden geçirmesi; ardından "gerisini sonra hallederiz" dediği ayrıntılar.
 
+## Çatı grafikleri ve çevre (kullanıcı geri bildirimi, 20 Kasım — hava fotoğrafı referans)
+
+- **Çatı:** gerçek hava fotoğrafındaki gibi Kuzey (Maçka) ucunda arma + "BEŞİKTAŞ", iki uzun kenarda
+  sponsor işareti + "Tüpraş", Eski Açık ucunda kanatları açık siyah kartal (başı sahaya dönük).
+  `src/stadium/roofDecal.ts`: grafikler **plan (üstten) koordinatında** bir dokuya çiziliyor ve
+  membranın üst yüzüne dünya x/z'siyle basılıyor — membranın kendi UV'si halka boyunca gittiği için
+  harfler iç kenara doğru sıkışırdı; böylece yukarıdan bakınca fotoğraftaki gibi düz okunuyor. Tüm
+  yazılar (üstten bakınca) saat yönünde ve harflerin tepesi dışa dönük, gerçek çatıdaki gibi. Panel
+  sıralarının halka dikişleri de dokuda. Gece membran ışıması yazıların üstünde kısılıyor.
+  Sponsor işareti sunum için sadeleştirilmiş kırmızı halka (şirketin çizimi değil); gerçek logo
+  gelince `drawSponsorMark` değiştirilir.
+- **Çevre verisi genişletildi** ("araziler boş, yollar yarım kalıyor"): OSM alanı 3.9 × 2.7 km'den
+  6.4 × 4.9 km'ye (Taksim/Harbiye/Cihangir → Yıldız → Üsküdar kıyısı → Tophane). Bina 5.479 → 21.089,
+  yol 2.211 → 7.338, alan 344 → 1.367. Yoğun karolar API sınırını aşarsa dörde bölünerek indiriliyor
+  (`scripts/fetch_osm.sh`); ham DEM yoksa `build_world.py` mevcut `terrain.bin`'i koruyor.
+  Çizim yükü değişmedi (akış yarıçapıyla sınırlı): açılış 840 → 851 çağrı, 719 → 676 bin üçgen.
+- **Boş gri araziler:** konut, kampüs/askeri/hastane, ticari, sanayi, kumsal alanları artık kendi
+  renkleriyle; kampüs bahçelerine (İTÜ, kışlalar) bina ayak izlerinden kaçınan ağaçlar ekleniyor.
+  Avlulu tarihi binalar (İTÜ Makina, Taşkışla, Maçka Silahhanesi, Atik Valide…) iç halkalarıyla
+  çiziliyor; önce avluları çatıyla kapanıp açılış görüntüsünde dev gri levha oluyordu.
+- **Yarım kalan yollar:** OSM tünele giren yolu çizmediği için yol havada bitiyordu (stadın
+  hemen önündeki Bomonti–Dolmabahçe tüneli dahil 27 yer) → beton tünel ağızları. Veri alanının
+  dışındaki uzak şehir daha sık ve kiremit/taş renkli; uzak zemin daha sıcak tonda.
+
 ## Yeni koltuk seçim akışı (kullanıcı geri bildirimi, 20 Kasım)
 
 İstek: girişte yalnızca **tek buton ("Koltuk Seç")**; tıklayınca hızlıca (ama izlenebilir) stadın
@@ -230,6 +254,7 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
   `scripts/verify-mask.mjs` (test parametreleri: `?block=416`, `?mask`, `?sold`)
 - `public/brand/bjk-logo.svg` — resmî arma (Wikimedia Commons, PD-Turkey)
 - `src/ui/picker.ts`, `src/ui/regions.ts`, `src/ui/ticket.ts` — seçim akışı, bölgeler, dijital bilet
+- `src/stadium/roofDecal.ts` — çatı grafikleri (plan koordinatında doku, membran üstüne baskı)
 - `scripts/flow.mjs` — uçtan uca akış (gerçek tıklama/dokunma), `scripts/regions.mjs` — tüm bölge
   kadrajları, `scripts/hitch.mjs` — adım başına derlenen shader ve en yavaş CPU parçaları
 

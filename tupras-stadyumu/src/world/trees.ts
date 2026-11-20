@@ -17,7 +17,7 @@ export interface AreaIndex {
 export function indexAreas(world: World): AreaIndex[] {
   const out: AreaIndex[] = [];
   for (const [cls, flat] of world.json.areas) {
-    if (cls !== 1 && cls !== 2 && cls !== 3) continue;
+    if (cls !== 1 && cls !== 2 && cls !== 3 && cls !== 9) continue;
     const ring: [number, number][] = [];
     let minX = Infinity, minZ = Infinity, maxX = -Infinity, maxZ = -Infinity;
     for (let i = 0; i < flat.length; i += 2) {
@@ -40,13 +40,50 @@ function h2(x: number, z: number, s: number): number {
 const crownProto = new IcosahedronGeometry(1, 0).toNonIndexed();
 const crownPos = crownProto.getAttribute('position').array as Float32Array;
 
-export function buildTreesGeometry(world: World, areas: AreaIndex[], osmTrees: number[] | undefined, x0: number, z0: number, size: number): BufferGeometry | null {
+/** Building footprints' bounding boxes (+2 m) that scattered trees keep out of. */
+export function buildingBoxes(world: World, ix: number, iz: number): Float32Array {
+  const out: number[] = [];
+  for (let dx = -1; dx <= 1; dx++) {
+    for (let dz = -1; dz <= 1; dz++) {
+      const recs = world.json.buildings[`${ix + dx},${iz + dz}`];
+      if (!recs) continue;
+      for (const r of recs) {
+        const ring = r[4];
+        let minX = Infinity, minZ = Infinity, maxX = -Infinity, maxZ = -Infinity;
+        for (let i = 0; i < ring.length; i += 2) {
+          minX = Math.min(minX, ring[i]);
+          maxX = Math.max(maxX, ring[i]);
+          minZ = Math.min(minZ, ring[i + 1]);
+          maxZ = Math.max(maxZ, ring[i + 1]);
+        }
+        out.push(minX - 2, minZ - 2, maxX + 2, maxZ + 2);
+      }
+    }
+  }
+  return new Float32Array(out);
+}
+
+export function buildTreesGeometry(
+  world: World,
+  areas: AreaIndex[],
+  osmTrees: number[] | undefined,
+  x0: number,
+  z0: number,
+  size: number,
+  blockers?: Float32Array,
+): BufferGeometry | null {
   const pts: [number, number, number][] = []; // x, z, type (0 broadleaf, 1 cypress)
   if (osmTrees) for (let i = 0; i < osmTrees.length; i += 2) pts.push([osmTrees[i], osmTrees[i + 1], 0]);
+  const blocked = (x: number, z: number) => {
+    if (!blockers) return false;
+    for (let i = 0; i < blockers.length; i += 4) if (x > blockers[i] && z > blockers[i + 1] && x < blockers[i + 2] && z < blockers[i + 3]) return true;
+    return false;
+  };
   for (const a of areas) {
     if (a.maxX < x0 || a.minX > x0 + size || a.maxZ < z0 || a.minZ > z0 + size) continue;
-    const spacing = a.cls === 2 ? 7.5 : a.cls === 3 ? 9 : 12;
-    const keep = a.cls === 2 ? 0.85 : a.cls === 3 ? 0.5 : 0.5;
+    // campuses and barracks (9): old trees between the buildings, sparser than a park
+    const spacing = a.cls === 2 ? 7.5 : a.cls === 3 ? 9 : a.cls === 9 ? 13 : 12;
+    const keep = a.cls === 2 ? 0.85 : a.cls === 3 ? 0.5 : a.cls === 9 ? 0.42 : 0.5;
     const sx = Math.max(x0, a.minX), ex = Math.min(x0 + size, a.maxX);
     const sz = Math.max(z0, a.minZ), ez = Math.min(z0 + size, a.maxZ);
     for (let gx = Math.floor(sx / spacing) * spacing; gx < ex; gx += spacing) {
@@ -56,6 +93,7 @@ export function buildTreesGeometry(world: World, areas: AreaIndex[], osmTrees: n
         const z = gz + (h2(gx, gz, 3) - 0.5) * spacing * 0.8;
         if (x < x0 || x >= x0 + size || z < z0 || z >= z0 + size) continue;
         if (!pointInRing(x, z, a.ring)) continue;
+        if (blocked(x, z)) continue;
         pts.push([x, z, a.cls === 3 ? 1 : 0]);
       }
     }

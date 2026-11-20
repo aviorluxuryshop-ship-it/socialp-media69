@@ -28,6 +28,8 @@ RAW, OUT = sys.argv[1], sys.argv[2]
 os.makedirs(OUT, exist_ok=True)
 
 ANCHOR = (41.03917, 28.9945)          # lat/lon the DEM grids were centred on
+# OSM extract (scripts/fetch_osm.sh): Taksim/Harbiye → Yıldız → Üsküdar shore → Tophane
+BBOX = (41.018, 41.062, 28.966, 29.042)   # lat_min, lat_max, lon_min, lon_max
 PITCH_WAY = '440559216'
 STADIUM_SITE_WAY = '1328815936'
 ESKI_ACIK_WAY = '489743779'
@@ -236,11 +238,23 @@ def building_kind(tags, wid, h):
         return 2
     return 0
 
-def add_building(rings, tags, wid):
+def add_building(rings, tags, wid, inner_rings=()):
     if tags.get('building') in ('construction', 'no', 'ruins', 'roof') or 'building:part' in tags:
         return
     if wid in SKIP_BUILDINGS:
         return
+    # courtyards (multipolygon inner rings): clockwise in frame, so their walls face the courtyard
+    holes_all = []
+    for refs in inner_rings:
+        hr = ring_frame(refs)
+        if len(hr) < 4:
+            continue
+        hr = simplify_ring(hr, 0.6)
+        if len(hr) < 3 or abs(area(hr)) < 12:
+            continue
+        if area(hr) > 0:
+            hr = hr[::-1]
+        holes_all.append(hr)
     for refs in rings:
         ring = ring_frame(refs)
         if len(ring) < 4:
@@ -258,7 +272,8 @@ def add_building(rings, tags, wid):
             continue
         h, mh = building_height(tags, wid)
         kind = building_kind(tags, wid, h)
-        building_out.append({'c': c, 'h': h, 'mh': mh, 'k': kind, 'r': ring, 'id': wid,
+        holes = [hr for hr in holes_all if pip(hr[0], ring)]
+        building_out.append({'c': c, 'h': h, 'mh': mh, 'k': kind, 'r': ring, 'id': wid, 'holes': holes,
                              'v': int(hash01(wid + 'v') * 8), 'n': tags.get('name')})
 
 for wid, (refs, tags) in ways.items():
@@ -267,8 +282,9 @@ for wid, (refs, tags) in ways.items():
 for rid, (members, tags) in rels.items():
     if 'building' in tags and tags.get('type') == 'multipolygon':
         outers = [m[1] for m in members if m[0] == 'way' and m[2] in ('outer', '')]
+        inners = [m[1] for m in members if m[0] == 'way' and m[2] == 'inner']
         rings = join_ways(outers)
-        add_building(rings, tags, 'r' + rid)
+        add_building(rings, tags, 'r' + rid, join_ways(inners) if inners else ())
 print('buildings', len(building_out), file=sys.stderr)
 
 # ---------------------------------------------------------------- roads
@@ -299,6 +315,32 @@ for wid, (refs, tags) in ways.items():
                   'br': tags.get('bridge') is not None})
 print('roads', len(roads), file=sys.stderr)
 
+# where a road dives into a tunnel the drawn road stops: mark the mouth (x, z, direction into the tunnel, width)
+road_nodes = set()
+for wid, (refs, tags) in ways.items():
+    if tags.get('highway') in ROAD_W and tags.get('tunnel') not in ('yes', 'building_passage'):
+        road_nodes.update(refs)
+portals = []
+portal_seen = set()
+for wid, (refs, tags) in ways.items():
+    hw = tags.get('highway')
+    if hw not in ROAD_W or tags.get('tunnel') != 'yes' or ROAD_CLASS[hw] > 3 or len(refs) < 2:
+        continue
+    for end, nxt in ((0, 1), (-1, -2)):
+        nid = refs[end]
+        if nid not in road_nodes or nid in portal_seen or nid not in nodes or refs[nxt] not in nodes:
+            continue
+        portal_seen.add(nid)
+        p = ll_frame(nid)
+        q = ll_frame(refs[nxt])
+        d = math.hypot(q[0] - p[0], q[1] - p[1]) or 1.0
+        w = ROAD_W[hw]
+        lanes = parse_len(tags.get('lanes'))
+        if lanes:
+            w = max(w * 0.6, lanes * 3.3 + 1.0)
+        portals.append([rnd(p[0]), rnd(p[1]), round((q[0] - p[0]) / d, 3), round((q[1] - p[1]) / d, 3), round(w, 1)])
+print('tunnel portals', len(portals), file=sys.stderr)
+
 # ---------------------------------------------------------------- green / areas
 AREA_CLASS = []
 def area_class(tags):
@@ -316,6 +358,21 @@ def area_class(tags):
         return 6
     if tags.get('amenity') == 'parking':
         return 7
+    lu = tags.get('landuse')
+    am = tags.get('amenity')
+    if tags.get('natural') in ('grassland', 'heath') or lu == 'recreation_ground' or tags.get('leisure') in ('playground', 'common', 'dog_park', 'sports_centre'):
+        return 1
+    # institutional grounds: campuses, hospitals, barracks — lawns and old trees between the buildings
+    if lu in ('military', 'education', 'religious', 'institutional') or am in ('university', 'college', 'school', 'kindergarten', 'hospital', 'clinic'):
+        return 9
+    if lu == 'residential':
+        return 8
+    if lu in ('commercial', 'retail'):
+        return 10
+    if lu in ('industrial', 'railway', 'construction', 'brownfield', 'garages'):
+        return 11
+    if tags.get('natural') in ('sand', 'beach'):
+        return 12
     return None
 
 areas = []
@@ -389,7 +446,7 @@ coast_enu = [c for c in coast_enu if len(c) >= 2]
 print('coast chains', len(coast_enu), [len(c) for c in coast_enu], file=sys.stderr)
 
 # OSM data rectangle (ENU about ORIGIN), shrunk a little so every coast chain crosses it cleanly
-lat_min, lat_max, lon_min, lon_max = 41.026, 41.050, 28.984, 29.030
+lat_min, lat_max, lon_min, lon_max = BBOX
 e0, n0 = enu(lat_min, lon_min)
 e1, n1 = enu(lat_max, lon_max)
 RECT = (e0 + 20, n0 + 20, e1 - 20, n1 - 20)
@@ -550,8 +607,11 @@ def load_dem(name):
     ae, an = enu(*ANCHOR)
     return {'nx': d['nx'], 'ny': d['ny'], 'step': d['step'], 'e0': ae - d['half_w'], 'n0': an - d['half_h'], 'a': a}
 
-near = load_dem('near')
-far = load_dem('far100')
+DEM_RAW = os.path.exists(os.path.join(RAW, 'dem', 'near.json'))
+if not DEM_RAW:
+    # no raw DEM on this machine: keep the committed terrain.bin and its grid description
+    PREV_TERRAIN = json.load(open(os.path.join(OUT, 'world.json')))['terrain']
+    print('terrain: raw DEM missing, keeping', os.path.join(OUT, 'terrain.bin'), file=sys.stderr)
 def blur(a, k=1):
     out = a.copy()
     for _ in range(k):
@@ -559,16 +619,24 @@ def blur(a, k=1):
         out = (p[:-2, :-2] + 2 * p[:-2, 1:-1] + p[:-2, 2:] + 2 * p[1:-1, :-2] + 4 * p[1:-1, 1:-1] +
                2 * p[1:-1, 2:] + p[2:, :-2] + 2 * p[2:, 1:-1] + p[2:, 2:]) / 16
     return out
-# SRTM is a surface model: soften building/tree bumps, but keep water at 0
-near_a = blur(np.maximum(near['a'], 0), 1)
-far_a = np.maximum(far['a'], -1)
-far_land = far['a'] > 0.5
-far_a = np.where(far_land, blur(np.maximum(far_a, 0), 1), -12)
-near_q = np.clip(np.round(near_a * 10), -32768, 32767).astype(np.int16)
-far_q = np.clip(np.round(far_a * 10), -32768, 32767).astype(np.int16)
-with open(os.path.join(OUT, 'terrain.bin'), 'wb') as fh:
-    fh.write(near_q.tobytes())
-    fh.write(far_q.tobytes())
+if DEM_RAW:
+    near = load_dem('near')
+    far = load_dem('far100')
+    # SRTM is a surface model: soften building/tree bumps, but keep water at 0
+    near_a = blur(np.maximum(near['a'], 0), 1)
+    far_a = np.maximum(far['a'], -1)
+    far_land = far['a'] > 0.5
+    far_a = np.where(far_land, blur(np.maximum(far_a, 0), 1), -12)
+    near_q = np.clip(np.round(near_a * 10), -32768, 32767).astype(np.int16)
+    far_q = np.clip(np.round(far_a * 10), -32768, 32767).astype(np.int16)
+    with open(os.path.join(OUT, 'terrain.bin'), 'wb') as fh:
+        fh.write(near_q.tobytes())
+        fh.write(far_q.tobytes())
+    TERRAIN_NEAR = {'nx': near['nx'], 'ny': near['ny'], 'step': near['step'], 'e0': round(near['e0'], 2), 'n0': round(near['n0'], 2)}
+    TERRAIN_FAR = {'nx': far['nx'], 'ny': far['ny'], 'step': far['step'], 'e0': round(far['e0'], 2), 'n0': round(far['n0'], 2)}
+else:
+    TERRAIN_NEAR = PREV_TERRAIN['near']
+    TERRAIN_FAR = PREV_TERRAIN['far']
 
 # ---------------------------------------------------------------- landmarks
 def way_centroid_frame(wid):
@@ -595,7 +663,10 @@ def r2(pts):
 chunks = {}
 for b in building_out:
     key = f"{math.floor(b['c'][0] / CHUNK)},{math.floor(b['c'][1] / CHUNK)}"
-    chunks.setdefault(key, []).append([b['k'], round(b['h'], 1), round(b['mh'], 1), b['v'], r2(b['r'])])
+    rec = [b['k'], round(b['h'], 1), round(b['mh'], 1), b['v'], r2(b['r'])]
+    if b['holes']:
+        rec.append([r2(hr) for hr in b['holes']])
+    chunks.setdefault(key, []).append(rec)
 
 tree_chunks = {}
 for x, z in trees:
@@ -611,8 +682,8 @@ world = {
         'attribution': '© OpenStreetMap contributors (ODbL) · SRTM 1 Arc-Second Global (NASA/USGS)',
     },
     'terrain': {
-        'near': {'nx': near['nx'], 'ny': near['ny'], 'step': near['step'], 'e0': round(near['e0'], 2), 'n0': round(near['n0'], 2)},
-        'far': {'nx': far['nx'], 'ny': far['ny'], 'step': far['step'], 'e0': round(far['e0'], 2), 'n0': round(far['n0'], 2)},
+        'near': TERRAIN_NEAR,
+        'far': TERRAIN_FAR,
         'coast': {'nx': gw, 'ny': gh, 'res': RES, 'e0': round(x0r, 2), 'n0': round(y0r, 2), 'units': 0.25},
     },
     'site': r2(site),
@@ -621,6 +692,7 @@ world = {
     'trees': tree_chunks,
     'roads': [[r['c'], r['w'], 1 if r['lit'] else 0, 1 if r['br'] else 0, r2(r['p'])] for r in roads],
     'areas': [[a['c'], r2(a['r'])] for a in areas],
+    'portals': portals,
     'landmarks': {k: {kk: (r2([vv])[:2] if isinstance(vv, tuple) else (r2(vv) if isinstance(vv, list) else vv)) for kk, vv in v.items()} for k, v in landmarks.items()},
 }
 with open(os.path.join(OUT, 'world.json'), 'w') as fh:

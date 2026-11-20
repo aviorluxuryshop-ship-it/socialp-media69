@@ -130,7 +130,7 @@ export function buildFarTerrain(world: World, nearHalf: number, pinnedRadius: nu
   const pos: number[] = [];
   const col: number[] = [];
   const idx: number[] = [];
-  const city = new Color('#a9a395');
+  const city = new Color('#9d9384');
   const green = new Color('#6f7d55');
   const sand = new Color('#bcb39f');
   const water = new Color('#1d3440');

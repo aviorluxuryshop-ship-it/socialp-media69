@@ -8,6 +8,7 @@ import {
   type Material,
 } from 'three';
 import { boardTexture, detailTexture, ledRibbonTexture, pitchTexture } from '../core/textures.ts';
+import { applyRoofDecal, createRoofDecal } from './roofDecal.ts';
 
 /**
  * Shared stadium materials. One instance per material kind keeps the number
@@ -73,6 +74,8 @@ export class StadiumMaterials {
       emissive: new Color(0xe4ebff),
       emissiveIntensity: 0,
     });
+    // crest, BEŞİKTAŞ, the sponsor and the eagle printed on top (as in aerial photos)
+    if (typeof document !== 'undefined') applyRoofDecal(this.membraneTop, createRoofDecal());
     // PTFE lets ~12 % of daylight through: the underside glows softly by day
     this.membraneUnder = new MeshStandardMaterial({
       color: 0xf1f0ea,

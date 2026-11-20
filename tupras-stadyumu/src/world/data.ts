@@ -4,7 +4,8 @@
  */
 import { PITCH_ELEVATION, OUTER_CURVE } from '../stadium/config.ts';
 
-export type BuildingRec = [kind: number, height: number, minHeight: number, variant: number, ring: number[]];
+/** ring: counter-clockwise outline; holes: clockwise courtyards (multipolygon inner rings) */
+export type BuildingRec = [kind: number, height: number, minHeight: number, variant: number, ring: number[], holes?: number[][]];
 export type RoadRec = [cls: number, width: number, lit: number, bridge: number, pts: number[]];
 export type AreaRec = [cls: number, ring: number[]];
 
@@ -26,6 +27,8 @@ export interface WorldJson {
   roads: RoadRec[];
   areas: AreaRec[];
   landmarks: Record<string, Record<string, number[] | number>>;
+  /** tunnel mouths: x, z, direction into the tunnel (dx, dz), road width */
+  portals?: number[][];
 }
 
 export class World {

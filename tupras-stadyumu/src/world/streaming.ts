@@ -35,7 +35,7 @@ import type { World } from './data.ts';
 import { buildBuildingsGeometry } from './buildings.ts';
 import { chunkTerrainGeometry } from './terrain.ts';
 import type { GroundCoverage } from './ground.ts';
-import { buildTreesGeometry, indexAreas, type AreaIndex } from './trees.ts';
+import { buildingBoxes, buildTreesGeometry, indexAreas, type AreaIndex } from './trees.ts';
 
 interface ChunkObj {
   group: Group;
@@ -229,7 +229,7 @@ export class ChunkStreamer {
     fresh.buildings.geometry = bg ?? EMPTY;
     fresh.buildings.visible = !!bg;
     let trg: BufferGeometry | null = null;
-    if (lod === 0 && this.q.trees) trg = buildTreesGeometry(this.world, this.areas, this.world.json.trees[st.key], x0, z0, C);
+    if (lod === 0 && this.q.trees) trg = buildTreesGeometry(this.world, this.areas, this.world.json.trees[st.key], x0, z0, C, buildingBoxes(this.world, st.ix, st.iz));
     fresh.trees.geometry = trg ?? EMPTY;
     fresh.trees.visible = !!trg;
     const lamps = this.lightsByChunk.get(st.key);

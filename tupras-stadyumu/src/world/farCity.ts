@@ -8,7 +8,8 @@ import type { World } from './data.ts';
 
 export function buildFarCity(world: World, uNight: IUniform<number>, spacing: number, innerHalf: number): InstancedMesh {
   const g = world.json.terrain.far;
-  const palette = ['#d9cfbd', '#cbbfa8', '#e2dbcd', '#c4bcb0', '#d6c6a6', '#b9b0a3', '#ddd0bb'].map((c) => new Color(c));
+  // cream and stone façades, with the terracotta and grey roofs that dominate Istanbul from afar
+  const palette = ['#d9cfbd', '#cbbfa8', '#e2dbcd', '#c4bcb0', '#d6c6a6', '#b9b0a3', '#ddd0bb', '#b8735a', '#a8624b', '#9d978e', '#c9a58d'].map((c) => new Color(c));
   const items: { x: number; z: number; y: number; w: number; d: number; h: number; rot: number; c: Color }[] = [];
   const hash = (a: number, b: number, s: number) => {
     const v = Math.sin(a * 12.9898 + b * 78.233 + s * 37.719) * 43758.5453;

@@ -97,7 +97,8 @@ export class App {
     farGroup.name = 'far';
     scene.add(farGroup);
     farGroup.add(buildFarTerrain(world, this.streamer.halfExtent, ChunkStreamer.PINNED_RADIUS));
-    farGroup.add(buildFarCity(world, engine.uNight, q.tier === 'low' ? 120 : 80, 0));
+    // denser than one box per block reads as city fabric rather than scattered boxes
+    farGroup.add(buildFarCity(world, engine.uNight, q.tier === 'low' ? 95 : q.tier === 'medium' ? 62 : 54, 0));
     splitMeshesBySector([farGroup.getObjectByName('far-terrain') as Mesh], 16);
     splitInstancedBySector(farGroup.getObjectByName('far-city') as InstancedMesh, 16);
     this.water = buildWater();

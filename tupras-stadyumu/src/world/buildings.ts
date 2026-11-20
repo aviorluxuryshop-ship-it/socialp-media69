@@ -172,7 +172,7 @@ export function addMinaret(b: Buf, x: number, y0: number, z: number, h: number, 
 export function buildBuildingsGeometry(world: World, recs: BuildingRec[]): BufferGeometry | null {
   const b: Buf = { pos: [], nor: [], col: [], info: [], fac: [], idx: [] };
   for (let bi = 0; bi < recs.length; bi++) {
-    const [kind, height, minH, variant, ringFlat] = recs[bi];
+    const [kind, height, minH, variant, ringFlat, holeRings] = recs[bi];
     const n = ringFlat.length / 2;
     if (n < 3) continue;
     let base = Infinity;
@@ -194,35 +194,46 @@ export function buildBuildingsGeometry(world: World, recs: BuildingRec[]): Buffe
     const top = base + 0.8 + height;
     const bottom = base + minH;
     const info = [kind, 0, seed];
-    // walls
-    let acc = 0;
-    for (let i = 0; i < n; i++) {
-      const x1 = ringFlat[i * 2], z1 = ringFlat[i * 2 + 1];
-      const j = (i + 1) % n;
-      const x2 = ringFlat[j * 2], z2 = ringFlat[j * 2 + 1];
-      const len = Math.hypot(x2 - x1, z2 - z1);
-      if (len < 0.05) continue;
-      // ring is counter-clockwise in (x, z): outward normal = (dz, −dx)
-      const nx = (z2 - z1) / len, nz = -(x2 - x1) / len;
-      const shade = 0.9 + 0.1 * Math.abs(nx); // fake bounce variation per orientation
-      const c = wallColor.clone().multiplyScalar(shade * 0.92);
-      const a = vtx(b, x1, bottom, z1, nx, 0, nz, c, info, acc, bottom - base);
-      const bb = vtx(b, x2, bottom, z2, nx, 0, nz, c, info, acc + len, bottom - base);
-      const cc = vtx(b, x2, top, z2, nx, 0, nz, c, info, acc + len, top - base);
-      const d = vtx(b, x1, top, z1, nx, 0, nz, c, info, acc, top - base);
-      b.idx.push(a, cc, bb, a, d, cc);
-      acc += len;
+    // walls: the outline (counter-clockwise) and any courtyards (clockwise, facing in)
+    const holes = holeRings ?? [];
+    for (const rf of [ringFlat, ...holes]) {
+      const m = rf.length / 2;
+      let acc = 0;
+      for (let i = 0; i < m; i++) {
+        const x1 = rf[i * 2], z1 = rf[i * 2 + 1];
+        const j = (i + 1) % m;
+        const x2 = rf[j * 2], z2 = rf[j * 2 + 1];
+        const len = Math.hypot(x2 - x1, z2 - z1);
+        if (len < 0.05) continue;
+        // counter-clockwise in (x, z): outward normal = (dz, −dx)
+        const nx = (z2 - z1) / len, nz = -(x2 - x1) / len;
+        const shade = 0.9 + 0.1 * Math.abs(nx); // fake bounce variation per orientation
+        const c = wallColor.clone().multiplyScalar(shade * 0.92);
+        const a = vtx(b, x1, bottom, z1, nx, 0, nz, c, info, acc, bottom - base);
+        const bb = vtx(b, x2, bottom, z2, nx, 0, nz, c, info, acc + len, bottom - base);
+        const cc = vtx(b, x2, top, z2, nx, 0, nz, c, info, acc + len, top - base);
+        const d = vtx(b, x1, top, z1, nx, 0, nz, c, info, acc, top - base);
+        b.idx.push(a, cc, bb, a, d, cc);
+        acc += len;
+      }
     }
-    // roof
+    // roof (with the courtyards left open)
     const contour: Vector2[] = [];
     for (let i = 0; i < n; i++) contour.push(new Vector2(ringFlat[i * 2], ringFlat[i * 2 + 1]));
-    const tris = ShapeUtils.triangulateShape(contour, []);
+    const holePts = holes.map((rf) => {
+      const out: Vector2[] = [];
+      for (let i = 0; i < rf.length; i += 2) out.push(new Vector2(rf[i], rf[i + 1]));
+      return out;
+    });
+    // (triangulateShape drops duplicated end points in place: read the vertices back after it)
+    const tris = ShapeUtils.triangulateShape(contour, holePts);
+    const roofPts = [...contour, ...holePts.flat()];
     const roofColor =
       kind === 1 ? new Color('#b9b6ae') : kind === 2 ? new Color('#5d6670') : kind === 3 ? new Color('#7f868c') : ROOF_COLORS[Math.floor(seed * 997) % ROOF_COLORS.length].clone();
     if (kind === 0 && height > 24) roofColor.set('#8e8a83');
     const rinfo = [kind, 1, seed];
     const r0 = b.pos.length / 3;
-    for (let i = 0; i < n; i++) vtx(b, ringFlat[i * 2], top, ringFlat[i * 2 + 1], 0, 1, 0, roofColor, rinfo, 0, 0);
+    for (const p of roofPts) vtx(b, p.x, top, p.y, 0, 1, 0, roofColor, rinfo, 0, 0);
     for (const t of tris) {
       // face up: triangulateShape returns CCW in (x, z) which faces −Y with x right / z down → flip
       b.idx.push(r0 + t[0], r0 + t[2], r0 + t[1]);
