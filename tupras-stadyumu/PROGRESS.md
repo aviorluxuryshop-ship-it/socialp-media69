@@ -13,16 +13,33 @@
 | STEP 01 – Stadium in code | ✅ Tamamlandı ve görsel olarak doğrulandı |
 | STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
 | STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
-| STEP 04 – Choice in post (maske/vurgu) | 🟡 Sıradaki |
-| STEP 05 – Pick your seat, get the ticket | ⏳ Bekliyor |
+| STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
+| STEP 05 – Pick your seat, get the ticket | 🟡 Sıradaki |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
 | Dinamik yükleme / performans | 🟡 Parça akışı + havuz + LOD çalışıyor; ölçüm/ayar bekliyor |
 
 ## Devam eden aşama
 
-**STEP 04** — aynı 3D modelden doğru kamera açısında maske (blok kimliği) geçişi; seçili blok
-maskede kırmızı; son işlemde seçili blok koltukları turuncu (ışık/gölge/yansıma korunarak);
-satılmış koltuklar gri; maske ↔ koltuk verisi birebir eşleşme testi.
+**STEP 05** — tribün → blok → sıra → koltuk seçim akışı, fare ile koltuk vurgusu + fiyat,
+koltuğa uçuş, koltuktan görüş, dijital bilet (koltuğun gerçek görüş görüntüsüyle), VIP ve Loca
+seçenekleri, mobil + masaüstü testleri.
+
+## STEP 04 doğrulaması
+
+- `src/selection/idpass.ts`: aynı sahne, aynı kamera; koltuklar `gl_InstanceID` ile kendi
+  kimliğini, basamaklar blok kimliğini 24-bit RGB'ye yazar; geri kalan yalnızca örtücü.
+  Aynı geçiş 1×1 pencereyle GPU seçimi için kullanılır.
+- `src/selection/highlight.ts`: son işlemde (ton eşlemeden önce, doğrusal HDR) seçili bloğun
+  koltukları turuncu. Piksel parlaklığı o koltuğun gerçek albedosuna bölünüp (siyah/beyaz/VIP)
+  turuncu albedoyla çarpılır → ışık, gölge, örtülme korunur; yansımalar (speküler) üstte tutulur.
+  Seçili blokta ince kontur; satılmış koltuklar (müsaitlik modu) gri kalır. Maske modu: seçili
+  blok kırmızı.
+- `scripts/verify-mask.mjs`: 4 görünüm × 17 blok: maske saflığı her durumda %100 (seçili bloğa
+  atfedilen her maske pikseli o bloğun koltuğu); görünür koltuk merkezlerinde tam koltuk kimliği
+  %96.5–100 (uzak sığ açılarda komşu koltuk), betona düşme < %6.
+- Hatalar: ShaderPass uniform'ları klonladığı için render target dokusu `null` oluyordu (maske
+  siyah) → dokular geçiş oluşturulduktan sonra bağlanıyor; GLSL3'te `gl_FragColor` yok → açık çıktı.
+- Görseller: `docs/screens/step04-*.jpg`.
 
 ## STEP 03 doğrulaması
 
@@ -92,6 +109,8 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 - `src/ui/viewsBar.ts` — görünüm çubuğu
 - `scripts/views.mjs`, `scripts/compare_views.py` — görünüm çıktıları ve geometri özdeşlik testi
 - `src/camera/clips.ts` — uçuş planlayıcı + oynatıcı; `scripts/test-clips.ts`, `scripts/filmstrip.mjs`
+- `src/selection/{idpass,highlight,selection}.ts` — maske/ID geçişi, vurgu birleştirme, seçim ve GPU seçimi;
+  `scripts/verify-mask.mjs` (test parametreleri: `?block=416`, `?mask`, `?sold`)
 - `public/brand/bjk-logo.svg` — resmî arma (Wikimedia Commons, PD-Turkey)
 
 ## Yapılan önemli kararlar
@@ -134,10 +153,9 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 
 ## Sıradaki işlem
 
-STEP 04: `src/selection/mask.ts` — blok kimliği render hedefi (koltuk örnekleri + beton blockId),
-maske görüntüsü (seçili blok kırmızı), `HighlightPass` (maske + güzellik görüntüsü → turuncu ton,
-parlaklık korunur), satılmış koltuk gri modu, GPU seçimi (fare altındaki koltuk/blok),
-eşleşme testi (maske piksellerinin blok verisiyle tutarlılığı).
+STEP 05: `src/ui/picker.ts` (tribün/blok/sıra/koltuk paneli, mobil alt sayfa), `src/ui/ticket.ts`
+(dijital bilet, koltuğun görüşü offscreen render), seçim akışını uçuşlara bağlama
+(tribün → standFrame, blok → blockFrame, koltuk → seat), hover fiyat etiketi, VIP/Loca kısayolları.
 
 Bilinen görsel eksikler (sonra ele alınabilir):
 - Ağaçlar düşük poligon; yakında oyuncak gibi.

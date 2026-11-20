@@ -21,6 +21,7 @@ import { Atmosphere } from './lighting/atmosphere.ts';
 import { CameraDirector } from './camera/director.ts';
 import { buildViews, type LockedView, type ViewId } from './camera/views.ts';
 import { planToFrame, planToSeat, seatFrame, type KeyFrame, type PlanContext } from './camera/clips.ts';
+import { Selection } from './selection/selection.ts';
 
 export interface FrameHook {
   (dt: number, elapsed: number): void;
@@ -40,6 +41,7 @@ export class App {
   clock = new SunClock();
   director!: CameraDirector;
   views: LockedView[] = [];
+  selection!: Selection;
   time!: TimeSource;
   private groundMats: MeshStandardMaterial[] = [];
   /** ?pass=normal: geometry only, no lighting — used to prove views are identical */
@@ -101,7 +103,21 @@ export class App {
       const m = (o as { material?: MeshStandardMaterial }).material;
       if (m && (m as MeshStandardMaterial).isMeshStandardMaterial && m.metalness > 0.8 && m.roughness < 0.15 && m !== mats.glass) this.atmosphere.registerReflective(m, 1.3);
     });
-    engine.onResize((w, h) => this.post.setSize(w, h));
+    // STEP 04: mask + highlight compositing before tone mapping
+    this.selection = new Selection(renderer, scene, camera, this.stadium);
+    this.post.insertBeforeOutput(this.selection.pass);
+    engine.onResize((w, h) => {
+      this.post.setSize(w, h);
+      const pr = renderer.getPixelRatio();
+      this.selection.setSize(Math.round(w * pr), Math.round(h * pr));
+    });
+    const blockParam = this.params.get('block');
+    if (blockParam) {
+      const b = this.stadium.layout.blocks.find((x) => x.code === blockParam);
+      if (b) this.selection.selectBlock(b.index);
+    }
+    if (this.params.has('mask')) this.selection.setMask(true);
+    if (this.params.has('sold')) this.selection.setAvailability(true);
 
     // camera
     this.director = new CameraDirector(camera, renderer.domElement, world);
@@ -224,6 +240,7 @@ export class App {
       streamer.lightMaterial.visible = false;
     }
     engine.renderer.info.reset();
+    this.selection.prepare(this.elapsed);
     this.post.render(dt);
 
     const ms = performance.now() - t0;
