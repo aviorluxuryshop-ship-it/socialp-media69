@@ -15,12 +15,12 @@
 | STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
 | STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
 | STEP 05 – Pick your seat, get the ticket | ✅ Tamamlandı — masaüstü + mobil uçtan uca akış hatasız |
-| Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
+| Gece–gündüz / güneş sistemi | ✅ Tamamlandı — gerçek güneş konumu, kesintisiz gün akışı doğrulandı |
 | Dinamik yükleme / performans | ✅ Bakış yönü kırpma, koni akışı, havuz, LOD + çalışma anı kare süresi yöneticisi |
 
 ## Devam eden aşama
 
-Gece–gündüz son doğrulaması ve canlı link (Vercel kotası).
+Canlı link (Vercel kotası) ve isteğe bağlı görsel iyileştirmeler.
 
 ## Bakış yönüne göre kırpma (kullanıcı isteği, "Subway Surfers" mantığı)
 
@@ -68,6 +68,18 @@ Bu turda bulunup düzeltilenler:
   tribün stadyumda turuncu yanıyor. Bloğa inerken çatı yeniden katılaşıyor.
   Uzak koltuk LOD'u dik bir sırtlık dörtgeniydi, tepeden bakınca bıçak gibi kayboluyordu → oturak
   önünden sırtlık tepesine 45° eğik tek dörtgen: önden sırtlık, tepeden oturak izi gibi görünüyor.
+
+## Gece–gündüz doğrulaması (`scripts/daynight.mjs`)
+
+- Güneş hesabı İstanbul için gerçek değerlerle uyuşuyor: 21 Haziran doğuş/batış 05:33/20:40
+  (öğle 13:06, 72.4°), 20 Kasım 07:58/17:43, 20 Mart 07:09/19:16.
+- Dış cephe görünümü 06:00 → 22:30 arası 10 saatte tarandı, konsol hatası yok. Bulunan ve düzeltilen:
+  alacakaranlıkta (güneş 0…−6°) sahne gece yarısından karanlıktı — pozlama ve şehir ışıkları yalnızca
+  "tam gece" katsayısına bağlıydı. Pozlama artık güneşin ufkun ne kadar altında olduğuna göre sürekli
+  açılıyor; pencereler/sokak lambaları güneş doğana kadar yanık (+3°'de sönmüş), gökyüzü sivil
+  alacakaranlıkta gece tonunun bir kısmını alıyor.
+- Saat atlatıldığında (12:00 → 21:00) güneş ve tüm ışık parametreleri ~1.5 s içinde süzülerek geçiyor;
+  canlı modda duvar saati zaten dakikadan dakikaya yumuşak ilerliyor.
 
 ## Kare süresi yöneticisi (performans bütçesi, `src/core/governor.ts`)
 
@@ -215,10 +227,9 @@ STEP 05 tamam: masaüstü (960×540) ve mobil (iPhone 13) uçtan uca akış kons
 (`scripts/with-server.sh node scripts/flow.mjs <dir> 960 540` / `… 0 0 mobile`).
 
 **Yapılacak:**
-1. Gece–gündüz: alacakaranlık pozlama düzeltmesinin taramasını doğrula (`scripts/daynight.mjs`).
-2. Canlı link: Vercel günlük deploy kotası dolu (402). 21 Kasım ~11:00 UTC için otomatik yeniden
+1. Canlı link: Vercel günlük deploy kotası dolu (402). 21 Kasım ~11:00 UTC için otomatik yeniden
    deneme kuruldu; dal push'ları bağlı projeye (`tupras-stadyumu`) gider.
-3. İsteğe bağlı görsel iyileştirmeler (aşağıda).
+2. İsteğe bağlı görsel iyileştirmeler (aşağıda).
 
 Not: bu ortamda tarayıcı yazılım GPU'su (SwiftShader) kullanıyor; kare başına 1–2 s sürüyor
 (ana iş parçacığı 6–12 ms). Gerçek GPU performansını göstermez — bu yüzden kare süresi yöneticisi
