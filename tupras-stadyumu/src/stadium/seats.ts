@@ -255,7 +255,7 @@ export class SeatSystem {
 
   baseColor(i: number, out: Color): Color {
     const S = this.layout.seats;
-    if (this.availabilityMode && S.sold[i] !== 0) return out.copy(this.sold);
+    if (this.availabilityMode) return out.copy(S.sold[i] !== 0 ? this.sold : this.white);
     if (this.neutral.has(S.block[i])) return out.copy(this.white);
     const sh = S.shade[i];
     return out.copy(sh === 0 ? this.white : sh === 1 ? this.black : this.vip);

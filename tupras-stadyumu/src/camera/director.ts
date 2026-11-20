@@ -68,8 +68,8 @@ export class CameraDirector {
   }
 
   /** Play a chain of key frames as one continuous move. */
-  fly(frames: KeyFrame[], view: LockedView | null, onDone?: () => void): Flight {
-    const f = new Flight(frames);
+  fly(frames: KeyFrame[], view: LockedView | null, onDone?: () => void, maxDuration = Infinity): Flight {
+    const f = new Flight(frames, 1, maxDuration);
     this.flight = f;
     this.flightTime = 0;
     this.flightView = view;
@@ -111,6 +111,7 @@ export class CameraDirector {
       c.maxPolarAngle = Math.PI * 0.62;
       c.minPolarAngle = Math.PI * 0.25;
     } else {
+      c.autoRotate = false;
       c.minDistance = 4;
       c.maxDistance = 5000;
       c.enableZoom = true;
@@ -166,7 +167,7 @@ export class CameraDirector {
       this.controls.enabled = this.mode === 'locked';
       if (this.mode === 'locked' && this.seatMode) {
         // look around from the seat: the orbit target sits just in front of the eye
-        this.controls.update();
+        this.controls.update(dt);
         this.target.copy(this.controls.target);
       }
     }

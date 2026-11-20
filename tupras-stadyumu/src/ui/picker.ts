@@ -1,59 +1,85 @@
 /**
- * STEP 05 — Pick your seat, get the ticket.
+ * STEP 05 — Pick your seat, see the view, get the ticket.
  *
- * Flow: intro → stand (Batı/Doğu/Kuzey/Güney, VIP, Loca) → block → row →
- * seat. Every step flies the camera to its frame (stand frame, block frame,
- * the seat itself), the selected block is highlighted in post, sold seats are
- * grey, and at the seat the real view is captured for the ticket.
+ * Flow: one button ("Koltuk Seç") → the camera drops into the bowl and turns
+ * slowly; labels on the stands name the regions (Doğu Alt, Kuzey Üst, VIP,
+ * Localar…) → choosing a region flies in front of it, sold seats grey → a tap
+ * on a seat flies to that seat: the real view, with region, block, row, seat
+ * number and price beside it → the digital ticket.
  */
 import type { App } from '../app.ts';
 import { Vector3 } from 'three';
-import { PITCH_ELEVATION, STANDS, type StandId } from '../stadium/config.ts';
 import type { Block } from '../stadium/layout.ts';
-import { blockFrame, standFrame, type KeyFrame } from '../camera/clips.ts';
+import { insideFrame, PICKER_MAX, regionFrame, type KeyFrame } from '../camera/clips.ts';
 import type { PickResult } from '../selection/idpass.ts';
-import { availability, blockTitle, categoryName, escapeHtml, price, standName, tierName } from './format.ts';
+import { blockTitle, categoryName, escapeHtml, price } from './format.ts';
+import { buildRegions, nearestFreeSeat, regionOfBlock, regionStats, type Region } from './regions.ts';
 import { showTicket, ticketFor } from './ticket.ts';
 
-type Step = 'intro' | 'stand' | 'block' | 'row' | 'seat';
-type StandChoice = StandId | 'VIP' | 'LOCA';
+type Step = 'intro' | 'regions' | 'region' | 'seat';
 
-const STAND_ORDER: StandId[] = ['BATI', 'DOGU', 'KUZEY', 'GUNEY'];
+
+const STEP_ORDER: Step[] = ['regions', 'region', 'seat'];
 
 export class SeatPicker {
   step: Step = 'intro';
-  stand: StandChoice | null = null;
-  block: Block | null = null;
-  row: number | null = null;
+  region: Region | null = null;
   seat: number | null = null;
+  readonly regions: Region[];
   private seatView: string | null = null;
+  private notice = '';
   private readonly purchased = new Set<number>();
+  private readonly stats = new Map<string, { free: number; total: number; from: number }>();
   private readonly app: App;
   private readonly panel: HTMLElement;
   private readonly body: HTMLElement;
   private readonly foot: HTMLElement;
   private readonly intro: HTMLElement;
   private readonly tip: HTMLElement;
+  private readonly labels: HTMLElement;
+  private readonly labelEls = new Map<string, HTMLButtonElement>();
   private pointer = { x: 0, y: 0 };
+  private area = { x: 0, y: 0, w: 0, h: 0 };
+  /** the user has turned the view themselves: no more automatic turning */
+  private turnedByUser = false;
+  private hoverRegion: Region | null = null;
+  private readonly tmp = new Vector3();
 
   constructor(app: App) {
     this.app = app;
-    // ---- intro card
+    this.regions = buildRegions(app.stadium.layout);
+
+    // ---- intro card: a single action
     this.intro = document.createElement('section');
     this.intro.className = 'intro';
     this.intro.innerHTML = `
       <div class="eyebrow">Tüpraş Stadyumu · Dolmabahçe</div>
       <h1>Koltuğunu seç,<br/>sahayı oradan gör.</h1>
-      <p>Tribünü, bloğu, sırayı ve koltuğu seçin; kamera sizi o koltuğa götürsün. Biletinizde koltuğunuzun gerçek görüşü yer alır.</p>
+      <p>Stadın içine girin, bölgenizi seçin, koltuğunuza dokunun. Sahayı o koltuktan görün; sıra, koltuk numarası ve fiyatı hemen yanında.</p>
       <div class="intro-actions">
         <button class="btn primary" type="button" data-act="start">Koltuk Seç</button>
-        <button class="btn ghost" type="button" data-act="explore">Stadyumu Gez</button>
       </div>`;
     document.body.appendChild(this.intro);
     // opened straight into a view (shared link, screenshots): start without the card
     if (app.params.has('view')) this.intro.classList.add('hidden');
-    this.intro.querySelector('[data-act="start"]')!.addEventListener('click', () => this.go('stand'));
-    this.intro.querySelector('[data-act="explore"]')!.addEventListener('click', () => this.intro.classList.add('hidden'));
+    this.intro.querySelector('[data-act="start"]')!.addEventListener('click', () => this.start());
+
+    // ---- region labels on the stands
+    this.labels = document.createElement('div');
+    this.labels.className = 'region-labels';
+    for (const r of this.regions) {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'region-label off';
+      el.dataset.region = r.id;
+      el.innerHTML = `<b>${escapeHtml(r.name)}</b><span></span>`;
+      el.addEventListener('click', () => this.chooseRegion(r));
+      el.addEventListener('pointerenter', () => this.setHoverRegion(r, true));
+      el.addEventListener('pointerleave', () => this.setHoverRegion(null, true));
+      this.labels.appendChild(el);
+      this.labelEls.set(r.id, el);
+    }
+    document.body.appendChild(this.labels);
 
     // ---- panel
     this.panel = document.createElement('aside');
@@ -63,7 +89,7 @@ export class SeatPicker {
       <div class="picker-head">
         <button class="icon-btn" type="button" data-act="back" aria-label="Geri">‹</button>
         <ol class="steps">
-          <li data-s="stand">Tribün</li><li data-s="block">Blok</li><li data-s="row">Sıra</li><li data-s="seat">Koltuk</li>
+          <li data-s="regions">Bölge</li><li data-s="region">Koltuk</li><li data-s="seat">Görüş</li>
         </ol>
         <button class="icon-btn" type="button" data-act="close" aria-label="Kapat">×</button>
       </div>
@@ -76,7 +102,7 @@ export class SeatPicker {
     this.body = this.panel.querySelector('.picker-body')!;
     this.foot = this.panel.querySelector('.picker-foot')!;
     this.panel.querySelector('[data-act="back"]')!.addEventListener('click', () => this.back());
-    this.panel.querySelector('[data-act="close"]')!.addEventListener('click', () => this.go('intro'));
+    this.panel.querySelector('[data-act="close"]')!.addEventListener('click', () => this.close());
 
     // ---- hover tooltip
     this.tip = document.createElement('div');
@@ -85,53 +111,36 @@ export class SeatPicker {
     app.engine.canvas.addEventListener('pointermove', (e) => (this.pointer = { x: e.clientX, y: e.clientY }));
     app.selection.onHover((p) => this.onHover(p));
     app.selection.onClick((p) => this.onPick(p));
-    app.director.onChange((mode) => {
-      if (mode === 'locked' && this.step === 'seat' && this.seat !== null) this.arrivedAtSeat();
+    app.director.controls.addEventListener('start', () => {
+      if (this.step === 'intro') return;
+      this.turnedByUser = true;
+      this.setAutoTurn(false);
     });
+    app.director.onChange((mode) => this.onDirector(mode));
+    app.onFrame(() => this.updateLabels());
   }
 
-  // ------------------------------------------------------------------ navigation
+  // ------------------------------------------------------------------ helpers
 
   private get L() {
     return this.app.stadium.layout;
   }
 
-  private blocksOf(stand: StandChoice): Block[] {
-    const all = this.L.blocks;
-    if (stand === 'VIP') return all.filter((b) => b.kind === 'vip');
-    if (stand === 'LOCA') return all.filter((b) => b.tier === 'suite');
-    return all.filter((b) => b.stand === stand && b.tier !== 'suite');
+  private get portrait(): boolean {
+    return this.app.engine.camera.aspect < 1;
   }
 
-  /** The block that frames a stand best: lower tier, closest to the stand's middle. */
-  private standAnchor(stand: StandChoice): Block {
-    const bs = this.blocksOf(stand);
-    if (stand === 'VIP' || stand === 'LOCA') return stand === 'LOCA' ? this.L.blocks.find((b) => b.code === 'L074')! : bs[0];
-    const mid: Record<StandId, number> = { GUNEY: 0, BATI: Math.PI / 2, KUZEY: Math.PI, DOGU: (3 * Math.PI) / 2 };
-    const lower = bs.filter((b) => b.tier === 'lower');
-    const ang = (b: Block) => Math.abs(((b.tc - mid[stand as StandId]) % (2 * Math.PI) + 3 * Math.PI) % (2 * Math.PI) - Math.PI);
-    return lower.sort((a, b) => ang(a) - ang(b))[0];
+  private statsOf(r: Region) {
+    let s = this.stats.get(r.id);
+    if (!s) {
+      s = regionStats(this.L, r, (i) => this.app.seatPrice(i));
+      this.stats.set(r.id, s);
+    }
+    return s;
   }
 
-  /**
-   * Seat-map overview for the stand step: almost straight down through the
-   * see-through roof. The lens shift centres it in the area the panel leaves
-   * free; here only the distance is chosen so the bowl fits that area.
-   */
-  private overviewFrame(): KeyFrame {
-    const cam = this.app.engine.camera;
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const sheet = W <= 760;
-    const freeW = sheet ? W : Math.max(320, W - 396);
-    const freeH = sheet ? Math.max(160, H * 0.48 - 64) : H - 64 - 90;
-    const fov = sheet ? 50 : 40;
-    const t = Math.tan((fov * Math.PI) / 360);
-    // stadium footprint ≈ 236 × 180 m with a margin
-    const D = Math.max(236 / (2 * t * cam.aspect * (freeW / W)), 180 / (2 * t * (freeH / H)));
-    const Y = PITCH_ELEVATION;
-    // a touch of perspective so the stands read as raked
-    return { position: new Vector3(0, Y + D, D * 0.16), target: new Vector3(0, Y, 0), fov, label: 'Stadyum planı' };
+  private regionOfSeat(seat: number): Region | null {
+    return regionOfBlock(this.regions, this.L.seats.block[seat]);
   }
 
   /** Free screen area next to / above the panel (CSS px). */
@@ -143,163 +152,178 @@ export class SeatPicker {
     const r = this.panel.getBoundingClientRect();
     const sheet = r.width > W * 0.8; // phone bottom sheet
     if (sheet) return { x: 0, y: top, w: W, h: Math.max(80, r.top - top) };
-    return { x: 0, y: top, w: Math.max(200, r.left - 12), h: H - top - 90 };
+    return { x: 0, y: top, w: Math.max(200, r.left - 12), h: H - top - 24 };
   }
 
   private updateLensShift(): void {
+    this.area = this.freeArea();
     if (this.step === 'intro') {
       this.app.engine.setLensShift(0, 0);
       return;
     }
-    const a = this.freeArea();
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    this.app.engine.setLensShift(W / 2 - (a.x + a.w / 2), H / 2 - (a.y + a.h / 2));
+    const a = this.area;
+    this.app.engine.setLensShift(window.innerWidth / 2 - (a.x + a.w / 2), window.innerHeight / 2 - (a.y + a.h / 2));
   }
 
-  go(step: Step): void {
+  private setAutoTurn(on: boolean): void {
+    const c = this.app.director.controls;
+    c.autoRotate = on;
+    c.autoRotateSpeed = 0.7; // ≈ 4° per second
+  }
+
+  // ------------------------------------------------------------------ navigation
+
+  private go(step: Step): void {
     const app = this.app;
     const sel = app.selection;
-    const from = this.step;
     this.step = step;
-    app.setRoofXray(step === 'stand');
     document.body.classList.toggle('picking', step !== 'intro');
     this.intro.classList.toggle('hidden', step !== 'intro');
     this.panel.classList.toggle('hidden', step === 'intro');
     this.panel.dataset.step = step;
+    this.labels.classList.remove('show');
     this.updateLensShift();
     for (const li of this.panel.querySelectorAll<HTMLElement>('.steps li')) {
-      const order = ['stand', 'block', 'row', 'seat'];
-      li.classList.toggle('done', order.indexOf(li.dataset.s!) < order.indexOf(step));
+      li.classList.toggle('done', STEP_ORDER.indexOf(li.dataset.s as Step) < STEP_ORDER.indexOf(step));
       li.classList.toggle('now', li.dataset.s === step);
     }
-    sel.hoverEnabled = step !== 'intro';
-    sel.setAvailability(step === 'row' || step === 'seat');
-    if (step !== 'seat') app.director.seatLook(false);
-    if (step === 'intro') {
-      this.stand = this.block = null;
-      this.row = this.seat = null;
-      sel.selectBlock(-1);
-      sel.selectSeat(-1);
-      sel.state.row = -1;
-      sel.setHoverSet([]);
-      this.hideTip();
-      const top = app.views.find((v) => v.id === 'ustten')!;
-      app.flyToView(top);
-      return;
-    }
-    if (step === 'stand') {
-      this.block = null;
-      this.row = this.seat = null;
-      sel.selectBlock(-1);
-      sel.selectSeat(-1);
-      sel.state.row = -1;
-      if (from !== 'stand') app.flyToFrame(this.overviewFrame(), null);
-    }
-    if (step === 'block') {
-      this.row = this.seat = null;
-      sel.selectBlock(-1);
-      sel.selectSeat(-1);
-      sel.state.row = -1;
-    }
-    if (step === 'row') {
+    // at the seat the view stays clean: no hover tint over the stand around you
+    sel.hoverEnabled = step === 'regions' || step === 'region';
+    // sold seats grey while choosing; at the seat the stand looks like match day
+    sel.setAvailability(step === 'region');
+    sel.selectBlock(-1);
+    sel.state.row = -1;
+    if (step !== 'seat') {
       this.seat = null;
       sel.selectSeat(-1);
     }
+    this.setHoverRegion(null, false);
+    this.hideTip();
+    app.director.seatLook(false);
+    this.setAutoTurn(false);
     this.render();
+  }
+
+  /** "Koltuk Seç": into the stadium. */
+  start(): void {
+    this.region = null;
+    this.go('regions');
+    this.app.flyIn(insideFrame(this.portrait), undefined, PICKER_MAX.enter);
+  }
+
+  private toRegions(): void {
+    this.region = null;
+    this.go('regions');
+    this.app.flyToFrame(insideFrame(this.portrait), null, undefined, PICKER_MAX.region);
+  }
+
+  chooseRegion(r: Region): void {
+    const fromSeat = this.step === 'seat';
+    this.region = r;
+    this.notice = '';
+    this.go('region');
+    this.app.flyToFrame(regionFrame(this.L, r.frameBlock, r.kind, this.portrait), null, undefined, fromSeat ? PICKER_MAX.back : PICKER_MAX.region);
+  }
+
+  chooseSeat(seat: number, notice = ''): void {
+    const sel = this.app.selection;
+    this.region = this.regionOfSeat(seat) ?? this.region;
+    this.seat = seat;
+    this.seatView = null;
+    this.notice = notice;
+    this.go('seat');
+    sel.selectSeat(seat);
+    this.app.flyToSeat(seat, undefined, PICKER_MAX.seat);
   }
 
   back(): void {
-    if (this.step === 'seat') this.chooseBlock(this.block!, true);
-    else if (this.step === 'row') {
-      if (this.stand === 'VIP') this.go('stand');
-      else this.chooseStand(this.stand!);
-    } else if (this.step === 'block') this.go('stand');
-    else this.go('intro');
+    if (this.step === 'seat' && this.region) this.chooseRegion(this.region);
+    else if (this.step === 'region') this.toRegions();
+    else this.close();
   }
 
-  chooseStand(stand: StandChoice): void {
-    this.stand = stand;
-    this.app.selection.setHoverSet([]);
-    if (stand === 'VIP') {
-      this.chooseBlock(this.blocksOf('VIP')[0]);
+  close(): void {
+    this.region = null;
+    this.go('intro');
+    const app = this.app;
+    const home = app.startPose;
+    if (home) app.flyOut({ position: home.position.clone(), target: home.target.clone(), fov: home.fov, label: 'Dışarı' } as KeyFrame, undefined, PICKER_MAX.exit);
+    else app.flyToView(app.views.find((v) => v.id === 'ustten')!);
+  }
+
+  private onDirector(mode: string): void {
+    this.labels.classList.toggle('show', mode !== 'flying' && this.step === 'regions');
+    if (mode !== 'locked') {
+      if (this.step === 'seat') this.render();
       return;
     }
-    const anchor = this.standAnchor(stand);
-    this.app.flyToFrame(standFrame(this.L, anchor), anchor);
-    this.go('block');
-  }
-
-  chooseBlock(b: Block, keepStand = false): void {
-    if (!keepStand || !this.stand) this.stand = b.kind === 'vip' ? 'VIP' : b.tier === 'suite' ? 'LOCA' : b.stand;
-    this.block = b;
-    this.app.selection.setHoverSet([]);
-    this.app.selection.selectBlock(b.index);
-    this.app.flyToFrame(blockFrame(this.L, b), b);
-    this.go('row');
-  }
-
-  chooseRow(row: number): void {
-    this.row = row;
-    this.app.selection.state.row = row;
-    this.render();
-  }
-
-  chooseSeat(seat: number): void {
-    const S = this.L.seats;
-    const b = this.L.blocks[S.block[seat]];
-    if (!this.block || this.block.index !== b.index) {
-      this.block = b;
-      this.stand = b.kind === 'vip' ? 'VIP' : b.tier === 'suite' ? 'LOCA' : b.stand;
-      this.app.selection.selectBlock(b.index);
+    if (this.step === 'seat' && this.seat !== null) this.arrivedAtSeat();
+    else if (this.step === 'regions' || this.step === 'region') {
+      // look around from here: drag turns the view in place
+      this.app.director.seatLook(true);
+      if (this.step === 'regions' && !this.turnedByUser) this.setAutoTurn(true);
     }
-    this.row = S.row[seat];
-    this.seat = seat;
-    this.seatView = null;
-    this.app.selection.state.row = -1;
-    this.app.selection.selectSeat(seat);
-    this.app.director.seatLook(false);
-    this.app.flyToSeat(seat);
-    this.go('seat');
   }
 
   private arrivedAtSeat(): void {
+    const seat = this.seat;
+    this.app.director.seatLook(true);
+    this.render();
     // let streaming and LOD settle for two frames, then capture the real view for the ticket
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
-        if (this.step !== 'seat' || this.seat === null) return;
-        this.seatView = this.app.captureView();
-        // at the seat the view should look like match day: no orange block in the foreground
-        this.app.selection.selectBlock(-1);
-        this.app.director.seatLook(true);
-        this.render();
+        if (this.step !== 'seat' || this.seat !== seat) return;
+        this.app.captureView().then((url) => {
+          if (this.step !== 'seat' || this.seat !== seat) return;
+          this.seatView = url;
+          this.render();
+        });
       }),
     );
   }
 
   // ------------------------------------------------------------------ 3D input
 
+  private setHoverRegion(r: Region | null, fromList: boolean): void {
+    if (this.hoverRegion === r) return;
+    this.hoverRegion = r;
+    this.app.selection.setHoverSet(r ? r.blocks.map((b) => b.index) : []);
+    for (const [id, el] of this.labelEls) el.classList.toggle('on', id === r?.id);
+    for (const el of this.body.querySelectorAll<HTMLElement>('[data-region]')) el.classList.toggle('on', el.dataset.region === r?.id);
+    if (fromList && r) this.setAutoTurn(false);
+  }
+
   private onHover(p: PickResult): void {
     if (this.step === 'intro' || p.block < 0) {
+      if (this.step === 'regions') this.setHoverRegion(null, false);
       this.hideTip();
       return;
     }
     const b = this.L.blocks[p.block];
     if (b.kind === 'press') {
+      this.setHoverRegion(null, false);
       this.showTip(`<b>Basın Tribünü</b><span>Satışa kapalı</span>`);
       return;
     }
-    if ((this.step === 'row' || this.step === 'seat') && p.seat >= 0) {
+    if (this.step === 'regions') {
+      const r = regionOfBlock(this.regions, p.block);
+      this.setHoverRegion(r, false);
+      if (!r) return this.hideTip();
+      const s = this.statsOf(r);
+      this.showTip(`<b>${escapeHtml(r.name)}</b><span>${escapeHtml(r.note)} · ${price(s.from)}’den · ${s.free.toLocaleString('tr-TR')} boş</span>`);
+      return;
+    }
+    if (p.seat >= 0) {
       const S = this.L.seats;
-      const sold = S.sold[p.seat] !== 0;
+      const sold = S.sold[p.seat] !== 0 && !this.purchased.has(p.seat);
+      const r = this.regionOfSeat(p.seat);
       this.showTip(
-        `<b>${escapeHtml(blockTitle(b))} · Sıra ${S.row[p.seat]} · Koltuk ${S.num[p.seat]}</b>` +
+        `<b>${escapeHtml(r?.name ?? '')} · ${escapeHtml(blockTitle(b))} · Sıra ${S.row[p.seat]} · Koltuk ${S.num[p.seat]}</b>` +
           (sold ? `<span class="sold">Satıldı</span>` : `<span>${price(this.app.seatPrice(p.seat))} · ${escapeHtml(categoryName(S.category[p.seat]))}</span>`),
       );
       return;
     }
-    const a = availability(this.L, b);
-    this.showTip(`<b>${escapeHtml(blockTitle(b))}</b><span>${escapeHtml(standName(b))} · ${escapeHtml(tierName(b))} · ${a.free} müsait</span>`);
+    this.showTip(`<b>${escapeHtml(blockTitle(b))}</b><span>Bir koltuğa dokunun</span>`);
   }
 
   private onPick(p: PickResult): void {
@@ -307,17 +331,31 @@ export class SeatPicker {
     if (this.app.director.mode === 'flying') return;
     const b = this.L.blocks[p.block];
     if (b.kind === 'press') return;
-    if ((this.step === 'row' || this.step === 'seat') && p.seat >= 0 && this.block && p.block === this.block.index) {
-      if (this.L.seats.sold[p.seat] === 0) this.chooseSeat(p.seat);
+    if (this.step === 'regions') {
+      const r = regionOfBlock(this.regions, p.block);
+      if (r) this.chooseRegion(r);
       return;
     }
-    this.chooseBlock(b);
+    const S = this.L.seats;
+    if (this.step === 'seat') {
+      // at a seat: another free seat of the same region
+      if (p.seat >= 0 && S.sold[p.seat] === 0 && this.regionOfSeat(p.seat) === this.region && p.seat !== this.seat) this.chooseSeat(p.seat);
+      return;
+    }
+    // region step: the seat under the finger, or the closest free one
+    if (p.seat >= 0 && S.sold[p.seat] === 0) {
+      this.chooseSeat(p.seat);
+      return;
+    }
+    const alt = nearestFreeSeat(this.L, b, p.seat);
+    if (alt >= 0) this.chooseSeat(alt, p.seat >= 0 ? 'Dokunduğunuz koltuk satılmış; en yakın boş koltuğu seçtik.' : '');
   }
 
   private showTip(html: string): void {
     this.tip.innerHTML = html;
     this.tip.classList.remove('hidden');
-    const x = Math.min(window.innerWidth - 240, this.pointer.x + 16);
+    const w = this.tip.offsetWidth || 240;
+    const x = Math.max(8, Math.min(window.innerWidth - w - 8, this.pointer.x + 16));
     const y = Math.max(8, this.pointer.y - 52);
     this.tip.style.transform = `translate(${x}px, ${y}px)`;
   }
@@ -326,103 +364,99 @@ export class SeatPicker {
     this.tip.classList.add('hidden');
   }
 
+  /** Region labels follow the stands on screen (only in the regions step). */
+  private updateLabels(): void {
+    if (this.step !== 'regions' || !this.labels.classList.contains('show')) return;
+    const cam = this.app.engine.camera;
+    cam.updateMatrixWorld();
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const a = this.area;
+    for (const r of this.regions) {
+      const el = this.labelEls.get(r.id)!;
+      // behind the camera? (tested in camera space: with a reversed depth
+      // buffer the projected z of a point behind the eye still looks valid)
+      const ahead = this.tmp.copy(r.labelAt).applyMatrix4(cam.matrixWorldInverse).z < -cam.near;
+      const v = this.tmp.copy(r.labelAt).project(cam);
+      const x = (v.x * 0.5 + 0.5) * W;
+      const y = (-v.y * 0.5 + 0.5) * H;
+      const vis = ahead && x > a.x + 24 && x < a.x + a.w - 24 && y > a.y + 16 && y < a.y + a.h - 16;
+      el.classList.toggle('off', !vis);
+      if (vis) el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -50%)`;
+    }
+  }
+
   // ------------------------------------------------------------------ rendering
+
+  private blockLabel(b: Block): string {
+    if (b.kind === 'suite') return b.label;
+    if (b.kind === 'vip') return 'VIP';
+    return b.code;
+  }
 
   private render(): void {
     const L = this.L;
     const S = L.seats;
     let html = '';
     let foot = '';
-    if (this.step === 'stand') {
-      const minPrice = (bs: Block[]) => Math.min(...bs.map((b) => this.app.seatPrice(b.seatStart)).filter((v) => v > 0));
-      const card = (key: StandChoice, title: string, note: string, bs: Block[]) => {
-        const free = bs.reduce((s, b) => s + availability(L, b).free, 0);
-        return `<button class="stand-card" type="button" data-stand="${key}">
-          <span class="stand-name">${escapeHtml(title)}</span>
-          <span class="stand-note">${escapeHtml(note)}</span>
-          <span class="stand-meta">${key === 'LOCA' ? bs.length + ' loca' : bs.length + ' blok'} · ${free.toLocaleString('tr-TR')} müsait · ${price(minPrice(bs))}’den</span>
+    if (this.step === 'regions') {
+      for (const r of this.regions) {
+        const s = this.statsOf(r);
+        this.labelEls.get(r.id)!.querySelector('span')!.textContent = `${price(s.from)}’den`;
+      }
+      const card = (r: Region) => {
+        const s = this.statsOf(r);
+        const full = s.free === 0;
+        return `<button class="region-card${full ? ' off' : ''}" type="button" data-region="${r.id}" ${full ? 'disabled' : ''}>
+          <span class="rc-name">${escapeHtml(r.name)}</span>
+          <span class="rc-note">${escapeHtml(r.note)}</span>
+          <span class="rc-meta">${full ? 'Tükendi' : `${price(s.from)}’den · ${s.free.toLocaleString('tr-TR')} boş`}</span>
         </button>`;
       };
-      html = `<h2>Tribün seçin</h2><div class="stand-grid">${STAND_ORDER.map((k) => card(k, STANDS[k].name, STANDS[k].note, this.blocksOf(k))).join('')}</div>
-        <h3>Ayrıcalıklı alanlar</h3>
-        <div class="stand-grid two">${card('VIP', 'VIP Tribün', 'Batı Alt · deri koltuk · protokol', this.blocksOf('VIP'))}${card('LOCA', 'Localar · Skybox', '147 loca · 12 kişilik · balkonlu', this.blocksOf('LOCA'))}</div>`;
-      foot = `<p class="foot-hint">Stadyumda bir bloğa dokunarak da seçebilirsiniz.</p>`;
-    } else if (this.step === 'block' && this.stand) {
-      const bs = this.blocksOf(this.stand);
-      const chip = (b: Block) => {
-        const a = availability(L, b);
-        const press = b.kind === 'press';
-        const full = !press && a.free === 0;
-        const dis = press || full;
-        const label = press ? 'kapalı' : full ? (b.kind === 'suite' ? 'satıldı' : 'dolu') : String(a.free);
-        return `<button class="block-chip${dis ? ' off' : ''}" type="button" data-block="${b.index}" ${dis ? 'disabled' : ''}>
-          <span class="bc-code">${escapeHtml(b.kind === 'suite' ? String(Number(b.code.slice(1))) : press ? 'BASIN' : b.code)}</span>
-          <span class="bc-free">${label}</span></button>`;
-      };
-      if (this.stand === 'LOCA') {
-        html = `<h2>Localar</h2><p class="sub">147 loca, katlar arasında kesintisiz bant. Bir loca seçin.</p>`;
-        for (const k of STAND_ORDER) {
-          const group = bs.filter((b) => b.stand === k);
-          html += `<h3>${escapeHtml(STANDS[k].name)}</h3><div class="chips suites">${group.map(chip).join('')}</div>`;
-        }
-      } else {
-        const st = STANDS[this.stand as StandId];
-        html = `<h2>${escapeHtml(st.name)}</h2><p class="sub">${escapeHtml(st.note)}</p>`;
-        const upper = bs.filter((b) => b.tier === 'upper');
-        const lower = bs.filter((b) => b.tier === 'lower');
-        html += `<h3>Üst Kat</h3><div class="chips">${upper.map(chip).join('')}</div>`;
-        html += `<h3>Alt Kat</h3><div class="chips">${lower.map(chip).join('')}</div>`;
-      }
-      foot = `<p class="foot-hint">Rakam: müsait koltuk sayısı. Üzerine gelince blok stadyumda vurgulanır.</p>`;
-    } else if (this.step === 'row' && this.block) {
-      const b = this.block;
-      const a = availability(L, b);
-      const cat = S.category[b.seatStart];
+      html = `<h2>Bölge seçin</h2>
+        <p class="sub">Stadın içindesiniz. Sürükleyerek etrafa bakın; stadyumda ya da listede bir bölgeye dokunun.</p>
+        <div class="region-grid">${this.regions.map(card).join('')}</div>`;
+    } else if (this.step === 'region' && this.region) {
+      const r = this.region;
+      const s = this.statsOf(r);
+      const cats = [...new Set(r.blocks.map((b) => S.category[b.seatStart]))].map((c) => categoryName(c)).join(' · ');
       html = `<div class="block-head">
-          <h2>${escapeHtml(blockTitle(b))}</h2>
-          <div class="sub">${escapeHtml(standName(b))} · ${escapeHtml(tierName(b))} · ${escapeHtml(categoryName(cat))}</div>
-          <div class="kpis"><span><b>${price(this.app.seatPrice(b.seatStart))}</b> koltuk başı</span><span><b>${a.free}</b> / ${a.total} müsait</span></div>
-        </div>`;
-      html += `<h3>Sıra seçin</h3><div class="rows">`;
-      for (let r = b.rows; r >= 1; r--) {
-        const ra = availability(L, b, r);
-        const pct = ra.total ? (ra.free / ra.total) * 100 : 0;
-        html += `<button class="row-btn${this.row === r ? ' on' : ''}" type="button" data-row="${r}" ${ra.free === 0 ? 'disabled' : ''}>
-          <span class="rb-n">Sıra ${r}</span><span class="rb-bar"><i style="width:${pct.toFixed(0)}%"></i></span><span class="rb-f">${ra.free}</span></button>`;
-      }
-      html += `</div>`;
-      if (this.row) {
-        const r = this.row;
-        html += `<h3>Sıra ${r} · koltuk seçin</h3><div class="seat-chips">`;
-        for (let i = b.rowStart[r - 1]; i < b.rowStart[r]; i++) {
-          const sold = S.sold[i] !== 0;
-          html += `<button class="seat-chip${sold ? ' sold' : ''}" type="button" data-seat="${i}" ${sold ? 'disabled aria-label="Satıldı"' : ''}>${S.num[i]}</button>`;
-        }
-        html += `</div>`;
-      }
-      foot = `<p class="foot-hint">Gri koltuklar satılmıştır. Stadyumda bir koltuğa dokunarak da seçebilirsiniz.</p>`;
+          <div class="eyebrow">Bölge</div>
+          <h2>${escapeHtml(r.name)}</h2>
+          <div class="sub">${escapeHtml(r.note)} · ${escapeHtml(cats)}</div>
+          <div class="kpis"><span><b>${price(s.from)}</b>’den</span><span><b>${s.free.toLocaleString('tr-TR')}</b> boş koltuk</span></div>
+        </div>
+        <ol class="howto">
+          <li>Stadyumda bir koltuğa dokunun.</li>
+          <li>Kamera sizi o koltuğa götürür.</li>
+          <li>Sahayı oradan görün; sıra, koltuk ve fiyat yanında.</li>
+        </ol>
+        <div class="legend"><span><i class="lg free"></i>Boş</span><span><i class="lg sold"></i>Satıldı</span></div>`;
+      foot = `<p class="foot-hint"><b>Bir koltuğa dokunun.</b> Sürükleyerek bölgede sağa sola bakabilirsiniz.</p>`;
     } else if (this.step === 'seat' && this.seat !== null) {
       const i = this.seat;
       const b = L.blocks[S.block[i]];
-      const sold = S.sold[i] !== 0;
+      const r = this.region;
       const mine = this.purchased.has(i);
       const flying = this.app.director.mode === 'flying';
-      html = `<h2>${flying ? 'Koltuğunuza gidiliyor…' : 'Koltuğunuzdan görünüm'}</h2>
+      html = `<div class="seat-head">
+          <div class="eyebrow">${flying ? 'Koltuğunuza gidiliyor…' : mine ? 'Bu koltuk sizin · onaylandı' : 'Koltuğunuzdan görünüm'}</div>
+        </div>
+        ${this.notice ? `<p class="notice">${escapeHtml(this.notice)}</p>` : ''}
         <dl class="seat-dl">
-          <div><dt>Tribün</dt><dd>${escapeHtml(standName(b))}</dd></div>
-          <div><dt>Blok</dt><dd>${escapeHtml(blockTitle(b))}</dd></div>
+          <div><dt>Bölge</dt><dd>${escapeHtml(r?.name ?? '')}</dd></div>
+          <div><dt>${b.kind === 'suite' ? 'Loca' : 'Blok'}</dt><dd>${escapeHtml(this.blockLabel(b))}</dd></div>
           <div><dt>Sıra</dt><dd>${S.row[i]}</dd></div>
           <div><dt>Koltuk</dt><dd>${S.num[i]}</dd></div>
-          <div><dt>Fiyat</dt><dd>${price(this.app.seatPrice(i))}</dd></div>
-          <div><dt>Durum</dt><dd class="${mine ? 'ok' : sold ? 'sold' : 'free'}">${mine ? 'Onaylandı' : sold ? 'Satıldı' : 'Müsait'}</dd></div>
+          <div><dt>Kategori</dt><dd class="small">${escapeHtml(categoryName(S.category[i]))}</dd></div>
+          <div class="price"><dt>Fiyat</dt><dd>${price(this.app.seatPrice(i))}</dd></div>
         </dl>
-        <p class="sub">${flying ? '' : 'Ekranı sürükleyerek koltuktan etrafa bakabilirsiniz.'}</p>
         <div class="seat-nav">
           <button class="btn ghost" type="button" data-act="prev">‹ Sol koltuk</button>
           <button class="btn ghost" type="button" data-act="next">Sağ koltuk ›</button>
         </div>`;
-      foot = `<button class="btn primary wide" type="button" data-act="ticket" ${this.seatView ? '' : 'disabled'}>${this.seatView ? 'Dijital Bileti Görüntüle' : 'Görüş hazırlanıyor…'}</button>
-        <button class="btn ghost wide" type="button" data-act="change">Koltuğu değiştir</button>`;
+      foot = `<button class="btn primary wide" type="button" data-act="ticket" ${this.seatView ? '' : 'disabled'}>${this.seatView ? (mine ? 'Bileti Görüntüle' : 'Bileti Gör') : 'Görüş hazırlanıyor…'}</button>
+        <button class="btn ghost wide" type="button" data-act="change">Başka koltuk seç</button>`;
     }
     this.body.innerHTML = html;
     this.foot.innerHTML = foot;
@@ -430,30 +464,11 @@ export class SeatPicker {
   }
 
   private bind(): void {
-    const sel = this.app.selection;
-    for (const el of this.body.querySelectorAll<HTMLElement>('[data-stand]')) {
-      const k = el.dataset.stand as StandChoice;
-      el.addEventListener('click', () => this.chooseStand(k));
-      el.addEventListener('pointerenter', () => sel.setHoverSet(this.blocksOf(k).map((b) => b.index)));
-      el.addEventListener('pointerleave', () => sel.setHoverSet([]));
-    }
-    for (const el of this.body.querySelectorAll<HTMLElement>('[data-block]')) {
-      const b = this.L.blocks[Number(el.dataset.block)];
-      el.addEventListener('click', () => this.chooseBlock(b));
-      el.addEventListener('pointerenter', () => sel.setHoverSet([b.index]));
-      el.addEventListener('pointerleave', () => sel.setHoverSet([]));
-    }
-    for (const el of this.body.querySelectorAll<HTMLElement>('[data-row]')) {
-      const r = Number(el.dataset.row);
-      el.addEventListener('click', () => this.chooseRow(r));
-      el.addEventListener('pointerenter', () => (sel.state.row = r));
-      el.addEventListener('pointerleave', () => (sel.state.row = this.row ?? -1));
-    }
-    for (const el of this.body.querySelectorAll<HTMLElement>('[data-seat]')) {
-      const i = Number(el.dataset.seat);
-      el.addEventListener('click', () => this.chooseSeat(i));
-      el.addEventListener('pointerenter', () => (sel.state.hoverSeat = i));
-      el.addEventListener('pointerleave', () => (sel.state.hoverSeat = -1));
+    for (const el of this.body.querySelectorAll<HTMLElement>('[data-region]')) {
+      const r = this.regions.find((x) => x.id === el.dataset.region)!;
+      el.addEventListener('click', () => this.chooseRegion(r));
+      el.addEventListener('pointerenter', () => this.setHoverRegion(r, true));
+      el.addEventListener('pointerleave', () => this.setHoverRegion(null, true));
     }
     this.panel.querySelector('[data-act="ticket"]')?.addEventListener('click', () => this.openTicket());
     this.panel.querySelector('[data-act="change"]')?.addEventListener('click', () => this.back());
@@ -463,9 +478,9 @@ export class SeatPicker {
 
   /** Next free seat to the spectator's left (−1) or right (+1) in the same row. */
   private neighbour(dir: -1 | 1): void {
-    if (this.seat === null || !this.block) return;
+    if (this.seat === null) return;
     const S = this.L.seats;
-    const b = this.block;
+    const b = this.L.blocks[S.block[this.seat]];
     const r = S.row[this.seat];
     const a = b.rowStart[r - 1];
     const e = b.rowStart[r];
@@ -490,6 +505,7 @@ export class SeatPicker {
         ? () => {
             S.sold[i] = 1;
             this.purchased.add(i);
+            this.stats.clear();
             this.app.selection.refreshSold();
             showTicket(ticketFor(this.app, i, this.seatView!, true), null);
             this.render();
@@ -497,15 +513,8 @@ export class SeatPicker {
         : null,
     );
   }
-
-  /** Re-render when a flight ends or starts so the seat panel shows the right state. */
-  refresh(): void {
-    if (this.step === 'seat') this.render();
-  }
 }
 
 export function mountPicker(app: App): SeatPicker {
-  const p = new SeatPicker(app);
-  app.director.onChange(() => p.refresh());
-  return p;
+  return new SeatPicker(app);
 }

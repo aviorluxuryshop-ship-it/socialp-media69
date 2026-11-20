@@ -31,8 +31,11 @@ async function main() {
   timeSlider.addEventListener('input', () => app.clock.setOverride(Number(timeSlider.value)));
   liveBtn.addEventListener('click', () => app.clock.setOverride(null));
 
-  // ---- locked views
-  mountViewsBar(app, (v) => app.flyToView(v));
+  // ---- locked views (STEP 02): presentation / review only, the visitor flow is the picker
+  if (app.params.has('views')) {
+    document.body.classList.add('has-views');
+    mountViewsBar(app, (v) => app.flyToView(v));
+  }
 
   // ---- seat picker (STEP 05)
   const picker = mountPicker(app);

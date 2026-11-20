@@ -2,7 +2,8 @@
 import { Vector3 } from 'three';
 import { buildLayout, seatEye, type StadiumLayout } from '../src/stadium/layout.ts';
 import { FASCIA, FACADE, PITCH_ELEVATION, ROOF, LOWER, UPPER } from '../src/stadium/config.ts';
-import { Flight, planToFrame, planToSeat, overOpening, roofUnderside, type KeyFrame } from '../src/camera/clips.ts';
+import { Flight, insideFrame, PICKER_MAX, planEnter, planExit, planToFrame, planToSeat, overOpening, regionFrame, roofUnderside, seatFrame, type KeyFrame } from '../src/camera/clips.ts';
+import { buildRegions } from '../src/ui/regions.ts';
 import { buildViews, middleSeat } from '../src/camera/views.ts';
 import type { CameraPose } from '../src/camera/views.ts';
 
@@ -82,8 +83,14 @@ interface Stats {
   dur: number;
 }
 
-function check(name: string, frames: KeyFrame[], from: CameraPose, endPos: Vector3, exempt: Vector3[]): Stats {
-  const f = new Flight(frames);
+/**
+ * maxDuration: the picker's capped UI moves — faster than the drone limits,
+ * so only collisions, continuity and turn rate are checked for them.
+ */
+function check(name: string, frames: KeyFrame[], from: CameraPose, endPos: Vector3, exempt: Vector3[], maxDuration = Infinity): Stats {
+  const f = new Flight(frames, 1, maxDuration);
+  const capped = Number.isFinite(maxDuration);
+  if (f.duration > maxDuration + 1e-6) fail(`${name}: ${f.duration.toFixed(2)} s is over the ${maxDuration} s cap`);
   const pose: CameraPose = { position: new Vector3(), target: new Vector3(), fov: 50 };
   const dt = 1 / 60;
   let prevP: Vector3 | null = null;
@@ -99,7 +106,7 @@ function check(name: string, frames: KeyFrame[], from: CameraPose, endPos: Vecto
     const dir = pose.target.clone().sub(pose.position).normalize();
     if (prevP && prevD) {
       const step = pose.position.distanceTo(prevP);
-      const allowed = 1.0 + 0.012 * Math.max(0, pose.position.y - Y);
+      const allowed = (capped ? 2.6 : 1.0) + (capped ? 0.03 : 0.012) * Math.max(0, pose.position.y - Y);
       if (step > allowed) {
         fail(`${name}: too fast ${(step * 60).toFixed(0)} m/s at height ${(pose.position.y - Y).toFixed(0)} m (t=${tm.toFixed(2)})`);
         break;
@@ -110,7 +117,7 @@ function check(name: string, frames: KeyFrame[], from: CameraPose, endPos: Vecto
       st.maxAng = Math.max(st.maxAng, ang);
       // relative speed change per frame: a discontinuity shows up as a spike
       const acc = (v - prevV) / dt;
-      if (Math.abs(acc) > 70 + 0.7 * Math.max(0, pose.position.y - Y)) {
+      if (Math.abs(acc) > (capped ? 260 : 70) + (capped ? 2 : 0.7) * Math.max(0, pose.position.y - Y)) {
         fail(`${name}: harsh acceleration ${acc.toFixed(0)} m/s² at t=${tm.toFixed(2)}`);
         break;
       }
@@ -142,8 +149,8 @@ function check(name: string, frames: KeyFrame[], from: CameraPose, endPos: Vecto
     f.poseAt(f.segments[i - 1].end, pose);
     if (pose.position.distanceTo(frames[i].position) > 1e-3) fail(`${name}: clip ${i} end frame mismatch`);
   }
-  if (st.maxAng > 2.6) fail(`${name}: rotation jump ${st.maxAng.toFixed(2)}°/frame`);
-  if (st.maxAcc > 25) fail(`${name}: speed discontinuity (acceleration jumps ${st.maxAcc.toFixed(1)} m/s² in one frame) at ${accAt}`);
+  if (st.maxAng > (capped ? 3.2 : 2.6)) fail(`${name}: rotation jump ${st.maxAng.toFixed(2)}°/frame`);
+  if (st.maxAcc > (capped ? 60 : 25)) fail(`${name}: speed discontinuity (acceleration jumps ${st.maxAcc.toFixed(1)} m/s² in one frame) at ${accAt}`);
   return st;
 }
 
@@ -192,6 +199,34 @@ for (const a of views) {
     all.push(check(`view ${a.id}→${b.id}`, frames, a, b.position, ex));
   }
 }
+
+// 4. the picker: start pose → inside → every region → a seat there → back → out (capped UI moves)
+const picker: Stats[] = [];
+for (const portrait of [false, true]) {
+  const start: CameraPose = portrait
+    ? { position: new Vector3(-70, 280, 520), target: new Vector3(-11, -40, 144), fov: 58 }
+    : { position: new Vector3(-60, 240, 430), target: new Vector3(-30, 4, 0), fov: 50 };
+  const tag = portrait ? 'portrait' : 'landscape';
+  const inside = insideFrame(portrait);
+  picker.push(check(`picker ${tag} enter`, planEnter({ layout: L }, start, inside), start, inside.position, [], PICKER_MAX.enter));
+  for (const r of buildRegions(L)) {
+    const rf = regionFrame(L, r.frameBlock, r.kind, portrait);
+    if (!overOpening(rf.position.x, rf.position.z, 4)) fail(`picker ${r.id}: region frame not over the opening`);
+    picker.push(check(`picker ${tag} inside→${r.id}`, planToFrame({ layout: L }, inside, rf, null), inside, rf.position, [], PICKER_MAX.region));
+    const ends = [r.anchor, r.blocks[0], r.blocks[r.blocks.length - 1]];
+    for (const b of ends) {
+      const s = b.tier === 'suite' ? middleSeat(L, b.index, 1) : middleSeat(L, b.index, Math.ceil(b.rows / 2), 0.5);
+      const sf = seatFrame(L, s);
+      picker.push(check(`picker ${tag} ${r.id}→${b.code}`, planToSeat({ layout: L }, rf, s), rf, sf.position, [sf.position], PICKER_MAX.seat));
+      picker.push(check(`picker ${tag} ${b.code}→${r.id}`, planToFrame({ layout: L }, sf, rf, null), sf, rf.position, [sf.position], PICKER_MAX.back));
+    }
+    picker.push(check(`picker ${tag} ${r.id}→inside`, planToFrame({ layout: L }, rf, inside, null), rf, inside.position, [], PICKER_MAX.region));
+  }
+  const out: KeyFrame = { ...start, position: start.position.clone(), target: start.target.clone(), label: 'Dışarı' };
+  picker.push(check(`picker ${tag} exit`, planExit({ layout: L }, inside, out), inside, start.position, [], PICKER_MAX.exit));
+}
+const pmax = (k: keyof Stats) => Math.max(...picker.map((s) => s[k]));
+console.log(`picker flights: ${picker.length} · max step ${pmax('maxStep').toFixed(2)} m/frame · max turn ${pmax('maxAng').toFixed(2)}°/frame · max accel jump ${pmax('maxAcc').toFixed(1)} · durations ${Math.min(...picker.map((s) => s.dur)).toFixed(1)}–${pmax('dur').toFixed(1)} s`);
 
 {
   const s = middleSeat(L, L.blocks.find((b) => b.code === '416')!.index, 10, 0.3);

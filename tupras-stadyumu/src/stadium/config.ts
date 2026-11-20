@@ -175,5 +175,5 @@ export const SEAT_COLORS = {
   white: 0xf2f2ef,
   black: 0x17181a,
   vip: 0x232427,
-  sold: 0x8b8e93,
+  sold: 0x6e7176,
 };

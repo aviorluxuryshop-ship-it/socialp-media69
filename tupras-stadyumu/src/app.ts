@@ -2,7 +2,7 @@
  * Application root: builds the world, the stadium and the atmosphere, owns
  * the camera director and the frame loop.
  */
-import { Group, MeshNormalMaterial, NoToneMapping, Timer, Vector3, type InstancedMesh, type Mesh, type MeshStandardMaterial } from 'three';
+import { Group, MeshNormalMaterial, NoToneMapping, Timer, Vector3, WebGLRenderTarget, type InstancedMesh, type Mesh, type MeshStandardMaterial } from 'three';
 import { splitInstancedBySector, splitMeshesBySector } from './core/split.ts';
 import { detectQuality, type QualitySettings } from './core/quality.ts';
 import { Engine } from './core/engine.ts';
@@ -23,7 +23,8 @@ import { SunClock, type TimeSource } from './lighting/sun.ts';
 import { Atmosphere } from './lighting/atmosphere.ts';
 import { CameraDirector } from './camera/director.ts';
 import { buildViews, type LockedView, type ViewId } from './camera/views.ts';
-import { planToFrame, planToSeat, seatFrame, type KeyFrame, type PlanContext } from './camera/clips.ts';
+import { planEnter, planExit, planToFrame, planToSeat, seatFrame, type KeyFrame, type PlanContext } from './camera/clips.ts';
+import type { CameraPose } from './camera/views.ts';
 import { Selection } from './selection/selection.ts';
 
 export interface FrameHook {
@@ -61,6 +62,8 @@ export class App {
   governor: FrameGovernor | null = null;
   private xray = 0;
   private xrayTarget = 0;
+  /** the opening shot, where closing the picker returns to */
+  startPose: CameraPose | null = null;
 
   async init(container: HTMLElement, step: (txt: string, p: number) => Promise<unknown>): Promise<void> {
     this.quality = detectQuality();
@@ -144,11 +147,10 @@ export class App {
       // opening shot from above Gümüşsuyu: stadium, Dolmabahçe and the Bosphorus,
       // with Süzer Plaza kept off the stadium; portrait screens frame it above the intro card
       const portrait = camera.aspect < 1;
-      this.director.applyPose(
-        portrait
-          ? { position: new Vector3(-70, 280, 520), target: new Vector3(-11, -40, 144), fov: 58 }
-          : { position: new Vector3(-60, 240, 430), target: new Vector3(-30, 4, 0), fov: 50 },
-      );
+      this.startPose = portrait
+        ? { position: new Vector3(-70, 280, 520), target: new Vector3(-11, -40, 144), fov: 58 }
+        : { position: new Vector3(-60, 240, 430), target: new Vector3(-30, 4, 0), fov: 50 };
+      this.director.applyPose(this.startPose);
       const camP = this.params.get('cam');
       const lookP = this.params.get('look');
       if (camP || lookP) {
@@ -173,6 +175,10 @@ export class App {
     this.streamer.primeAll(camera);
     this.time = this.clock.now();
     this.atmosphere.update(this.time.sun, camera.position, 0, true);
+    if (!this.geometryPass) {
+      await step('Stadyum hazırlanıyor', 0.95);
+      this.warmUp();
+    }
     renderer.info.autoReset = false;
 
     // automated runs pin the quality (?q=, ?fast, webdriver); ?gov forces the governor on
@@ -180,6 +186,50 @@ export class App {
     if (p.has('gov') || (!p.has('q') && !p.has('fast') && !navigator.webdriver && !this.geometryPass)) {
       this.governor = new FrameGovernor(this.governorSteps());
     }
+  }
+
+  /**
+   * Compile every shader and upload every seat buffer behind the loading
+   * screen. Otherwise the first frames inside the bowl stall: the detailed
+   * seats (and their shadow casters), the ID pass and the highlight pass are
+   * first drawn there, and each first draw compiles a program and uploads
+   * instance buffers on the spot.
+   */
+  private warmUp(): void {
+    const { engine, stadium, selection, post } = this;
+    const { renderer, scene, camera } = engine;
+    const pos = camera.position.clone();
+    const quat = camera.quaternion.clone();
+    camera.position.set(0, PITCH_ELEVATION + 17, 16);
+    camera.lookAt(0, PITCH_ELEVATION + 9, -60);
+    camera.updateMatrixWorld();
+    const meshes: InstancedMesh[] = [];
+    for (const p of stadium.seats.pairs) {
+      for (const m of [p.detailed, p.simple, p.far]) {
+        m.visible = true;
+        m.frustumCulled = false;
+        meshes.push(m);
+      }
+      p.detailed.castShadow = true;
+    }
+    renderer.compile(scene, camera);
+    const rt = new WebGLRenderTarget(16, 16);
+    renderer.setRenderTarget(rt);
+    renderer.render(scene, camera);
+    renderer.setRenderTarget(null);
+    rt.dispose();
+    // ID pass + highlight compositing
+    const any = stadium.layout.blocks[0].index;
+    selection.setHoverSet([any]);
+    selection.prepare(0);
+    post.render(0);
+    selection.setHoverSet([]);
+    selection.prepare(0);
+    for (const m of meshes) m.frustumCulled = true;
+    camera.position.copy(pos);
+    camera.quaternion.copy(quat);
+    camera.updateMatrixWorld();
+    stadium.seats.update(camera);
   }
 
   /**
@@ -247,24 +297,38 @@ export class App {
     this.director.fly(frames, v, onDone);
   }
 
-  /** Cinematic flight to a stand or block frame (STEP 05). */
   /** Fade the roof membrane to see-through (seat-map overview) or back to solid. */
   setRoofXray(on: boolean): void {
     this.xrayTarget = on ? 1 : 0;
   }
 
-  flyToFrame(dest: KeyFrame, via: Block | null, onDone?: () => void): void {
+  /** Cinematic flight to a stand, block or region frame (STEP 05). */
+  flyToFrame(dest: KeyFrame, via: Block | null, onDone?: () => void, maxDuration = Infinity): void {
     const frames = planToFrame(this.planContext(), this.director.pose(), { ...dest, position: dest.position.clone(), target: dest.target.clone() }, via);
     const v: LockedView = { id: 'seat' as ViewId, label: dest.label, caption: '', position: dest.position, target: dest.target, fov: dest.fov };
-    this.director.fly(frames, v, onDone);
+    this.director.fly(frames, v, onDone, maxDuration);
+  }
+
+  /** The picker's entry: over the roof and straight down into the bowl. */
+  flyIn(dest: KeyFrame, onDone?: () => void, maxDuration = Infinity): void {
+    const frames = planEnter(this.planContext(), this.director.pose(), { ...dest, position: dest.position.clone(), target: dest.target.clone() });
+    const v: LockedView = { id: 'seat' as ViewId, label: dest.label, caption: '', position: dest.position, target: dest.target, fov: dest.fov };
+    this.director.fly(frames, v, onDone, maxDuration);
+  }
+
+  /** The picker's exit: up through the opening and back to a pose outside. */
+  flyOut(dest: KeyFrame, onDone?: () => void, maxDuration = Infinity): void {
+    const frames = planExit(this.planContext(), this.director.pose(), { ...dest, position: dest.position.clone(), target: dest.target.clone() });
+    const v: LockedView = { id: 'seat' as ViewId, label: dest.label, caption: '', position: dest.position, target: dest.target, fov: dest.fov };
+    this.director.fly(frames, v, onDone, maxDuration);
   }
 
   /** Cinematic flight to a seat (STEP 05 uses this). */
-  flyToSeat(seat: number, onDone?: () => void): void {
+  flyToSeat(seat: number, onDone?: () => void, maxDuration = Infinity): void {
     const frames = planToSeat(this.planContext(), this.director.pose(), seat);
     const s = seatFrame(this.stadium.layout, seat);
     const v: LockedView = { id: 'uzun', label: 'Koltuk', caption: '', position: s.position, target: s.target, fov: s.fov, seat };
-    this.director.fly(frames, { ...v, id: 'seat' as ViewId }, onDone);
+    this.director.fly(frames, { ...v, id: 'seat' as ViewId }, onDone, maxDuration);
   }
 
   seatPrice(seat: number): number {
@@ -279,23 +343,33 @@ export class App {
 
   /**
    * Capture the current view without any highlight — the ticket image.
-   * Read back in the same task as the render (the drawing buffer is not preserved).
+   * The frame is copied into a small 2D canvas in the same task as the render
+   * (the drawing buffer is not preserved) and encoded off the main thread, so
+   * arriving at a seat does not stall on a full-resolution JPEG encode.
    */
-  captureView(): string {
+  captureView(): Promise<string> {
     const st = { ...this.selection.state };
     const hov = this.selection.hoverEnabled;
     Object.assign(this.selection.state, { block: -1, row: -1, seat: -1, hoverSeat: -1, hoverBlock: -1, mask: false });
     this.selection.hoverEnabled = false;
     this.selection.setHoverSet([]);
+    const src = this.engine.canvas;
+    const k = Math.min(1, 1280 / src.width);
+    const out = document.createElement('canvas');
+    out.width = Math.round(src.width * k);
+    out.height = Math.round(src.height * k);
     // the ticket shows the plain view from the seat, centred
-    const url = this.engine.withoutLensShift(() => {
+    this.engine.withoutLensShift(() => {
       this.renderNow();
-      return this.engine.canvas.toDataURL('image/jpeg', 0.88);
+      out.getContext('2d')!.drawImage(src, 0, 0, out.width, out.height);
     });
     Object.assign(this.selection.state, st);
     this.selection.hoverEnabled = hov;
-    this.renderNow();
-    return url;
+    // the next regular frame redraws the view with the lens shift and highlights
+    return new Promise((resolve) => {
+      if (out.toBlob) out.toBlob((b) => resolve(b ? URL.createObjectURL(b) : out.toDataURL('image/jpeg', 0.88)), 'image/jpeg', 0.88);
+      else resolve(out.toDataURL('image/jpeg', 0.88));
+    });
   }
 
   onFrame(fn: FrameHook): void {

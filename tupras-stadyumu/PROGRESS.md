@@ -14,13 +14,55 @@
 | STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
 | STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
 | STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
-| STEP 05 – Pick your seat, get the ticket | ✅ Tamamlandı — masaüstü + mobil uçtan uca akış hatasız |
+| STEP 05 – Pick your seat, get the ticket | ✅ Kullanıcı geri bildirimiyle yeniden kuruldu: tek buton → stadın içi → bölge → koltuk → görüş + fiyat |
 | Gece–gündüz / güneş sistemi | ✅ Tamamlandı — gerçek güneş konumu, kesintisiz gün akışı doğrulandı |
 | Dinamik yükleme / performans | ✅ Bakış yönü kırpma, koni akışı, havuz, LOD + çalışma anı kare süresi yöneticisi |
 
 ## Devam eden aşama
 
-Canlı link (Vercel kotası) ve isteğe bağlı görsel iyileştirmeler.
+Kullanıcının yeni akışı gözden geçirmesi; ardından "gerisini sonra hallederiz" dediği ayrıntılar.
+
+## Yeni koltuk seçim akışı (kullanıcı geri bildirimi, 20 Kasım)
+
+İstek: girişte yalnızca **tek buton ("Koltuk Seç")**; tıklayınca hızlıca (ama izlenebilir) stadın
+içine girilsin, donmasın; içeride etrafta bölgeler görünsün (Doğu Alt/Üst, Kuzey Alt/Üst — kale
+arkası …), bölge seçilsin, bölgeden koltuğa dokunulsun, koltuktan görüş + koltuk/sıra/bölge/fiyat
+görünsün, sonra bilet. Liste üzerinden "bilmeden" blok/sıra/numara seçtirme kalktı.
+
+Yapılanlar:
+- **Giriş kartı:** tek "Koltuk Seç" butonu. Kilitli görünüm çubuğu (STEP 02) ziyaretçi akışından
+  kaldırıldı; sunum/inceleme için `?views` ile açılıyor.
+- **Stadın içi (`insideFrame`):** kamera çatıdan tek hamlede iniyor (`planEnter`: açılış pozu →
+  çatı açıklığının üstü → sahanın üstünde Batı'ya yakın nokta, yüzü Doğu'ya), en fazla 3.8 s.
+  Varınca yerinde yavaşça dönüyor (~4°/s, kullanıcı sürükleyince durur); sürükleyerek 360° bakılıyor.
+- **Bölgeler (`src/ui/regions.ts`):** 4 tribün × alt/üst + VIP + Localar = 10 bölge, her satılık
+  blok tam bir bölgede. Tribünlerin üzerinde 3D etiketler (ad + "₺…’den"), panelde 2 sütun bölge
+  kartı (fiyat, boş koltuk). Bölgenin üzerine gelince (etiket, kart ya da stadın kendisi) tüm bölge
+  turuncu yanıyor; tıklayınca o bölgeye uçuluyor.
+- **Bölge kadrajı (`regionFrame`):** sahanın üstünden bölgenin ortasına bakış (Batı'da VIP / basın
+  tribünü ortada). Üst katlar alçaktan ve uzaktan (arka sıraların görüş çizgisi çatının iç kafes
+  kirişinin altından geçsin), alt katlar yakından (koltuklar dokunulacak büyüklükte). Bu adımda
+  boş koltuklar beyaz, satılmışlar gri; sürükleyerek bölgede sağa sola bakılıyor.
+- **Koltuk:** stadyumda koltuğa dokunmak o koltuğa uçuruyor (üzerine gelince ipucu: bölge · blok ·
+  sıra · koltuk · fiyat). Satılmış koltuğa dokunulursa aynı bloktaki en yakın boş koltuk seçilip
+  not düşülüyor. Koltukta panel: Bölge, Blok, Sıra, Koltuk, Kategori, **Fiyat**; sol/sağ koltuk,
+  "Bileti Gör", "Başka koltuk seç". Koltukta vurgu kapalı (maç günü görüntüsü).
+- **Uçuş süreleri (`PICKER_MAX`):** giriş 3.8 s, bölge 2.4 s, koltuk 4.2 s, geri 2.8 s, çıkış 4 s
+  (eski akışta havadan koltuğa 14 s). `Flight(frames, 1, maxDuration)` süreyi kısaltırken önce yol
+  kısımlarını sıkıştırıyor; dönüşler tepe noktasında 150°/s'yi geçmiyor. Arkaya dönüşlerde bakış
+  noktası kameranın içinden geçiyordu (tek karede 43° savrulma) → bakış yana süpürülüyor
+  (`sweepFrames`). `scripts/test-clips.ts`'e 164 seçim uçuşu eklendi (yatay + dikey ekran, her
+  bölge, bölge uçları): çarpışma yok, en büyük dönüş 3.15°/kare, süreler 1.5–4.2 s.
+
+Donma ölçümü (`scripts/hitch.mjs`, yükleme sonrası derlenen shader sayısı):
+- Önce: girişte +2 program (çatının saydamlaşması malzemeyi yeniden derletiyordu), detaylı koltuklar,
+  gölgeleri ve ID/vurgu geçişleri ilk kez stadın içinde çizildiği için orada derleniyor/yükleniyordu.
+- Şimdi: çatı saydamlığı kullanılmıyor; yükleme ekranında `App.warmUp()` tüm koltuk LOD'larını,
+  gölge vericilerini, ID ve vurgu geçişlerini bir kez çizerek bütün programları derliyor ve örnek
+  tamponlarını GPU'ya yüklüyor. Akışın hiçbir adımında (giriş, bölge, koltuk, geri) **yeni program
+  derlenmiyor (+0)**; kare başına en kötü CPU payı akış 10 ms, seçim 7 ms.
+- Koltuk görüntüsü (bilet) tam çözünürlükte eş zamanlı JPEG kodlanıyordu (telefonda 100–300 ms
+  donma) → 1280 px'e küçültülüp `toBlob` ile arka planda kodlanıyor.
 
 ## Bakış yönüne göre kırpma (kullanıcı isteği, "Subway Surfers" mantığı)
 
@@ -36,7 +78,7 @@ Canlı link (Vercel kotası) ve isteğe bağlı görsel iyileştirmeler.
   (önce 1.38 M + 1.21 M); aynı koltukta arkaya bakış 215 bin; havadan stadyuma bakış 454 bin,
   stadyuma sırtını dönünce 129 bin. Çizim çağrısı 480 → 180 (arkaya bakış).
 
-## STEP 05 doğrulaması (uçtan uca akış, `scripts/flow.mjs`)
+## STEP 05 doğrulaması (ilk akış — 20 Kasım'da yukarıdaki yeni akışla değiştirildi)
 
 Gerçek DOM tıklamalarıyla tam akış (960×540, `?fast&q=medium&msaa=0`), konsol hatası: **yok**.
 Giriş → "Koltuk Seç" → Batı tribünü (üzerine gelince tüm tribün turuncu) → Blok 416 → Sıra 12 →
@@ -184,6 +226,9 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 - `src/selection/{idpass,highlight,selection}.ts` — maske/ID geçişi, vurgu birleştirme, seçim ve GPU seçimi;
   `scripts/verify-mask.mjs` (test parametreleri: `?block=416`, `?mask`, `?sold`)
 - `public/brand/bjk-logo.svg` — resmî arma (Wikimedia Commons, PD-Turkey)
+- `src/ui/picker.ts`, `src/ui/regions.ts`, `src/ui/ticket.ts` — seçim akışı, bölgeler, dijital bilet
+- `scripts/flow.mjs` — uçtan uca akış (gerçek tıklama/dokunma), `scripts/regions.mjs` — tüm bölge
+  kadrajları, `scripts/hitch.mjs` — adım başına derlenen shader ve en yavaş CPU parçaları
 
 ## Yapılan önemli kararlar
 
@@ -225,13 +270,15 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 
 ## Sıradaki işlem
 
-STEP 05 tamam: masaüstü (960×540) ve mobil (iPhone 13) uçtan uca akış konsol hatası olmadan geçiyor
-(`scripts/with-server.sh node scripts/flow.mjs <dir> 960 540` / `… 0 0 mobile`).
+Yeni akış masaüstü (1280×720, 960×540) ve mobil (iPhone 13) uçtan uca konsol hatası olmadan geçiyor
+(`scripts/with-server.sh node scripts/flow.mjs <dir> 960 540 '' DOGU-lower` / `… 390 664 mobile`).
 
 **Yapılacak:**
-1. Canlı link: Vercel günlük deploy kotası dolu (402). 21 Kasım ~11:00 UTC için otomatik yeniden
-   deneme kuruldu; dal push'ları bağlı projeye (`tupras-stadyumu`) gider.
-2. İsteğe bağlı görsel iyileştirmeler (aşağıda).
+1. Kullanıcının yeni akışı denemesi ve geri bildirimi ("gerisini sonra hallederiz").
+2. Canlı link: Vercel hesabında aynı repoya bağlı 10 proje var; her push 10 deploy başlatıyor ve
+   günlük 100 sınırı hızla doluyor. Kullanıcı ilgisiz projelerin Git bağlantısını kesmeli.
+   `tupras-stadyumu` projesinin önizlemeleri Vercel girişi ister (Deployment Protection).
+3. İsteğe bağlı görsel iyileştirmeler (aşağıda).
 
 Not: bu ortamda tarayıcı yazılım GPU'su (SwiftShader) kullanıyor; kare başına 1–2 s sürüyor
 (ana iş parçacığı 6–12 ms). Gerçek GPU performansını göstermez — bu yüzden kare süresi yöneticisi

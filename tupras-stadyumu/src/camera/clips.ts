@@ -134,6 +134,38 @@ export function blockFrame(layout: StadiumLayout, b: Block): KeyFrame {
   return { position: p, target: c, fov: 52, label: 'Bloğa yaklaşma' };
 }
 
+/**
+ * The picker's "inside the stadium" pose: over the pitch, a little towards
+ * Batı, facing Doğu across the pitch. Both tiers of the stand ahead fit
+ * vertically; turning in place shows every other stand.
+ */
+export function insideFrame(portrait: boolean): KeyFrame {
+  return {
+    position: new Vector3(0, Y + 17, 16),
+    target: new Vector3(0, Y + 9, -60),
+    fov: portrait ? 64 : 58,
+    label: 'Stadın içi',
+  };
+}
+
+export type RegionKind = 'lower' | 'upper' | 'vip' | 'suite';
+
+/**
+ * Facing one region (a stand's tier, VIP or the suites) from over the pitch.
+ * Upper tiers are seen from low and far so the sight line to the back rows
+ * passes under the roof's inner truss; lower tiers from closer, where their
+ * seats are large enough to tap.
+ */
+export function regionFrame(layout: StadiumLayout, anchor: Block, kind: RegionKind, portrait: boolean): KeyFrame {
+  const c = blockCentre(anchor);
+  const spec = { lower: [-24, 9], upper: [-40, 11], vip: [-22, 8], suite: [-9, 14] }[kind];
+  let p = frontPoint(layout, anchor.tc, spec[0], spec[1]);
+  // the short ends have less room in front of them: never past the centre line
+  if (Math.abs(p.x) < 6 && Math.abs(anchor.center[0]) > 30) p.x = Math.sign(anchor.center[0]) * 6;
+  if (!overOpening(p.x, p.z, 4)) p = frontPoint(layout, anchor.tc, -12, spec[1]);
+  return { position: p, target: c, fov: portrait ? 64 : 56, label: 'Bölge' };
+}
+
 export function seatFrame(layout: StadiumLayout, seat: number, fov = 62): KeyFrame {
   const e = seatEye(layout, seat);
   const position = new Vector3(e.x, e.y + Y, e.z);
@@ -249,8 +281,12 @@ export function planToSeat(ctx: PlanContext, from: CameraPose, seat: number): Ke
       frames.push(bf, turnFrame(layout, bf, hover, b), hover, seatF);
       return dedupe(frames);
     }
-    // somewhere else in the bowl (stand / block frame)
-    frames.push(standFrame(layout, b));
+    // somewhere else in the bowl (stand / block / region frame): cross over the
+    // pitch to face the stand first, unless the camera already does
+    const sf = standFrame(layout, b);
+    const facing = from.target.clone().sub(from.position).normalize().dot(blockCentre(b).sub(from.position).normalize());
+    // (the picker's region frames face their blocks: straight to the block frame)
+    if (facing < 0.5) frames.push(sf);
   } else {
     // outside: (climb to the top frame,) then down through the roof opening
     const horiz = Math.hypot(from.position.x, from.position.z);
@@ -283,7 +319,7 @@ export function planToFrame(ctx: PlanContext, from: CameraPose, dest: KeyFrame, 
       h.label = 'Kalkış';
       frames.push(h);
     }
-    frames.push(dest);
+    frames.push(...sweepFrames(frames[frames.length - 1], dest), dest);
     return dedupe(frames);
   }
   if (!fromInside && destInside && viaBlock) {
@@ -320,6 +356,65 @@ export function planToFrame(ctx: PlanContext, from: CameraPose, dest: KeyFrame, 
   frames.push(liftFrame(ctx, from, dest));
   frames.push(dest);
   return dedupe(frames);
+}
+
+/** Longest picker moves, seconds: quick, but slow enough to follow (see Flight maxDuration). */
+export const PICKER_MAX = { enter: 3.8, region: 2.4, seat: 4.2, back: 2.8, exit: 4 };
+
+/** Out of the bowl for the picker: the entry route played backwards. */
+export function planExit(ctx: PlanContext, from: CameraPose, dest: KeyFrame): KeyFrame[] {
+  const here: KeyFrame = { position: from.position.clone(), target: from.target.clone(), fov: from.fov, label: 'Başlangıç' };
+  const frames = planEnter(ctx, dest, here).reverse();
+  frames[0] = here;
+  for (let i = 1; i < frames.length; i++) frames[i] = { ...frames[i], label: i === frames.length - 1 ? dest.label : 'Çatıdan çıkış' };
+  return frames;
+}
+
+/**
+ * Into the bowl for the picker: one arc to a point over the roof opening on
+ * the side the camera comes from, then straight down through the opening to
+ * the destination — two clips instead of the full drone route.
+ */
+export function planEnter(ctx: PlanContext, from: CameraPose, dest: KeyFrame): KeyFrame[] {
+  const { layout } = ctx;
+  if (isInside(layout, from.position)) return planToFrame(ctx, from, dest, null);
+  const frames: KeyFrame[] = [poseFrame(from, 'Başlangıç')];
+  const h = Math.hypot(from.position.x, from.position.z) || 1;
+  const above = new Vector3((from.position.x / h) * 12, Y + 82, (from.position.z / h) * 12);
+  const look = new Vector3(dest.target.x * 0.4, Y, dest.target.z * 0.4);
+  const over: KeyFrame = { position: above, target: look, fov: (from.fov + dest.fov) / 2, label: 'Çatıdan giriş' };
+  if (from.position.y < above.y + 30) frames.push(liftFrame(ctx, from, over));
+  frames.push(over, dest);
+  return dedupe(frames);
+}
+
+/**
+ * Turning round inside the bowl (facing one stand → facing another, or the
+ * pitch → the stand): with a straight blend of the look targets the target
+ * would pass through the camera and the view would whip round in one frame.
+ * Intermediate frames sweep the gaze sideways in plan, about 60° apart.
+ */
+function sweepFrames(a: CameraPose, b: CameraPose): KeyFrame[] {
+  const da = a.target.clone().sub(a.position);
+  const db = b.target.clone().sub(b.position);
+  const ya = Math.atan2(da.z, da.x);
+  let dy = Math.atan2(db.z, db.x) - ya;
+  dy = ((dy + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;
+  const turn = Math.abs(dy);
+  if (turn < (70 * Math.PI) / 180) return [];
+  const pa = Math.atan2(da.y, Math.hypot(da.x, da.z));
+  const pb = Math.atan2(db.y, Math.hypot(db.x, db.z));
+  const n = Math.ceil(turn / ((60 * Math.PI) / 180)) - 1;
+  const out: KeyFrame[] = [];
+  for (let k = 1; k <= n; k++) {
+    const f = k / (n + 1);
+    const p = a.position.clone().lerp(b.position, f);
+    const yaw = ya + dy * f;
+    const pitch = pa + (pb - pa) * f;
+    const t = p.clone().add(new Vector3(Math.cos(yaw) * Math.cos(pitch), Math.sin(pitch), Math.sin(yaw) * Math.cos(pitch)).multiplyScalar(40));
+    out.push({ position: p, target: t, fov: a.fov + (b.fov - a.fov) * f, label: 'Dönüş' });
+  }
+  return out;
 }
 
 /** Mid-air arc point between two outside poses, raised until the route clears obstacles. */
@@ -396,7 +491,12 @@ export class Flight {
   /** per clip: cumulative arc length at ARC_STEPS sub-steps of the curve parameter */
   private readonly arc: Float64Array[] = [];
 
-  constructor(frames: KeyFrame[], speed = 1) {
+  /**
+   * @param maxDuration the picker's moves are UI transitions: when the drone
+   *   budget would take longer, every clip is scaled down together so the
+   *   shape of the move (and its continuity) stays the same, only faster
+   */
+  constructor(frames: KeyFrame[], speed = 1, maxDuration = Infinity) {
     if (frames.length < 2) frames = [frames[0], { ...frames[0], label: frames[0].label }];
     this.frames = frames;
     this.n = frames.length;
@@ -451,6 +551,27 @@ export class Flight {
         }
       }
       if (!changed) break;
+      slopes = this.solveSlopes(lens, durs);
+    }
+    const total = durs.reduce((a, b) => a + b, 0);
+    if (total > maxDuration / speed) {
+      // squeeze the travel, not the turns: a clip never turns the view faster
+      // than ~150°/s at its peak (quintic peak ≈ 1.875 × the mean rate)
+      const floor = frames.slice(1).map((fr, i) => {
+        const d0 = frames[i].target.clone().sub(frames[i].position).normalize();
+        const d1 = fr.target.clone().sub(fr.position).normalize();
+        const ang = (Math.acos(Math.max(-1, Math.min(1, d0.dot(d1)))) * 180) / Math.PI;
+        return Math.min(durs[i], (ang * 1.875) / 150 / speed);
+      });
+      const fit = (k: number) => durs.reduce((s, d, i) => s + Math.max(floor[i], d * k), 0);
+      let lo = 0;
+      let hi = 1;
+      for (let it = 0; it < 40; it++) {
+        const mid = (lo + hi) / 2;
+        if (fit(mid) > maxDuration / speed) hi = mid;
+        else lo = mid;
+      }
+      for (let i = 0; i < segs; i++) durs[i] = Math.max(floor[i], durs[i] * lo);
       slopes = this.solveSlopes(lens, durs);
     }
     this.slopes = slopes;
