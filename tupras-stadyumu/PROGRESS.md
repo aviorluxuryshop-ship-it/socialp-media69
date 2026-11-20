@@ -105,8 +105,10 @@ Bu turda bulunup düzeltilenler:
   Seçili blokta ince kontur; satılmış koltuklar (müsaitlik modu) gri kalır. Maske modu: seçili
   blok kırmızı.
 - `scripts/verify-mask.mjs`: 4 görünüm × 17 blok: maske saflığı her durumda %100 (seçili bloğa
-  atfedilen her maske pikseli o bloğun koltuğu); görünür koltuk merkezlerinde tam koltuk kimliği
-  %96.5–100 (uzak sığ açılarda komşu koltuk), betona düşme < %6.
+  atfedilen her maske pikseli o bloğun koltuğu). Görünür koltuklarda tam koltuk kimliği normal
+  açılarda %93–100; sığ açıyla karşı uçtaki blokta (kale → 106) %85 (sonda komşu koltuğun
+  sırtlığına düşüyor) ve 470 m'den üstten bakışta %55 (koltuk pikselden küçük). Sonda noktası
+  koltuğun o an çizildiği LOD'a göre seçiliyor (son tur, uzak LOD eğik dörtgene geçtikten sonra).
 - Hatalar: ShaderPass uniform'ları klonladığı için render target dokusu `null` oluyordu (maske
   siyah) → dokular geçiş oluşturulduktan sonra bağlanıyor; GLSL3'te `gl_FragColor` yok → açık çıktı.
 - Görseller: `docs/screens/step04-*.jpg`.
