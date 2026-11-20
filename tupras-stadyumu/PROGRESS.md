@@ -14,15 +14,13 @@
 | STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
 | STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
 | STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
-| STEP 05 – Pick your seat, get the ticket | 🟡 Masaüstü + mobil uçtan uca akış hatasız; son görsel tur sürüyor |
+| STEP 05 – Pick your seat, get the ticket | ✅ Tamamlandı — masaüstü + mobil uçtan uca akış hatasız |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
-| Dinamik yükleme / performans | 🟡 Bakış yönüne göre kırpma + koni akışı eklendi ve ölçüldü; mobil bütçe ayarı bekliyor |
+| Dinamik yükleme / performans | ✅ Bakış yönü kırpma, koni akışı, havuz, LOD + çalışma anı kare süresi yöneticisi |
 
 ## Devam eden aşama
 
-**STEP 05** — tribün → blok → sıra → koltuk seçim akışı, fare ile koltuk vurgusu + fiyat,
-koltuğa uçuş, koltuktan görüş, dijital bilet (koltuğun gerçek görüş görüntüsüyle), VIP ve Loca
-seçenekleri, mobil + masaüstü testleri.
+Gece–gündüz son doğrulaması ve canlı link (Vercel kotası).
 
 ## Bakış yönüne göre kırpma (kullanıcı isteği, "Subway Surfers" mantığı)
 
@@ -213,25 +211,25 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 
 ## Sıradaki işlem
 
-STEP 05 durumu: `src/ui/picker.ts` (giriş kartı, tribün/blok/sıra/koltuk paneli, mobilde alt sayfa,
-VIP ve Loca yolları, 3D üzerine gelme ipucu + fiyat, 3D tıklama ile seçim, sol/sağ koltuk),
-`src/ui/ticket.ts` (koltuğun gerçek görüşüyle dijital bilet, PNG indirme, örnek "Bileti Al"),
-`src/ui/format.ts`, sıra vurgusu ve tribün grubu vurgusu (`setHoverSet`), koltukta etrafa bakma
-(`director.seatLook`). Tip denetimi, `npm test` ve üretim derlemesi geçiyor.
+STEP 05 tamam: masaüstü (960×540) ve mobil (iPhone 13) uçtan uca akış konsol hatası olmadan geçiyor
+(`scripts/with-server.sh node scripts/flow.mjs <dir> 960 540` / `… 0 0 mobile`).
 
-**Yapılacak (sıradaki oturum):**
-1. `node scripts/flow.mjs <dir> 960 540` ile uçtan uca akış testini tamamla (yarıda kaldı); hataları düzelt.
-2. Mobil test: `node scripts/flow.mjs <dir> 0 0 mobile` (iPhone 13 emülasyonu).
-3. Gece–gündüz son kontrolü, performans bütçeleri (kademe başına çizim çağrısı/üçgen, gölge boyutu).
-4. PROGRESS.md son hali.
+**Yapılacak:**
+1. Gece–gündüz: alacakaranlık pozlama düzeltmesinin taramasını doğrula (`scripts/daynight.mjs`).
+2. Canlı link: Vercel günlük deploy kotası dolu (402). 21 Kasım ~11:00 UTC için otomatik yeniden
+   deneme kuruldu; dal push'ları bağlı projeye (`tupras-stadyumu`) gider.
+3. İsteğe bağlı görsel iyileştirmeler (aşağıda).
 
 Not: bu ortamda tarayıcı yazılım GPU'su (SwiftShader) kullanıyor; kare başına 1–2 s sürüyor
-(ana iş parçacığı 6–12 ms). Gerçek GPU performansını göstermez. Test parametreleri:
-`?fast` (uçuşlar 5× hızlı), `?msaa=0`, `?nopost` (teşhis).
+(ana iş parçacığı 6–12 ms). Gerçek GPU performansını göstermez — bu yüzden kare süresi yöneticisi
+gerçek cihazda ölçüp karar veriyor. Test parametreleri: `?fast` (uçuşlar 5× hızlı), `?msaa=0`,
+`?nopost` (teşhis), `?gov` (yöneticiyi testte zorla aç), `?debug` (HUD).
 
 Bilinen görsel eksikler (sonra ele alınabilir):
 - Ağaçlar düşük poligon; yakında oyuncak gibi.
 - Batı tarafı gerçekte istinat duvarlarıyla ~30 m yüksek; modelde 60 m'lik eğimli geçiş var.
+- Bazı koltukların önünde kusma (vomitoryum) duvarı görüşü kısıtlıyor — gerçekte de öyle; istenirse
+  bu koltuklara "kısıtlı görüş" etiketi eklenebilir.
 
 ## Nasıl çalıştırılır
 
