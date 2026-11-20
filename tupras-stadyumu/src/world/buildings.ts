@@ -17,7 +17,10 @@ import {
 import type { BuildingRec, World } from './data.ts';
 
 // Istanbul façade palette: creams, sands, pale greys and a few pastels
-const FACADE_COLORS = ['#d9d0bf', '#cfc4ad', '#e4ddd0', '#c9c3b9', '#d8c8a8', '#bfb7ab', '#e1d3bd', '#cbbfaa'].map((c) => new Color(c));
+const FACADE_COLORS = [
+  '#cdbfa6', '#b9a88e', '#d6cab5', '#a9a39a', '#c8b39a', '#ddd1bd', '#b3a996', '#c4b6a2',
+  '#c79f82', '#cdb98a', '#9da69f', '#bfae9d', '#d2c3ac', '#a8988a', '#e0d6c6', '#b7aa8f',
+].map((c) => new Color(c));
 const ROOF_COLORS = [new Color('#8f5a43'), new Color('#7d7a76'), new Color('#9a968f'), new Color('#a0624a')];
 const KIND_COLORS: Record<number, Color> = {
   1: new Color('#f1ece2'), // palace / historic: white marble
@@ -51,23 +54,31 @@ float bhash(vec3 p){ p = fract(p*0.3183099+vec3(0.71,0.113,0.419)); p*=17.0; ret
         `#include <color_fragment>
 float wMask = 0.0;
 float lit = 0.0;
+vec2 bCell = vec2(0.0);
 if (vInfo.y < 0.5) {
   float kind = vInfo.x;
   float bayW = kind > 1.5 && kind < 2.5 ? 1.6 : 3.1;
   float flH = kind > 0.5 && kind < 1.5 ? 4.6 : 3.2;
   vec2 cell = vec2(vFacade.x / bayW, vFacade.y / flH);
+  bCell = cell;
   vec2 f = fract(cell);
   float wx = kind > 1.5 && kind < 2.5 ? step(0.06, f.x) * step(f.x, 0.94) : step(0.24, f.x) * step(f.x, 0.76);
   float wy = kind > 1.5 && kind < 2.5 ? step(0.12, f.y) * step(f.y, 0.9) : step(0.3, f.y) * step(f.y, 0.82);
   float ground = step(1.0, cell.y);
   wMask = wx * wy * ground;
+  // screen-space filtering: when a window cell shrinks below ~2 px, fade the
+  // hard grid into its average coverage so distant façades do not shimmer
+  vec2 fwc = fwidth(cell);
+  float blur = smoothstep(0.3, 0.85, max(fwc.x, fwc.y));
+  float meanW = kind > 1.5 && kind < 2.5 ? 0.69 : 0.27;
+  wMask = mix(wMask, meanW * ground, blur);
   // mosques: no regular window grid
   if (kind > 2.5) wMask *= step(0.5, fract(cell.x * 0.5));
   vec3 glass = kind > 1.5 && kind < 2.5 ? vec3(0.16, 0.22, 0.28) : vec3(0.07, 0.08, 0.09);
   diffuseColor.rgb = mix(diffuseColor.rgb, glass, wMask * 0.88);
   float h = bhash(vec3(floor(cell), vInfo.z * 97.0));
   float share = kind > 0.5 && kind < 1.5 ? 0.0 : (kind > 1.5 && kind < 2.5 ? 0.3 : 0.42);
-  lit = wMask * step(1.0 - share, h);
+  lit = mix(wMask * step(1.0 - share, h), wMask * share, blur);
 }
 `,
       )
@@ -81,7 +92,7 @@ roughnessFactor = mix(roughnessFactor, 0.12, wMask);`,
         `#include <emissivemap_fragment>
 float warm = bhash(vec3(vFacade.x * 0.37, vInfo.z * 13.0, 5.0));
 vec3 winCol = mix(vec3(1.0, 0.72, 0.42), vec3(0.85, 0.9, 1.0), step(0.75, warm));
-totalEmissiveRadiance += winCol * lit * uNight * (0.9 + 0.9 * bhash(vec3(floor(cell.y), vInfo.z, 3.0)));
+totalEmissiveRadiance += winCol * lit * uNight * (0.9 + 0.9 * bhash(vec3(floor(bCell.y), vInfo.z, 3.0)));
 // floodlit historic façades at night
 totalEmissiveRadiance += (vInfo.x > 0.5 && vInfo.x < 1.5 && vInfo.y < 0.5) ? vec3(1.0, 0.86, 0.66) * 0.22 * uNight * (1.0 - wMask) : vec3(0.0);
 `,
@@ -177,7 +188,7 @@ export function buildBuildingsGeometry(world: World, recs: BuildingRec[]): Buffe
     if (base < 0.5 && world.isWater(cx, cz)) continue; // piers / bad data over water
     base -= 0.8; // sink slightly so slopes never show a gap
     const seed = ((Math.abs(ringFlat[0] * 13.37 + ringFlat[1] * 7.77) % 1000) / 1000) + 0.001;
-    const wallColor = (KIND_COLORS[kind] ?? FACADE_COLORS[variant % FACADE_COLORS.length]).clone();
+    const wallColor = (KIND_COLORS[kind] ?? FACADE_COLORS[(variant * 2 + Math.floor(seed * 2)) % FACADE_COLORS.length]).clone();
     // gentle per-building tint so the fabric is not uniform
     wallColor.offsetHSL(0, 0, (seed - 0.5) * 0.06);
     const top = base + 0.8 + height;
@@ -194,7 +205,7 @@ export function buildBuildingsGeometry(world: World, recs: BuildingRec[]): Buffe
       // ring is counter-clockwise in (x, z): outward normal = (dz, −dx)
       const nx = (z2 - z1) / len, nz = -(x2 - x1) / len;
       const shade = 0.9 + 0.1 * Math.abs(nx); // fake bounce variation per orientation
-      const c = wallColor.clone().multiplyScalar(shade);
+      const c = wallColor.clone().multiplyScalar(shade * 0.92);
       const a = vtx(b, x1, bottom, z1, nx, 0, nz, c, info, acc, bottom - base);
       const bb = vtx(b, x2, bottom, z2, nx, 0, nz, c, info, acc + len, bottom - base);
       const cc = vtx(b, x2, top, z2, nx, 0, nz, c, info, acc + len, top - base);

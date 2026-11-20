@@ -24,7 +24,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   Points,
-  PointsMaterial,
+  ShaderMaterial,
   Sphere,
   Vector3,
   type Camera,
@@ -87,7 +87,7 @@ export class ChunkStreamer {
   private readonly pool: ChunkObj[] = [];
   private readonly areas: AreaIndex[];
   private readonly lightsByChunk = new Map<string, number[]>();
-  readonly lightMaterial: PointsMaterial;
+  readonly lightMaterial: ShaderMaterial;
   private queue: ChunkState[] = [];
   private q: QualitySettings;
   private readonly frustum = new Frustum();
@@ -103,12 +103,24 @@ export class ChunkStreamer {
     this.q = q;
     this.group.name = 'city-chunks';
     this.areas = indexAreas(world);
-    this.lightMaterial = new PointsMaterial({
-      map: glowTexture(),
-      size: 9,
-      sizeAttenuation: true,
+    this.lightMaterial = new ShaderMaterial({
+      uniforms: { map: { value: glowTexture() }, opacity: { value: 0 }, scale: { value: 900 } },
+      vertexShader: `
+        uniform float scale; varying float vFade;
+        void main(){
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          float d = -mv.z;
+          gl_PointSize = clamp(6.0 * scale / max(d, 1.0), 1.5, 10.0);
+          vFade = smoothstep(25.0, 90.0, d);
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        uniform sampler2D map; uniform float opacity; varying float vFade;
+        void main(){
+          vec4 t = texture2D(map, gl_PointCoord);
+          gl_FragColor = vec4(t.rgb * 2.2, t.a * opacity * vFade);
+        }`,
       transparent: true,
-      opacity: 0,
       depthWrite: false,
       blending: AdditiveBlending,
     });
@@ -315,7 +327,7 @@ export class ChunkStreamer {
 
   /** Night factor drives street-light sprites. */
   setNight(n: number): void {
-    this.lightMaterial.opacity = Math.min(1, n * 1.2);
+    this.lightMaterial.uniforms.opacity.value = Math.min(1, n * 1.2);
     this.lightMaterial.visible = n > 0.02;
   }
 }

@@ -15,23 +15,23 @@ export interface GroundCoverage {
 }
 
 const AREA_FILL: Record<number, string> = {
-  1: '#6f8d4f',
-  2: '#4e6d3e',
-  3: '#7e8966',
-  4: '#5d8c48',
-  5: '#4c9cc0',
-  6: '#d2cabb',
-  7: '#9d9c97',
+  1: '#5d7a40',
+  2: '#3f5a31',
+  3: '#6c7556',
+  4: '#4f7d3b',
+  5: '#3f8eb3',
+  6: '#bcb3a2',
+  7: '#85837d',
 };
 
 const ROAD_FILL: Record<number, string> = {
-  0: '#3d3e41',
-  1: '#45464a',
-  2: '#4b4c50',
-  3: '#55565a',
-  4: '#66666a',
-  5: '#cfc7b6',
-  6: '#bfb6a5',
+  0: '#36373a',
+  1: '#3b3c3f',
+  2: '#424345',
+  3: '#4c4d4f',
+  4: '#5a5a5b',
+  5: '#b3aa98',
+  6: '#a69d8c',
 };
 
 export function paintGround(world: World, cx: number, cz: number, size: number, px: number): GroundCoverage {
@@ -61,7 +61,7 @@ export function paintGround(world: World, cx: number, cz: number, size: number, 
   };
 
   // base: urban ground; noise gives the fabric some life
-  d.fillStyle = '#9c968a';
+  d.fillStyle = '#8e877a';
   d.fillRect(0, 0, px, px);
   n.fillStyle = '#000000';
   n.fillRect(0, 0, px, px);
@@ -77,7 +77,7 @@ export function paintGround(world: World, cx: number, cz: number, size: number, 
   d.putImageData(img, 0, 0);
 
   // stadium plaza
-  d.fillStyle = '#cdc4b3';
+  d.fillStyle = '#b8ae9c';
   path(d, world.json.site, true);
   d.fill();
 

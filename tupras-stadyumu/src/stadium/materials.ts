@@ -147,7 +147,7 @@ export class StadiumMaterials {
     const ledLevel = 0.75 + (1 - daylight) * 0.6;
     this.led.color.setScalar(ledLevel);
     this.boards.color.setScalar(ledLevel);
-    this.floodlight.color.setScalar(0.35 + lights * 6.0);
+    this.floodlight.color.setScalar(0.35 + lights * 9.0);
   }
 
   all(): Material[] {

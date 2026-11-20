@@ -11,8 +11,8 @@
 | Veri hattı (OSM + SRTM → `public/data`) | ✅ Tamamlandı — `scripts/build_world.py` |
 | Koltuk yerleşim motoru (saf veri) | ✅ Tamamlandı, testler geçiyor — `src/stadium/layout.ts` |
 | STEP 01 – Stadium in code | ✅ Tamamlandı ve görsel olarak doğrulandı |
-| STEP 02 – Every view camera locked | 🟡 Sıradaki |
-| STEP 03 – Clips start and end | ⏳ Bekliyor |
+| STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
+| STEP 03 – Clips start and end | 🟡 Sıradaki |
 | STEP 04 – Choice in post (maske/vurgu) | ⏳ Bekliyor |
 | STEP 05 – Pick your seat, get the ticket | ⏳ Bekliyor |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
@@ -20,8 +20,24 @@
 
 ## Devam eden aşama
 
-**STEP 02** — sabit kamera görünümleri (üstten, dış geniş açı, uzun tribün, kale arkası,
-VIP loca, çatı, Boğaz) ve aynı geometri üzerinde malzeme/ışık/gölge gerçekçiliği.
+**STEP 03** — sinematik kamera klipleri: üstten → yaklaşma → tribüne iniş → blok → koltuk;
+her klibin son karesi bir sonrakinin ilk karesi; drone hareketi; ani sıçrama yok.
+
+## STEP 02 doğrulaması
+
+- 7 kilitli görünüm (`src/camera/views.ts`): Üstten, Dış Cephe, Uzun Tribün (Batı Üst · 416),
+  Kale Arkası (Kuzey Alt), VIP Loca (Batı ortası, Loca 74), Çatı, Boğaz. Koltuk görünümleri
+  gerçek bir koltuğun göz noktasından (yerleşim verisinden) türetilir; kusma tüneli önündeki
+  sıralar otomatik atlanır.
+- **Geometri özdeşliği testi**: `?pass=normal` (yalnızca yüzey normalleri, ışıksız) ile her görünüm
+  11:00 ve 22:00'de çizildi → 7/7 görünümde %0.000 fark, maks. piksel farkı 0
+  (`node scripts/views.mjs <dir> "11:00,22:00" "q=high&pass=normal"` +
+  `python3 -I scripts/compare_views.py <dir> 1100 2200`).
+- Gerçekçilik: yansıtıcı malzemelere (cam, su) ayrı ortam haritası; dağınık gökyüzü ışığı güneşin
+  ~1/4'ü; gölge kutusu bakılan yere odaklanıyor ve ışık uzayında dokuya hizalı (titremesiz);
+  zeminde dünya-uzayı detay dokusu; bina pencereleri ekran-uzayında filtreli; gece stadyum içinde
+  pozlama uyumu; yalnızca gerçek ışık kaynakları bloom alıyor; sokak lambası noktaları sınırlı.
+- Görseller: `docs/screens/step02-*.jpg`.
 
 ## STEP 01 doğrulaması (2026-11-20)
 
@@ -53,6 +69,11 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 - `src/world/{data,ground,terrain,buildings,trees,streaming,water,landmarks,farCity}.ts` — çevre
 - `src/lighting/{sun,atmosphere}.ts` — gerçek güneş konumu, gökyüzü, ışıklar, sis, yansıma
 - `scripts/shot.mjs` — Playwright ile ekran görüntüsü (`node scripts/shot.mjs out.png "t=13:30&cam=x,y,z&look=x,y,z"`)
+- `src/app.ts` — uygulama kökü (sahne, dünya, atmosfer, son işlem, kamera, kare döngüsü)
+- `src/core/post.ts` — son işlem: MSAA HDR hedef → bloom (gece, yüksek kademe) → ton eşleme
+- `src/camera/{views,director}.ts` — kilitli görünümler, kamera yönetimi (serbest/kilitli)
+- `src/ui/viewsBar.ts` — görünüm çubuğu
+- `scripts/views.mjs`, `scripts/compare_views.py` — görünüm çıktıları ve geometri özdeşlik testi
 - `public/brand/bjk-logo.svg` — resmî arma (Wikimedia Commons, PD-Turkey)
 
 ## Yapılan önemli kararlar
@@ -80,6 +101,12 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 - Vertex-color'lu taş malzemesi renk özniteliği olmayan kutulara uygulanınca siyah görünüyordu
   (Eski Açık kuleleri) → `stonePlain`.
 - Vite 8 (rolldown) `manualChunks` için fonksiyon istiyor.
+- Bina gölgelendiricisinde `if` bloğu içindeki `cell` dışarıdan kullanılıyordu → derleme hatası,
+  binalar çizilmiyordu (STEP 01 son gece ayarında girmişti). Düzeltildi; görünüm betiği artık
+  konsol hatalarını basıyor.
+- `scene.environmentIntensity`, kendi `envMap`'i olmayan malzemelerde `envMapIntensity`'yi ezer →
+  cam/su için ortam haritası açıkça atanıyor.
+- Gece iç görünümler bloom yüzünden beyaza patlıyordu → eşik 2.2 (HDR), stadyum içinde pozlama kısılıyor.
 
 ## Düzeltilmesi gerekenler / açık konular
 
@@ -89,14 +116,13 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 
 ## Sıradaki işlem
 
-STEP 02: `src/camera/views.ts` — adlandırılmış sabit görünümler (konum/hedef/FOV), görünüm seçici,
-malzeme ve ışık iyileştirmeleri (zemin rengi soğuk/mavimsi, binalar soluk, cam yansımaları,
-su tonu, gölge yumuşaklığı), görüntülerin aynı geometriden geldiğinin testi.
+STEP 03: `src/camera/clips.ts` — kamera klipleri (başlangıç/bitiş kareleri, Bézier/Catmull-Rom yol,
+yumuşak hız profili, bakış yönünün kuaternion ile yumuşak geçişi, çatı açıklığından iniş),
+`director` içinde 'flying' modu, görünüm çubuğunun uçuşla çalışması, kesintisizlik testi
+(ardışık karelerde konum/yön sıçraması ölçümü).
 
-Bilinen görsel eksikler (STEP 02'de ele alınacak):
-- Zemin dokusu gündüz mavimsi-gri görünüyor (gökyüzü ışığı); daha sıcak/koyu ve dokulu olmalı.
-- Ağaçlar hâlâ düşük poligon; uzaktan iyi, yakında oyuncak gibi.
-- Bina cepheleri çok açık; pencere ızgarası uzakta gürültü yapıyor (filtrelenmeli).
+Bilinen görsel eksikler (sonra ele alınabilir):
+- Ağaçlar düşük poligon; yakında oyuncak gibi.
 - Batı tarafı gerçekte istinat duvarlarıyla ~30 m yüksek; modelde 60 m'lik eğimli geçiş var.
 
 ## Nasıl çalıştırılır

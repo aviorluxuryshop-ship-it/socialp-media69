@@ -23,11 +23,13 @@ export class Engine {
   quality: QualitySettings;
   reversedDepth = false;
   private world: World | null = null;
+  private readonly resizeFns: ((w: number, h: number) => void)[] = [];
 
   constructor(container: HTMLElement, quality: QualitySettings) {
     this.quality = quality;
     const renderer = new WebGLRenderer({
-      antialias: quality.antialias,
+      // MSAA happens in the post pipeline's multisampled target
+      antialias: false,
       powerPreference: 'high-performance',
       reversedDepthBuffer: !new URLSearchParams(location.search).has('nrz'),
       preserveDrawingBuffer: false,
@@ -51,12 +53,17 @@ export class Engine {
     this.world = world;
   }
 
+  onResize(fn: (w: number, h: number) => void): void {
+    this.resizeFns.push(fn);
+  }
+
   resize(container: HTMLElement): void {
     const w = container.clientWidth;
     const h = container.clientHeight;
     this.renderer.setSize(w, h);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    for (const f of this.resizeFns) f(w, h);
   }
 
   /**

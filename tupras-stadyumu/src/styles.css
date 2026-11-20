@@ -236,3 +236,88 @@ body {
     width: 72px;
   }
 }
+
+/* ---------------------------------------------------------------- views bar */
+.views-bar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 22px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+  max-width: calc(100vw - 2 * var(--gutter));
+}
+
+.views-caption {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.views-list {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(14, 14, 16, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.views-list::-webkit-scrollbar {
+  display: none;
+}
+
+.view-btn {
+  flex: 0 0 auto;
+  font: 600 13px var(--font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: color 0.2s, background 0.25s;
+}
+
+.view-btn:hover {
+  color: var(--paper);
+}
+
+.view-btn.active {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.view-btn:focus-visible,
+.chip:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .views-bar {
+    left: var(--gutter);
+    right: var(--gutter);
+    transform: none;
+    max-width: none;
+  }
+  .view-btn {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}

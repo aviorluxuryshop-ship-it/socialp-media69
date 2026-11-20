@@ -5,6 +5,7 @@
 import { BufferAttribute, BufferGeometry, Color, Mesh, MeshStandardMaterial, type IUniform } from 'three';
 import type { World } from './data.ts';
 import type { GroundCoverage } from './ground.ts';
+import { detailTexture } from '../core/textures.ts';
 
 export function chunkTerrainGeometry(world: World, x0: number, z0: number, size: number, step: number, cover: GroundCoverage): BufferGeometry | null {
   const n = Math.round(size / step);
@@ -98,6 +99,24 @@ export function groundMaterial(cover: GroundCoverage, u: TerrainUniforms): MeshS
     metalness: 0,
   });
   m.userData.night = u.uNight;
+  // fine world-space detail so the painted ground does not look blurry up close
+  const detail = detailTexture('asphalt');
+  m.onBeforeCompile = (shader) => {
+    shader.uniforms.tDetail = { value: detail };
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec2 vGW;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvGW = (modelMatrix * vec4(transformed, 1.0)).xz;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform sampler2D tDetail;\nvarying vec2 vGW;')
+      .replace(
+        '#include <map_fragment>',
+        `#include <map_fragment>
+        float dA = texture2D(tDetail, vGW / 7.0).r;
+        float dB = texture2D(tDetail, vGW / 53.0 + 0.37).r;
+        diffuseColor.rgb *= 0.78 + 0.32 * (dA * 0.55 + dB * 0.45);`,
+      );
+  };
+  m.customProgramCacheKey = () => 'ground-detail-v1';
   return m;
 }
 

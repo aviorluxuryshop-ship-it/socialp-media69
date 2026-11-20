@@ -23,6 +23,7 @@ import {
   Vector3,
   type WebGLRenderer,
   type WebGLRenderTarget,
+  type MeshStandardMaterial,
 } from 'three';
 import { Sky } from 'three/addons/objects/Sky.js';
 import type { World } from '../world/data.ts';
@@ -80,6 +81,7 @@ export class Atmosphere {
     this.scene = scene;
     this.renderer = renderer;
     this.pmrem = new PMREMGenerator(renderer);
+    this.pitchElevation = pitchElevation;
     this.group.name = 'atmosphere';
 
     // sky dome (scaled far, rendered behind everything)
@@ -146,6 +148,41 @@ export class Atmosphere {
     scene.add(this.group);
   }
 
+  /** materials that keep strong reflections even though the diffuse ambient is low */
+  private readonly reflective: { m: MeshStandardMaterial; k: number }[] = [];
+
+  registerReflective(m: MeshStandardMaterial, intensity: number): void {
+    this.reflective.push({ m, k: intensity });
+    if (this.envRT) {
+      m.envMap = this.envRT.texture;
+      m.envMapIntensity = intensity;
+      m.needsUpdate = true;
+    }
+  }
+
+  private readonly shadowFocus = new Vector3();
+  private readonly pitchElevation: number;
+  private shadowExtent = 175;
+
+  /**
+   * Centre the sun's shadow box on what the camera is looking at: tight around
+   * the stadium for seat and stand views, wider for aerials.
+   */
+  setShadowFocus(cameraPos: Vector3, target: Vector3): void {
+    const ground = this.world.heightAt(cameraPos.x, cameraPos.z);
+    const height = Math.max(0, cameraPos.y - Math.max(ground, 0));
+    const dir = new Vector3().subVectors(target, cameraPos);
+    const dist = dir.length();
+    dir.normalize();
+    const reach = Math.min(dist, 120 + height * 1.2);
+    const p = cameraPos.clone().addScaledVector(dir, reach);
+    p.y = Math.max(0, this.world.heightAt(p.x, p.z));
+    // stadium views stay centred on the stadium so the roof shadow is always complete
+    if (Math.hypot(cameraPos.x, cameraPos.z) < 220 && height < 160) p.set(0, this.pitchElevation, 0);
+    this.shadowFocus.copy(p);
+    this.shadowExtent = Math.min(650, Math.max(175, height * 1.4 + dist * 0.15));
+  }
+
   /** Called every frame. `dt` in seconds; `instant` skips smoothing. */
   update(sun: SunState, cameraPos: Vector3, dt: number, instant = false): void {
     if (Number.isNaN(this.curAlt) || instant) {
@@ -182,21 +219,43 @@ export class Atmosphere {
     const dir = new Vector3().copy(this.sunDir);
     if (dir.y < 0.08) dir.y = 0.08;
     dir.normalize().lerp(moonDir, 1 - sunUp).normalize();
-    this.sun.position.copy(this.target.position).addScaledVector(dir, 420);
+    // shadow box: follow the focus, snapped to whole texels to avoid shimmering
+    const ext = this.shadowExtent;
+    const sc = this.sun.shadow.camera;
+    if (sc.right !== ext) {
+      sc.left = -ext;
+      sc.right = ext;
+      sc.top = ext;
+      sc.bottom = -ext;
+      sc.far = 900 + ext;
+      sc.updateProjectionMatrix();
+    }
+    // snap the focus to whole shadow texels in light space
+    const texel = (2 * ext) / this.sun.shadow.mapSize.x;
+    const fwd = dir.clone();
+    const right = new Vector3(0, 1, 0).cross(fwd);
+    if (right.lengthSq() < 1e-6) right.set(1, 0, 0);
+    right.normalize();
+    const upv = new Vector3().crossVectors(fwd, right).normalize();
+    const a = Math.round(this.shadowFocus.dot(right) / texel) * texel;
+    const b = Math.round(this.shadowFocus.dot(upv) / texel) * texel;
+    const c = this.shadowFocus.dot(fwd);
+    this.target.position.copy(right.multiplyScalar(a)).addScaledVector(upv, b).addScaledVector(fwd, c);
+    this.sun.position.copy(this.target.position).addScaledVector(dir, 420 + ext * 0.5);
     const warm = new Color(0xffa45c);
     const white = new Color(0xfff4e6);
     const moon = new Color(0x9db4ff);
     const sunCol = warm.clone().lerp(white, smooth(4, 30, alt));
     this.sun.color.copy(moon).lerp(sunCol, sunUp);
-    this.sun.intensity = 0.22 * (1 - sunUp) + sunUp * (0.6 + 2.9 * smooth(0, 35, alt));
+    this.sun.intensity = 0.22 * (1 - sunUp) + sunUp * (1.0 + 4.0 * smooth(0, 35, alt));
     this.sun.shadow.intensity = 0.35 + 0.65 * sunUp;
 
     // sky fill
-    const skyDay = new Color(0xb9d3f2), skyGold = new Color(0xf2b68a), skyNight = new Color(0x1d2742);
-    const gDay = new Color(0x8c8270), gNight = new Color(0x0d0d12);
+    const skyDay = new Color(0xc3d2e4), skyGold = new Color(0xf0b88e), skyNight = new Color(0x1d2742);
+    const gDay = new Color(0x9a8a70), gNight = new Color(0x0d0d12);
     this.hemi.color.copy(skyNight).lerp(skyDay, f.day).lerp(skyGold, f.golden * 0.55);
     this.hemi.groundColor.copy(gNight).lerp(gDay, f.day);
-    this.hemi.intensity = 0.22 + 0.38 * f.day;
+    this.hemi.intensity = 0.16 + 0.2 * f.day;
 
     // fog / haze tint follows the horizon
     const fogDay = new Color(0xc6d2df), fogGold = new Color(0xdcae8e), fogNight = new Color(0x161a26);
@@ -213,11 +272,15 @@ export class Atmosphere {
     this.stars.position.copy(cameraPos);
 
     // floodlights
-    for (const s of this.floods) s.intensity = f.lights * 2.6;
-    this.bowlFill.intensity = f.lights * 1.1;
+    for (const s of this.floods) s.intensity = f.lights * 1.55;
+    this.bowlFill.intensity = f.lights * 0.5;
 
-    // exposure: open up a little at dusk and night
-    this.renderer.toneMappingExposure = 0.82 + f.golden * 0.12 + f.night * 0.32;
+    // exposure: open up at dusk and night outside; inside the lit bowl the eye
+    // adapts to the floodlights, so close down again (like a camera would)
+    const horiz = Math.hypot(cameraPos.x, cameraPos.z);
+    const inside = (1 - smooth(95, 150, horiz)) * (1 - smooth(this.pitchElevation + 45, this.pitchElevation + 90, cameraPos.y));
+    const nightOpen = f.night * 0.3 * (1 - inside * f.lights) - inside * f.lights * 0.12;
+    this.renderer.toneMappingExposure = 0.92 + f.golden * 0.12 * (1 - inside) + nightOpen;
 
     // environment map: regenerate when the sky changed enough (throttled)
     const now = performance.now();
@@ -228,7 +291,14 @@ export class Atmosphere {
       if (this.envRT) this.envRT.dispose();
       this.envRT = rt;
       this.scene.environment = rt.texture;
-      this.scene.environmentIntensity = 0.25 + 0.45 * f.day + f.lights * 0.1;
+      // diffuse sky light stays well below the sun (clear-sky ratio ≈ 1:4)
+      this.scene.environmentIntensity = 0.12 + 0.16 * f.day + f.lights * 0.08;
+      for (const { m, k } of this.reflective) {
+        const fresh = m.envMap === null;
+        m.envMap = rt.texture;
+        m.envMapIntensity = k * (0.45 + 0.55 * f.day);
+        if (fresh) m.needsUpdate = true;
+      }
     }
   }
 

@@ -60,6 +60,7 @@ function normalTexture(size = 256): CanvasTexture {
 
 export interface WaterHandle {
   mesh: Mesh;
+  material: MeshStandardMaterial;
   update(time: number): void;
   setNight(n: number): void;
 }
@@ -69,11 +70,11 @@ export function buildWater(): WaterHandle {
   nt.repeat.set(1, 1);
   const uTime: IUniform<number> = { value: 0 };
   const mat = new MeshStandardMaterial({
-    color: new Color('#0b2833'),
-    roughness: 0.16,
+    color: new Color('#0a2430'),
+    roughness: 0.22,
     metalness: 0.0,
     normalMap: nt,
-    normalScale: new Vector2(0.32, 0.32),
+    normalScale: new Vector2(0.2, 0.2),
     envMapIntensity: 0.85,
   });
   mat.onBeforeCompile = (shader) => {
@@ -92,7 +93,10 @@ export function buildWater(): WaterHandle {
         vec3 n3 = texture2D( normalMap, wuv / 410.0 + vec2( uTime * 0.002, -uTime * 0.003 ) ).xyz * 2.0 - 1.0;
         // the plane is horizontal: build the normal in world space directly
         // (UV derivatives over a 60 km plane are too small for a stable TBN)
-        vec2 slope = ( n1.xy + n2.xy * 0.6 + n3.xy * 0.9 ) * normalScale;
+        vec2 slope = ( n1.xy + n2.xy * 0.6 + n3.xy * 0.35 ) * normalScale;
+        // calmer far away: waves average out over a pixel at grazing angles
+        float far = clamp( length( vWPos - cameraPosition ) / 2500.0, 0.0, 1.0 );
+        slope *= mix( 1.0, 0.45, far );
         vec3 worldN = normalize( vec3( slope.x, 1.0, slope.y ) );
         normal = normalize( mat3( viewMatrix ) * worldN );
         `,
@@ -108,12 +112,13 @@ export function buildWater(): WaterHandle {
   mesh.renderOrder = -1;
   return {
     mesh,
+    material: mat,
     update(time: number) {
       uTime.value = time;
     },
     setNight(n: number) {
-      mat.color.set('#0b2833').lerp(new Color('#040e14'), n);
-      mat.roughness = 0.16 + n * 0.04;
+      mat.color.set('#0a2430').lerp(new Color('#040e14'), n);
+      mat.roughness = 0.22 + n * 0.04;
     },
   };
 }
