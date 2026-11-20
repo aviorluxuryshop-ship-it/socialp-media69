@@ -7,9 +7,10 @@
  * grey, and at the seat the real view is captured for the ticket.
  */
 import type { App } from '../app.ts';
-import { STANDS, type StandId } from '../stadium/config.ts';
+import { Vector3 } from 'three';
+import { PITCH_ELEVATION, STANDS, type StandId } from '../stadium/config.ts';
 import type { Block } from '../stadium/layout.ts';
-import { blockFrame, standFrame } from '../camera/clips.ts';
+import { blockFrame, standFrame, type KeyFrame } from '../camera/clips.ts';
 import type { PickResult } from '../selection/idpass.ts';
 import { availability, blockTitle, categoryName, escapeHtml, price, standName, tierName } from './format.ts';
 import { showTicket, ticketFor } from './ticket.ts';
@@ -69,6 +70,9 @@ export class SeatPicker {
       <div class="picker-body"></div>
       <div class="picker-foot"></div>`;
     document.body.appendChild(this.panel);
+    // frame the 3D view in the screen area the panel leaves free
+    new ResizeObserver(() => this.updateLensShift()).observe(this.panel);
+    window.addEventListener('resize', () => this.updateLensShift());
     this.body = this.panel.querySelector('.picker-body')!;
     this.foot = this.panel.querySelector('.picker-foot')!;
     this.panel.querySelector('[data-act="back"]')!.addEventListener('click', () => this.back());
@@ -109,14 +113,61 @@ export class SeatPicker {
     return lower.sort((a, b) => ang(a) - ang(b))[0];
   }
 
+  /**
+   * Seat-map overview for the stand step: almost straight down through the
+   * see-through roof. The lens shift centres it in the area the panel leaves
+   * free; here only the distance is chosen so the bowl fits that area.
+   */
+  private overviewFrame(): KeyFrame {
+    const cam = this.app.engine.camera;
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const sheet = W <= 760;
+    const freeW = sheet ? W : Math.max(320, W - 396);
+    const freeH = sheet ? Math.max(160, H * 0.48 - 64) : H - 64 - 90;
+    const fov = sheet ? 50 : 40;
+    const t = Math.tan((fov * Math.PI) / 360);
+    // stadium footprint ≈ 236 × 180 m with a margin
+    const D = Math.max(236 / (2 * t * cam.aspect * (freeW / W)), 180 / (2 * t * (freeH / H)));
+    const Y = PITCH_ELEVATION;
+    // a touch of perspective so the stands read as raked
+    return { position: new Vector3(0, Y + D, D * 0.16), target: new Vector3(0, Y, 0), fov, label: 'Stadyum planı' };
+  }
+
+  /** Free screen area next to / above the panel (CSS px). */
+  private freeArea(): { x: number; y: number; w: number; h: number } {
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const top = 64; // top bar
+    if (this.panel.classList.contains('hidden')) return { x: 0, y: top, w: W, h: H - top };
+    const r = this.panel.getBoundingClientRect();
+    const sheet = r.width > W * 0.8; // phone bottom sheet
+    if (sheet) return { x: 0, y: top, w: W, h: Math.max(80, r.top - top) };
+    return { x: 0, y: top, w: Math.max(200, r.left - 12), h: H - top - 90 };
+  }
+
+  private updateLensShift(): void {
+    if (this.step === 'intro') {
+      this.app.engine.setLensShift(0, 0);
+      return;
+    }
+    const a = this.freeArea();
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    this.app.engine.setLensShift(W / 2 - (a.x + a.w / 2), H / 2 - (a.y + a.h / 2));
+  }
+
   go(step: Step): void {
     const app = this.app;
     const sel = app.selection;
+    const from = this.step;
     this.step = step;
+    app.setRoofXray(step === 'stand');
     document.body.classList.toggle('picking', step !== 'intro');
     this.intro.classList.toggle('hidden', step !== 'intro');
     this.panel.classList.toggle('hidden', step === 'intro');
     this.panel.dataset.step = step;
+    this.updateLensShift();
     for (const li of this.panel.querySelectorAll<HTMLElement>('.steps li')) {
       const order = ['stand', 'block', 'row', 'seat'];
       li.classList.toggle('done', order.indexOf(li.dataset.s!) < order.indexOf(step));
@@ -143,6 +194,7 @@ export class SeatPicker {
       sel.selectBlock(-1);
       sel.selectSeat(-1);
       sel.state.row = -1;
+      if (from !== 'stand') app.flyToFrame(this.overviewFrame(), null);
     }
     if (step === 'block') {
       this.row = this.seat = null;

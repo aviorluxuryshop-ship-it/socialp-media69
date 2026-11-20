@@ -59,6 +59,8 @@ export class App {
   readonly frameTimes: number[] = [];
   /** runtime quality governor (real devices only) */
   governor: FrameGovernor | null = null;
+  private xray = 0;
+  private xrayTarget = 0;
 
   async init(container: HTMLElement, step: (txt: string, p: number) => Promise<unknown>): Promise<void> {
     this.quality = detectQuality();
@@ -144,7 +146,7 @@ export class App {
       const portrait = camera.aspect < 1;
       this.director.applyPose(
         portrait
-          ? { position: new Vector3(-70, 280, 520), target: new Vector3(5, -40, 40), fov: 58 }
+          ? { position: new Vector3(-70, 280, 520), target: new Vector3(-11, -40, 144), fov: 58 }
           : { position: new Vector3(-60, 240, 430), target: new Vector3(-30, 4, 0), fov: 50 },
       );
       const camP = this.params.get('cam');
@@ -246,7 +248,12 @@ export class App {
   }
 
   /** Cinematic flight to a stand or block frame (STEP 05). */
-  flyToFrame(dest: KeyFrame, via: Block, onDone?: () => void): void {
+  /** Fade the roof membrane to see-through (seat-map overview) or back to solid. */
+  setRoofXray(on: boolean): void {
+    this.xrayTarget = on ? 1 : 0;
+  }
+
+  flyToFrame(dest: KeyFrame, via: Block | null, onDone?: () => void): void {
     const frames = planToFrame(this.planContext(), this.director.pose(), { ...dest, position: dest.position.clone(), target: dest.target.clone() }, via);
     const v: LockedView = { id: 'seat' as ViewId, label: dest.label, caption: '', position: dest.position, target: dest.target, fov: dest.fov };
     this.director.fly(frames, v, onDone);
@@ -280,8 +287,11 @@ export class App {
     Object.assign(this.selection.state, { block: -1, row: -1, seat: -1, hoverSeat: -1, hoverBlock: -1, mask: false });
     this.selection.hoverEnabled = false;
     this.selection.setHoverSet([]);
-    this.renderNow();
-    const url = this.engine.canvas.toDataURL('image/jpeg', 0.88);
+    // the ticket shows the plain view from the seat, centred
+    const url = this.engine.withoutLensShift(() => {
+      this.renderNow();
+      return this.engine.canvas.toDataURL('image/jpeg', 0.88);
+    });
     Object.assign(this.selection.state, st);
     this.selection.hoverEnabled = hov;
     this.renderNow();
@@ -310,7 +320,13 @@ export class App {
     const camera = engine.camera;
 
     director.update(dt);
+    engine.updateLensShift(dt);
     for (const h of this.hooks) h(dt, this.elapsed);
+    if (this.xray !== this.xrayTarget) {
+      this.xray += (this.xrayTarget - this.xray) * (1 - Math.exp(-dt * 3));
+      if (Math.abs(this.xray - this.xrayTarget) < 0.004) this.xray = this.xrayTarget;
+      stadium.materials.setRoofXray(this.xray);
+    }
 
     this.time = this.clock.now();
     atmosphere.setShadowFocus(camera.position, director.target);

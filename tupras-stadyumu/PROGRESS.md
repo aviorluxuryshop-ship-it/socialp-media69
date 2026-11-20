@@ -14,7 +14,7 @@
 | STEP 02 – Every view camera locked | ✅ Tamamlandı — 7 kilitli görünüm, geometri özdeşliği testle kanıtlandı |
 | STEP 03 – Clips start and end | ✅ Tamamlandı — 118 uçuş otomatik testten geçiyor |
 | STEP 04 – Choice in post (maske/vurgu) | ✅ Tamamlandı — maske ↔ koltuk verisi otomatik doğrulandı |
-| STEP 05 – Pick your seat, get the ticket | 🟡 Masaüstü uçtan uca akış hatasız; mobil test sürüyor |
+| STEP 05 – Pick your seat, get the ticket | 🟡 Masaüstü + mobil uçtan uca akış hatasız; son görsel tur sürüyor |
 | Gece–gündüz / güneş sistemi | 🟡 Temel hazır (güneş hesabı, gece ışıkları); ince ayar STEP 02 ile |
 | Dinamik yükleme / performans | 🟡 Bakış yönüne göre kırpma + koni akışı eklendi ve ölçüldü; mobil bütçe ayarı bekliyor |
 
@@ -57,6 +57,17 @@ Bu turda bulunup düzeltilenler:
   ekranlarda görüntü solda, bilgiler sağda geniş bilet düzeni.
 - Masaüstünde görünüm çubuğu koltuk panelinin altına giriyordu → panelin solundaki alana ortalanıyor.
 - Tamamen satılmış localar/bloklar listede tıklanabiliyordu → "satıldı"/"dolu" olarak kapalı.
+- **Mobil (iPhone 13 emülasyonu) akış da hatasız.** Bulunanlar: alt panel ekranın yarısını
+  kapladığı için koltuktan görünümde saha panelin altında kalıyordu → kamera pozu değişmeden
+  "lens kaydırma" (off-axis projeksiyon, `Engine.setLensShift`): görüntünün merkezi panelin boş
+  bıraktığı alana taşınıyor (masaüstünde yan panelin solu, telefonda alt panelin üstü). GPU seçimi
+  ve maske kaydırmayla birlikte çalışıyor; bilet görüntüsü kaydırmasız, ortalı çekiliyor.
+  Üst bardaki marka yazısı alt satıra kırılıyordu → dar ekran boyutları; kısa telefonlarda giriş
+  kartı sadeleşti, dikey açılış açısı stadı kartın üstüne alıyor.
+- **Tribün seçimi artık stadyum planı gibi:** "Koltuk Seç" kamerayı kuşbakışına uçuruyor, çatı
+  membranı yarı saydam oluyor (gölgesi kalır; ID geçişi saydam malzemeyi atladığı için koltuklar
+  çatının altından da seçilebiliyor). Böylece dört tribün de görünüyor ve kartın üzerine gelince
+  tribün stadyumda turuncu yanıyor. Bloğa inerken çatı yeniden katılaşıyor.
 
 ## Kare süresi yöneticisi (performans bütçesi, `src/core/governor.ts`)
 

@@ -24,6 +24,9 @@ export class Engine {
   reversedDepth = false;
   private world: World | null = null;
   private readonly resizeFns: ((w: number, h: number) => void)[] = [];
+  /** lens shift (CSS px): target and current, see setLensShift */
+  private readonly shiftGoal = { x: 0, y: 0 };
+  private readonly shift = { x: 0, y: 0 };
 
   constructor(container: HTMLElement, quality: QualitySettings) {
     this.quality = quality;
@@ -69,6 +72,7 @@ export class Engine {
     const h = container.clientHeight;
     this.renderer.setSize(w, h);
     this.camera.aspect = w / h;
+    this.applyShift();
     this.camera.updateProjectionMatrix();
     for (const f of this.resizeFns) f(w, h);
   }
@@ -90,6 +94,56 @@ export class Engine {
       cam.near = near;
       cam.updateProjectionMatrix();
     }
+  }
+
+  /**
+   * Off-axis "lens shift": moves the image centre by (x, y) CSS px to the left
+   * / up, so whatever the camera aims at sits in the part of the screen no
+   * panel covers (left of the desktop side panel, above the phone sheet). The
+   * camera pose — and so the view from a seat — is unchanged.
+   */
+  setLensShift(x: number, y: number, instant = false): void {
+    this.shiftGoal.x = x;
+    this.shiftGoal.y = y;
+    if (instant) {
+      this.shift.x = x;
+      this.shift.y = y;
+      this.applyShift();
+    }
+  }
+
+  /** Glide the lens shift towards its goal (call once per frame). */
+  updateLensShift(dt: number): void {
+    const g = this.shiftGoal;
+    const s = this.shift;
+    if (s.x === g.x && s.y === g.y) return;
+    const k = 1 - Math.exp(-dt * 6);
+    s.x += (g.x - s.x) * k;
+    s.y += (g.y - s.y) * k;
+    if (Math.abs(g.x - s.x) < 0.5 && Math.abs(g.y - s.y) < 0.5) {
+      s.x = g.x;
+      s.y = g.y;
+    }
+    this.applyShift();
+  }
+
+  /** Render with the plain centred projection inside `fn` (ticket capture). */
+  withoutLensShift<T>(fn: () => T): T {
+    if (!this.camera.view?.enabled) return fn();
+    this.camera.clearViewOffset();
+    try {
+      return fn();
+    } finally {
+      this.applyShift();
+    }
+  }
+
+  private applyShift(): void {
+    const w = this.canvas.clientWidth;
+    const h = this.canvas.clientHeight;
+    const { x, y } = this.shift;
+    if (Math.abs(x) < 0.5 && Math.abs(y) < 0.5) this.camera.clearViewOffset();
+    else this.camera.setViewOffset(w, h, x, y, w, h);
   }
 
   get pixelRatio(): number {

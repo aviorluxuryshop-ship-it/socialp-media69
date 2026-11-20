@@ -245,9 +245,14 @@ export class IdPass {
     const pr = this.renderer.getPixelRatio();
     const W = Math.round(cssW * pr);
     const H = Math.round(cssH * pr);
-    camera.setViewOffset(W, H, Math.round(x * pr), Math.round(y * pr), 1, 1);
+    // compose with an active lens shift (Engine.setLensShift), then restore it
+    const v = camera.view && camera.view.enabled ? { ...camera.view } : null;
+    const ox = v ? (v.offsetX * cssW) / v.fullWidth : 0;
+    const oy = v ? (v.offsetY * cssH) / v.fullHeight : 0;
+    camera.setViewOffset(W, H, Math.round((x + ox) * pr), Math.round((y + oy) * pr), 1, 1);
     this.renderTo(this.pickTarget, camera);
-    camera.clearViewOffset();
+    if (v) camera.setViewOffset(v.fullWidth, v.fullHeight, v.offsetX, v.offsetY, v.width, v.height);
+    else camera.clearViewOffset();
     this.renderer.readRenderTargetPixels(this.pickTarget, 0, 0, 1, 1, this.pickBuf);
     return this.decode(decodeId(this.pickBuf[0], this.pickBuf[1], this.pickBuf[2]));
   }

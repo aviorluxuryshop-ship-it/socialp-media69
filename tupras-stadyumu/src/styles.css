@@ -226,14 +226,37 @@ body {
 }
 
 @media (max-width: 640px) {
+  .brand {
+    gap: 9px;
+    min-width: 0;
+  }
   .brand-club {
-    font-size: 18px;
+    font-size: 17px;
+    white-space: nowrap;
+  }
+  .brand-venue {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
   }
   .brand img {
-    height: 36px;
+    height: 34px;
+  }
+  .timebox {
+    flex-shrink: 0;
+    gap: 7px;
+    padding: 6px 6px 6px 10px;
+  }
+  .timebox .chip {
+    padding: 4px 8px;
   }
   #time-slider {
-    width: 72px;
+    width: 56px;
+  }
+}
+@media (max-width: 370px) {
+  #time-slider {
+    width: 36px;
   }
 }
 
@@ -972,6 +995,16 @@ body.picking .views-bar {
   }
   .ticket-grid dd {
     font-size: 18px;
+  }
+}
+
+/* phones with the browser bars showing: keep the stadium clear of the card */
+@media (max-width: 760px) and (max-height: 720px) {
+  .intro h1 {
+    font-size: 28px;
+  }
+  .intro p {
+    display: none;
   }
 }
 

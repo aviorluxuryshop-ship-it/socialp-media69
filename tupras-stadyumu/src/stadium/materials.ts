@@ -139,6 +139,23 @@ export class StadiumMaterials {
     m.customProgramCacheKey = () => 'uplight-' + m.uuid;
   }
 
+  /**
+   * Seat-map overview: the PTFE membrane turns see-through (k = 1) so all four
+   * stands show from above. It keeps casting its shadow, and as a transparent
+   * material the ID pass skips it, so seats under it can be hovered and picked.
+   */
+  setRoofXray(k: number): void {
+    const on = k > 0.002;
+    for (const m of [this.membraneTop, this.membraneUnder]) {
+      if (m.transparent !== on) {
+        m.transparent = on;
+        m.depthWrite = !on;
+        m.needsUpdate = true;
+      }
+      m.opacity = 1 - 0.84 * k;
+    }
+  }
+
   setAtmosphere(daylight: number, lights: number): void {
     this.uUplight.value = lights * (1 - daylight) * 0.9;
     this.membraneTop.emissiveIntensity = lights * (1 - daylight) * 0.18;
