@@ -38,6 +38,19 @@ seçenekleri, mobil + masaüstü testleri.
   (önce 1.38 M + 1.21 M); aynı koltukta arkaya bakış 215 bin; havadan stadyuma bakış 454 bin,
   stadyuma sırtını dönünce 129 bin. Çizim çağrısı 480 → 180 (arkaya bakış).
 
+## Kare süresi yöneticisi (performans bütçesi, `src/core/governor.ts`)
+
+- Gerçek kare aralığını (rAF → rAF, GPU'nun yetişemediği kareler dahil) 90 karelik pencerelerle
+  ölçer; ortalama 20 ms'yi (≈50 fps) aşarsa kaliteyi tek tek düşürür: piksel oranı (2 → 1.6 → 1),
+  gece bloom'u, gölge haritası (yarıya), detay yarıçapları (koltuk/şehir), son çare piksel oranı 0.8.
+- Adım işe yaramıyorsa (ör. 30 Hz'e kilitli düşük güç modu) ardışık 3 adım sonra hepsini geri alır
+  ve düşürmeyi bırakır; kareler rahat hızlıysa adımları tek tek geri verir, bekleme süresi her
+  seferinde ikiye katlanır, 3 başarısız denemeden sonra yükseltme kalıcı olarak durur.
+- Stadyum ve koltuk verisine dokunmaz; yalnızca çizim kalitesini değiştirir. Otomatik testlerde
+  (`?q=`, `?fast`, webdriver) kapalıdır; `?gov` ile zorla açılır.
+- `scripts/test-governor.ts`: sentetik cihazlar (yavaş 2× GPU, 1× yavaş GPU, 30 Hz ekran, hızlı
+  cihaz, sınırda cihaz) — hepsi geçiyor.
+
 ## STEP 04 doğrulaması
 
 - `src/selection/idpass.ts`: aynı sahne, aynı kamera; koltuklar `gl_InstanceID` ile kendi

@@ -217,9 +217,34 @@ export class SeatSystem {
     this.refreshAllColors();
   }
 
+  /**
+   * Blocks drawn with one neutral (white) albedo while they are highlighted, so
+   * the compositing pass can re-light them in orange exactly: with the mixed
+   * black/white pattern the specular part of a black seat dominates its tiny
+   * albedo and the black seats came out far brighter than the white ones.
+   */
+  private readonly neutral = new Set<number>();
+
+  setNeutralBlocks(blocks: Iterable<number>): void {
+    const next = new Set<number>();
+    for (const b of blocks) if (b >= 0) next.add(b);
+    const changed: number[] = [];
+    for (const b of this.neutral) if (!next.has(b)) changed.push(b);
+    for (const b of next) if (!this.neutral.has(b)) changed.push(b);
+    if (!changed.length) return;
+    this.neutral.clear();
+    for (const b of next) this.neutral.add(b);
+    for (const b of changed) {
+      const blk = this.layout.blocks[b];
+      if (!blk) continue;
+      for (let i = blk.seatStart; i < blk.seatStart + blk.seatCount; i++) this.writeColor(i);
+    }
+  }
+
   baseColor(i: number, out: Color): Color {
     const S = this.layout.seats;
     if (this.availabilityMode && S.sold[i] !== 0) return out.copy(this.sold);
+    if (this.neutral.has(S.block[i])) return out.copy(this.white);
     const sh = S.shade[i];
     return out.copy(sh === 0 ? this.white : sh === 1 ? this.black : this.vip);
   }

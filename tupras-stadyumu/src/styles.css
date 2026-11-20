@@ -309,6 +309,12 @@ body {
   outline-offset: 2px;
 }
 
+/* desktop: while the seat panel is open, keep the views bar in the free space left of it */
+body.picking .views-bar {
+  left: calc((100vw - 372px - var(--gutter)) / 2);
+  max-width: calc(100vw - 372px - 3 * var(--gutter));
+}
+
 @media (max-width: 640px) {
   .views-bar {
     left: var(--gutter);
@@ -745,7 +751,7 @@ body {
   inset: 0;
   z-index: 50;
   display: grid;
-  place-items: center;
+  justify-items: center;
   padding: 24px var(--gutter);
   background: rgba(0, 0, 0, 0.62);
   backdrop-filter: blur(6px);
@@ -760,6 +766,8 @@ body {
 }
 .ticket {
   width: min(460px, 100%);
+  /* centred when it fits, scrolls from its top edge when it does not */
+  margin: auto 0;
   background: #f5f5f2;
   color: #0a0a0b;
   border-radius: 18px;
@@ -874,6 +882,60 @@ body {
 .ticket-actions .btn.primary {
   background: #0a0a0b;
   color: #f5f5f2;
+}
+
+/* short landscape screens (laptops, tablets): a wide pass, view beside the details */
+@media (min-width: 761px) and (max-height: 760px) {
+  .ticket {
+    width: min(880px, 100%);
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    grid-template-areas:
+      'head head'
+      'view grid'
+      'view stub'
+      'view note'
+      'view actions';
+    grid-template-rows: auto auto auto auto 1fr;
+  }
+  .ticket-head {
+    grid-area: head;
+    padding: 12px 18px;
+  }
+  .ticket-head img {
+    height: 40px;
+  }
+  .ticket-view {
+    grid-area: view;
+  }
+  .ticket-view img {
+    height: 100%;
+    min-height: 260px;
+    aspect-ratio: auto;
+  }
+  .ticket-grid {
+    grid-area: grid;
+    gap: 10px 12px;
+    padding: 16px 20px 4px;
+  }
+  .ticket-grid dd {
+    font-size: 19px;
+  }
+  .ticket-stub {
+    grid-area: stub;
+    padding-top: 10px;
+  }
+  .ticket-bars svg {
+    height: 36px;
+  }
+  .ticket-note {
+    grid-area: note;
+  }
+  .ticket-actions {
+    grid-area: actions;
+    align-items: end;
+    padding: 12px 20px 16px;
+  }
 }
 
 /* ---------------------------------------------------------------- mobile */

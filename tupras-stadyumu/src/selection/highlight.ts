@@ -108,7 +108,11 @@ export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Tex
           float soldBit = mod(meta.y, 8.0);
           float row = floor(meta.y / 8.0);
           bool sold = soldBit > 0.5 && uAvailability > 0.5;
+          bool inSet = block >= 0.0 && texelFetch(tSet, ivec2(int(block), 0), 0).r > 0.5;
+          bool lit = inSel || inSet || (block == uHoverBlock && block >= 0.0);
           float alb = shade < 0.5 ? uAlbedo.x : (shade < 1.5 ? uAlbedo.y : uAlbedo.z);
+          // highlighted blocks are rendered with the white albedo (SeatSystem.setNeutralBlocks)
+          if (lit) alb = uAlbedo.x;
           if (sold) alb = uSoldLum;
           float L = lum(col);
           // recover the light that reached this seat, then re-light it in orange
@@ -118,7 +122,6 @@ export function createHighlightPass(idTex: Texture, info: Texture, blockSet: Tex
           // slightly below the original brightness keeps the orange saturated after tone mapping;
           // a faint constant glow keeps a far block readable
           if (inSel && !sold) col = mix(col, uOrange * (shading * 0.82 + 0.1) + spec * 0.5, 0.96);
-          bool inSet = block >= 0.0 && texelFetch(tSet, ivec2(int(block), 0), 0).r > 0.5;
           if ((block == uHoverBlock || inSet) && !inSel && !sold) col = mix(col, uOrange * (shading * 0.85 + 0.05), 0.42);
           // the row being browsed in the panel
           if (inSel && row == uRow && !sold) col = mix(col, vec3(1.0, 0.82, 0.55) * (shading * 0.9 + 0.15), 0.7);

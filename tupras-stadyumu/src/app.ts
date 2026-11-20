@@ -136,11 +136,14 @@ export class App {
     const v = this.views.find((x) => x.id === viewParam) ?? null;
     if (v) this.director.lock(v);
     else {
-      this.director.applyPose({
-        position: new Vector3(-260, PITCH_ELEVATION + 210, 330),
-        target: new Vector3(0, PITCH_ELEVATION + 8, 0),
-        fov: 50,
-      });
+      // opening shot from above Gümüşsuyu: stadium, Dolmabahçe and the Bosphorus,
+      // with Süzer Plaza kept off the stadium; portrait screens frame it above the intro card
+      const portrait = camera.aspect < 1;
+      this.director.applyPose(
+        portrait
+          ? { position: new Vector3(-70, 280, 520), target: new Vector3(5, -40, 40), fov: 58 }
+          : { position: new Vector3(-60, 240, 430), target: new Vector3(-30, 4, 0), fov: 50 },
+      );
       const camP = this.params.get('cam');
       const lookP = this.params.get('look');
       if (camP || lookP) {

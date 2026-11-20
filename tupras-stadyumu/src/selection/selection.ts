@@ -92,11 +92,22 @@ export class Selection {
     for (const l of this.hoverListeners) l(p);
   }
 
-  private setSize_ = 0;
+  private hoverSet: number[] = [];
+  private neutralKey = '';
   /** Blocks tinted as a group (a stand under the pointer in the stand list). */
   setHoverSet(blocks: number[]): void {
-    this.setSize_ = blocks.length;
+    this.hoverSet = blocks.slice();
     this.idPass.setBlockSet(blocks);
+  }
+
+  /** Highlighted blocks are drawn with a neutral albedo in the beauty pass (see SeatSystem). */
+  private syncNeutral(): void {
+    const s = this.state;
+    const hb = this.hoverEnabled ? s.hoverBlock : -1;
+    const key = `${s.block}|${hb}|${this.hoverSet.join(',')}`;
+    if (key === this.neutralKey) return;
+    this.neutralKey = key;
+    this.stadium.seats.setNeutralBlocks([s.block, hb, ...this.hoverSet]);
   }
 
   selectBlock(block: number): void {
@@ -131,7 +142,8 @@ export class Selection {
       this.pointerDirty = false;
       this.setHover(this.pickAt(this.pointer.x, this.pointer.y));
     }
-    const active = s.mask || s.block >= 0 || s.seat >= 0 || s.hoverSeat >= 0 || s.hoverBlock >= 0 || this.setSize_ > 0;
+    this.syncNeutral();
+    const active = s.mask || s.block >= 0 || s.seat >= 0 || s.hoverSeat >= 0 || s.hoverBlock >= 0 || this.hoverSet.length > 0;
     this.pass.enabled = active;
     if (!active) return;
     this.idPass.render(this.camera);
