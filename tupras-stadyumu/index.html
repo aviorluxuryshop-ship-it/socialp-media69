@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0b" />
+    <title>Tüpraş Stadyumu · Koltuğunu Seç</title>
+    <meta name="description" content="Beşiktaş JK Tüpraş Stadyumu interaktif 3D deneyimi: tribün, blok ve koltuk seçin, o koltuktan sahayı görün, dijital biletinizi alın." />
+    <link rel="icon" href="./brand/bjk-logo.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div id="viewport"></div>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Beşiktaş JK · Tüpraş Stadyumu">
+        <img src="./brand/bjk-logo.svg" alt="Beşiktaş JK arması" width="26" height="43" />
+        <span class="brand-text">
+          <span class="brand-club">BEŞİKTAŞ JK</span>
+          <span class="brand-venue">TÜPRAŞ STADYUMU</span>
+        </span>
+      </a>
+      <div class="timebox" title="Atmosfer gerçek saate göre değişir">
+        <span class="time-dot"></span>
+        <span id="time-label">--:--</span>
+        <input id="time-slider" type="range" min="0" max="1439" step="1" aria-label="Saat" />
+        <button id="time-live" class="chip" type="button">Canlı</button>
+      </div>
+    </header>
+
+    <pre id="debug" hidden></pre>
+
+    <div id="loading">
+      <div class="loading-inner">
+        <img src="./brand/bjk-logo.svg" alt="" width="54" height="90" />
+        <div class="loading-title">TÜPRAŞ STADYUMU</div>
+        <div class="loading-track"><div id="loading-bar"></div></div>
+        <div id="loading-progress">Başlatılıyor</div>
+      </div>
+    </div>
+
+    <footer class="credits">© OpenStreetMap katkıcıları · SRTM (NASA/USGS)</footer>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

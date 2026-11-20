@@ -231,6 +231,8 @@ export function waveAt(front: Superellipse, t: number): number {
 }
 
 export const UPPER_BACK_CLEARANCE = 1.9;
+/** seat-pan centre behind the front edge (riser line) of its tread */
+export const SEAT_SETBACK = 0.46;
 
 export function upperRowsAt(front: Superellipse, outer: Superellipse, p: TierProfile, t: number): number {
   const wave = waveAt(front, t);
@@ -387,7 +389,7 @@ export function buildLayout(): StadiumLayout {
       const pitch = def.kind === 'vip' ? 0.58 : p.seatPitch;
       for (let r = 0; r < rows; r++) {
         block.rowStart.push(count);
-        const dSeat = prof[r].d + 0.36;
+        const dSeat = prof[r].d + SEAT_SETBACK;
         const span = sampleSpan(front, t0, t1, dSeat);
         const avail = span.length - p.aisle;
         const n = Math.floor(avail / pitch);
@@ -470,7 +472,7 @@ export function buildLayout(): StadiumLayout {
       const suiteSold = hash3(i, 99, 5) < 0.62 ? 1 : 0; // suites are sold as a whole box
       for (let r = 0; r < SUITES.balconyRows; r++) {
         block.rowStart.push(count);
-        const dSeat = SUITES.frontD + r * 0.85 + 0.36;
+        const dSeat = SUITES.frontD + r * 0.85 + SEAT_SETBACK;
         const span = sampleSpan(front, t0, t1, dSeat, 16);
         const n = SUITES.seatsPerRow;
         const pad = (span.length - n * SUITES.seatPitch) / 2;
