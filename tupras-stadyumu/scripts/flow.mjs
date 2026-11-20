@@ -57,8 +57,9 @@ const target = await page.evaluate(() => {
   const S = L.seats;
   const cam = a.engine.camera;
   cam.updateMatrixWorld();
-  const b = p.region.anchor;
   const V = a.engine.camera.position.constructor;
+  // the label block first, then the rest of the region
+  for (const b of [p.region.anchor, ...p.region.blocks]) {
   const free = [];
   for (let i = b.seatStart; i < b.seatStart + b.seatCount; i++) if (S.sold[i] === 0) free.push(i);
   free.sort((x, y) => Math.abs(S.row[x] - b.rows * 0.4) - Math.abs(S.row[y] - b.rows * 0.4) || Math.abs(x - (b.seatStart + b.seatCount / 2)) - Math.abs(y - (b.seatStart + b.seatCount / 2)));
@@ -68,8 +69,12 @@ const target = await page.evaluate(() => {
     // whole CSS pixels (pointer events report integers) with a 1 px margin around
     const x = Math.round((v.x * 0.5 + 0.5) * innerWidth);
     const y = Math.round((-v.y * 0.5 + 0.5) * innerHeight);
+    // only where a visitor can tap: the area the panel leaves free
+    const fa = p.area;
+    if (x < fa.x + 8 || x > fa.x + fa.w - 8 || y < fa.y + 8 || y > fa.y + fa.h - 8) continue;
     const ok = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => a.selection.pickAt(x + dx, y + dy).seat === i);
     if (ok) return { seat: i, x, y, row: S.row[i], num: S.num[i], block: b.code };
+  }
   }
   return null;
 });
