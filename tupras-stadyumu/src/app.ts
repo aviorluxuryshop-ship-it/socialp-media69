@@ -380,6 +380,8 @@ export class App {
   }
 
   start(): void {
+    // ?capture: no real-time loop; a recorder calls step(dt) once per video frame
+    if (this.params.has('capture')) return;
     const loop = (t: number) => {
       this.frame(t);
       requestAnimationFrame(loop);
@@ -388,10 +390,14 @@ export class App {
   }
 
   private frame(t: number): void {
-    const t0 = performance.now();
     this.governor?.tick(t);
     this.timer.update(t);
-    const dt = Math.min(0.1, this.timer.getDelta());
+    this.step(Math.min(0.1, this.timer.getDelta()));
+  }
+
+  /** Advance the scene by dt seconds and draw one frame (video capture drives this directly). */
+  step(dt: number): void {
+    const t0 = performance.now();
     this.elapsed += dt;
     const { engine, director, atmosphere, stadium, streamer, water, landmarks } = this;
     const camera = engine.camera;
