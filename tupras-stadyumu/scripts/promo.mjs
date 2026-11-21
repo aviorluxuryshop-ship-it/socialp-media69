@@ -75,7 +75,6 @@ await page.evaluate(({ DAY }) => {
   p.innerHTML = `
     <div class="title" style="opacity:0"><img src="./brand/bjk-logo.svg" alt=""><div class="k">BEŞİKTAŞ JK</div><div class="h">TÜPRAŞ STADYUMU</div><div class="s">Koltuğunu seç. Sahayı oradan gör.</div></div>
     <div class="cap" style="opacity:0"><div class="n"></div><div class="t"></div><div class="s"></div></div>
-    <div class="live" style="opacity:0"><i></i>CANLI SATIŞ</div>
     <div class="ring" style="opacity:0"></div>
     <div class="cur" style="opacity:0"></div>
     <div class="end" style="opacity:0"><img src="./brand/bjk-logo.svg" alt=""><div class="h">TÜPRAŞ STADYUMU</div><div class="s">3D koltuk seçimi · gerçek görüş · canlı satış</div><div class="u">tupras-stadyumu-iota.vercel.app</div></div>`;
@@ -88,7 +87,7 @@ const fade = (t, a, b, f = 0.45) => Math.max(0, Math.min(1, (t - a) / f, (b - t)
 const centerOf = (sel) => page.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }, sel);
 // a free seat of the chosen region near the middle of the free screen area, whose
 // centre and neighbours all pick back as that seat
-const seatTarget = (bias = 0) => page.evaluate((bias) => {
+const seatTarget = (bias = 0, strict = true) => page.evaluate(([bias, strict]) => {
   const a = window.__app, p = window.__picker, S = a.stadium.layout.seats, cam = a.engine.camera;
   cam.updateMatrixWorld();
   const V = cam.position.constructor, fa = p.area;
@@ -103,10 +102,11 @@ const seatTarget = (bias = 0) => page.evaluate((bias) => {
     if (x < fa.x + 40 || x > fa.x + fa.w - 40 || y < fa.y + 40 || y > fa.y + fa.h - 40) continue;
     const d = Math.hypot(x - cx, y - cy);
     if (best && d >= best.d) continue;
-    if ([[0, 0], [2, 0], [-2, 0], [0, 2], [0, -2]].every(([dx, dy]) => a.selection.pickAt(x + dx, y + dy).seat === i)) best = { x, y, d, seat: i };
+    const hits = strict ? [[0, 0], [2, 0], [-2, 0], [0, 2], [0, -2]].every(([dx, dy]) => a.selection.pickAt(x + dx, y + dy).seat === i) : p.region.blocks.some((b) => b.index === a.selection.pickAt(x, y).block);
+    if (hits) best = { x, y, d, seat: i };
   }
   return best;
-}, bias);
+}, [bias, strict]);
 
 // cursor state (film coordinates), caption state
 const cur = { x: w * 0.7, y: h * 0.62, vis: 0, move: null, ring: -1 };
@@ -143,7 +143,7 @@ const seq = [
       p.onLiveSold(seats, true);
     });
   }],
-  [20.6, async () => { regionTarget = await seatTarget(-40); cur.vis = 1; moveTo(20.6, regionTarget, 0.8); }],
+  [20.6, async () => { regionTarget = await seatTarget(-40, false); cur.vis = 1; moveTo(20.6, regionTarget, 0.8); }],
   [21.55, async (t) => click(t)],
   [21.8, async () => { cur.vis = 0; }],
   [23.3, async () => caption(23.4, 26.2, '03', 'Koltuğuna dokun', 'Yakınlaşınca koltuklar parmakla seçilecek kadar büyür.')],
@@ -197,7 +197,7 @@ for (let f = 0; f < N; f++) {
     clock: t > 40.3 ? Math.round(DAY + (NIGHT - DAY) * ease((t - 40.3) / 3.6)) : null,
     title: fade(t, 0.5, 5.9, 0.7),
     cap: cap ? { o: fade(t, cap.a, cap.b, 0.35), n: cap.n, t: cap.t, s: cap.s, y: (1 - ease((t - cap.a) / 0.5)) * 14 } : null,
-    live: fade(t, 18.6, 20.6, 0.3),
+    intro: t < 5.7 ? '0' : t < 6.1 ? String((t - 5.7) / 0.4) : '',
     cur: { x: cur.x, y: cur.y, o: cur.vis ? 1 : 0 },
     ring: cur.ring >= 0 && t - cur.ring < 0.45 ? (t - cur.ring) / 0.45 : -1,
     end: fade(t, 45.2, 99, 0.9),
@@ -222,7 +222,8 @@ for (let f = 0; f < N; f++) {
       c.querySelector('.t').textContent = s.cap.t;
       c.querySelector('.s').textContent = s.cap.s;
     } else c.style.opacity = 0;
-    P.querySelector('.live').style.opacity = s.live;
+    const ib = document.querySelector('.intro');
+    if (ib) ib.style.opacity = s.intro;
     const cu = P.querySelector('.cur');
     cu.style.opacity = s.cur.o;
     cu.style.transform = `translate(${s.cur.x}px, ${s.cur.y}px)`;
