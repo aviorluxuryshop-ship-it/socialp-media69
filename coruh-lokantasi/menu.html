@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Menü · Çoruh Lokantası Bayburt</title>
+  <meta name="description" content="Odun ateşinde et döner, iskender, kavurma, Bayburt tava, tencere yemekleri, çorbalar, tatlı ve içecekler. Cumhuriyet Cd. No:33, Bayburt Merkez.">
+  <meta name="theme-color" content="#0b0908">
+  <link rel="canonical" href="https://coruh-lokantasi.vercel.app/menu">
+  <link rel="icon" href="images/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:site_name" content="Çoruh Lokantası">
+  <meta property="og:title" content="Menü · Çoruh Lokantası Bayburt">
+  <meta property="og:description" content="Odun ateşinde et döner, iskender, kavurma, Bayburt tava, tencere yemekleri, çorbalar, tatlı ve içecekler. Cumhuriyet Cd. No:33, Bayburt Merkez.">
+  <meta property="og:url" content="https://coruh-lokantasi.vercel.app/menu">
+  <meta property="og:image" content="https://coruh-lokantasi.vercel.app/images/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+  <a class="skip" href="#main">İçeriğe geç</a>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="Çoruh Lokantası, ana sayfa">
+        <img class="brand-logo" src="images/logo-sm.png" width="53" height="58" alt="">
+        <span class="brand-text">
+          <span class="brand-name">Çoruh</span>
+          <span class="brand-sub">Lokantası · Bayburt</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Ana menü">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list">
+          <span class="sr">Menüyü aç</span><span class="bars" aria-hidden="true"></span>
+        </button>
+        <ul id="nav-list">
+          <li><a href="hakkimizda.html">Hakkımızda</a></li>
+          <li><a href="menu.html" aria-current="page">Menü</a></li>
+          <li><a href="galeri.html">Galeri</a></li>
+          <li><a href="yorumlar.html">Yorumlar</a></li>
+          <li><a href="iletisim.html">İletişim</a></li>
+          <li class="nav-cta"><a class="btn btn-copper btn-sm" href="tel:+904582222221">Ara: 0458 222 22 21</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ PAGE HERO ============ -->
+    <section class="page-hero">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Konum">
+          <a href="index.html">Ana sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Menü</span>
+        </nav>
+        <p class="eyebrow reveal">Menü</p>
+        <h1 class="page-title reveal">Bugün ocakta ne var?</h1>
+        <p class="page-lead reveal">Tencere yemeklerimiz güne göre değişebilir. Güncel fiyatlar ve günün yemekleri için bizi arayın.</p>
+      </div>
+    </section>
+
+    <!-- ============ MENU ============ -->
+    <section class="section menu">
+      <div class="wrap">
+        <div class="tabs reveal" role="tablist" aria-label="Menü kategorileri">
+          <button role="tab" id="tab-doner" aria-controls="panel-doner" aria-selected="true">Döner</button>
+          <button role="tab" id="tab-sulu" aria-controls="panel-sulu" aria-selected="false" tabindex="-1">Sulu Yemekler</button>
+          <button role="tab" id="tab-corba" aria-controls="panel-corba" aria-selected="false" tabindex="-1">Çorbalar</button>
+          <button role="tab" id="tab-meze" aria-controls="panel-meze" aria-selected="false" tabindex="-1">Meze &amp; Yanlar</button>
+          <button role="tab" id="tab-icecek" aria-controls="panel-icecek" aria-selected="false" tabindex="-1">Tatlı &amp; İçecek</button>
+        </div>
+
+        <div class="menu-board">
+          <div class="panel" role="tabpanel" id="panel-doner" aria-labelledby="tab-doner">
+            <ul class="menu-list">
+              <li><div><h4>Et Döner</h4><p>Odun ateşinde, 100 gr porsiyon</p></div><span class="mark">Meşhur</span></li>
+              <li><div><h4>Pilav Üstü Döner</h4><p>Tereyağlı pilav üzerinde, 100 gr</p></div></li>
+              <li><div><h4>İskender</h4><p>Döner, tereyağı, domates sosu ve yoğurtla, 100 gr</p></div></li>
+            </ul>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-sulu" aria-labelledby="tab-sulu" hidden>
+            <ul class="menu-list">
+              <li><div><h4>Kavurma</h4><p>Kendi yağında dana kavurma</p></div></li>
+              <li><div><h4>Bayburt Tava</h4><p>Yöresel usulde tava</p></div><span class="mark">Yöresel</span></li>
+              <li><div><h4>Kaburga</h4><p>Ağır ateşte pişmiş kaburga</p></div></li>
+              <li><div><h4>Haşlama</h4><p>Sebzeli et haşlama</p></div></li>
+              <li><div><h4>Güveç</h4><p>Toprak güveçte et ve sebze</p></div></li>
+              <li><div><h4>Sulu Köfte</h4><p>Domatesli, patatesli</p></div></li>
+              <li><div><h4>Tavuk Sote</h4><p>Biber ve domatesle</p></div></li>
+              <li><div><h4>Kuru Fasulye</h4><p>Pilav üstü ya da sade</p></div></li>
+            </ul>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-corba" aria-labelledby="tab-corba" hidden>
+            <ul class="menu-list">
+              <li><div><h4>Mercimek</h4><p>Limon ve taze ekmekle</p></div></li>
+              <li><div><h4>Ezogelin</h4><p>Bulgurlu, naneli</p></div></li>
+              <li><div><h4>Kesme Çorbası</h4><p>Ev yapımı kesme hamurla</p></div><span class="mark">Yöresel</span></li>
+              <li><div><h4>Gavut</h4><p>Bayburt yöresine özgü, mevsiminde</p></div><span class="mark">Yöresel</span></li>
+              <li><div><h4>Doduk Paça</h4><p>Yöresel paça çorbası</p></div></li>
+              <li><div><h4>Kelle Paça</h4><p>Sarımsak ve limonla</p></div></li>
+              <li><div><h4>İşkembe</h4><p>Sarımsaklı sirkeyle</p></div></li>
+            </ul>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-meze" aria-labelledby="tab-meze" hidden>
+            <ul class="menu-list">
+              <li><div><h4>Pilav</h4><p>Tereyağlı pirinç pilavı</p></div></li>
+              <li><div><h4>Salata</h4><p>Mevsim yeşillikleriyle</p></div></li>
+              <li><div><h4>Cacık</h4><p>Yoğurt, salatalık, nane</p></div></li>
+              <li><div><h4>Komposto</h4><p>Ev yapımı, soğuk</p></div></li>
+            </ul>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-icecek" aria-labelledby="tab-icecek" hidden>
+            <ul class="menu-list">
+              <li><div><h4>Fırın Sütlaç</h4><p>Toprak kâsede</p></div></li>
+              <li><div><h4>Çay</h4><p>Demli, ince belli bardakta</p></div></li>
+              <li><div><h4>Ayran</h4><p>Soğuk, köpüklü</p></div></li>
+              <li><div><h4>Şalgam Suyu</h4><p>Acılı ya da acısız</p></div></li>
+              <li><div><h4>Meşrubat</h4><p>Kutu ve şişe</p></div></li>
+              <li><div><h4>Soda &amp; Su</h4><p>Maden suyu ve su</p></div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="menu-foot reveal">
+          <p><strong>Paket servis, adrese teslim &amp; rezervasyon:</strong> Kalabalık gruplar ve özel günler için önceden arayın, masanızı hazırlayalım.</p>
+          <a class="btn btn-light" href="tel:+904582222221">Sipariş Ver</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="images/logo-sm.png" width="128" height="140" alt="Çoruh Lokantası logosu" loading="lazy">
+        <p>Çoruh’un kıyısında, Bayburt’un sofrası.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Alt menü">
+        <a href="index.html">Ana sayfa</a>
+        <a href="hakkimizda.html">Hakkımızda</a>
+        <a href="menu.html">Menü</a>
+        <a href="galeri.html">Galeri</a>
+        <a href="yorumlar.html">Yorumlar</a>
+        <a href="iletisim.html">İletişim</a>
+      </nav>
+      <div class="footer-contact">
+        <a href="tel:+904582222221">(0458) 222 22 21</a>
+        <span>Cumhuriyet Cd. No:33 (Belediye altı), Bayburt</span>
+        <span>Her gün 06:00 – 00:00</span>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <span>© <span data-year>2026</span> Çoruh Lokantası</span>
+      <span>Bayburt Merkez</span>
+    </div>
+  </footer>
+
+  <!-- Mobile action bar -->
+  <div class="action-bar" aria-label="Hızlı işlemler">
+    <a href="tel:+904582222221">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+      Ara
+    </a>
+    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=40.2591279,40.226881" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+      Yol Tarifi
+    </a>
+    <a href="menu.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v2H4zm0 6h16v2H4zm0 6h10v2H4z"/></svg>
+      Menü
+    </a>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
