@@ -1,6 +1,6 @@
-# Çoruh Et Lokantası — Bayburt
+# Çoruh Lokantası — Bayburt
 
-Çoruh Et Lokantası için tek sayfalık, hızlı, mobil öncelikli tanıtım sitesi.
+Çoruh Lokantası için tek sayfalık, hızlı, mobil öncelikli tanıtım sitesi.
 Saf HTML/CSS/JS'den oluşur; derleme adımı yoktur.
 
 ```
@@ -22,14 +22,15 @@ python3 -m http.server 8000   # http://localhost:8000
 
 Vercel'de yeni proje oluşturun → bu depoyu seçin → **Root Directory:
 `coruh-lokantasi`**, Framework: **Other**. Derleme komutu gerekmez.
-Alan adı alındığında `index.html` içindeki `https://coruhetlokantasi.com`
+Şu an yayında: https://coruh-lokantasi.vercel.app
+Alan adı alındığında `index.html` içindeki `https://coruh-lokantasi.vercel.app`
 adreslerini (canonical, og:image, JSON-LD) gerçek adresle değiştirin.
 
 ## İşletmeyle teyit edilmesi gerekenler
 
 Bilgiler Google İşletme kaydı ve herkese açık dizinlerden alındı:
 
-- Adres: Şeyh Hayran Mah., Cumhuriyet Cd. No:33, Bayburt (bir dizinde No:19 geçiyor)
+- Adres: Şeyh Hayran Mah., Cumhuriyet Cd. No:33, Bayburt (Google Haritalar kaydıyla doğrulandı)
 - Telefon: (0458) 222 22 21
 - Çalışma saatleri: Dizinde "her gün" görünüyor, kesin saatler sitede "Haftanın her günü açığız" olarak yazılı
 - Menü: Yorumlarda geçen yemekler (kavurma, döner, pilav, çorbalar, güveç,
