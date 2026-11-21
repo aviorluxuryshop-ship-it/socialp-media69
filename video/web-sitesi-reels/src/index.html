@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Socialp Media — Web Sitesi Reels</title>
+<style>
+@font-face{font-family:'Archivo';src:url(../assets/fonts/Archivo-normal-latin.woff2) format('woff2');font-weight:100 900;font-display:block;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Archivo';src:url(../assets/fonts/Archivo-normal-latin-ext.woff2) format('woff2');font-weight:100 900;font-display:block;
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Instrument Serif';font-style:italic;src:url(../assets/fonts/InstrumentSerif-italic-latin.woff2) format('woff2');font-display:block;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Instrument Serif';font-style:italic;src:url(../assets/fonts/InstrumentSerif-italic-latin-ext.woff2) format('woff2');font-display:block;
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Instrument Serif';font-style:normal;src:url(../assets/fonts/InstrumentSerif-normal-latin.woff2) format('woff2');font-display:block;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Instrument Serif';font-style:normal;src:url(../assets/fonts/InstrumentSerif-normal-latin-ext.woff2) format('woff2');font-display:block;
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+
+:root{
+  --ink:#050506; --paper:#fff; --mist:#a8a8ad; --dim:#6d6d74;
+  --red:#c2151f; --red2:#ff5a5f; --red3:#ff2d36;
+  --display:'Archivo','Inter',sans-serif; --body:'Inter',sans-serif; --serif:'Instrument Serif',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;background:var(--ink);overflow:hidden}
+body{font-family:var(--body);color:#fff;-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+#bg{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 960px}
+.a{position:absolute;left:0;top:0;will-change:transform,opacity,filter}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#grain{position:absolute;inset:0;opacity:.085;mix-blend-mode:overlay;pointer-events:none}
+#vig{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 75% at 50% 48%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen}
+#tint{position:absolute;inset:0;background:radial-gradient(70% 50% at 50% 50%,rgba(255,40,50,.55),rgba(120,0,10,0) 70%);opacity:0;mix-blend-mode:screen;pointer-events:none}
+
+/* ---------- type ---------- */
+.hl{font-family:var(--display);font-weight:800;letter-spacing:-.025em;line-height:1.04;text-align:center;color:#fff;width:1000px}
+.hl span{display:inline-block;will-change:transform,opacity,filter}
+.ac{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;color:var(--red2);
+  text-shadow:0 0 38px rgba(255,45,54,.55);padding:0 .06em}
+.kicker{font-family:var(--body);font-weight:600;font-size:40px;letter-spacing:.32em;text-transform:uppercase;color:var(--mist);text-align:center;width:900px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+
+/* ---------- glass + devices ---------- */
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+  border:1.5px solid rgba(255,255,255,.15);border-radius:30px;
+  box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.22);backdrop-filter:blur(26px)}
+.browser{width:880px;height:560px;border-radius:30px;overflow:hidden}
+.bbar{height:64px;display:flex;align-items:center;gap:18px;padding:0 26px;border-bottom:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04)}
+.dots{display:flex;gap:10px}.dots i{width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.22);display:block}
+.dots i:nth-child(1){background:#ff5f57}.dots i:nth-child(2){background:#febc2e}.dots i:nth-child(3){background:#28c840}
+.url{flex:1;height:40px;border-radius:20px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;padding:0 18px;font-size:22px;color:#d9d9de;font-weight:500;letter-spacing:.01em}
+.url svg{width:18px;height:18px;opacity:.7;flex:none}
+.caret{display:inline-block;width:2px;height:24px;background:#fff;margin-left:2px}
+.bbody{position:relative;height:calc(100% - 64px)}
+
+.phone{width:500px;height:1000px;border-radius:72px;padding:14px;background:linear-gradient(160deg,#2a2a31,#0b0b0e 40%,#16161a);
+  box-shadow:0 60px 120px rgba(0,0,0,.7),0 0 0 1.5px rgba(255,255,255,.16),inset 0 0 0 2px rgba(255,255,255,.06)}
+.screen{position:relative;width:100%;height:100%;border-radius:58px;overflow:hidden;background:#0d0d11}
+.island{position:absolute;left:50%;top:16px;width:130px;height:38px;margin-left:-65px;border-radius:20px;background:#000;z-index:5}
+.sbar{height:70px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 40px 8px;font-size:21px;font-weight:600;color:#fff}
+
+/* ---------- scene 2 error ---------- */
+#err1{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+#err1 .ic{width:150px;height:150px}
+#err1 .t{font-family:var(--display);font-weight:700;font-size:44px;color:#fff}
+#err1 .c{font-size:22px;color:#8d8d94;letter-spacing:.06em}
+.spinner{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;
+  border:6px solid rgba(255,255,255,.12);border-top-color:#fff}
+
+/* ---------- scene 3 search ---------- */
+.search{margin:18px 26px 0;height:76px;border-radius:38px;background:#1d1d23;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:14px;padding:0 26px;font-size:25px;color:#fff}
+.search svg{width:28px;height:28px;flex:none;opacity:.8}
+.tabs{display:flex;gap:30px;padding:24px 34px 14px;font-size:20px;color:#8b8b93;font-weight:500;border-bottom:1px solid rgba(255,255,255,.07)}
+.tabs b{color:#fff;font-weight:600;border-bottom:3px solid #fff;padding-bottom:10px}
+.res{margin:16px 22px 0;height:150px;border-radius:26px;background:#17171c;border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:20px;padding:0 22px}
+.res .av{width:96px;height:96px;border-radius:20px;flex:none;background-size:cover;background-position:center}
+.res .tx{flex:1}
+.res .n{font-size:26px;font-weight:700;color:#fff}
+.res .st{font-size:20px;color:#f5b301;margin-top:4px;letter-spacing:.04em}
+.res .st em{font-style:normal;color:#9a9aa1;letter-spacing:0;margin-left:8px}
+.res .ch{display:inline-flex;gap:8px;margin-top:10px}
+.res .ch span{font-size:17px;color:#cfd5ff;background:rgba(120,140,255,.14);border-radius:12px;padding:5px 11px}
+.res.miss{border:2.5px dashed var(--red3);background:rgba(255,45,54,.07)}
+.res.miss .av{background:rgba(255,45,54,.14);display:flex;align-items:center;justify-content:center}
+.res.miss .av svg{width:52px;height:52px}
+.res.miss .n{color:#fff}
+.res.miss .st{color:var(--red2);letter-spacing:0;font-weight:600}
+
+/* ---------- scene 5 sites ---------- */
+.site{position:absolute;inset:0;overflow:hidden;isolation:isolate}
+.snav{position:absolute;left:0;top:0;right:0;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;z-index:3}
+.slogo{font-size:28px;font-weight:700}
+.slinks{display:flex;gap:26px;font-size:17px;opacity:.85}
+.sbtn{font-size:16px;font-weight:600;padding:10px 18px;border-radius:30px}
+.shero{position:absolute;inset:0}
+.shero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sover{position:absolute;inset:0}
+.stext{position:absolute;left:44px;bottom:118px;width:560px;z-index:2}
+.seb{font-size:15px;letter-spacing:.28em;font-weight:600;opacity:.85;margin-bottom:12px}
+.sh1{font-size:62px;line-height:1.02}
+.scta{display:inline-block;margin-top:22px;font-size:18px;font-weight:700;padding:15px 28px;border-radius:40px}
+.scards{position:absolute;left:44px;right:44px;bottom:26px;height:70px;display:flex;gap:16px;z-index:2}
+.scards div{flex:1;border-radius:16px;backdrop-filter:blur(10px);display:flex;align-items:center;gap:12px;padding:0 16px;font-size:16px;font-weight:600}
+.scards div i{width:34px;height:34px;border-radius:10px;display:block;flex:none}
+
+.t1{background:#1a120c;color:#fff6ea}
+.t1 .slogo{font-family:var(--serif);font-style:italic;font-size:38px;font-weight:400}
+.t1 .sbtn{background:#e8a04b;color:#1a120c}
+.t1 .sover{background:linear-gradient(90deg,rgba(20,12,6,.88) 0%,rgba(20,12,6,.45) 55%,rgba(20,12,6,.1) 100%)}
+.t1 .seb{color:#e8a04b}
+.t1 .sh1{font-family:var(--serif);font-weight:400;font-size:74px}
+.t1 .scta{background:#e8a04b;color:#1a120c}
+.t1 .scards div{background:rgba(255,246,234,.1);border:1px solid rgba(255,246,234,.18)}
+.t1 .scards div i{background:#e8a04b}
+
+.t2{background:#f7efe9;color:#2a1820}
+.t2 .slogo{font-family:var(--serif);font-size:38px;font-weight:400;letter-spacing:.02em}
+.t2 .sbtn{background:#2a1820;color:#f7efe9}
+.t2 .sover{background:linear-gradient(90deg,rgba(247,239,233,.95) 0%,rgba(247,239,233,.7) 48%,rgba(247,239,233,0) 75%)}
+.t2 .seb{color:#c0567a}
+.t2 .sh1{font-family:var(--serif);font-style:italic;font-weight:400;font-size:76px;color:#2a1820}
+.t2 .scta{background:#c0567a;color:#fff}
+.t2 .scards div{background:rgba(255,255,255,.7);border:1px solid rgba(42,24,32,.08)}
+.t2 .scards div i{background:#c0567a}
+
+.t3{background:#0a1220;color:#eef4ff}
+.t3 .slogo{font-family:var(--display);font-weight:900;letter-spacing:.08em;font-size:26px}
+.t3 .sbtn{background:#3d8bff;color:#fff}
+.t3 .sover{background:linear-gradient(0deg,rgba(6,12,24,.92) 0%,rgba(6,12,24,.35) 60%,rgba(6,12,24,.2) 100%)}
+.t3 .seb{color:#6fb0ff}
+.t3 .sh1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:58px;letter-spacing:-.01em}
+.t3 .scta{background:#3d8bff;color:#fff}
+.t3 .scards div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+.t3 .scards div i{background:#3d8bff}
+
+.loadbar{position:absolute;left:0;top:64px;height:5px;width:0;background:linear-gradient(90deg,#ff2d36,#ffb36b);box-shadow:0 0 20px #ff2d36;z-index:9}
+.tag{font-size:22px;font-weight:600;color:#fff;padding:12px 22px;border-radius:30px;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.tag i{width:12px;height:12px;border-radius:50%;background:var(--red3);box-shadow:0 0 14px var(--red3);display:block}
+
+/* mobile site */
+.msite{position:absolute;inset:0;overflow:hidden}
+.msite .mhero{position:absolute;left:0;right:0;top:0;height:62%}
+.msite .mhero img{width:100%;height:100%;object-fit:cover}
+.msite .mhero .sover{position:absolute;inset:0}
+.msite .mnav{position:absolute;left:0;right:0;top:56px;height:60px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;z-index:3}
+.msite .mnav b{font-family:var(--display);font-weight:900;letter-spacing:.08em;font-size:19px}
+.msite .mnav i{width:30px;height:3px;background:#fff;display:block;box-shadow:0 9px 0 #fff,0 -9px 0 #fff}
+.msite .mtx{position:absolute;left:26px;right:26px;top:43%;z-index:3}
+.msite .mtx .seb{font-size:12px}
+.msite .mtx .sh1{font-size:40px}
+.msite .mtx .scta{font-size:15px;padding:12px 22px;margin-top:16px}
+.msite .mlist{position:absolute;left:20px;right:20px;top:66%;display:flex;flex-direction:column;gap:12px}
+.msite .mlist div{height:74px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:14px;padding:0 16px;font-size:17px;font-weight:600}
+.msite .mlist div i{width:44px;height:44px;border-radius:12px;background:#3d8bff;display:block;flex:none}
+.msite .mlist div small{display:block;font-size:13px;color:#8fa3c4;font-weight:500;margin-top:3px}
+
+.chip{width:460px;height:96px;border-radius:48px;display:flex;align-items:center;gap:18px;padding:0 26px;font-family:var(--display);font-weight:700;font-size:31px;letter-spacing:-.01em}
+.chip .ck{width:52px;height:52px;border-radius:50%;background:linear-gradient(140deg,#ff4a52,#b3121b);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 0 24px rgba(255,45,54,.6)}
+.chip .ck svg{width:28px;height:28px}
+
+/* ---------- scene 6 notifications ---------- */
+.notif{width:820px;height:136px;border-radius:34px;display:flex;align-items:center;gap:22px;padding:0 26px;
+  background:linear-gradient(180deg,rgba(40,40,46,.86),rgba(24,24,28,.86));border:1.5px solid rgba(255,255,255,.14);
+  box-shadow:0 30px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18);backdrop-filter:blur(30px)}
+.notif .ic{width:78px;height:78px;border-radius:20px;flex:none;display:flex;align-items:center;justify-content:center}
+.notif .ic svg{width:42px;height:42px}
+.notif .tx{flex:1;min-width:0}
+.notif .tt{display:flex;justify-content:space-between;font-size:26px;font-weight:700;color:#fff}
+.notif .tt em{font-style:normal;font-weight:500;font-size:20px;color:#9a9aa1}
+.notif .bd{font-size:23px;color:#d2d2d8;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat{width:330px;height:190px;border-radius:30px;padding:24px 26px}
+.stat .l{font-size:20px;color:#a8a8ad;font-weight:600;letter-spacing:.04em}
+.stat .v{font-family:var(--display);font-weight:800;font-size:46px;margin-top:4px;display:flex;align-items:center;gap:10px}
+.stat .v b{font-size:24px;color:#38d27a;font-weight:700}
+.stat svg{position:absolute;left:26px;right:26px;bottom:20px;width:278px;height:60px}
+
+/* ---------- scene 7 cta ---------- */
+.btn{width:820px;height:136px;border-radius:68px;display:flex;align-items:center;justify-content:center;gap:20px;
+  font-family:var(--display);font-weight:800;font-size:42px;letter-spacing:-.01em;color:#fff;
+  background:linear-gradient(180deg,#ff3a43,#b5101a);box-shadow:0 24px 70px rgba(255,30,40,.45),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -6px 18px rgba(0,0,0,.25)}
+.btn svg{width:44px;height:44px}
+.crow{width:820px;height:104px;border-radius:30px;display:flex;align-items:center;gap:24px;padding:0 30px;font-size:34px;font-weight:600;letter-spacing:.01em}
+.crow .ic{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex:none}
+.crow .ic svg{width:34px;height:34px}
+.crow small{display:block;font-size:19px;color:#9a9aa1;font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.ring{width:600px;height:600px;border-radius:50%;border:3px solid rgba(255,90,95,.9);box-shadow:0 0 60px rgba(255,45,54,.7),inset 0 0 60px rgba(255,45,54,.5)}
+#streak{width:1400px;height:8px;border-radius:8px;background:linear-gradient(90deg,rgba(255,60,60,0),#fff 45%,#fff 55%,rgba(255,60,60,0));box-shadow:0 0 40px 10px rgba(255,60,70,.75),0 0 120px 30px rgba(255,40,50,.45)}
+.logo{width:760px;height:306px;background:url(../assets/img/socialp.png) center/contain no-repeat}
+#cursor{width:70px;height:70px}
+.ripple{width:260px;height:260px;border-radius:50%;border:4px solid rgba(255,255,255,.9)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="bg" width="540" height="960"></canvas>
+  <div id="tint"></div>
+  <div id="cam">
+
+    <!-- ================= SCENE 1 + 2 : HOOK ================= -->
+    <div class="scene" id="s1">
+      <div class="a ring" id="ring1"></div>
+      <div class="a kicker" id="kick1"><span id="kick1t"></span></div>
+      <div class="a" id="year" style="width:760px;height:300px"></div>
+      <div class="a" id="yline" style="width:560px;height:8px;border-radius:6px;background:linear-gradient(90deg,rgba(255,45,54,0),#ff2d36,rgba(255,45,54,0));box-shadow:0 0 24px #ff2d36"></div>
+    </div>
+
+    <div class="scene" id="s2">
+      <div class="a hl" id="h2" style="font-size:96px">
+        <span data-t="2.95">Hâlâ</span> <span data-t="3.29">işletmenizin</span><br>
+        <span data-t="4.01">bir</span> <span class="ac" data-t="4.17" style="font-size:1.18em">web sitesi</span><br>
+        <span data-t="4.65">yok mu?</span>
+      </div>
+      <div class="a glass browser" id="br1">
+        <div class="bbar"><div class="dots"><i></i><i></i><i></i></div>
+          <div class="url"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span id="url1"></span><span class="caret" id="car1"></span></div></div>
+        <div class="bbody">
+          <div class="spinner" id="spin1"></div>
+          <div id="err1">
+            <svg class="ic" viewBox="0 0 120 120" fill="none">
+              <rect x="22" y="14" width="76" height="92" rx="12" stroke="#ff5a5f" stroke-width="5"/>
+              <path d="M40 46l12 12M52 46L40 58M68 46l12 12M80 46L68 58" stroke="#ff5a5f" stroke-width="5" stroke-linecap="round"/>
+              <path d="M42 86c10-10 26-10 36 0" stroke="#ff5a5f" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+            <div class="t">Bu siteye ulaşılamıyor</div>
+            <div class="c mono">ERR_NAME_NOT_RESOLVED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SCENE 3 : SEARCH ================= -->
+    <div class="scene" id="s3">
+      <div class="a hl" id="h3a" style="font-size:88px">
+        <span data-t="5.68">Müşterileriniz</span><br><span data-t="6.37">sizi</span> <span data-t="6.65">arıyor…</span>
+      </div>
+      <div class="a hl" id="h3b" style="font-size:88px">
+        <span class="ac" data-t="7.37" style="font-size:1.12em">ama</span> <span data-t="7.61" style="color:#ff5a5f;text-shadow:0 0 40px rgba(255,45,54,.6)">bulamıyor.</span>
+      </div>
+      <div class="a phone" id="ph1">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="sbar"><span>09:41</span><span>●●● 5G</span></div>
+          <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span id="q1"></span><span class="caret" id="car2" style="height:28px"></span></div>
+          <div class="tabs"><b>Tümü</b><span>Haritalar</span><span>Görseller</span><span>Yorumlar</span></div>
+          <div class="res" id="r1"><div class="av" style="background-image:url(../assets/img/sektor-restoran.webp)"></div><div class="tx"><div class="n">Köşe Kafe</div><div class="st">★★★★★<em>4.8 · 0,4 km</em></div><div class="ch"><span>Web sitesi</span><span>Menü</span></div></div></div>
+          <div class="res" id="r2"><div class="av" style="background:linear-gradient(140deg,#e8a04b,#7a3e10)"></div><div class="tx"><div class="n">Moda Coffee</div><div class="st">★★★★★<em>4.7 · 0,9 km</em></div><div class="ch"><span>Web sitesi</span><span>Sipariş</span></div></div></div>
+          <div class="res" id="r3"><div class="av" style="background:linear-gradient(140deg,#4aa3ff,#173a6b)"></div><div class="tx"><div class="n">Bulvar Bistro</div><div class="st">★★★★☆<em>4.5 · 1,2 km</em></div><div class="ch"><span>Web sitesi</span><span>Rezervasyon</span></div></div></div>
+          <div class="res miss" id="r4"><div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="#ff5a5f" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div><div class="tx"><div class="n">Sizin işletmeniz</div><div class="st">Sonuç bulunamadı</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SCENE 4 : BRAND ================= -->
+    <div class="scene" id="s4">
+      <div class="a ring" id="ring2"></div>
+      <div class="a" id="streak"></div>
+      <div class="a logo" id="logo1"></div>
+      <div class="a hl" id="h4" style="font-size:80px">
+        <span class="ac" data-t="8.62" style="color:#fff;text-shadow:0 0 30px rgba(255,255,255,.35);font-size:1.15em">Biz,</span> <span data-t="9.21">tam da</span><br><span data-t="9.57">bunun için</span> <span data-t="10.09" style="color:#ff5a5f;text-shadow:0 0 40px rgba(255,45,54,.6)">varız.</span>
+      </div>
+    </div>
+
+    <!-- ================= SCENE 5 : BUILD ================= -->
+    <div class="scene" id="s5">
+      <div class="a hl" id="h5" style="font-size:100px">
+        <span data-t="10.81">İşletmenize</span> <span class="ac" data-t="11.45" style="font-size:1.2em">özel</span>
+      </div>
+      <div class="a hl" id="h5b" style="font-size:58px;font-weight:700;color:#d8d8dd">
+        <span data-t="13.93">web siteleri</span> <span data-t="14.55">tasarlıyoruz.</span>
+      </div>
+
+      <div class="a glass browser" id="desk" style="width:900px;height:600px">
+        <div class="bbar"><div class="dots"><i></i><i></i><i></i></div><div class="url"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span id="url2">maverarestoran.com</span></div></div>
+        <div class="loadbar" id="load"></div>
+        <div class="bbody" id="dbody">
+          <div class="site t1" id="st1">
+            <div class="shero"><img src="../assets/img/sektor-restoran.webp"><div class="sover"></div></div>
+            <div class="snav"><div class="slogo">Mavera</div><div class="slinks"><span>Menü</span><span>Hakkımızda</span><span>İletişim</span></div><div class="sbtn">Rezervasyon</div></div>
+            <div class="stext"><div class="seb">RESTORAN · İSTANBUL</div><div class="sh1">Lezzetin yeni adresi</div><div class="scta">Rezervasyon Yap</div></div>
+            <div class="scards"><div><i></i>Menüyü İncele</div><div><i></i>Online Sipariş</div><div><i></i>Yol Tarifi</div></div>
+          </div>
+          <div class="site t2" id="st2">
+            <div class="shero"><img src="../assets/img/sektor-guzellik.webp" style="object-position:70% 50%"><div class="sover"></div></div>
+            <div class="snav"><div class="slogo">Lune Beauty</div><div class="slinks"><span>Hizmetler</span><span>Galeri</span><span>İletişim</span></div><div class="sbtn">Randevu</div></div>
+            <div class="stext"><div class="seb">GÜZELLİK STÜDYOSU</div><div class="sh1">Güzelliğinize özen</div><div class="scta">Online Randevu Al</div></div>
+            <div class="scards"><div><i></i>Cilt Bakımı</div><div><i></i>Makyaj</div><div><i></i>Kampanyalar</div></div>
+          </div>
+          <div class="site t3" id="st3">
+            <div class="shero"><img src="../assets/img/sektor-insaat.webp"><div class="sover"></div></div>
+            <div class="snav"><div class="slogo">ATLAS YAPI</div><div class="slinks"><span>Projeler</span><span>Kurumsal</span><span>İletişim</span></div><div class="sbtn">Teklif Al</div></div>
+            <div class="stext"><div class="seb">İNŞAAT · MİMARLIK</div><div class="sh1">Geleceği inşa ediyoruz</div><div class="scta">Projeleri İncele</div></div>
+            <div class="scards"><div><i></i>Devam Eden</div><div><i></i>Tamamlanan</div><div><i></i>Teklif Formu</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="a glass tag" id="tag5"><i></i><span id="tag5t">Restoran</span></div>
+
+      <div class="a phone" id="ph2" style="width:330px;height:680px;border-radius:52px;padding:10px">
+        <div class="screen" style="border-radius:43px">
+          <div class="island" style="width:96px;height:28px;margin-left:-48px;top:12px"></div>
+          <div class="msite t3">
+            <div class="mhero"><img src="../assets/img/sektor-insaat.webp"><div class="sover"></div></div>
+            <div class="mnav"><b>ATLAS YAPI</b><i></i></div>
+            <div class="mtx"><div class="seb">İNŞAAT · MİMARLIK</div><div class="sh1">Geleceği inşa ediyoruz</div><div class="scta">Projeleri İncele</div></div>
+            <div class="mlist"><div><i></i><span>Devam Eden Projeler<small>12 proje</small></span></div><div><i style="background:#6fb0ff"></i><span>Teklif Formu<small>24 saatte dönüş</small></span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="a glass chip" id="c1"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>Modern Tasarım</div>
+      <div class="a glass chip" id="c2"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>Mobil Uyumlu</div>
+      <div class="a glass chip" id="c3"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>Hızlı &amp; Güvenli</div>
+      <div class="a glass chip" id="c4"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>SEO Altyapısı</div>
+    </div>
+
+    <!-- ================= SCENE 6 : DEMAND ================= -->
+    <div class="scene" id="s6">
+      <div class="a hl" id="h6" style="font-size:92px">
+        <span data-t="15.64">Dijital</span> <span class="ac" data-t="15.97" style="font-size:1.16em">vitrininizi</span><br>
+        <span data-t="16.65">birlikte</span> <span data-t="17.05">kuralım.</span>
+      </div>
+      <div class="a notif" id="n1"><div class="ic" style="background:#25d366"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.4.1.1.1.7-.1 1.3z"/></svg></div><div class="tx"><div class="tt">Yeni mesaj<em>şimdi</em></div><div class="bd">“Merhaba, fiyat bilgisi alabilir miyim?”</div></div></div>
+      <div class="a notif" id="n2"><div class="ic" style="background:linear-gradient(140deg,#ff4a52,#b3121b)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><div class="tx"><div class="tt">Yeni rezervasyon<em>şimdi</em></div><div class="bd">Cumartesi 20:00 · 4 kişi</div></div></div>
+      <div class="a notif" id="n3"><div class="ic" style="background:linear-gradient(140deg,#ffb84d,#d9761a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></div><div class="tx"><div class="tt">Yeni sipariş<em>şimdi</em></div><div class="bd">Sipariş #1042 onaylandı</div></div></div>
+      <div class="a notif" id="n4"><div class="ic" style="background:linear-gradient(140deg,#4aa3ff,#1d5fd1)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4V5z"/><path d="M8 9h8M8 12h5"/></svg></div><div class="tx"><div class="tt">İletişim formu<em>şimdi</em></div><div class="bd">Web sitenizden yeni talep var</div></div></div>
+      <div class="a glass stat" id="stat"><div class="l">ZİYARETÇİLER</div><div class="v">Artışta <b>▲</b></div>
+        <svg viewBox="0 0 278 60" fill="none"><path id="spark" d="M2 54 C40 52 60 46 90 44 S140 30 170 30 S220 12 276 4" stroke="#38d27a" stroke-width="4" stroke-linecap="round"/></svg></div>
+    </div>
+
+    <!-- ================= SCENE 7 : CTA ================= -->
+    <div class="scene" id="s7">
+      <div class="a ring" id="ring3"></div>
+      <div class="a logo" id="logo2"></div>
+      <div class="a hl" id="h7" style="font-size:124px;font-weight:900">
+        <span data-t="17.68">Hemen</span> <span data-t="18.01">bize</span><br><span class="ac" data-t="18.21" style="font-size:1.2em">yazın!</span>
+      </div>
+      <div class="a btn" id="btn">Web sitenizi konuşalım <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="a ripple" id="rip"></div>
+      <div class="a glass crow" id="k1"><div class="ic" style="background:#25d366"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.4.1.1.1.7-.1 1.3z"/></svg></div><div><small>WhatsApp</small>+90 540 034 69 69</div></div>
+      <div class="a glass crow" id="k2"><div class="ic" style="background:linear-gradient(45deg,#f9a825,#e91e63 55%,#7b1fa2)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="#fff"/></svg></div><div><small>Instagram</small>@socialp.media</div></div>
+      <div class="a glass crow" id="k3"><div class="ic" style="background:rgba(255,255,255,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg></div><div><small>Web</small>socialpmedia.com</div></div>
+      <div class="a" id="cursor"><svg viewBox="0 0 32 32" width="70" height="70"><path d="M6 3l20 12-8.5 2.2L22 27l-4 2-4.6-9.8L6 25z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+    </div>
+
+  </div>
+  <div id="flash"></div>
+  <div id="grain"></div>
+  <div id="vig"></div>
+</div>
+
+<script src="anim.js"></script>
+</body>
+</html>
