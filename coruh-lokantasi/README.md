@@ -5,7 +5,7 @@ Saf HTML/CSS/JS'den oluşur; derleme adımı yoktur.
 
 ```
 index.html     İçerik (menü, yorumlar, iletişim, SEO / JSON-LD)
-styles.css     Tasarım (Çoruh yeşili · bakır · krem)
+styles.css     Tasarım (logo renkleri: siyah · ateş turuncusu · kırmızı · beyaz)
 script.js      Mobil menü, menü sekmeleri, kaydırma animasyonları
 images/        Fotoğraflar, favicon, paylaşım görseli (og.jpg)
 vercel.json    Vercel ayarları
@@ -55,3 +55,4 @@ Aynı adla `images/` içine koymanız yeterli:
 | `sutlac.jpg`             | Fırın sütlaç                    | 4:3 |
 | `galeri-*.jpg`           | Mekân galerisi                  | 4:3 |
 | `og.jpg`                 | WhatsApp/sosyal medya önizlemesi | 1200×630 |
+| `logo.png`, `logo-sm.png`, `favicon.png` | Logo (şeffaf arka planlı) | — |
