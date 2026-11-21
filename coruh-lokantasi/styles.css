@@ -352,7 +352,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .menu-foot strong { color: #fff; }
 
 /* ---------- Reviews ---------- */
-.reviews { background: var(--cream-50); }
+.reviews { background: var(--cream-100); }
 .quote-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .quote {
   margin: 0; padding: 30px 26px; border-radius: var(--radius-lg);
@@ -374,7 +374,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 560px) { .quote-grid { grid-template-columns: 1fr; } }
 
 /* ---------- Contact ---------- */
-.contact { background: var(--cream-100); padding-bottom: clamp(72px, 10vw, 120px); }
+.contact { background: var(--cream-50); padding-bottom: clamp(72px, 10vw, 120px); }
 .contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: stretch; }
 .contact-card { background: #fff; border-radius: var(--radius-lg); padding: clamp(28px, 4vw, 52px); border: 1px solid var(--line); }
 .contact-card .section-title { font-size: clamp(1.8rem, 3.4vw, 2.5rem); margin-bottom: 1.8rem; }
@@ -451,3 +451,25 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 /* backdrop-filter would trap the fixed mobile menu inside the header */
 .site-header.nav-open { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+/* ---------- Gallery ---------- */
+.gallery { background: var(--cream-50); }
+.gallery-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: clamp(180px, 20vw, 260px); gap: 16px;
+}
+.g-item { position: relative; margin: 0; border-radius: var(--radius-lg); overflow: hidden; background: var(--cream-200); }
+.g-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.g-item:hover img { transform: scale(1.05); }
+.g-item figcaption {
+  position: absolute; left: 14px; bottom: 14px; padding: 7px 14px; border-radius: 999px;
+  background: rgba(8, 40, 38, .78); color: #fff; font-size: .82rem; font-weight: 600;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.g-big { grid-column: span 2; grid-row: span 2; }
+.g-wide { grid-column: span 2; }
+@media (max-width: 760px) {
+  .gallery-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; gap: 10px; }
+  .g-big { grid-column: 1 / -1; grid-row: span 2; }
+  .g-wide { grid-column: 1 / -1; }
+  .g-item { border-radius: var(--radius); }
+}
