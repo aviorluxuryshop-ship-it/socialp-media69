@@ -294,6 +294,7 @@ OSM yolları/parkları zemin dokusunda, SRTM arazi (yakın 40 m, uzak 100 m), Bo
 - `src/stadium/roofDecal.ts` — çatı grafikleri (plan koordinatında doku, membran üstüne baskı)
 - `scripts/flow.mjs` — uçtan uca akış (gerçek tıklama/dokunma), `scripts/regions.mjs` — tüm bölge
   kadrajları, `scripts/hitch.mjs` — adım başına derlenen shader ve en yavaş CPU parçaları
+- `scripts/promo.mjs` — tanıtım videosu kaydedici (`?capture` modu, sanal saat, kare kare ekran görüntüsü)
 
 ## Yapılan önemli kararlar
 
@@ -374,3 +375,19 @@ bash scripts/fetch_osm.sh .raw          # OSM karoları
 python3 -I scripts/fetch_dem.py .raw    # SRTM ızgaraları (opentopodata, ~5 dk)
 python3 -I scripts/build_world.py .raw public/data
 ```
+
+Tanıtım videosu (49 sn; açılış → bölge → canlı satış → koltuk → görüş → bilet → gece kapanışı):
+
+```bash
+npm run dev &                                   # 127.0.0.1:5173 açık olmalı
+node scripts/promo.mjs /tmp/promo 1280 720 1.5 30   # 1920×1080, 30 fps (~1 sa 50 dk, yazılım GPU)
+ffmpeg -i /tmp/promo/promo.mp4 -i muzik.mp3 -filter_complex \
+  "[1:a]atrim=0:49,afade=t=in:d=0.4,afade=t=out:st=46.5:d=2.5[a]" \
+  -map 0:v -map "[a]" -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart \
+  -c:a aac -b:a 192k -shortest tanitim.mp4
+```
+
+`?capture` ile uygulama kendi döngüsünü çalıştırmaz; kaydedici `App.step(1/fps)` ile zamanı
+ilerletir, `setTimeout` ve CSS animasyonlarını da aynı sanal saate bağlar (takılma olmaz).
+Müzik ElevenLabs ile üretildi (enstrümantal, 50 sn); video ve kareler repoya eklenmez.
+
