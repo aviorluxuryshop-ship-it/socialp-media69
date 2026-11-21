@@ -131,11 +131,11 @@ const grain = $('grain');
 const yearEl = $('year'), strips = [];
 for (let i = 0; i < 4; i++) {
   const col = document.createElement('div');
-  col.style.cssText = `position:absolute;left:${i * 190}px;top:0;width:190px;height:300px;overflow:hidden`;
+  col.style.cssText = `position:absolute;left:${i * 190}px;top:0;width:190px;height:340px;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 11%,#000 89%,transparent 100%)`;
   const st = document.createElement('div');
   st.style.cssText = 'will-change:transform';
   st.innerHTML = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((n) =>
-    `<div style="height:300px;line-height:300px;text-align:center;font:900 300px/300px Archivo,sans-serif;letter-spacing:-.02em;color:#fff;text-shadow:0 0 50px rgba(255,45,54,.55),0 0 120px rgba(255,45,54,.35)">${n}</div>`).join('');
+    `<div style="height:340px;line-height:340px;text-align:center;font:900 300px/340px Archivo,sans-serif;letter-spacing:-.02em;color:#fff">${n}</div>`).join('');
   col.appendChild(st); yearEl.appendChild(col); strips.push(st);
 }
 const yearVal = (t) => 1990 + 36 * E.out4(seg(t, 0.02, 1.25));
@@ -200,7 +200,7 @@ function scene12(t, out) {
   const hund = (Math.floor(v / 100) % 10) + (v % 100 >= 99 ? clamp((v % 100) - 99) : 0);
   const thou = (Math.floor(v / 1000) % 10) + (v % 1000 >= 999 ? clamp((v % 1000) - 999) : 0);
   [thou, hund, tens, ones].forEach((p, i) => {
-    strips[i].style.transform = `translateY(${(-p * 300).toFixed(2)}px)`;
+    strips[i].style.transform = `translateY(${(-p * 340).toFixed(2)}px)`;
   });
   strips[3].style.filter = dv > 3 ? `blur(${Math.min(9, dv * 0.09).toFixed(2)}px)` : 'none';
   strips[2].style.filter = dv > 30 ? `blur(${Math.min(4, dv * 0.02).toFixed(2)}px)` : 'none';
@@ -210,6 +210,7 @@ function scene12(t, out) {
   T(yearEl, {
     x: 540, y: lerp(900, 318, up) - out * 520, s: lerp(yS, 0.44, up),
     o: 1 - out, blur: (1 - E.out3(seg(t, 0, 0.3))) * 6 + out * 26,
+    f: `drop-shadow(0 0 ${(26 + pulse([[1.25, 30]], t, 4)).toFixed(1)}px rgba(255,45,54,.75))`,
   });
   const kick = $('kick1');
   $('kick1t').textContent = typed('Yıl olmuş', t, 0.42, 0.95);
