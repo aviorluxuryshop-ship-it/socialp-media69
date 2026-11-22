@@ -1,6 +1,6 @@
 # Paylaşım açıklamaları
 
-Tüm videolar 1080x1920, 30 fps, H.264. Seslendirme tüm videolarda aynı Türkçe erkek sesi (Microsoft "Ahmet").
+Tüm videolar 1080x1920, 30 fps, H.264. Seslendirme tüm videolarda aynı Türkçe erkek sesi (Microsoft "Ahmet"). Seslendirmede İngilizce kelime yok (Google, WhatsApp, Instagram, DM, online yerine Türkçe karşılıkları kullanıldı).
 
 ## Video akışı (01–05 ve IG3)
 
@@ -14,13 +14,13 @@ Her video aynı 4 bölümden oluşuyor:
 | Video | Süre | Kanca (problem) | Gösterilen çözüm |
 |---|---|---|---|
 | 01 Çoruh Lokantası | 44 sn | Aşçı hem yemek yapıyor hem "menü ne, fiyat ne, neredesiniz?" aramalarına bakıyor, çorba taşıyor | Online menü, galeri, yorumlar, yol tarifi ve tek tıkla arama |
-| 02 Melopee Nail Studio | 42 sn | Nail artist tırnak yaparken telefon susmuyor, defterde randevular çakışıyor | Hizmet ve süre filtresi, online randevu (şube ve hizmet seçimi), şubeler |
-| 03 Peel Auto Glass | 39 sn | Ön cam çatlıyor, müşteri Google'da ilk çıkan rakibi arıyor | Hizmet sayfaları, SSS, tek tıkla arama |
-| 04 Velmo | 42 sn | Instagram DM'leri bitmiyor, siparişler defterde karışıyor | Sepete ekle, adet artınca ücretsiz kargo, ürün ve kullanım sayfası |
-| 05 FixPlant | 41 sn | Kararsız müşteri cevap bulamayıp sepeti bırakıyor | Ürün filtresi, renk seçimi, öncesi/sonrası kaydırıcısı, WhatsApp |
-| IG1 | 23 sn | "Rakibini buldu" girişi, 5 sitenin gerçek kullanım anları | Faydalar ve DM çağrısı |
+| 02 Melopee Nail Studio | 41 sn | Manikürcü tırnak yaparken telefon susmuyor, defterde randevular çakışıyor | Hizmet ve süre filtresi, online randevu (şube ve hizmet seçimi), şubeler |
+| 03 Peel Auto Glass | 40 sn | Ön cam çatlıyor, müşteri internette ilk çıkan rakibi arıyor | Hizmet sayfaları, SSS, tek tıkla arama |
+| 04 Velmo | 42 sn | Sosyal medyadan gelen mesajlar bitmiyor, siparişler defterde karışıyor | Sepete ekle, adet artınca ücretsiz kargo, ürün ve kullanım sayfası |
+| 05 FixPlant | 41 sn | Kararsız müşteri cevap bulamayıp sepeti bırakıyor | Ürün filtresi, renk seçimi, öncesi/sonrası kaydırıcısı, tek tıkla mesaj |
+| IG1 | 24 sn | "Rakibini buldu" girişi, 5 sitenin gerçek kullanım anları | Faydalar ve DM çağrısı |
 | IG2 | 24 sn | 5 proje, her birinde gerçek bir özellik | "Yorumlara numarasını yaz" |
-| IG3 Berber | 41 sn | Berber aynı anda telefonda randevu alıyor, deftere yazıyor, traş yapıyor, saç yamuk kalıyor | Online randevu akışı (Melopee demosu), faydalar |
+| IG3 Berber | 41 sn | Berber aynı anda telefonda randevu alıyor, deftere yazıyor, traş yapıyor, saç yamuk kalıyor | Randevu sistemi (Melopee demosu), faydalar |
 
 Müzik eklerken TikTok/Instagram'da müzik sesini %15–25'e çek, orijinal ses %100 kalsın. Böylece seslendirme net duyulur.
 
@@ -55,8 +55,8 @@ Her video "Yorumlara 'SİTE' yaz" ile bitiyor. "SİTE" yazan herkese DM'den dön
 ## Instagram (Socialp Web Design)
 
 **IG1_hala_web_siten_yok_mu.mp4**
-Müşterin seni Google'da aradı… ve rakibini buldu 😬
-Web siten yoksa her gün müşteri kaçırıyorsun. DM'den "SİTE" yaz, ücretsiz ön görüşme yapalım 📩
+Müşterin seni internette aradı… ve rakibini buldu 😬
+Web siten yoksa her gün müşteri kaçırıyorsun. Mesajla "SİTE" yaz, ücretsiz ön görüşme yapalım 📩
 #websitesi #webtasarım #dijitalpazarlama #işletme #kobi #sosyalmedya #socialpmedia
 
 **IG2_hangisi_favorin.mp4**
