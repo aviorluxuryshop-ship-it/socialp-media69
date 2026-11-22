@@ -1,8 +1,17 @@
 # Paylaşım açıklamaları
 
-Tüm videolar 1080x1920, 30 fps, H.264 formatında. Sayfa kaydırmaları kesintisiz, arada duraksama yok. Türkçe seslendirme videonun içinde.
-- 01, 02, 03: ElevenLabs "Enes" sesi (enerjik, genç erkek)
-- 04, 05, IG1, IG2: Microsoft "Ahmet" nöral sesi (ElevenLabs kredisi bittiği için)
+Tüm videolar 1080x1920, 30 fps ve H.264 formatında. Videolar sitelerin gerçek kullanımını gösteriyor: menüye dokunma, alt sayfalara geçme, randevu, sepet, filtre ve kaydırıcı. Seslendirme her sahnede o an ekranda olanı anlatıyor.
+Seslendirme: tüm videolarda aynı Türkçe erkek sesi (Microsoft "Ahmet").
+
+| Video | Süre | Gösterilenler |
+|---|---|---|
+| 01 Çoruh Lokantası | 35 sn | Yemekler → menü açma → online menü sekmeleri → galeri → yorumlar → iletişim & yol tarifi → tek tıkla arama |
+| 02 Melopee | 30 sn | Hizmetler & süreler → kategori filtresi → online randevu (şube seçimi, hizmet seçimi) → şubeler |
+| 03 Peel Auto Glass | 30 sn | İngilizce menü → hizmetler → cam tamiri detayı → açılan SSS → iletişim butonları |
+| 04 Velmo | 30 sn | Koku seçimi → sepete ekle → adet artırınca ücretsiz kargo → ürün sayfası → nasıl kullanılır → EN dili |
+| 05 FixPlant | 26 sn | Ürün filtresi → renk seçimi → öncesi/sonrası kaydırıcısı → nasıl uygulanır → WhatsApp |
+| IG1 | 23 sn | "Rakibini buldu" girişi → 5 sitenin gerçek kullanım anları → faydalar → DM çağrısı |
+| IG2 | 25 sn | 5 proje (her birinde gerçek özellik) → "Yorumlara numarasını yaz" |
 
 Müzik eklerken TikTok/Instagram'da müzik sesini %15–25'e çek, orijinal ses %100 kalsın. Böylece seslendirme net duyulur.
 
