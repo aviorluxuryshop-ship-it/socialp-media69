@@ -1,7 +1,10 @@
 # Paylaşım açıklamaları
 
-Tüm videolar 1080x1920, 30 fps, H.264 formatında. Seslendirme yok, ses kanalı boş; müziği TikTok/Instagram'da ekle.
-Müzik önerisi: trend olan hızlı tempolu bir ses seç. Videolardaki geçişler yaklaşık 2,3 saniyede bir (ekranda beliren yazılar), ritmi buna uyan bir ses iyi oturur.
+Tüm videolar 1080x1920, 30 fps, H.264 formatında. Sayfa kaydırmaları kesintisiz, arada duraksama yok. Türkçe seslendirme videonun içinde.
+- 01, 02, 03: ElevenLabs "Enes" sesi (enerjik, genç erkek)
+- 04, 05, IG1, IG2: Microsoft "Ahmet" nöral sesi (ElevenLabs kredisi bittiği için)
+
+Müzik eklerken TikTok/Instagram'da müzik sesini %15–25'e çek, orijinal ses %100 kalsın. Böylece seslendirme net duyulur.
 
 ---
 
