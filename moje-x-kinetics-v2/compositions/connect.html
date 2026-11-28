@@ -1,0 +1,89 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: var(--ground);
+      font-family: var(--font-body);
+    }
+    /* Two dots joined by a line: the Kinetics logo motif, read as two brands meeting */
+    #connect-line {
+      position: absolute;
+      left: 200px;
+      top: 699px;
+      width: 680px;
+      height: 2px;
+      background: var(--burgundy);
+      transform-origin: 0% 50%;
+    }
+    .connect-dot {
+      position: absolute;
+      top: 690px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--burgundy);
+    }
+    #connect-a {
+      left: 190px;
+    }
+    #connect-b {
+      left: 870px;
+    }
+    #connect-label {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 330px;
+      text-align: center;
+      color: var(--mute);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.5em;
+      padding-left: 0.5em;
+    }
+    #connect-line-text {
+      position: absolute;
+      left: 90px;
+      width: 900px;
+      top: 960px;
+      text-align: center;
+      color: var(--ink);
+      font-family: var(--font-accent);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 104px;
+      line-height: 1.1;
+    }
+  </style>
+  <div id="root" data-composition-id="connect" data-width="1080" data-height="1920">
+    <div id="connect-label" class="clip" data-start="0" data-duration="2.17" data-track-index="1">
+      MOJE NAIL STUDIO
+    </div>
+    <div id="connect-line" class="clip" data-start="0" data-duration="2.17" data-track-index="1"></div>
+    <div id="connect-a" class="connect-dot clip" data-start="0" data-duration="2.17" data-track-index="2"></div>
+    <div id="connect-b" class="connect-dot clip" data-start="0" data-duration="2.17" data-track-index="2"></div>
+    <h1
+      id="connect-line-text"
+      class="clip"
+      data-start="0"
+      data-duration="2.17"
+      data-track-index="3"
+      data-var-text="hookLine"
+    >
+      İki imza.
+    </h1>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // The line draws from one dot to the other, landing on the beat at 1.65 s
+    tl.fromTo("#connect-line", { scaleX: 0 }, { scaleX: 1, duration: 1.35, ease: "power2.inOut" }, 0.3);
+    // The second dot answers when the line reaches it
+    tl.fromTo("#connect-b", { scale: 1 }, { scale: 1.6, duration: 0.12, ease: "power2.out" }, 1.62);
+    tl.to("#connect-b", { scale: 1, duration: 0.3, ease: "power2.inOut" }, 1.74);
+    // Exit
+    tl.to("#connect-line-text", { opacity: 0, filter: "blur(8px)", duration: 0.18, ease: "power2.in" }, 1.95);
+    tl.to("#connect-label", { opacity: 0, duration: 0.18, ease: "power2.in" }, 1.95);
+    window.__timelines["connect"] = tl;
+  </script>
+</template>

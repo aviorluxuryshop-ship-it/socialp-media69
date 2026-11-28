@@ -1,0 +1,11 @@
+{
+  "name": "moje-x-kinetics-v2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.9.93 preview",
+    "check": "npx --yes hyperframes@0.9.93 check",
+    "render": "npx --yes hyperframes@0.9.93 render",
+    "publish": "npx --yes hyperframes@0.9.93 publish"
+  }
+}

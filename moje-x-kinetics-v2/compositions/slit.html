@@ -1,0 +1,95 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: var(--ground);
+      font-family: var(--font-body);
+    }
+    /* The connecting line opens into a 1080x430 window: the source shown at native size */
+    #slit-window {
+      position: absolute;
+      left: 0;
+      top: 485px;
+      width: 1080px;
+      height: 430px;
+      background: #000;
+      overflow: hidden;
+    }
+    #slit-window video {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 430px;
+      object-fit: cover;
+    }
+    .slit-dot {
+      position: absolute;
+      top: 690px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--burgundy);
+    }
+    #slit-a {
+      left: 190px;
+    }
+    #slit-b {
+      left: 870px;
+    }
+    #slit-text {
+      position: absolute;
+      left: 90px;
+      width: 900px;
+      top: 985px;
+      text-align: center;
+      color: var(--ink);
+      font-size: 60px;
+      font-weight: 300;
+      line-height: 1.2;
+    }
+    #slit-text em {
+      font-family: var(--font-accent);
+      font-style: italic;
+      color: var(--burgundy);
+    }
+  </style>
+  <div data-hf-id="hf-88m1" id="root" data-composition-id="slit" data-width="1080" data-height="1920">
+    <div data-hf-id="hf-tn44" id="slit-window">
+      <video data-color-grading="{&quot;preset&quot;:null,&quot;intensity&quot;:1,&quot;adjust&quot;:{&quot;exposure&quot;:0,&quot;contrast&quot;:0.15,&quot;highlights&quot;:0,&quot;shadows&quot;:0,&quot;whites&quot;:0,&quot;blacks&quot;:0,&quot;temperature&quot;:0,&quot;tint&quot;:0,&quot;vibrance&quot;:0,&quot;saturation&quot;:-1},&quot;details&quot;:{&quot;vignette&quot;:0,&quot;vignetteMidpoint&quot;:0.5,&quot;vignetteRoundness&quot;:0,&quot;vignetteFeather&quot;:0.65,&quot;grain&quot;:0.1,&quot;grainSize&quot;:0.25,&quot;grainRoughness&quot;:0.5},&quot;effects&quot;:{&quot;blur&quot;:0,&quot;pixelate&quot;:0,&quot;chromaBleed&quot;:0,&quot;tapeDamage&quot;:0,&quot;tapeTracking&quot;:0,&quot;tapeNoise&quot;:1,&quot;tapeSpeed&quot;:0.5,&quot;filmArtifacts&quot;:0,&quot;halftone&quot;:0,&quot;halftoneSize&quot;:0,&quot;twoInkPrint&quot;:0,&quot;twoInkPrintSize&quot;:0,&quot;ascii&quot;:0,&quot;asciiSize&quot;:0.06578947368421052,&quot;asciiInvert&quot;:0,&quot;asciiStyle&quot;:0,&quot;asciiColor&quot;:1,&quot;asciiRotation&quot;:0,&quot;dither&quot;:0,&quot;ditherSize&quot;:0,&quot;bloom&quot;:0,&quot;bloomRadius&quot;:8,&quot;monoScreen&quot;:0,&quot;monoScreenSize&quot;:0,&quot;monoScreenAngle&quot;:0,&quot;monoScreenSpread&quot;:0,&quot;monoScreenShape&quot;:0,&quot;monoScreenInvert&quot;:0,&quot;scanlines&quot;:0,&quot;scanlineCount&quot;:0,&quot;scanlineSoftness&quot;:0,&quot;chromaticAberration&quot;:0,&quot;chromaticAngle&quot;:0,&quot;crtCurvature&quot;:0,&quot;digitalGlitch&quot;:0,&quot;digitalGlitchColorSplit&quot;:0,&quot;digitalGlitchLineTear&quot;:0,&quot;digitalGlitchPixelate&quot;:0,&quot;digitalGlitchBlockAmount&quot;:0,&quot;digitalGlitchBlockDisplacement&quot;:0,&quot;digitalGlitchBlockOpacity&quot;:0,&quot;digitalGlitchSpeed&quot;:0,&quot;engraving&quot;:0,&quot;engravingSpacing&quot;:0.4117647058823529,&quot;engravingMinThickness&quot;:0.2,&quot;engravingMaxThickness&quot;:0.4571428571428572,&quot;engravingAngle&quot;:0.25,&quot;engravingContrast&quot;:0.4666666666666667,&quot;engravingSharpness&quot;:0.59,&quot;engravingWave&quot;:0.2,&quot;engravingWaveFrequency&quot;:0.2222222222222222,&quot;crosshatch&quot;:0,&quot;crosshatchSpacing&quot;:0.28,&quot;crosshatchThickness&quot;:0.25,&quot;crosshatchAngle&quot;:0.25,&quot;crosshatchContrast&quot;:0.3333333333333333,&quot;crosshatchEdges&quot;:0.5,&quot;crosshatchLineWeight&quot;:0,&quot;crosshatchWave&quot;:0.33,&quot;crosshatchWaveFrequency&quot;:0.2222222222222222,&quot;kuwahara&quot;:0,&quot;kuwaharaRadius&quot;:0.14285714285714285,&quot;kuwaharaSharpness&quot;:0.3125,&quot;kuwaharaSaturation&quot;:0.5},&quot;lut&quot;:null,&quot;colorSpace&quot;:&quot;rec709&quot;}" data-hf-id="hf-hk77" id="slit-hands" class="clip" src="assets/kinetics-shore.mp4" data-start="0" data-duration="2.04" data-media-start="22.4" data-track-index="0" muted playsinline></video>
+    </div>
+    <div data-hf-id="hf-9bql" id="slit-a" class="slit-dot clip" data-start="0" data-duration="2.04" data-track-index="1"></div>
+    <div data-hf-id="hf-d9um" id="slit-b" class="slit-dot clip" data-start="0" data-duration="2.04" data-track-index="1"></div>
+    <div data-hf-id="hf-4zv5" id="slit-text" class="clip" data-start="0" data-duration="2.04" data-track-index="2">
+      Tek bir <em data-hf-id="hf-z3pi">dokunuş.</em>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Line -> window: the 680x2 line grows into the full-width slit
+    tl.fromTo(
+      "#slit-window",
+      { clipPath: "inset(214px 200px 214px 200px)" },
+      { clipPath: "inset(0px 0px 0px 0px)", duration: 0.5, ease: "expo.out" },
+      0,
+    );
+    // The dots ride the window edges out of frame
+    tl.fromTo("#slit-a", { x: 0, opacity: 1 }, { x: -240, opacity: 0, duration: 0.45, ease: "expo.out" }, 0);
+    tl.fromTo("#slit-b", { x: 0, opacity: 1 }, { x: 240, opacity: 0, duration: 0.45, ease: "expo.out" }, 0);
+    tl.fromTo(
+      "#slit-text",
+      { opacity: 0, filter: "blur(8px)" },
+      { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" },
+      0.38,
+    );
+    // Window collapses to its centre point; the next scene opens a circle from there
+    tl.to("#slit-text", { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, 1.6);
+    tl.to(
+      "#slit-window",
+      { clipPath: "inset(205px 530px 205px 530px)", duration: 0.38, ease: "power3.in" },
+      1.64,
+    );
+    window.__timelines["slit"] = tl;
+  </script>
+</template>

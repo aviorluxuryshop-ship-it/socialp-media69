@@ -1,0 +1,161 @@
+<!doctype html>
+<html
+  lang="tr"
+  data-composition-variables='[
+    {"id":"hookLine","type":"string","label":"Açılış","default":"İki imza."},
+    {"id":"slitLine","type":"string","label":"İkinci cümle","default":"Tek bir dokunuş."},
+    {"id":"collectionLabel","type":"string","label":"Koleksiyon etiketi","default":"YENİ KOLEKSİYON"},
+    {"id":"cta","type":"string","label":"Kapanış","default":"Çok yakında."},
+    {"id":"handle","type":"string","label":"Instagram","default":"@mojenailstudio"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      /* Moje Nail Studio palette (mojenailstudio.com): cream ground, burgundy accent, ink text */
+      :root {
+        --ground: #fef8f1;
+        --burgundy: #400303;
+        --ink: #121012;
+        --mute: #929090;
+        --font-body: "Montserrat", sans-serif;
+        --font-accent: "Playfair Display", serif;
+        /* every motif is centred on this line */
+        --axis-y: 700px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: var(--ground);
+        font-family: var(--font-body);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="14"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div
+        id="connect"
+        data-composition-id="connect"
+        data-composition-src="compositions/connect.html"
+        data-start="0"
+        data-duration="2.17"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+      <div
+        id="slit"
+        data-composition-id="slit"
+        data-composition-src="compositions/slit.html"
+        data-start="2.17"
+        data-duration="2.04"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+      <div
+        id="circle"
+        data-composition-id="circle"
+        data-composition-src="compositions/circle.html"
+        data-start="4.21"
+        data-duration="4.32"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+      <div
+        id="lockup"
+        data-composition-id="lockup"
+        data-composition-src="compositions/lockup.html"
+        data-start="8.53"
+        data-duration="5.47"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Music: CC0 "Tense/Suspenseful Cinematic" (Freesound 382155), 108.5 BPM; first beat on frame 0 -->
+      <audio
+        id="music-bed"
+        class="clip"
+        src="assets/music/tense-cinematic-cc0.mp3"
+        data-start="0"
+        data-duration="14"
+        data-media-start="0.045"
+        data-track-index="5"
+        data-volume="1.9"
+        data-fade-out="1.2"
+      ></audio>
+      <audio
+        id="sfx-slit"
+        class="clip"
+        src="assets/sfx/whoosh.mp3"
+        data-start="1.6"
+        data-duration="1.6"
+        data-track-index="2"
+        data-volume="0.4"
+        data-fade-out="0.5"
+      ></audio>
+      <audio
+        id="sfx-circle"
+        class="clip"
+        src="assets/sfx/subhit.mp3"
+        data-start="4.22"
+        data-duration="1.8"
+        data-track-index="2"
+        data-volume="0.5"
+      ></audio>
+      <audio
+        id="sfx-swell"
+        class="clip"
+        src="assets/sfx/swell.mp3"
+        data-start="6.6"
+        data-duration="4.4"
+        data-track-index="3"
+        data-volume="0.3"
+        data-fade-in="0.5"
+        data-fade-out="1.2"
+      ></audio>
+      <audio
+        id="sfx-mark"
+        class="clip"
+        src="assets/sfx/boom.mp3"
+        data-start="9.1"
+        data-duration="2"
+        data-track-index="2"
+        data-volume="0.4"
+      ></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

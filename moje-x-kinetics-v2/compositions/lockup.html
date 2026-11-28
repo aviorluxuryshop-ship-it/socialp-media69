@@ -1,0 +1,143 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: var(--ground);
+      font-family: var(--font-body);
+    }
+    .lock-dot {
+      position: absolute;
+      left: 530px;
+      top: 690px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--burgundy);
+    }
+    #lock-line {
+      position: absolute;
+      left: 539px;
+      top: 650px;
+      width: 2px;
+      height: 100px;
+      background: var(--burgundy);
+    }
+    #lock-moje {
+      position: absolute;
+      left: 415px;
+      top: 340px;
+      width: 250px;
+      height: 280px;
+    }
+    #lock-kinetics {
+      position: absolute;
+      left: 340px;
+      top: 785px;
+      width: 400px;
+      height: 111px;
+    }
+    .lock-center {
+      position: absolute;
+      left: 90px;
+      width: 900px;
+      text-align: center;
+    }
+    #lock-label {
+      top: 950px;
+      color: var(--burgundy);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0.42em;
+      padding-left: 0.42em;
+    }
+    #lock-cta {
+      top: 1010px;
+      color: var(--ink);
+      font-family: var(--font-accent);
+      font-style: italic;
+      font-size: 72px;
+      line-height: 1.1;
+    }
+    #lock-handle {
+      top: 1120px;
+      color: var(--mute);
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      padding-left: 0.16em;
+    }
+  </style>
+  <div id="root" data-composition-id="lockup" data-width="1080" data-height="1920">
+    <div id="lock-line" class="clip" data-start="0" data-duration="5.47" data-track-index="1"></div>
+    <div id="lock-a" class="lock-dot clip" data-start="0" data-duration="5.47" data-track-index="2"></div>
+    <div id="lock-b" class="lock-dot clip" data-start="0" data-duration="5.47" data-track-index="3"></div>
+    <img
+      id="lock-moje"
+      class="clip"
+      src="assets/moje-logo-ink.svg"
+      alt="Moje Nail Studio"
+      data-start="0"
+      data-duration="5.47"
+      data-track-index="4"
+    />
+    <img
+      id="lock-kinetics"
+      class="clip"
+      src="assets/kinetics-logo-ink.png"
+      alt="Kinetics"
+      data-start="0"
+      data-duration="5.47"
+      data-track-index="5"
+    />
+    <div id="lock-label" class="lock-center clip" data-start="0" data-duration="5.47" data-track-index="6" data-var-text="collectionLabel">
+      YENİ KOLEKSİYON
+    </div>
+    <div id="lock-cta" class="lock-center clip" data-start="0" data-duration="5.47" data-track-index="7" data-var-text="cta">
+      Çok yakında.
+    </div>
+    <div id="lock-handle" class="lock-center clip" data-start="0" data-duration="5.47" data-track-index="8" data-var-text="handle">
+      @mojenailstudio
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // The single point splits into two, joined by a vertical line
+    tl.fromTo("#lock-a", { y: 0 }, { y: -50, duration: 0.42, ease: "power3.out" }, 0.02);
+    tl.fromTo("#lock-b", { y: 0 }, { y: 50, duration: 0.42, ease: "power3.out" }, 0.02);
+    tl.fromTo("#lock-line", { scaleY: 0 }, { scaleY: 1, duration: 0.42, ease: "power3.out" }, 0.02);
+    // Moje above, on the beat (9.08 s)
+    tl.fromTo(
+      "#lock-moje",
+      { clipPath: "inset(100% 0% 0% 0%)", opacity: 0, filter: "blur(6px)" },
+      { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" },
+      0.55,
+    );
+    // Kinetics below, on the next bar (9.62 s)
+    tl.fromTo(
+      "#lock-kinetics",
+      { clipPath: "inset(0% 0% 100% 0%)", opacity: 0, filter: "blur(6px)" },
+      { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" },
+      1.09,
+    );
+    tl.fromTo(
+      "#lock-label",
+      { opacity: 0, filter: "blur(6px)" },
+      { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power3.out" },
+      1.68,
+    );
+    tl.fromTo(
+      "#lock-cta",
+      { opacity: 0, filter: "blur(8px)" },
+      { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" },
+      2.28,
+    );
+    tl.fromTo(
+      "#lock-handle",
+      { opacity: 0, filter: "blur(6px)" },
+      { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power3.out" },
+      2.85,
+    );
+    window.__timelines["lockup"] = tl;
+  </script>
+</template>
