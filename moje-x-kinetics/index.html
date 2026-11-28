@@ -1,0 +1,133 @@
+<!doctype html>
+<html
+  lang="tr"
+  data-composition-variables='[
+    {"id":"hookLine","type":"string","label":"Açılış cümlesi","default":"Yeni bir dokunuş geliyor."},
+    {"id":"collectionLabel","type":"string","label":"Koleksiyon etiketi","default":"ÖZEL KOLEKSİYON"},
+    {"id":"cta","type":"string","label":"Kapanış","default":"Çok yakında."},
+    {"id":"handle","type":"string","label":"Instagram","default":"@mojenailstudio"},
+    {"id":"burgundy","type":"color","label":"Moje bordo","default":"#400303"},
+    {"id":"cream","type":"color","label":"Moje krem","default":"#FEF8F1"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      /* Moje Nail Studio palette (mojenailstudio.com) + Kinetics SHORE black */
+      :root {
+        --ground: #000000;
+        --burgundy: #400303;
+        --cream: #fef8f1;
+        --mute: #9b999a;
+        --font-display: "Montserrat", sans-serif;
+        /* Footage band: 1920x764 source shown at 1080x430 */
+        --band-top: 553px;
+        --band-h: 430px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: var(--ground);
+        font-family: var(--font-display);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="14"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div
+        id="hook"
+        data-composition-id="hook"
+        data-composition-src="compositions/hook.html"
+        data-start="0"
+        data-duration="2.5"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+      <div
+        id="touch"
+        data-composition-id="touch"
+        data-composition-src="compositions/touch.html"
+        data-start="2.5"
+        data-duration="3.5"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+      <div
+        id="eight"
+        data-composition-id="eight"
+        data-composition-src="compositions/eight.html"
+        data-start="6"
+        data-duration="3"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+      <div
+        id="reveal"
+        data-composition-id="reveal"
+        data-composition-src="compositions/reveal.html"
+        data-start="9"
+        data-duration="5"
+        data-track-index="0"
+        data-track-kind="graphics"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Sound: whoosh on the burgundy flood, swell peaking as the lockup lands -->
+      <audio
+        id="sfx-flood"
+        class="clip"
+        src="assets/sfx/whoosh.mp3"
+        data-start="8.5"
+        data-duration="3.6"
+        data-track-index="2"
+        data-volume="0.55"
+        data-fade-out="0.8"
+      ></audio>
+      <audio
+        id="sfx-swell"
+        class="clip"
+        src="assets/sfx/swell.mp3"
+        data-start="7.6"
+        data-duration="5.4"
+        data-track-index="3"
+        data-volume="0.4"
+        data-fade-in="0.6"
+        data-fade-out="1.5"
+      ></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
